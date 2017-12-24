@@ -910,6 +910,34 @@ public static final String _serializedATN = Utils.join(
 <else>
 <! only one segment, can be inlined !>
 val serializedIntegersATN =
+	arrayOf(<model.serialized:{it | <it>}; wrap={<\n><\t>}, separator=", ">)
+<endif>
+val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
+init {
+	decisionToDFA = Array\<DFA>(ATN.getNumberOfDecisions(), {
+		createDFA(ATN.getDecisionState(it), it)
+	})
+<!	org.antlr.v4.tool.DOTGenerator dot = new org.antlr.v4.tool.DOTGenerator(null);!>
+<!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
+<!	System.out.println(dot.getDOT(_ATN.ruleToStartState[2], ruleNames, false));!>
+}
+>>
+
+SerializedATNEnriched(model) ::= <<
+<if(rest(model.segments))>
+<! requires segmented representation !>
+private static final int _serializedATNSegments = <length(model.segments)>;
+<model.segments:{segment|private static final String _serializedATNSegment<i0> =
+	"<segment; wrap={"+<\n><\t>"}>";}; separator="\n">
+public static final String _serializedATN = Utils.join(
+	new String[] {
+		<model.segments:{segment | _serializedATNSegment<i0>}; separator=",\n">
+	},
+	""
+);
+<else>
+<! only one segment, can be inlined !>
+val serializedIntegersATN =
 	arrayOf(<model.serializedIntegers; wrap={<\n><\t>}, separator=",">)
 <endif>
 val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)

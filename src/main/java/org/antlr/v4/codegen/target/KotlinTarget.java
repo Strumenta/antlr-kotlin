@@ -101,42 +101,42 @@ public class KotlinTarget extends Target {
 
 		@Override
 		public String toString(Object o, String formatString, Locale locale) {
-			if ("java-escape".equals(formatString)) {
-				// 5C is the hex code for the \ itself
-				return ((String)o).replace("\\u", "\\u005Cu");
-			}
-			if (o.equals("\\f")) {
-				return "\\u000C";
-			}
-			if (formatString == null && (o instanceof String)){
-				String s = (String)o;
-				if (s.startsWith("\\")) {
-					boolean ok = true;
-					for (int i=1;i<s.length() && ok;i++) {
-						ok = Character.isDigit(s.charAt(i));
-					}
-					if (ok) {
-						int n = Integer.parseInt(s.substring(1));
-						//if (n == 14) n = 12;
-						return String.format("\\u%04X", n);
-//						String hexPart = Integer.toHexString(n);
-//						String res = "\\u";
-//						for (int i=0;i<4-hexPart.length();i++) {
-//							res = res + "0";
-//						}
-//						res += hexPart;
-//						if (res.equals("\\u000d")) {
-//							System.out.println("GOT AAA " + o + " -> " + res);
-//						}
-//						return res;
-					}
-				}
-			}
-
-			String res = super.toString(o, formatString, locale);
-			if (res.equals("\\u000d")) {
-				System.out.println("GOT ZZZ " + o + " -> " + res);
-			}
+//			if ("java-escape".equals(formatString)) {
+//				// 5C is the hex code for the \ itself
+//				return ((String)o).replace("\\u", "\\u005Cu");
+//			}
+//			if (o.equals("\\f")) {
+//				return "\\u000C";
+//			}
+//			if (formatString == null && (o instanceof String)){
+//				String s = (String)o;
+//				if (s.startsWith("\\")) {
+//					boolean ok = true;
+//					for (int i=1;i<s.length() && ok;i++) {
+//						ok = Character.isDigit(s.charAt(i));
+//					}
+//					if (ok) {
+//						int n = Integer.parseInt(s.substring(1));
+//						//if (n == 14) n = 12;
+//						return String.format("\\u%04X", n);
+////						String hexPart = Integer.toHexString(n);
+////						String res = "\\u";
+////						for (int i=0;i<4-hexPart.length();i++) {
+////							res = res + "0";
+////						}
+////						res += hexPart;
+////						if (res.equals("\\u000d")) {
+////							System.out.println("GOT AAA " + o + " -> " + res);
+////						}
+////						return res;
+//					}
+//				}
+//			}
+//
+//			String res = super.toString(o, formatString, locale);
+//			if (res.equals("\\u000d")) {
+//				System.out.println("GOT ZZZ " + o + " -> " + res);
+//			}
 
 			return super.toString(o, formatString, locale);
 		}
@@ -144,8 +144,13 @@ public class KotlinTarget extends Target {
 	}
 
 	@Override
+	public String encodeIntAsCharEscape(int v) {
+		return Integer.toString(v);
+	}
+
+	@Override
 	protected void appendUnicodeEscapedCodePoint(int codePoint, StringBuilder sb) {
-		System.out.println("AAAA "+codePoint);
+		//System.out.println("AAAA "+codePoint);
 		UnicodeEscapes.appendJavaStyleEscapedCodePoint(codePoint, sb);
 	}
 }
