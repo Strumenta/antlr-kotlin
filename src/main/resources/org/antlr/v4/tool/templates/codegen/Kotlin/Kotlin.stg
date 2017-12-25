@@ -224,36 +224,31 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class <parser.name> extends <superClass; null="Parser"> {
-	static { RuntimeMetaData.checkVersion("<file.ANTLRVersion>", RuntimeMetaData.VERSION); }
+class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.grammarFileName>", input) {
+	// TODO verify version of runtime is compatible
 
-	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
-	<if(parser.tokens)>
-	public static final int
-		<parser.tokens:{k | <k>=<parser.tokens.(k)>}; separator=", ", wrap, anchor>;
-	<endif>
-	public static final int
-		<parser.rules:{r | RULE_<r.name> = <r.index>}; separator=", ", wrap, anchor>;
-	public static final String[] ruleNames = {
-		<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>
-	};
+    <if(parser.tokens)>
+    enum class Tokens(val id: Int) {
+        <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
+    }
+    <endif>
 
-	<vocabulary(parser.literalNames, parser.symbolicNames)>
+    enum class Rules(val id: Int) {
+        <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
+    }
 
-	@Override
-	public String getGrammarFileName() { return "<parser.grammarFileName; format="java-escape">"; }
+	companion object {
+	    protected val decisionToDFA : Array\<DFA>
+    	protected val sharedContextCache = PredictionContextCache()
 
-	@Override
-	public String[] getRuleNames() { return ruleNames; }
+        val ruleNames = arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
 
-	@Override
-	public String getSerializedATN() { return _serializedATN; }
+        <vocabulary(parser.literalNames, parser.symbolicNames)>
+	}
 
-	@Override
-	public ATN getATN() { return _ATN; }
+	private val interpreter : ParserATNSimulator
+
+	<atn>
 
 	<namedActions.members>
 	<parser:(ctor)()>
@@ -271,7 +266,7 @@ case <f.ruleIndex>:
 	<sempredFuncs.values; separator="\n">
 <endif>
 
-	<atn>
+
 }
 >>
 
@@ -310,9 +305,8 @@ case <f.ruleIndex>:
 >>
 
 parser_ctor(p) ::= <<
-public <p.name>(TokenStream input) {
-	super(input);
-	_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+init {
+	interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
 }
 >>
 
@@ -692,35 +686,27 @@ SetNonLocalAttr(s, rhsChunks)	  ::=
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>);"
 
-TokenDecl(t) ::= "<TokenLabelType()> <t.name>"
+TokenDecl(t) ::= "<t.name>: <TokenLabelType()>"
 TokenTypeDecl(t) ::= "int <t.name>;"
 TokenListDecl(t) ::= "List\<Token> <t.name> = new ArrayList\<Token>()"
-RuleContextDecl(r) ::= "<r.ctxName> <r.name>"
+RuleContextDecl(r) ::= "<r.name>: <r.ctxName>"
 RuleContextListDecl(rdecl) ::= "List\<<rdecl.ctxName>> <rdecl.name> = new ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
-    "public TerminalNode <t.name>() { return getToken(<parser.name>.<t.name>, 0); }"
+    "fun <t.name>() : TerminalNode = return getToken(<parser.name>.<t.name>, 0)"
 ContextTokenListGetterDecl(t)  ::=
-    "public List\<TerminalNode> <t.name>() { return getTokens(<parser.name>.<t.name>); }"
+    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.<t.name>)"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
-public TerminalNode <t.name>(int i) {
-	return getToken(<parser.name>.<t.name>, i);
-}
+fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.<t.name>, i)
 >>
 ContextRuleGetterDecl(r)       ::= <<
-public <r.ctxName> <r.name>() {
-	return getRuleContext(<r.ctxName>.class,0);
-}
+fun <r.name>() : <r.ctxName> = getRuleContext(<r.ctxName>.class,0)
 >>
 ContextRuleListGetterDecl(r)   ::= <<
-public List\<<r.ctxName>\> <r.name>() {
-	return getRuleContexts(<r.ctxName>.class);
-}
+fun <r.name>() : List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>.class);
 >>
 ContextRuleListIndexedGetterDecl(r)   ::= <<
-public <r.ctxName> <r.name>(int i) {
-	return getRuleContext(<r.ctxName>.class,i);
-}
+fun <r.name>(i: Int) : <r.ctxName> = getRuleContext(<r.ctxName>.class,i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
@@ -740,15 +726,14 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1);"
 
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
-public static class <struct.name> extends <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> implements <interfaces; separator=", "><endif> {
-	<attrs:{a | public <a>;}; separator="\n">
+class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
+	<attrs:{a | var <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
-	<if(ctorAttrs)>public <struct.name>(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }<endif>
-	public <struct.name>(ParserRuleContext parent, int invokingState<ctorAttrs:{a | , <a>}>) {
-		super(parent, invokingState);
+	<if(ctorAttrs)>constructor(parent: ParserRuleContext, invokingState: int) : super(parent, invokingState){ ; }<endif>
+	constructor(parent: ParserRuleContext, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
 		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
 	}
-	@Override public int getRuleIndex() { return RULE_<struct.derivedFromName>; }
+	override fun getRuleIndex() = Rules.RULE_<struct.derivedFromName>
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
 	public <struct.name>() { }
 	public void copyFrom(<struct.name> ctx) {
@@ -756,8 +741,8 @@ public static class <struct.name> extends <if(contextSuperClass)><contextSuperCl
 		<struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
 	}
 <endif>
-	<dispatchMethods; separator="\n">
-	<extensionMembers; separator="\n">
+	/*<dispatchMethods; separator="\n">
+	<extensionMembers; separator="\n">*/
 }
 >>
 
@@ -785,7 +770,7 @@ public \<T> T accept(ParseTreeVisitor\<? extends T> visitor) {
 }
 >>
 
-AttributeDecl(d) ::= "<d.type> <d.name><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "<d.name> : <d.type><if(d.initValue)> = <d.initValue><endif>"
 
 /** If we don't know location of label def x, use this template */
 labelref(x) ::= "<if(!x.isLocal)>((<x.ctx.name>)_localctx).<endif><x.name>"

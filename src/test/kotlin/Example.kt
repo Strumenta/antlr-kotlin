@@ -19,5 +19,6 @@ fun main(args: Array<String>) {
 
 
 
-    Tool.main(arrayOf("-Dlanguage=Kotlin", /*"-o", "/Users/federico/repos/antlr-kotlin-runtime-idea/antlr-kotlin-runtime-examples/src/main/kotlin",*/ "src/test/resources/MiniCalcLexer.g4"))
+    //Tool.main(arrayOf("-Dlanguage=Kotlin", /*"-o", "/Users/federico/repos/antlr-kotlin-runtime-idea/antlr-kotlin-runtime-examples/src/main/kotlin",*/ "src/test/resources/MiniCalcLexer.g4"))
+    Tool.main(arrayOf("-Dlanguage=Kotlin", /*"-o", "/Users/federico/repos/antlr-kotlin-runtime-idea/antlr-kotlin-runtime-examples/src/main/kotlin",*/ "src/test/resources/MiniCalcParser.g4"))
 }
