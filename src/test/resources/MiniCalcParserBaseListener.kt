@@ -1,314 +1,314 @@
 // Generated from java-escape by ANTLR 4.7.1
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.kotlinruntime.facade.ErrorNode
+import org.antlr.v4.kotlinruntime.facade.ParserRuleContext
+import org.antlr.v4.kotlinruntime.facade.TerminalNode
 
 /**
  * This class provides an empty implementation of {@link MiniCalcParserListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class MiniCalcParserBaseListener implements MiniCalcParserListener {
+class MiniCalcParserBaseListener : MiniCalcParserListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMiniCalcFile(MiniCalcParser.MiniCalcFileContext ctx) { }
+	override fun enterMiniCalcFile(ctx: MiniCalcParser.MiniCalcFileContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMiniCalcFile(MiniCalcParser.MiniCalcFileContext ctx) { }
+	override fun exitMiniCalcFile(ctx: MiniCalcParser.MiniCalcFileContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLine(MiniCalcParser.LineContext ctx) { }
+	override fun enterLine(ctx: MiniCalcParser.LineContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLine(MiniCalcParser.LineContext ctx) { }
+	override fun exitLine(ctx: MiniCalcParser.LineContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInputDeclarationStatement(MiniCalcParser.InputDeclarationStatementContext ctx) { }
+	override fun enterInputDeclarationStatement(ctx: MiniCalcParser.InputDeclarationStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInputDeclarationStatement(MiniCalcParser.InputDeclarationStatementContext ctx) { }
+	override fun exitInputDeclarationStatement(ctx: MiniCalcParser.InputDeclarationStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarDeclarationStatement(MiniCalcParser.VarDeclarationStatementContext ctx) { }
+	override fun enterVarDeclarationStatement(ctx: MiniCalcParser.VarDeclarationStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarDeclarationStatement(MiniCalcParser.VarDeclarationStatementContext ctx) { }
+	override fun exitVarDeclarationStatement(ctx: MiniCalcParser.VarDeclarationStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignmentStatement(MiniCalcParser.AssignmentStatementContext ctx) { }
+	override fun enterAssignmentStatement(ctx: MiniCalcParser.AssignmentStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignmentStatement(MiniCalcParser.AssignmentStatementContext ctx) { }
+	override fun exitAssignmentStatement(ctx: MiniCalcParser.AssignmentStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrintStatement(MiniCalcParser.PrintStatementContext ctx) { }
+	override fun enterPrintStatement(ctx: MiniCalcParser.PrintStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrintStatement(MiniCalcParser.PrintStatementContext ctx) { }
+	override fun exitPrintStatement(ctx: MiniCalcParser.PrintStatementContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrint(MiniCalcParser.PrintContext ctx) { }
+	override fun enterPrint(ctx: MiniCalcParser.PrintContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrint(MiniCalcParser.PrintContext ctx) { }
+	override fun exitPrint(ctx: MiniCalcParser.PrintContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInputDeclaration(MiniCalcParser.InputDeclarationContext ctx) { }
+	override fun enterInputDeclaration(ctx: MiniCalcParser.InputDeclarationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInputDeclaration(MiniCalcParser.InputDeclarationContext ctx) { }
+	override fun exitInputDeclaration(ctx: MiniCalcParser.InputDeclarationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarDeclaration(MiniCalcParser.VarDeclarationContext ctx) { }
+	override fun enterVarDeclaration(ctx: MiniCalcParser.VarDeclarationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarDeclaration(MiniCalcParser.VarDeclarationContext ctx) { }
+	override fun exitVarDeclaration(ctx: MiniCalcParser.VarDeclarationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignment(MiniCalcParser.AssignmentContext ctx) { }
+	override fun enterAssignment(ctx: MiniCalcParser.AssignmentContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignment(MiniCalcParser.AssignmentContext ctx) { }
+	override fun exitAssignment(ctx: MiniCalcParser.AssignmentContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecimalLiteral(MiniCalcParser.DecimalLiteralContext ctx) { }
+	override fun enterDecimalLiteral(ctx: MiniCalcParser.DecimalLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecimalLiteral(MiniCalcParser.DecimalLiteralContext ctx) { }
+	override fun exitDecimalLiteral(ctx: MiniCalcParser.DecimalLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMinusExpression(MiniCalcParser.MinusExpressionContext ctx) { }
+	override fun enterMinusExpression(ctx: MiniCalcParser.MinusExpressionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMinusExpression(MiniCalcParser.MinusExpressionContext ctx) { }
+	override fun exitMinusExpression(ctx: MiniCalcParser.MinusExpressionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValueReference(MiniCalcParser.ValueReferenceContext ctx) { }
+	override fun enterValueReference(ctx: MiniCalcParser.ValueReferenceContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitValueReference(MiniCalcParser.ValueReferenceContext ctx) { }
+	override fun exitValueReference(ctx: MiniCalcParser.ValueReferenceContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStringLiteral(MiniCalcParser.StringLiteralContext ctx) { }
+	override fun enterStringLiteral(ctx: MiniCalcParser.StringLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStringLiteral(MiniCalcParser.StringLiteralContext ctx) { }
+	override fun exitStringLiteral(ctx: MiniCalcParser.StringLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIntLiteral(MiniCalcParser.IntLiteralContext ctx) { }
+	override fun enterIntLiteral(ctx: MiniCalcParser.IntLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIntLiteral(MiniCalcParser.IntLiteralContext ctx) { }
+	override fun exitIntLiteral(ctx: MiniCalcParser.IntLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParenExpression(MiniCalcParser.ParenExpressionContext ctx) { }
+	override fun enterParenExpression(ctx: MiniCalcParser.ParenExpressionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParenExpression(MiniCalcParser.ParenExpressionContext ctx) { }
+	override fun exitParenExpression(ctx: MiniCalcParser.ParenExpressionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinaryOperation(MiniCalcParser.BinaryOperationContext ctx) { }
+	override fun enterBinaryOperation(ctx: MiniCalcParser.BinaryOperationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinaryOperation(MiniCalcParser.BinaryOperationContext ctx) { }
+	override fun exitBinaryOperation(ctx: MiniCalcParser.BinaryOperationContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeConversion(MiniCalcParser.TypeConversionContext ctx) { }
+	override fun enterTypeConversion(ctx: MiniCalcParser.TypeConversionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeConversion(MiniCalcParser.TypeConversionContext ctx) { }
+	override fun exitTypeConversion(ctx: MiniCalcParser.TypeConversionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstantString(MiniCalcParser.ConstantStringContext ctx) { }
+	override fun enterConstantString(ctx: MiniCalcParser.ConstantStringContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstantString(MiniCalcParser.ConstantStringContext ctx) { }
+	override fun exitConstantString(ctx: MiniCalcParser.ConstantStringContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInterpolatedValue(MiniCalcParser.InterpolatedValueContext ctx) { }
+	override fun enterInterpolatedValue(ctx: MiniCalcParser.InterpolatedValueContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInterpolatedValue(MiniCalcParser.InterpolatedValueContext ctx) { }
+	override fun exitInterpolatedValue(ctx: MiniCalcParser.InterpolatedValueContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInteger(MiniCalcParser.IntegerContext ctx) { }
+	override fun enterInteger(ctx: MiniCalcParser.IntegerContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInteger(MiniCalcParser.IntegerContext ctx) { }
+	override fun exitInteger(ctx: MiniCalcParser.IntegerContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecimal(MiniCalcParser.DecimalContext ctx) { }
+	override fun enterDecimal(ctx: MiniCalcParser.DecimalContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecimal(MiniCalcParser.DecimalContext ctx) { }
+	override fun exitDecimal(ctx: MiniCalcParser.DecimalContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterString(MiniCalcParser.StringContext ctx) { }
+	override fun enterString(ctx: MiniCalcParser.StringContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitString(MiniCalcParser.StringContext ctx) { }
+	override fun exitString(ctx: MiniCalcParser.StringContext) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	fun enterEveryRule(ctx: ParserRuleContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	fun exitEveryRule(ctx: ParserRuleContext ) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	fun visitTerminal(node: TerminalNode ) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitErrorNode(ErrorNode node) { }
+	fun visitErrorNode(node: ErrorNode) { }
 }

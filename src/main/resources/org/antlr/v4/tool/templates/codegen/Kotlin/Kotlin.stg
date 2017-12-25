@@ -49,14 +49,8 @@ ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 package <file.genPackage>;
 <endif>
 <namedActions.header>
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+import com.strumenta.kotlinmultiplatform.Arrays
+import org.antlr.v4.kotlinruntime.facade.*
 
 <parser>
 >>
@@ -67,13 +61,14 @@ ListenerFile(file, header, namedActions) ::= <<
 package <file.genPackage>;
 <endif>
 <header>
-import org.antlr.v4.runtime.tree.ParseTreeListener;
+
+import org.antlr.v4.kotlinruntime.facade.ParseTreeListener
 
 /**
  * This interface defines a complete listener for a parse tree produced by
  * {@link <file.parserName>}.
  */
-public interface <file.grammarName>Listener extends ParseTreeListener {
+interface <file.grammarName>Listener : ParseTreeListener {
 	<file.listenerNames:{lname |
 /**
 <if(file.listenerLabelRuleNames.(lname))>
@@ -84,7 +79,7 @@ public interface <file.grammarName>Listener extends ParseTreeListener {
 <endif>
  * @param ctx the parse tree
  */
-void enter<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx);
+fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context);
 /**
 <if(file.listenerLabelRuleNames.(lname))>
  * Exit a parse tree produced by the {@code <lname>\}
@@ -94,7 +89,7 @@ void enter<lname; format="cap">(<file.parserName>.<lname; format="cap">Context c
 <endif>
  * @param ctx the parse tree
  */
-void exit<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx);}; separator="\n">
+fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)}; separator="\n">
 }
 >>
 
@@ -105,54 +100,54 @@ package <file.genPackage>;
 <endif>
 <header>
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.kotlinruntime.facade.ErrorNode
+import org.antlr.v4.kotlinruntime.facade.ParserRuleContext
+import org.antlr.v4.kotlinruntime.facade.TerminalNode
 
 /**
  * This class provides an empty implementation of {@link <file.grammarName>Listener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class <file.grammarName>BaseListener implements <file.grammarName>Listener {
+class <file.grammarName>BaseListener : <file.grammarName>Listener {
 	<file.listenerNames:{lname |
 /**
  * {@inheritDoc\}
  *
  * \<p>The default implementation does nothing.\</p>
  */
-@Override public void enter<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx) { \}
+override fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) { \}
 /**
  * {@inheritDoc\}
  *
  * \<p>The default implementation does nothing.\</p>
  */
-@Override public void exit<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx) { \}}; separator="\n">
+override fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) { \}}; separator="\n">
 
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	fun enterEveryRule(ctx: ParserRuleContext) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	fun exitEveryRule(ctx: ParserRuleContext ) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	fun visitTerminal(node: TerminalNode ) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	@Override public void visitErrorNode(ErrorNode node) { }
+	fun visitErrorNode(node: ErrorNode) { }
 }
 >>
 
@@ -171,7 +166,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  * @param \<T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-public interface <file.grammarName>Visitor\<T> extends ParseTreeVisitor\<T> {
+interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
 	<file.visitorNames:{lname |
 /**
 <if(file.visitorLabelRuleNames.(lname))>
@@ -203,7 +198,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * @param \<T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-public class <file.grammarName>BaseVisitor\<T> extends AbstractParseTreeVisitor\<T> implements <file.grammarName>Visitor\<T> {
+class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>, s <file.grammarName>Visitor\<T> {
 	<file.visitorNames:{lname |
 /**
  * {@inheritDoc\}
@@ -224,6 +219,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
+
 class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.grammarFileName>", input) {
 	// TODO verify version of runtime is compatible
 
@@ -244,28 +240,27 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.g
         val ruleNames = arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
+
+        <atn>
 	}
 
 	private val interpreter : ParserATNSimulator
 
-	<atn>
+
 
 	<namedActions.members>
 	<parser:(ctor)()>
 	<funcs; separator="\n">
 
 <if(sempredFuncs)>
-	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
-		switch (ruleIndex) {
-		<parser.sempredFuncs.values:{f|
-case <f.ruleIndex>:
-	return <f.name>_sempred((<f.ctxType>)_localctx, predIndex);}; separator="\n">
+	fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
+		when (ruleIndex) {
+		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred((<f.ctxType>)_localctx, predIndex)}; separator="\n">
 		}
-		return true;
+		return true
 	}
 	<sempredFuncs.values; separator="\n">
 <endif>
-
 
 }
 >>
@@ -279,26 +274,21 @@ val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
 
 dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
 <if(actionFuncs)>
-@Override
-public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
-	switch (ruleIndex) {
+fun action(RuleContext _localctx, int ruleIndex, int actionIndex) {
+	when (ruleIndex) {
 	<recog.actionFuncs.values:{f|
-case <f.ruleIndex>:
-	<f.name>_action((<f.ctxType>)_localctx, actionIndex);
-	break;}; separator="\n">
+    <f.ruleIndex> -> <f.name>_action((<f.ctxType>)_localctx, actionIndex);}; separator="\n">
 	}
 }
 <actionFuncs.values; separator="\n">
 <endif>
 <if(sempredFuncs)>
-@Override
-public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
-	switch (ruleIndex) {
+fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
+	when (ruleIndex) {
 	<recog.sempredFuncs.values:{f|
-case <f.ruleIndex>:
-	return <f.name>_sempred((<f.ctxType>)_localctx, predIndex);}; separator="\n">
+<f.ruleIndex> -> return <f.name>_sempred((<f.ctxType>)_localctx, predIndex)}; separator="\n">
 	}
-	return true;
+	return true
 }
 <sempredFuncs.values; separator="\n">
 <endif>
@@ -306,7 +296,7 @@ case <f.ruleIndex>:
 
 parser_ctor(p) ::= <<
 init {
-	interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
+	interpreter = createParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
 }
 >>
 
@@ -314,12 +304,10 @@ init {
  * overriding implementation impossible to maintain.
  */
 RuleActionFunction(r, actions) ::= <<
-private void <r.name>_action(<r.ctxType> _localctx, int actionIndex) {
+private fun <r.name>_action(<r.ctxType> _localctx, int actionIndex) {
 	switch (actionIndex) {
 	<actions:{index|
-case <index>:
-	<actions.(index)>
-	break;}; separator="\n">
+    <index> -> <actions.(index)>}; separator="\n">
 	}
 }
 >>
@@ -328,13 +316,12 @@ case <index>:
  * overriding implementation impossible to maintain.
  */
 RuleSempredFunction(r, actions) ::= <<
-private boolean <r.name>_sempred(<r.ctxType> _localctx, int predIndex) {
-	switch (predIndex) {
+private fun <r.name>_sempred(<r.ctxType> _localctx, int predIndex) : Boolean {
+	when (predIndex) {
 	<actions:{index|
-case <index>:
-	return <actions.(index)>;}; separator="\n">
+    <index> -> return <actions.(index)>}; separator="\n">
 	}
-	return true;
+	return true
 }
 >>
 
@@ -343,14 +330,14 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public final <endif><currentRule.ctxType> <currentRule.name>(<args; separator=",">) throws RecognitionException {
-	<currentRule.ctxType> _localctx = new <currentRule.ctxType>(_ctx, getState()<currentRule.args:{a | , <a.name>}>);
-	enterRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>);
+fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <currentRule.name>(<args; separator=",">) : <currentRule.ctxType> {
+	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(_ctx, getState()<currentRule.args:{a | , <a.name>}>)
+	enterRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>)
 	<namedActions.init>
 	<locals; separator="\n">
 	try {
 <if(currentRule.hasLookaheadBlock)>
-		int _alt;
+		var _alt: Int
 <endif>
 		<code>
 		<postamble; separator="\n">
@@ -359,17 +346,17 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 	<if(exceptions)>
 	<exceptions; separator="\n">
 	<else>
-	catch (RecognitionException re) {
-		_localctx.exception = re;
-		_errHandler.reportError(this, re);
-		_errHandler.recover(this, re);
+	catch (re: RecognitionException) {
+		_localctx.exception = re
+		_errHandler.reportError(this, re)
+		_errHandler.recover(this, re)
 	}
 	<endif>
 	finally {
 		<finallyAction>
-		exitRule();
+		exitRule()
 	}
-	return _localctx;
+	return _localctx
 }
 >>
 
@@ -384,39 +371,39 @@ LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
 	return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>);
 }
 
-private <currentRule.ctxType> <currentRule.name>(int _p<args:{a | , <a>}>) throws RecognitionException {
-	ParserRuleContext _parentctx = _ctx;
-	int _parentState = getState();
-	<currentRule.ctxType> _localctx = new <currentRule.ctxType>(_ctx, _parentState<currentRule.args:{a | , <a.name>}>);
-	<currentRule.ctxType> _prevctx = _localctx;
-	int _startState = <currentRule.startState>;
-	enterRecursionRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>, _p);
+private <currentRule.ctxType> <currentRule.name>(_p: Int<args:{a | , <a>}>) {
+	_parentctx : ParserRuleContext= _ctx
+	_parentState : Int = getState()
+	_localctx : <currentRule.ctxType>= <currentRule.ctxType>(_ctx, _parentState<currentRule.args:{a | , <a.name>}>)
+	_prevctx : <currentRule.ctxType>= _localctx
+	_startState : Int = <currentRule.startState>
+	enterRecursionRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>, _p)
 	<namedActions.init>
 	<locals; separator="\n">
 	try {
 <if(currentRule.hasLookaheadBlock)>
-		int _alt;
+		_alt: Int
 <endif>
 		<code>
 		<postamble; separator="\n">
 		<namedActions.after>
 	}
 	catch (RecognitionException re) {
-		_localctx.exception = re;
-		_errHandler.reportError(this, re);
-		_errHandler.recover(this, re);
+		_localctx.exception = re
+		_errHandler.reportError(this, re)
+		_errHandler.recover(this, re)
 	}
 	finally {
 		<finallyAction>
-		unrollRecursionContexts(_parentctx);
+		unrollRecursionContexts(_parentctx)
 	}
-	return _localctx;
+	return _localctx
 }
 >>
 
 CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= <<
-<if(currentOuterMostAltCodeBlock.altLabel)>_localctx = new <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx);<endif>
-enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>);
+<if(currentOuterMostAltCodeBlock.altLabel)>_localctx = <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx)<endif>
+enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 <CodeBlockForAlt(currentAltCodeBlock=currentOuterMostAltCodeBlock, ...)>
 >>
 
@@ -433,24 +420,20 @@ setState(<choice.stateNumber>);
 _errHandler.sync(this);
 <if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
 <preamble; separator="\n">
-switch (_input.LA(1)) {
+when (_input.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
-	<alt>
-	break;}; separator="\n">
-default:
-	<error>
+	<alt>}; separator="\n">
+else -> <error>
 }
 >>
 
 LL1OptionalBlock(choice, alts, error) ::= <<
 setState(<choice.stateNumber>);
 _errHandler.sync(this);
-switch (_input.LA(1)) {
+when (_input.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
-	<alt>
-	break;}; separator="\n">
-default:
-	break;
+	<alt>}; separator="\n">
+else -> ;
 }
 >>
 
@@ -485,7 +468,7 @@ do {
 	setState(<choice.stateNumber>); <! loopback/exit decision !>
 	_errHandler.sync(this);
 	<iteration>
-} while ( <loopExpr> );
+} while ( <loopExpr> )
 >>
 
 // LL(*) stuff
@@ -495,22 +478,18 @@ setState(<choice.stateNumber>);
 _errHandler.sync(this);
 <if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
 <preamble; separator="\n">
-switch ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
-<alts:{alt |
-case <i>:
-	<alt>
-	break;}; separator="\n">
+when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
+<alts:{alt |<i> -> <alt>}; separator="\n">
 }
 >>
 
 OptionalBlock(choice, alts, error) ::= <<
 setState(<choice.stateNumber>);
 _errHandler.sync(this);
-switch ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
+when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
 <alts:{alt |
-case <i><if(!choice.ast.greedy)>+1<endif>:
-	<alt>
-	break;}; separator="\n">
+<i> -> <if(!choice.ast.greedy)>+1<endif>:
+	<alt>}; separator="\n">
 }
 >>
 
@@ -536,21 +515,18 @@ _alt = 1<if(!choice.ast.greedy)>+1<endif>;
 do {
 	switch (_alt) {
 	<alts:{alt|
-case <i><if(!choice.ast.greedy)>+1<endif>:
-	<alt>
-	break;}; separator="\n">
-	default:
-		<error>
+    <i><if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
+	else -> <error>
 	}
 	setState(<choice.loopBackStateNumber>); <! loopback/exit decision !>
 	_errHandler.sync(this);
 	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx);
-} while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+} while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER )
 >>
 
 Sync(s) ::= "sync(<s.expecting.name>);"
 
-ThrowNoViableAlt(t) ::= "throw new NoViableAltException(this);"
+ThrowNoViableAlt(t) ::= "throw NoViableAltException(this)"
 
 TestSetInline(s) ::= <<
 <s.bitsets:{bits | <if(rest(rest(bits.ttypes)))><bitsetBitfieldComparison(s, bits)><else><bitsetInlineComparison(s, bits)><endif>}; separator=" || ">
@@ -558,12 +534,12 @@ TestSetInline(s) ::= <<
 
 // Java language spec 15.19 - shift operators mask operands rather than overflow to 0... need range test
 testShiftInRange(shiftAmount) ::= <<
-((<shiftAmount>) & ~0x3f) == 0
+((<shiftAmount>) and 0x3f.inv) == 0
 >>
 
 // produces smaller bytecode only when bits.ttypes contains more than two items
 bitsetBitfieldComparison(s, bits) ::= <%
-(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L \<\< <offsetShift(s.varName, bits.shift)>) & (<bits.ttypes:{ttype | (1L \<\< <offsetShift(ttype, bits.shift)>)}; separator=" | ">)) != 0)
+(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and (<bits.ttypes:{ttype | (1L shl <offsetShift(ttype, bits.shift)>)}; separator=" or ">)) != 0)
 %>
 
 isZero ::= [
@@ -581,16 +557,15 @@ bitsetInlineComparison(s, bits) ::= <%
 %>
 
 cases(ttypes) ::= <<
-<ttypes:{t | case <t>:}; separator="\n">
->>
+<ttypes:{t | <t> ->}; separator=" "> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
-setState(<r.stateNumber>);
+setState(<r.stateNumber>)
 <if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.name>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>);
 >>
 
 MatchToken(m) ::= <<
-setState(<m.stateNumber>);
+setState(<m.stateNumber>)
 <if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>);
 >>
 
@@ -599,7 +574,7 @@ MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
 MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
-setState(<m.stateNumber>);
+setState(<m.stateNumber>)
 <if(m.labels)><m.labels:{l | <labelref(l)> = }>_input.LT(1);<endif>
 <capture>
 if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
@@ -625,7 +600,7 @@ ArgAction(a, chunks) ::= "<chunks>"
 
 SemPred(p, chunks, failChunks) ::= <<
 setState(<p.stateNumber>);
-if (!(<chunks>)) throw new FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>);
+if (!(<chunks>)) throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>);
 >>
 
 ExceptionClause(e, catchArg, catchAction) ::= <<
@@ -686,11 +661,11 @@ SetNonLocalAttr(s, rhsChunks)	  ::=
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>);"
 
-TokenDecl(t) ::= "<t.name>: <TokenLabelType()>"
-TokenTypeDecl(t) ::= "int <t.name>;"
-TokenListDecl(t) ::= "List\<Token> <t.name> = new ArrayList\<Token>()"
-RuleContextDecl(r) ::= "<r.name>: <r.ctxName>"
-RuleContextListDecl(rdecl) ::= "List\<<rdecl.ctxName>> <rdecl.name> = new ArrayList\<<rdecl.ctxName>>()"
+TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>"
+TokenTypeDecl(t) ::= "var <t.name>: Int"
+TokenListDecl(t) ::= "var <t.name> : List\<Token>= ArrayList\<Token>()"
+RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>"
+RuleContextListDecl(rdecl) ::= "var <rdecl.name> : List\<<rdecl.ctxName>>= ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
     "fun <t.name>() : TerminalNode = return getToken(<parser.name>.<t.name>, 0)"
@@ -700,13 +675,13 @@ ContextTokenListIndexedGetterDecl(t)  ::= <<
 fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.<t.name>, i)
 >>
 ContextRuleGetterDecl(r)       ::= <<
-fun <r.name>() : <r.ctxName> = getRuleContext(<r.ctxName>.class,0)
+fun <r.name>() : <r.ctxName>? = getRuleContext("<r.ctxName>",0)
 >>
 ContextRuleListGetterDecl(r)   ::= <<
-fun <r.name>() : List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>.class);
+fun <r.name>() : List\<<r.ctxName>\> = getRuleContexts("<r.ctxName>")
 >>
 ContextRuleListIndexedGetterDecl(r)   ::= <<
-fun <r.name>(i: Int) : <r.ctxName> = getRuleContext(<r.ctxName>.class,i)
+fun <r.name>(i: Int) : <r.ctxName>? = getRuleContext("<r.ctxName>",i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
@@ -727,56 +702,54 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1);"
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
 class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
-	<attrs:{a | var <a>}; separator="\n">
+	<attrs:{a | <a>? = null}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
 	<if(ctorAttrs)>constructor(parent: ParserRuleContext, invokingState: int) : super(parent, invokingState){ ; }<endif>
 	constructor(parent: ParserRuleContext, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
 		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
 	}
-	override fun getRuleIndex() = Rules.RULE_<struct.derivedFromName>
+	override fun getRuleIndex() = Rules.RULE_<struct.derivedFromName>.id
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
-	public <struct.name>() { }
-	public void copyFrom(<struct.name> ctx) {
-		super.copyFrom(ctx);
+	constructor () { }
+	fun copyFrom(ctx: <struct.name>) {
+		super.copyFrom(ctx)
 		<struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
 	}
 <endif>
-	/*<dispatchMethods; separator="\n">
-	<extensionMembers; separator="\n">*/
+	<dispatchMethods; separator="\n">
+	<extensionMembers; separator="\n">
 }
 >>
 
 AltLabelStructDecl(struct,attrs,getters,dispatchMethods) ::= <<
-public static class <struct.name> extends <currentRule.name; format="cap">Context {
-	<attrs:{a | public <a>;}; separator="\n">
+class <struct.name> : <currentRule.name; format="cap">Context {
+	<attrs:{a | public <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
-	public <struct.name>(<currentRule.name; format="cap">Context ctx) { copyFrom(ctx); }
+	constructor(ctx: <currentRule.name; format="cap">Context) { copyFrom(ctx) }
 	<dispatchMethods; separator="\n">
 }
 >>
 
 ListenerDispatchMethod(method) ::= <<
-@Override
-public void <if(method.isEnter)>enter<else>exit<endif>Rule(ParseTreeListener listener) {
-	if ( listener instanceof <parser.grammarName>Listener ) ((<parser.grammarName>Listener)listener).<if(method.isEnter)>enter<else>exit<endif><struct.derivedFromName; format="cap">(this);
+fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeListener) {
+	if ( listener is <parser.grammarName>Listener ) (listener as <parser.grammarName>Listener).<if(method.isEnter)>enter<else>exit<endif><struct.derivedFromName; format="cap">(this)
 }
 >>
 
 VisitorDispatchMethod(method) ::= <<
-@Override
-public \<T> T accept(ParseTreeVisitor\<? extends T> visitor) {
-	if ( visitor instanceof <parser.grammarName>Visitor ) return ((<parser.grammarName>Visitor\<? extends T>)visitor).visit<struct.derivedFromName; format="cap">(this);
-	else return visitor.visitChildren(this);
+fun \<T> accept(visitor : ParseTreeVisitor\<? extends T>) : T {
+	if ( visitor is <parser.grammarName>Visitor ) return (visitor as <parser.grammarName>Visitor\<? extends T>).visit<struct.derivedFromName; format="cap">(this)
+	else return visitor.visitChildren(this)
 }
 >>
 
 AttributeDecl(d) ::= "<d.name> : <d.type><if(d.initValue)> = <d.initValue><endif>"
 
 /** If we don't know location of label def x, use this template */
-labelref(x) ::= "<if(!x.isLocal)>((<x.ctx.name>)_localctx).<endif><x.name>"
+labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.name>"
 
 /** For any action chunk, what is correctly-typed context struct ptr? */
-ctx(actionChunk) ::= "((<actionChunk.ctx.name>)_localctx)"
+ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
 
 // used for left-recursive rules
 recRuleAltPredicate(ruleName,opPrec)  ::= "precpred(_ctx, <opPrec>)"
@@ -784,7 +757,7 @@ recRuleSetReturnAction(src,name)	  ::= "$<name>=$<src>.<name>;"
 recRuleSetStopToken()                 ::= "_ctx.stop = _input.LT(-1);"
 
 recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
-_localctx = new <ctxName>Context(_parentctx, _parentState);
+_localctx = <ctxName>Context(_parentctx, _parentState)
 <if(label)>
 <if(isListLabel)>
 _localctx.<label>.add(_prevctx);
@@ -797,26 +770,26 @@ pushNewRecursionContext(_localctx, _startState, RULE_<ruleName>);
 >>
 
 recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
-_localctx = new <currentAltLabel; format="cap">Context(new <ruleName; format="cap">Context(_parentctx, _parentState));
+_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
-((<currentAltLabel; format="cap">Context)_localctx).<label>.add(_prevctx);
+((<currentAltLabel; format="cap">Context)_localctx).<label>.add(_prevctx)
 <else>
-((<currentAltLabel; format="cap">Context)_localctx).<label> = _prevctx;
+((<currentAltLabel; format="cap">Context)_localctx).<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, RULE_<ruleName>);
+pushNewRecursionContext(_localctx, _startState, RULE_<ruleName>)
 >>
 
 recRuleReplaceContext(ctxName) ::= <<
-_localctx = new <ctxName>Context(_localctx);
-_ctx = _localctx;
-_prevctx = _localctx;
+_localctx = <ctxName>Context(_localctx)
+_ctx = _localctx
+_prevctx = _localctx
 >>
 
 recRuleSetPrevCtx() ::= <<
-if ( _parseListeners!=null ) triggerExitRuleEvent();
-_prevctx = _localctx;
+if ( _parseListeners!=null ) triggerExitRuleEvent()
+_prevctx = _localctx
 >>
 
 
