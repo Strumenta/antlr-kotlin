@@ -255,12 +255,16 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.g
 <if(sempredFuncs)>
 	fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
 		when (ruleIndex) {
-		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred((<f.ctxType>)_localctx, predIndex)}; separator="\n">
+		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
 		}
 		return true
 	}
 	<sempredFuncs.values; separator="\n">
 <endif>
+
+	override fun getATN() = ATN
+	override fun getRuleNames(): Array<String> = ruleNames
+	override fun getTokenNames(): Array<String> = tokenNames
 
 }
 >>
@@ -286,7 +290,7 @@ fun action(RuleContext _localctx, int ruleIndex, int actionIndex) {
 fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
 	when (ruleIndex) {
 	<recog.sempredFuncs.values:{f|
-<f.ruleIndex> -> return <f.name>_sempred((<f.ctxType>)_localctx, predIndex)}; separator="\n">
+<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
 	}
 	return true
 }
@@ -316,7 +320,7 @@ private fun <r.name>_action(<r.ctxType> _localctx, int actionIndex) {
  * overriding implementation impossible to maintain.
  */
 RuleSempredFunction(r, actions) ::= <<
-private fun <r.name>_sempred(<r.ctxType> _localctx, int predIndex) : Boolean {
+private fun <r.name>_sempred( _localctx : <r.ctxType>, predIndex: Int) : Boolean {
 	when (predIndex) {
 	<actions:{index|
     <index> -> return <actions.(index)>}; separator="\n">
@@ -332,7 +336,7 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 
 fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <currentRule.name>(<args; separator=",">) : <currentRule.ctxType> {
 	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(_ctx, getState()<currentRule.args:{a | , <a.name>}>)
-	enterRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>)
+	enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
 	<namedActions.init>
 	<locals; separator="\n">
 	try {
@@ -367,28 +371,28 @@ LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public final <endif><currentRule.ctxType> <currentRule.name>(<args; separator=", ">) throws RecognitionException {
+<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> fun <currentRule.name>(<args; separator=", ">) : <currentRule.ctxType> {
 	return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>);
 }
 
-private <currentRule.ctxType> <currentRule.name>(_p: Int<args:{a | , <a>}>) {
-	_parentctx : ParserRuleContext= _ctx
-	_parentState : Int = getState()
-	_localctx : <currentRule.ctxType>= <currentRule.ctxType>(_ctx, _parentState<currentRule.args:{a | , <a.name>}>)
-	_prevctx : <currentRule.ctxType>= _localctx
-	_startState : Int = <currentRule.startState>
-	enterRecursionRule(_localctx, <currentRule.startState>, RULE_<currentRule.name>, _p)
+private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType> {
+	var _parentctx : ParserRuleContext = _ctx
+	var _parentState : Int = getState()
+	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(_ctx, _parentState<currentRule.args:{a | , <a.name>}>)
+	var _prevctx : <currentRule.ctxType>= _localctx
+	var _startState : Int = <currentRule.startState>
+	enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
 	<namedActions.init>
 	<locals; separator="\n">
 	try {
 <if(currentRule.hasLookaheadBlock)>
-		_alt: Int
+		var _alt: Int
 <endif>
 		<code>
 		<postamble; separator="\n">
 		<namedActions.after>
 	}
-	catch (RecognitionException re) {
+	catch (re: RecognitionException) {
 		_localctx.exception = re
 		_errHandler.reportError(this, re)
 		_errHandler.recover(this, re)
@@ -401,14 +405,14 @@ private <currentRule.ctxType> <currentRule.name>(_p: Int<args:{a | , <a>}>) {
 }
 >>
 
-CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= <<
-<if(currentOuterMostAltCodeBlock.altLabel)>_localctx = <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx)<endif>
+CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= << <if(currentOuterMostAltCodeBlock.altLabel)>_localctx = <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx)<endif>
 enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 <CodeBlockForAlt(currentAltCodeBlock=currentOuterMostAltCodeBlock, ...)>
 >>
 
 CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
-{
+/*CodeBlockForAlt*/
+if (true){
 <locals; separator="\n">
 <preamble; separator="\n">
 <ops; separator="\n">
@@ -416,20 +420,19 @@ CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
 >>
 
 LL1AltBlock(choice, preamble, alts, error) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
-<if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
+setState(<choice.stateNumber>)
+_errHandler.sync(this)
+<if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
 <preamble; separator="\n">
 when (_input.LA(1)) {
-<choice.altLook,alts:{look,alt| <cases(ttypes=look)>
-	<alt>}; separator="\n">
+<choice.altLook,alts:{look,alt| <cases(ttypes=look)> /*LL1AltBlock*/{<alt>\}}; separator="\n">
 else -> <error>
 }
 >>
 
 LL1OptionalBlock(choice, alts, error) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
+setState(<choice.stateNumber>)
+_errHandler.sync(this)
 when (_input.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
 	<alt>}; separator="\n">
@@ -438,8 +441,8 @@ else -> ;
 >>
 
 LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
+setState(<choice.stateNumber>)
+_errHandler.sync(this)
 <preamble; separator="\n">
 if (<expr>) {
 	<alts; separator="\n">
@@ -448,25 +451,25 @@ if (<expr>) {
 >>
 
 LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
-setState(<choice.stateNumber>);
+setState(<choice.stateNumber>)
 _errHandler.sync(this);
 <preamble; separator="\n">
 while (<loopExpr>) {
 	<alts; separator="\n">
 	setState(<choice.loopBackStateNumber>);
-	_errHandler.sync(this);
+	_errHandler.sync(this)
 	<iteration>
 }
 >>
 
 LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
 setState(<choice.blockStartStateNumber>); <! alt block decision !>
-_errHandler.sync(this);
+_errHandler.sync(this)
 <preamble; separator="\n">
 do {
 	<alts; separator="\n">
-	setState(<choice.stateNumber>); <! loopback/exit decision !>
-	_errHandler.sync(this);
+	setState(<choice.stateNumber>) <! loopback/exit decision !>
+	_errHandler.sync(this)
 	<iteration>
 } while ( <loopExpr> )
 >>
@@ -474,8 +477,8 @@ do {
 // LL(*) stuff
 
 AltBlock(choice, preamble, alts, error) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
+setState(<choice.stateNumber>)
+_errHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
 <preamble; separator="\n">
 when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
@@ -484,47 +487,46 @@ when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
 >>
 
 OptionalBlock(choice, alts, error) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
+setState(<choice.stateNumber>)
+_errHandler.sync(this)
 when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
 <alts:{alt |
-<i> -> <if(!choice.ast.greedy)>+1<endif>:
-	<alt>}; separator="\n">
+<i>  <if(!choice.ast.greedy)>+1<endif>: -> <alt>}; separator="\n">
 }
 >>
 
 StarBlock(choice, alts, sync, iteration) ::= <<
 setState(<choice.stateNumber>);
 _errHandler.sync(this);
-_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx);
+_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx)
 while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
 		<iteration>
 		<alts> <! should only be one !>
 	}
-	setState(<choice.loopBackStateNumber>);
-	_errHandler.sync(this);
-	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx);
+	setState(<choice.loopBackStateNumber>)
+	_errHandler.sync(this)
+	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx)
 }
 >>
 
 PlusBlock(choice, alts, error) ::= <<
 setState(<choice.blockStartStateNumber>); <! alt block decision !>
-_errHandler.sync(this);
+_errHandler.sync(this)
 _alt = 1<if(!choice.ast.greedy)>+1<endif>;
 do {
-	switch (_alt) {
+	when (_alt) {
 	<alts:{alt|
     <i><if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
 	else -> <error>
 	}
-	setState(<choice.loopBackStateNumber>); <! loopback/exit decision !>
-	_errHandler.sync(this);
+	setState(<choice.loopBackStateNumber>) <! loopback/exit decision !>
+	_errHandler.sync(this)
 	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx);
 } while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER )
 >>
 
-Sync(s) ::= "sync(<s.expecting.name>);"
+Sync(s) ::= "sync(<s.expecting.name>)"
 
 ThrowNoViableAlt(t) ::= "throw NoViableAltException(this)"
 
@@ -578,7 +580,7 @@ setState(<m.stateNumber>)
 <if(m.labels)><m.labels:{l | <labelref(l)> = }>_input.LT(1);<endif>
 <capture>
 if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
-	<if(m.labels)><m.labels:{l | <labelref(l)> = (Token)}><endif>_errHandler.recoverInline(this);
+	<if(m.labels)><m.labels:{l | <labelref(l)> = _errHandler.recoverInline(this) as Token}><else>_errHandler.recoverInline(this)<endif>
 }
 else {
 	if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -663,12 +665,12 @@ AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>);"
 
 TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>"
 TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "var <t.name> : List\<Token>= ArrayList\<Token>()"
+TokenListDecl(t) ::= "var <t.name> : List\<Token> = ArrayList\<Token>()"
 RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>"
-RuleContextListDecl(rdecl) ::= "var <rdecl.name> : List\<<rdecl.ctxName>>= ArrayList\<<rdecl.ctxName>>()"
+RuleContextListDecl(rdecl) ::= "var <rdecl.name> : List\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
-    "fun <t.name>() : TerminalNode = return getToken(<parser.name>.<t.name>, 0)"
+    "fun <t.name>() : TerminalNode = getToken(<parser.name>.<t.name>, 0)"
 ContextTokenListGetterDecl(t)  ::=
     "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.<t.name>)"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
@@ -731,7 +733,7 @@ class <struct.name> : <currentRule.name; format="cap">Context {
 >>
 
 ListenerDispatchMethod(method) ::= <<
-fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeListener) {
+override fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeListener) {
 	if ( listener is <parser.grammarName>Listener ) (listener as <parser.grammarName>Listener).<if(method.isEnter)>enter<else>exit<endif><struct.derivedFromName; format="cap">(this)
 }
 >>
@@ -756,8 +758,7 @@ recRuleAltPredicate(ruleName,opPrec)  ::= "precpred(_ctx, <opPrec>)"
 recRuleSetReturnAction(src,name)	  ::= "$<name>=$<src>.<name>;"
 recRuleSetStopToken()                 ::= "_ctx.stop = _input.LT(-1);"
 
-recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
-_localctx = <ctxName>Context(_parentctx, _parentState)
+recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<_localctx = <ctxName>Context(_parentctx, _parentState)
 <if(label)>
 <if(isListLabel)>
 _localctx.<label>.add(_prevctx);
@@ -766,23 +767,21 @@ _localctx.<label> = _prevctx;
 <endif>
 <endif>
 <if(label)>_localctx.<label> = _prevctx;<endif>
-pushNewRecursionContext(_localctx, _startState, RULE_<ruleName>);
+pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id);
 >>
 
-recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
-_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
+recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
-((<currentAltLabel; format="cap">Context)_localctx).<label>.add(_prevctx)
+(_localctx as <currentAltLabel; format="cap">Context).<label>.add(_prevctx)
 <else>
-((<currentAltLabel; format="cap">Context)_localctx).<label> = _prevctx
+(_localctx as <currentAltLabel; format="cap">Context).<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, RULE_<ruleName>)
+pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
 >>
 
-recRuleReplaceContext(ctxName) ::= <<
-_localctx = <ctxName>Context(_localctx)
+recRuleReplaceContext(ctxName) ::= <<_localctx = <ctxName>Context(_localctx)
 _ctx = _localctx
 _prevctx = _localctx
 >>

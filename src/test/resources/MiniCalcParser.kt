@@ -162,33 +162,36 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_miniCalcFile.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterMiniCalcFile(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitMiniCalcFile(this)
 		}
 	}
 
 	fun  miniCalcFile() : MiniCalcFileContext {
 		var _localctx : MiniCalcFileContext = MiniCalcFileContext(_ctx, getState())
-		enterRule(_localctx, 0, RULE_miniCalcFile)
+		enterRule(_localctx, 0, Rules.RULE_miniCalcFile.id)
 		var _la: Int
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
+			/*CodeBlockForAlt*/
+			if (true){
 			setState(21); 
-			_errHandler.sync(this);
+			_errHandler.sync(this)
 			_la = _input.LA(1);
 			do {
-				{
-				{
-				setState(20);
+				/*CodeBlockForAlt*/
+				if (true){
+				/*CodeBlockForAlt*/
+				if (true){
+				setState(20)
 				(_localctx as MiniCalcFileContext).lines = line();
 				}
 				}
-				setState(23); 
-				_errHandler.sync(this);
+				setState(23) 
+				_errHandler.sync(this)
 				_la = _input.LA(1);
 			} while ( (((_la) and 0x3f.inv) == 0 && ((1L shl _la) and ((1L shl INPUT) or (1L shl VAR) or (1L shl PRINT) or (1L shl ID))) != 0) )
 			}
@@ -206,32 +209,33 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 
 	class LineContext : ParserRuleContext {
 		fun statement() : StatementContext? = getRuleContext("StatementContext",0)
-		fun NEWLINE() : TerminalNode = return getToken(MiniCalcParser.NEWLINE, 0)
-		fun EOF() : TerminalNode = return getToken(MiniCalcParser.EOF, 0)
+		fun NEWLINE() : TerminalNode = getToken(MiniCalcParser.NEWLINE, 0)
+		fun EOF() : TerminalNode = getToken(MiniCalcParser.EOF, 0)
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_line.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterLine(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitLine(this)
 		}
 	}
 
 	fun  line() : LineContext {
 		var _localctx : LineContext = LineContext(_ctx, getState())
-		enterRule(_localctx, 2, RULE_line)
+		enterRule(_localctx, 2, Rules.RULE_line.id)
 		var _la: Int
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(25);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(25)
 			statement();
-			setState(26);
+			setState(26)
 			_la = _input.LA(1);
 			if ( !(_la==EOF || _la==NEWLINE) ) {
-			_errHandler.recoverInline(this);
+				_errHandler.recoverInline(this)
 			}
 			else {
 				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -264,79 +268,79 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 	class PrintStatementContext : StatementContext {
 		fun print() : PrintContext? = getRuleContext("PrintContext",0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterPrintStatement(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitPrintStatement(this)
 		}
 	}
 	class AssignmentStatementContext : StatementContext {
 		fun assignment() : AssignmentContext? = getRuleContext("AssignmentContext",0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterAssignmentStatement(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitAssignmentStatement(this)
 		}
 	}
 	class InputDeclarationStatementContext : StatementContext {
 		fun inputDeclaration() : InputDeclarationContext? = getRuleContext("InputDeclarationContext",0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInputDeclarationStatement(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInputDeclarationStatement(this)
 		}
 	}
 	class VarDeclarationStatementContext : StatementContext {
 		fun varDeclaration() : VarDeclarationContext? = getRuleContext("VarDeclarationContext",0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterVarDeclarationStatement(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitVarDeclarationStatement(this)
 		}
 	}
 
 	fun  statement() : StatementContext {
 		var _localctx : StatementContext = StatementContext(_ctx, getState())
-		enterRule(_localctx, 4, RULE_statement)
+		enterRule(_localctx, 4, Rules.RULE_statement.id)
 		try {
-			setState(32);
-			_errHandler.sync(this);
+			setState(32)
+			_errHandler.sync(this)
 			when (_input.LA(1)) {
-			INPUT -> 
-				_localctx = InputDeclarationStatementContext(_localctx)
-				enterOuterAlt(_localctx, 1)
-				{
-				setState(28);
-				inputDeclaration();
-				}
-			VAR -> 
-				_localctx = VarDeclarationStatementContext(_localctx)
-				enterOuterAlt(_localctx, 2)
-				{
-				setState(29);
-				varDeclaration();
-				}
-			ID -> 
-				_localctx = AssignmentStatementContext(_localctx)
-				enterOuterAlt(_localctx, 3)
-				{
-				setState(30);
-				assignment();
-				}
-			PRINT -> 
-				_localctx = PrintStatementContext(_localctx)
-				enterOuterAlt(_localctx, 4)
-				{
-				setState(31);
-				print();
-				}
+			INPUT ->  /*LL1AltBlock*/{_localctx = InputDeclarationStatementContext(_localctx)
+			enterOuterAlt(_localctx, 1)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(28)
+			inputDeclaration();
+			}}
+			VAR ->  /*LL1AltBlock*/{_localctx = VarDeclarationStatementContext(_localctx)
+			enterOuterAlt(_localctx, 2)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(29)
+			varDeclaration();
+			}}
+			ID ->  /*LL1AltBlock*/{_localctx = AssignmentStatementContext(_localctx)
+			enterOuterAlt(_localctx, 3)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(30)
+			assignment();
+			}}
+			PRINT ->  /*LL1AltBlock*/{_localctx = PrintStatementContext(_localctx)
+			enterOuterAlt(_localctx, 4)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(31)
+			print();
+			}}
 			else -> throw NoViableAltException(this)
 			}
 		}
@@ -352,34 +356,35 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 	}
 
 	class PrintContext : ParserRuleContext {
-		fun PRINT() : TerminalNode = return getToken(MiniCalcParser.PRINT, 0)
-		fun LPAREN() : TerminalNode = return getToken(MiniCalcParser.LPAREN, 0)
+		fun PRINT() : TerminalNode = getToken(MiniCalcParser.PRINT, 0)
+		fun LPAREN() : TerminalNode = getToken(MiniCalcParser.LPAREN, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
-		fun RPAREN() : TerminalNode = return getToken(MiniCalcParser.RPAREN, 0)
+		fun RPAREN() : TerminalNode = getToken(MiniCalcParser.RPAREN, 0)
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_print.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterPrint(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitPrint(this)
 		}
 	}
 
 	fun  print() : PrintContext {
 		var _localctx : PrintContext = PrintContext(_ctx, getState())
-		enterRule(_localctx, 6, RULE_print)
+		enterRule(_localctx, 6, Rules.RULE_print.id)
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(34);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(34)
 			match(PRINT);
-			setState(35);
+			setState(35)
 			match(LPAREN);
-			setState(36);
+			setState(36)
 			expression(0);
-			setState(37);
+			setState(37)
 			match(RPAREN);
 			}
 		}
@@ -396,31 +401,32 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 
 	class InputDeclarationContext : ParserRuleContext {
 		var name: Token? = null
-		fun INPUT() : TerminalNode = return getToken(MiniCalcParser.INPUT, 0)
+		fun INPUT() : TerminalNode = getToken(MiniCalcParser.INPUT, 0)
 		fun type() : TypeContext? = getRuleContext("TypeContext",0)
-		fun ID() : TerminalNode = return getToken(MiniCalcParser.ID, 0)
+		fun ID() : TerminalNode = getToken(MiniCalcParser.ID, 0)
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_inputDeclaration.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInputDeclaration(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInputDeclaration(this)
 		}
 	}
 
 	fun  inputDeclaration() : InputDeclarationContext {
 		var _localctx : InputDeclarationContext = InputDeclarationContext(_ctx, getState())
-		enterRule(_localctx, 8, RULE_inputDeclaration)
+		enterRule(_localctx, 8, Rules.RULE_inputDeclaration.id)
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(39);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(39)
 			match(INPUT);
-			setState(40);
+			setState(40)
 			type();
-			setState(41);
+			setState(41)
 			(_localctx as InputDeclarationContext).name = match(ID);
 			}
 		}
@@ -436,28 +442,29 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 	}
 
 	class VarDeclarationContext : ParserRuleContext {
-		fun VAR() : TerminalNode = return getToken(MiniCalcParser.VAR, 0)
+		fun VAR() : TerminalNode = getToken(MiniCalcParser.VAR, 0)
 		fun assignment() : AssignmentContext? = getRuleContext("AssignmentContext",0)
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_varDeclaration.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterVarDeclaration(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitVarDeclaration(this)
 		}
 	}
 
 	fun  varDeclaration() : VarDeclarationContext {
 		var _localctx : VarDeclarationContext = VarDeclarationContext(_ctx, getState())
-		enterRule(_localctx, 10, RULE_varDeclaration)
+		enterRule(_localctx, 10, Rules.RULE_varDeclaration.id)
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(43);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(43)
 			match(VAR);
-			setState(44);
+			setState(44)
 			assignment();
 			}
 		}
@@ -473,31 +480,32 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 	}
 
 	class AssignmentContext : ParserRuleContext {
-		fun ID() : TerminalNode = return getToken(MiniCalcParser.ID, 0)
-		fun ASSIGN() : TerminalNode = return getToken(MiniCalcParser.ASSIGN, 0)
+		fun ID() : TerminalNode = getToken(MiniCalcParser.ID, 0)
+		fun ASSIGN() : TerminalNode = getToken(MiniCalcParser.ASSIGN, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
 		constructor(parent: ParserRuleContext, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun getRuleIndex() = Rules.RULE_assignment.id
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterAssignment(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitAssignment(this)
 		}
 	}
 
 	fun  assignment() : AssignmentContext {
 		var _localctx : AssignmentContext = AssignmentContext(_ctx, getState())
-		enterRule(_localctx, 12, RULE_assignment)
+		enterRule(_localctx, 12, Rules.RULE_assignment.id)
 		try {
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(46);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(46)
 			match(ID);
-			setState(47);
+			setState(47)
 			match(ASSIGN);
-			setState(48);
+			setState(48)
 			expression(0);
 			}
 		}
@@ -523,70 +531,70 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		}
 	}
 	class DecimalLiteralContext : ExpressionContext {
-		fun DECLIT() : TerminalNode = return getToken(MiniCalcParser.DECLIT, 0)
+		fun DECLIT() : TerminalNode = getToken(MiniCalcParser.DECLIT, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterDecimalLiteral(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitDecimalLiteral(this)
 		}
 	}
 	class MinusExpressionContext : ExpressionContext {
-		fun MINUS() : TerminalNode = return getToken(MiniCalcParser.MINUS, 0)
+		fun MINUS() : TerminalNode = getToken(MiniCalcParser.MINUS, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterMinusExpression(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitMinusExpression(this)
 		}
 	}
 	class ValueReferenceContext : ExpressionContext {
-		fun ID() : TerminalNode = return getToken(MiniCalcParser.ID, 0)
+		fun ID() : TerminalNode = getToken(MiniCalcParser.ID, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterValueReference(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitValueReference(this)
 		}
 	}
 	class StringLiteralContext : ExpressionContext {
 		public var stringLiteralContent: StringLiteralContentContext
-		public var parts : List<StringLiteralContentContext>= ArrayList<StringLiteralContentContext>()
-		fun STRING_OPEN() : TerminalNode = return getToken(MiniCalcParser.STRING_OPEN, 0)
-		fun STRING_CLOSE() : TerminalNode = return getToken(MiniCalcParser.STRING_CLOSE, 0)
+		public var parts : List<StringLiteralContentContext> = ArrayList<StringLiteralContentContext>()
+		fun STRING_OPEN() : TerminalNode = getToken(MiniCalcParser.STRING_OPEN, 0)
+		fun STRING_CLOSE() : TerminalNode = getToken(MiniCalcParser.STRING_CLOSE, 0)
 		fun stringLiteralContent() : List<StringLiteralContentContext> = getRuleContexts("StringLiteralContentContext")
 		fun stringLiteralContent(i: Int) : StringLiteralContentContext? = getRuleContext("StringLiteralContentContext",i)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterStringLiteral(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitStringLiteral(this)
 		}
 	}
 	class IntLiteralContext : ExpressionContext {
-		fun INTLIT() : TerminalNode = return getToken(MiniCalcParser.INTLIT, 0)
+		fun INTLIT() : TerminalNode = getToken(MiniCalcParser.INTLIT, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterIntLiteral(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitIntLiteral(this)
 		}
 	}
 	class ParenExpressionContext : ExpressionContext {
-		fun LPAREN() : TerminalNode = return getToken(MiniCalcParser.LPAREN, 0)
+		fun LPAREN() : TerminalNode = getToken(MiniCalcParser.LPAREN, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
-		fun RPAREN() : TerminalNode = return getToken(MiniCalcParser.RPAREN, 0)
+		fun RPAREN() : TerminalNode = getToken(MiniCalcParser.RPAREN, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterParenExpression(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitParenExpression(this)
 		}
 	}
@@ -596,199 +604,206 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		public var right: ExpressionContext
 		fun expression() : List<ExpressionContext> = getRuleContexts("ExpressionContext")
 		fun expression(i: Int) : ExpressionContext? = getRuleContext("ExpressionContext",i)
-		fun DIVISION() : TerminalNode = return getToken(MiniCalcParser.DIVISION, 0)
-		fun ASTERISK() : TerminalNode = return getToken(MiniCalcParser.ASTERISK, 0)
-		fun PLUS() : TerminalNode = return getToken(MiniCalcParser.PLUS, 0)
-		fun MINUS() : TerminalNode = return getToken(MiniCalcParser.MINUS, 0)
+		fun DIVISION() : TerminalNode = getToken(MiniCalcParser.DIVISION, 0)
+		fun ASTERISK() : TerminalNode = getToken(MiniCalcParser.ASTERISK, 0)
+		fun PLUS() : TerminalNode = getToken(MiniCalcParser.PLUS, 0)
+		fun MINUS() : TerminalNode = getToken(MiniCalcParser.MINUS, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterBinaryOperation(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitBinaryOperation(this)
 		}
 	}
 	class TypeConversionContext : ExpressionContext {
 		public var value: ExpressionContext
 		public var targetType: TypeContext
-		fun AS() : TerminalNode = return getToken(MiniCalcParser.AS, 0)
+		fun AS() : TerminalNode = getToken(MiniCalcParser.AS, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
 		fun type() : TypeContext? = getRuleContext("TypeContext",0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterTypeConversion(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitTypeConversion(this)
 		}
 	}
 
-	public final ExpressionContext expression() throws RecognitionException {
+	 fun expression() : ExpressionContext {
 		return expression(0);
 	}
 
-	private ExpressionContext expression(_p: Int) {
-		_parentctx : ParserRuleContext= _ctx
-		_parentState : Int = getState()
-		_localctx : ExpressionContext= ExpressionContext(_ctx, _parentState)
-		_prevctx : ExpressionContext= _localctx
-		_startState : Int = 14
-		enterRecursionRule(_localctx, 14, RULE_expression, _p)
+	private fun expression(_p: Int) : ExpressionContext {
+		var _parentctx : ParserRuleContext = _ctx
+		var _parentState : Int = getState()
+		var _localctx : ExpressionContext= ExpressionContext(_ctx, _parentState)
+		var _prevctx : ExpressionContext= _localctx
+		var _startState : Int = 14
+		enterRecursionRule(_localctx, 14, Rules.RULE_expression.id, _p)
 		var _la: Int
 		try {
-			_alt: Int
+			var _alt: Int
 			enterOuterAlt(_localctx, 1)
-			{
-			setState(68);
-			_errHandler.sync(this);
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(68)
+			_errHandler.sync(this)
 			when (_input.LA(1)) {
-			LPAREN -> 
-				{
-				_localctx = ParenExpressionContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
+			LPAREN ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = ParenExpressionContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
 
-				setState(51);
-				match(LPAREN);
-				setState(52);
-				expression(0);
-				setState(53);
-				match(RPAREN);
+			setState(51)
+			match(LPAREN);
+			setState(52)
+			expression(0);
+			setState(53)
+			match(RPAREN);
+			}}
+			ID ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = ValueReferenceContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
+			setState(55)
+			match(ID);
+			}}
+			MINUS ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = MinusExpressionContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
+			setState(56)
+			match(MINUS);
+			setState(57)
+			expression(4);
+			}}
+			STRING_OPEN ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = StringLiteralContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
+			setState(58)
+			match(STRING_OPEN);
+			setState(62)
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==INTERPOLATION_OPEN || _la==STRING_CONTENT) {
+				/*CodeBlockForAlt*/
+				if (true){
+				/*CodeBlockForAlt*/
+				if (true){
+				setState(59)
+				(_localctx as StringLiteralContext).stringLiteralContent = stringLiteralContent();
+				(_localctx as StringLiteralContext).parts.add((_localctx as StringLiteralContext).stringLiteralContent);
 				}
-			ID -> 
-				{
-				_localctx = ValueReferenceContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
-				setState(55);
-				match(ID);
 				}
-			MINUS -> 
-				{
-				_localctx = MinusExpressionContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
-				setState(56);
-				match(MINUS);
-				setState(57);
-				expression(4);
-				}
-			STRING_OPEN -> 
-				{
-				_localctx = StringLiteralContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
-				setState(58);
-				match(STRING_OPEN);
-				setState(62);
-				_errHandler.sync(this);
+				setState(64);
+				_errHandler.sync(this)
 				_la = _input.LA(1);
-				while (_la==INTERPOLATION_OPEN || _la==STRING_CONTENT) {
-					{
-					{
-					setState(59);
-					(_localctx as StringLiteralContext).stringLiteralContent = stringLiteralContent();
-					(_localctx as StringLiteralContext).parts.add((_localctx as StringLiteralContext).stringLiteralContent);
-					}
-					}
-					setState(64);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-				}
-				setState(65);
-				match(STRING_CLOSE);
-				}
-			INTLIT -> 
-				{
-				_localctx = IntLiteralContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
-				setState(66);
-				match(INTLIT);
-				}
-			DECLIT -> 
-				{
-				_localctx = DecimalLiteralContext(_localctx)
-				_ctx = _localctx
-				_prevctx = _localctx
-				setState(67);
-				match(DECLIT);
-				}
+			}
+			setState(65)
+			match(STRING_CLOSE);
+			}}
+			INTLIT ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = IntLiteralContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
+			setState(66)
+			match(INTLIT);
+			}}
+			DECLIT ->  /*LL1AltBlock*/{/*CodeBlockForAlt*/
+			if (true){
+			_localctx = DecimalLiteralContext(_localctx)
+			_ctx = _localctx
+			_prevctx = _localctx
+			setState(67)
+			match(DECLIT);
+			}}
 			else -> throw NoViableAltException(this)
 			}
 			_ctx.stop = _input.LT(-1);
 			setState(81);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,5,_ctx)
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent()
 					_prevctx = _localctx
-					{
-					setState(79);
-					_errHandler.sync(this);
+					/*CodeBlockForAlt*/
+					if (true){
+					setState(79)
+					_errHandler.sync(this)
 					when ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
-					1 -> {
+					1 -> /*CodeBlockForAlt*/
+					if (true){
 					_localctx = BinaryOperationContext(ExpressionContext(_parentctx, _parentState))
-					((BinaryOperationContext)_localctx).left = _prevctx
-					pushNewRecursionContext(_localctx, _startState, RULE_expression)
+					(_localctx as BinaryOperationContext).left = _prevctx
+					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
 					setState(70);
 					if (!(precpred(_ctx, 9))) throw FailedPredicateException(this, "precpred(_ctx, 9)");
-					setState(71);
+					setState(71)
 					(_localctx as BinaryOperationContext).operator = _input.LT(1);
 					_la = _input.LA(1);
 					if ( !(_la==ASTERISK || _la==DIVISION) ) {
-						(_localctx as BinaryOperationContext).operator = (Token)_errHandler.recoverInline(this);
+						(_localctx as BinaryOperationContext).operator = _errHandler.recoverInline(this) as Token
 					}
 					else {
 						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
 						_errHandler.reportMatch(this);
 						consume();
 					}
-					setState(72);
+					setState(72)
 					(_localctx as BinaryOperationContext).right = expression(10);
 					}
-					2 -> {
+					2 -> /*CodeBlockForAlt*/
+					if (true){
 					_localctx = BinaryOperationContext(ExpressionContext(_parentctx, _parentState))
-					((BinaryOperationContext)_localctx).left = _prevctx
-					pushNewRecursionContext(_localctx, _startState, RULE_expression)
+					(_localctx as BinaryOperationContext).left = _prevctx
+					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
 					setState(73);
 					if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-					setState(74);
+					setState(74)
 					(_localctx as BinaryOperationContext).operator = _input.LT(1);
 					_la = _input.LA(1);
 					if ( !(_la==PLUS || _la==MINUS) ) {
-						(_localctx as BinaryOperationContext).operator = (Token)_errHandler.recoverInline(this);
+						(_localctx as BinaryOperationContext).operator = _errHandler.recoverInline(this) as Token
 					}
 					else {
 						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
 						_errHandler.reportMatch(this);
 						consume();
 					}
-					setState(75);
+					setState(75)
 					(_localctx as BinaryOperationContext).right = expression(9);
 					}
-					3 -> {
+					3 -> /*CodeBlockForAlt*/
+					if (true){
 					_localctx = TypeConversionContext(ExpressionContext(_parentctx, _parentState))
-					((TypeConversionContext)_localctx).value = _prevctx
-					pushNewRecursionContext(_localctx, _startState, RULE_expression)
+					(_localctx as TypeConversionContext).value = _prevctx
+					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
 					setState(76);
 					if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-					setState(77);
+					setState(77)
 					match(AS);
-					setState(78);
+					setState(78)
 					(_localctx as TypeConversionContext).targetType = type();
 					}
 					}
 					} 
 				}
-				setState(83);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
+				setState(83)
+				_errHandler.sync(this)
+				_alt = getInterpreter().adaptivePredict(_input,5,_ctx)
 			}
 			}
 		}
-		catch (RecognitionException re) {
+		catch (re: RecognitionException) {
 			_localctx.exception = re
 			_errHandler.reportError(this, re)
 			_errHandler.recover(this, re)
@@ -810,53 +825,53 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		}
 	}
 	class InterpolatedValueContext : StringLiteralContentContext {
-		fun INTERPOLATION_OPEN() : TerminalNode = return getToken(MiniCalcParser.INTERPOLATION_OPEN, 0)
+		fun INTERPOLATION_OPEN() : TerminalNode = getToken(MiniCalcParser.INTERPOLATION_OPEN, 0)
 		fun expression() : ExpressionContext? = getRuleContext("ExpressionContext",0)
-		fun INTERPOLATION_CLOSE() : TerminalNode = return getToken(MiniCalcParser.INTERPOLATION_CLOSE, 0)
+		fun INTERPOLATION_CLOSE() : TerminalNode = getToken(MiniCalcParser.INTERPOLATION_CLOSE, 0)
 		constructor(ctx: StringLiteralContentContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInterpolatedValue(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInterpolatedValue(this)
 		}
 	}
 	class ConstantStringContext : StringLiteralContentContext {
-		fun STRING_CONTENT() : TerminalNode = return getToken(MiniCalcParser.STRING_CONTENT, 0)
+		fun STRING_CONTENT() : TerminalNode = getToken(MiniCalcParser.STRING_CONTENT, 0)
 		constructor(ctx: StringLiteralContentContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterConstantString(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitConstantString(this)
 		}
 	}
 
 	fun  stringLiteralContent() : StringLiteralContentContext {
 		var _localctx : StringLiteralContentContext = StringLiteralContentContext(_ctx, getState())
-		enterRule(_localctx, 16, RULE_stringLiteralContent)
+		enterRule(_localctx, 16, Rules.RULE_stringLiteralContent.id)
 		try {
-			setState(89);
-			_errHandler.sync(this);
+			setState(89)
+			_errHandler.sync(this)
 			when (_input.LA(1)) {
-			STRING_CONTENT -> 
-				_localctx = ConstantStringContext(_localctx)
-				enterOuterAlt(_localctx, 1)
-				{
-				setState(84);
-				match(STRING_CONTENT);
-				}
-			INTERPOLATION_OPEN -> 
-				_localctx = InterpolatedValueContext(_localctx)
-				enterOuterAlt(_localctx, 2)
-				{
-				setState(85);
-				match(INTERPOLATION_OPEN);
-				setState(86);
-				expression(0);
-				setState(87);
-				match(INTERPOLATION_CLOSE);
-				}
+			STRING_CONTENT ->  /*LL1AltBlock*/{_localctx = ConstantStringContext(_localctx)
+			enterOuterAlt(_localctx, 1)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(84)
+			match(STRING_CONTENT);
+			}}
+			INTERPOLATION_OPEN ->  /*LL1AltBlock*/{_localctx = InterpolatedValueContext(_localctx)
+			enterOuterAlt(_localctx, 2)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(85)
+			match(INTERPOLATION_OPEN);
+			setState(86)
+			expression(0);
+			setState(87)
+			match(INTERPOLATION_CLOSE);
+			}}
 			else -> throw NoViableAltException(this)
 			}
 		}
@@ -882,64 +897,64 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		}
 	}
 	class StringContext : TypeContext {
-		fun STRING() : TerminalNode = return getToken(MiniCalcParser.STRING, 0)
+		fun STRING() : TerminalNode = getToken(MiniCalcParser.STRING, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterString(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitString(this)
 		}
 	}
 	class IntegerContext : TypeContext {
-		fun INT() : TerminalNode = return getToken(MiniCalcParser.INT, 0)
+		fun INT() : TerminalNode = getToken(MiniCalcParser.INT, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInteger(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInteger(this)
 		}
 	}
 	class DecimalContext : TypeContext {
-		fun DECIMAL() : TerminalNode = return getToken(MiniCalcParser.DECIMAL, 0)
+		fun DECIMAL() : TerminalNode = getToken(MiniCalcParser.DECIMAL, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		fun enterRule(listener: ParseTreeListener) {
+		override fun enterRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterDecimal(this)
 		}
-		fun exitRule(listener: ParseTreeListener) {
+		override fun exitRule(listener: ParseTreeListener) {
 			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitDecimal(this)
 		}
 	}
 
 	fun  type() : TypeContext {
 		var _localctx : TypeContext = TypeContext(_ctx, getState())
-		enterRule(_localctx, 18, RULE_type)
+		enterRule(_localctx, 18, Rules.RULE_type.id)
 		try {
-			setState(94);
-			_errHandler.sync(this);
+			setState(94)
+			_errHandler.sync(this)
 			when (_input.LA(1)) {
-			INT -> 
-				_localctx = IntegerContext(_localctx)
-				enterOuterAlt(_localctx, 1)
-				{
-				setState(91);
-				match(INT);
-				}
-			DECIMAL -> 
-				_localctx = DecimalContext(_localctx)
-				enterOuterAlt(_localctx, 2)
-				{
-				setState(92);
-				match(DECIMAL);
-				}
-			STRING -> 
-				_localctx = StringContext(_localctx)
-				enterOuterAlt(_localctx, 3)
-				{
-				setState(93);
-				match(STRING);
-				}
+			INT ->  /*LL1AltBlock*/{_localctx = IntegerContext(_localctx)
+			enterOuterAlt(_localctx, 1)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(91)
+			match(INT);
+			}}
+			DECIMAL ->  /*LL1AltBlock*/{_localctx = DecimalContext(_localctx)
+			enterOuterAlt(_localctx, 2)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(92)
+			match(DECIMAL);
+			}}
+			STRING ->  /*LL1AltBlock*/{_localctx = StringContext(_localctx)
+			enterOuterAlt(_localctx, 3)
+			/*CodeBlockForAlt*/
+			if (true){
+			setState(93)
+			match(STRING);
+			}}
 			else -> throw NoViableAltException(this)
 			}
 		}
@@ -956,11 +971,11 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 
 	fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
 		when (ruleIndex) {
-		7 -> return expression_sempred((ExpressionContext)_localctx, predIndex)
+		7 -> return expression_sempred(_localctx as ExpressionContext, predIndex)
 		}
 		return true
 	}
-	private fun expression_sempred(ExpressionContext _localctx, int predIndex) : Boolean {
+	private fun expression_sempred( _localctx : ExpressionContext, predIndex: Int) : Boolean {
 		when (predIndex) {
 		    0 -> return precpred(_ctx, 9)
 		    1 -> return precpred(_ctx, 8)
@@ -968,5 +983,9 @@ class MiniCalcParser(input: TokenStream) : Parser("MiniCalcParser.g4", input) {
 		}
 		return true
 	}
+
+	override fun getATN() = ATN
+	override fun getRuleNames(): Array = ruleNames
+	override fun getTokenNames(): Array = tokenNames
 
 }
