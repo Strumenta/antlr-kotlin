@@ -225,6 +225,7 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.g
 
     <if(parser.tokens)>
     enum class Tokens(val id: Int) {
+        EOF(-1),
         <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
@@ -246,7 +247,9 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.g
 
 	private val interpreter : ParserATNSimulator
 
-
+    <if(parser.tokens)>
+    <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
+    <endif>
 
 	<namedActions.members>
 	<parser:(ctor)()>
@@ -335,7 +338,7 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
 fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <currentRule.name>(<args; separator=",">) : <currentRule.ctxType> {
-	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(_ctx, getState()<currentRule.args:{a | , <a.name>}>)
+	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(_wrappingCtx!!, getState()<currentRule.args:{a | , <a.name>}>)
 	enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
 	<namedActions.init>
 	<locals; separator="\n">
@@ -376,9 +379,9 @@ LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
 }
 
 private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType> {
-	var _parentctx : ParserRuleContext = _ctx
+	var _parentctx : ParserRuleContext = _wrappingCtx
 	var _parentState : Int = getState()
-	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(_ctx, _parentState<currentRule.args:{a | , <a.name>}>)
+	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(_wrappingCtx, _parentState<currentRule.args:{a | , <a.name>}>)
 	var _prevctx : <currentRule.ctxType>= _localctx
 	var _startState : Int = <currentRule.startState>
 	enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
@@ -481,7 +484,7 @@ setState(<choice.stateNumber>)
 _errHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
 <preamble; separator="\n">
-when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
+when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) ) {
 <alts:{alt |<i> -> <alt>}; separator="\n">
 }
 >>
@@ -489,7 +492,7 @@ when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
 OptionalBlock(choice, alts, error) ::= <<
 setState(<choice.stateNumber>)
 _errHandler.sync(this)
-when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
+when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) ) {
 <alts:{alt |
 <i>  <if(!choice.ast.greedy)>+1<endif>: -> <alt>}; separator="\n">
 }
@@ -498,7 +501,7 @@ when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx) ) {
 StarBlock(choice, alts, sync, iteration) ::= <<
 setState(<choice.stateNumber>);
 _errHandler.sync(this);
-_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx)
+_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx)
 while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
 		<iteration>
@@ -506,7 +509,7 @@ while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT
 	}
 	setState(<choice.loopBackStateNumber>)
 	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx)
+	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx)
 }
 >>
 
@@ -522,7 +525,7 @@ do {
 	}
 	setState(<choice.loopBackStateNumber>) <! loopback/exit decision !>
 	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_ctx);
+	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx);
 } while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER )
 >>
 
@@ -568,7 +571,7 @@ setState(<r.stateNumber>)
 
 MatchToken(m) ::= <<
 setState(<m.stateNumber>)
-<if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>);
+<if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>) as Token
 >>
 
 MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
@@ -583,7 +586,7 @@ if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
 	<if(m.labels)><m.labels:{l | <labelref(l)> = _errHandler.recoverInline(this) as Token}><else>_errHandler.recoverInline(this)<endif>
 }
 else {
-	if ( _input.LA(1)==Token.EOF ) matchedEOF = true
+	if ( _input.LA(1)==Tokens.EOF.id ) matchedEOF = true
 	_errHandler.reportMatch(this)
 	consume()
 }
@@ -663,18 +666,18 @@ SetNonLocalAttr(s, rhsChunks)	  ::=
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>);"
 
-TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>"
-TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "var <t.name> : List\<Token> = ArrayList\<Token>()"
-RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>"
-RuleContextListDecl(rdecl) ::= "var <rdecl.name> : List\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+TokenDecl(t) ::= "/*TokenDecl*/ var <t.name>: <TokenLabelType()>? = null"
+TokenTypeDecl(t) ::= "/*TokenTypeDecl*/ var <t.name>: Int"
+TokenListDecl(t) ::= "/*TokenListDecl*/ var <t.name> : List\<Token> = ArrayList\<Token>()"
+RuleContextDecl(r) ::= "/*RuleContextDecl*/ var <r.name>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "/*RuleContextListDecl*/ var <rdecl.name> : List\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
-    "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0)"
+    "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0) as TerminalNode"
 ContextTokenListGetterDecl(t)  ::=
-    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id)"
+    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id) as TerminalNode"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
-fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i)
+fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i) as TerminalNode
 >>
 ContextRuleGetterDecl(r)       ::= <<
 fun <r.name>() : <r.ctxName>? = getRuleContext("<r.ctxName>",0)
@@ -704,7 +707,7 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1);"
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
 open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
-	<attrs:{a | <a>? = null}; separator="\n">
+	<attrs:{a | <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
 	<if(ctorAttrs)>constructor(parent: ParserRuleContext, invokingState: int) : super(parent, invokingState){ ; }<endif>
 	constructor(parent: ParserRuleContext, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
@@ -712,7 +715,7 @@ open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>Parse
 	}
 	override fun getRuleIndex() = Rules.RULE_<struct.derivedFromName>.id
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
-	constructor () { }
+	constructor() : super() { }
 	fun copyFrom(ctx: <struct.name>) {
 		super.copyFrom(ctx)
 		<struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
