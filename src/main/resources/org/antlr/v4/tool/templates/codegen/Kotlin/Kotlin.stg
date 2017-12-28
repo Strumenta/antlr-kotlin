@@ -379,7 +379,7 @@ LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
 }
 
 private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType> {
-	var _parentctx : ParserRuleContext = _wrappingCtx
+	var _parentctx : ParserRuleContext? = _wrappingCtx
 	var _parentState : Int = getState()
 	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(_wrappingCtx, _parentState<currentRule.args:{a | , <a.name>}>)
 	var _prevctx : <currentRule.ctxType>= _localctx
@@ -425,9 +425,9 @@ if (true){
 LL1AltBlock(choice, preamble, alts, error) ::= <<
 setState(<choice.stateNumber>)
 _errHandler.sync(this)
-<if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
+<if(choice.label)><labelref(choice.label)> = _wrappingInput!!.LT(1)<endif>
 <preamble; separator="\n">
-when (_input.LA(1)) {
+when (_wrappingInput!!.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)> /*LL1AltBlock*/{<alt>\}}; separator="\n">
 else -> <error>
 }
@@ -436,7 +436,7 @@ else -> <error>
 LL1OptionalBlock(choice, alts, error) ::= <<
 setState(<choice.stateNumber>)
 _errHandler.sync(this)
-when (_input.LA(1)) {
+when (_wrappingInput!!.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
 	<alt>}; separator="\n">
 else -> ;
@@ -482,9 +482,9 @@ do {
 AltBlock(choice, preamble, alts, error) ::= <<
 setState(<choice.stateNumber>)
 _errHandler.sync(this)
-<if(choice.label)><labelref(choice.label)> = _input.LT(1);<endif>
+<if(choice.label)><labelref(choice.label)> = _wrappingInput!!.LT(1)<endif>
 <preamble; separator="\n">
-when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) ) {
+when ( getInterpreter().adaptivePredict(_wrappingInput,<choice.decision>,_wrappingCtx) ) {
 <alts:{alt |<i> -> <alt>}; separator="\n">
 }
 >>
@@ -492,7 +492,7 @@ when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) )
 OptionalBlock(choice, alts, error) ::= <<
 setState(<choice.stateNumber>)
 _errHandler.sync(this)
-when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) ) {
+when ( getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx) ) {
 <alts:{alt |
 <i>  <if(!choice.ast.greedy)>+1<endif>: -> <alt>}; separator="\n">
 }
@@ -501,7 +501,7 @@ when ( getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx) )
 StarBlock(choice, alts, sync, iteration) ::= <<
 setState(<choice.stateNumber>);
 _errHandler.sync(this);
-_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx)
+_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
 while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
 		<iteration>
@@ -509,7 +509,7 @@ while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT
 	}
 	setState(<choice.loopBackStateNumber>)
 	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx)
+	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
 }
 >>
 
@@ -525,7 +525,7 @@ do {
 	}
 	setState(<choice.loopBackStateNumber>) <! loopback/exit decision !>
 	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_input,<choice.decision>,_wrappingCtx);
+	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
 } while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER )
 >>
 
@@ -580,13 +580,13 @@ MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
 setState(<m.stateNumber>)
-<if(m.labels)><m.labels:{l | <labelref(l)> = }>_input.LT(1);<endif>
+<if(m.labels)><m.labels:{l | <labelref(l)> = }>_wrappingInput!!.LT(1)<endif>
 <capture>
 if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
 	<if(m.labels)><m.labels:{l | <labelref(l)> = _errHandler.recoverInline(this) as Token}><else>_errHandler.recoverInline(this)<endif>
 }
 else {
-	if ( _input.LA(1)==Tokens.EOF.id ) matchedEOF = true
+	if ( _wrappingInput!!.LA(1)==Tokens.EOF.id ) matchedEOF = true
 	_errHandler.reportMatch(this)
 	consume()
 }
@@ -650,13 +650,13 @@ TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>!=null?Integer.valueOf(<ctx(t)>.
 
 RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>!=null?(<ctx(r)>.<r.label>.start):null)"
 RulePropertyRef_stop(r)	 ::= "(<ctx(r)>.<r.label>!=null?(<ctx(r)>.<r.label>.stop):null)"
-RulePropertyRef_text(r)	 ::= "(<ctx(r)>.<r.label>!=null?_input.getText(<ctx(r)>.<r.label>.start,<ctx(r)>.<r.label>.stop):null)"
+RulePropertyRef_text(r)	 ::= "(<ctx(r)>.<r.label>!=null?_wrappingInput!!.getText(<ctx(r)>.<r.label>.start,<ctx(r)>.<r.label>.stop):null)"
 RulePropertyRef_ctx(r)	 ::= "<ctx(r)>.<r.label>"
 RulePropertyRef_parser(r)	 ::= "this"
 
 ThisRulePropertyRef_start(r) ::= "_localctx.start"
 ThisRulePropertyRef_stop(r)	 ::= "_localctx.stop"
-ThisRulePropertyRef_text(r)	 ::= "_input.getText(_localctx.start, _input.LT(-1))"
+ThisRulePropertyRef_text(r)	 ::= "_wrappingInput!!.getText(_localctx.start, _wrappingInput!!.LT(-1))"
 ThisRulePropertyRef_ctx(r)	 ::= "_localctx"
 ThisRulePropertyRef_parser(r)	 ::= "this"
 
@@ -664,13 +664,13 @@ NonLocalAttrRef(s)		 ::= "((<s.ruleName; format=\"cap\">Context)getInvokingConte
 SetNonLocalAttr(s, rhsChunks)	  ::=
 	"((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>;"
 
-AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>);"
+AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
 TokenDecl(t) ::= "/*TokenDecl*/ var <t.name>: <TokenLabelType()>? = null"
 TokenTypeDecl(t) ::= "/*TokenTypeDecl*/ var <t.name>: Int"
-TokenListDecl(t) ::= "/*TokenListDecl*/ var <t.name> : List\<Token> = ArrayList\<Token>()"
+TokenListDecl(t) ::= "/*TokenListDecl*/ var <t.name> :Mutable\<Token> = ArrayList\<Token>()"
 RuleContextDecl(r) ::= "/*RuleContextDecl*/ var <r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "/*RuleContextListDecl*/ var <rdecl.name> : List\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+RuleContextListDecl(rdecl) ::= "/*RuleContextListDecl*/ var <rdecl.name> : MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
     "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0) as TerminalNode"
@@ -701,16 +701,16 @@ ImplicitRuleLabel(ruleName)	  ::= "<ruleName>"
 ImplicitSetLabel(id)		  ::= "_tset<id>"
 ListLabelName(label)		  ::= "<label>"
 
-CaptureNextToken(d) ::= "<d.varName> = _input.LT(1);"
-CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1);"
+CaptureNextToken(d) ::= "<d.varName> = _wrappingInput!!.LT(1)"
+CaptureNextTokenType(d) ::= "<d.varName> = _wrappingInput!!.LA(1)"
 
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
 open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
 	<attrs:{a | <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
-	<if(ctorAttrs)>constructor(parent: ParserRuleContext, invokingState: int) : super(parent, invokingState){ ; }<endif>
-	constructor(parent: ParserRuleContext, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
+	<if(ctorAttrs)>constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){ ; }<endif>
+	constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
 		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
 	}
 	override fun getRuleIndex() = Rules.RULE_<struct.derivedFromName>.id
@@ -758,25 +758,25 @@ ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
 
 // used for left-recursive rules
 recRuleAltPredicate(ruleName,opPrec)  ::= "precpred(_ctx, <opPrec>)"
-recRuleSetReturnAction(src,name)	  ::= "$<name>=$<src>.<name>;"
-recRuleSetStopToken()                 ::= "_ctx.stop = _input.LT(-1);"
+recRuleSetReturnAction(src,name)	  ::= "$<name>=$<src>.<name>"
+recRuleSetStopToken()                 ::= "setCtxStop(_wrappingInput!!.LT(-1))"
 
 recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<_localctx = <ctxName>Context(_parentctx, _parentState)
 <if(label)>
 <if(isListLabel)>
-_localctx.<label>.add(_prevctx);
+_localctx.<label>.add(_prevctx!!)
 <else>
-_localctx.<label> = _prevctx;
+_localctx.<label> = _prevctx
 <endif>
 <endif>
 <if(label)>_localctx.<label> = _prevctx;<endif>
-pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id);
+pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
 >>
 
 recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
-(_localctx as <currentAltLabel; format="cap">Context).<label>.add(_prevctx)
+(_localctx as <currentAltLabel; format="cap">Context).<label>.add(_prevctx!!)
 <else>
 (_localctx as <currentAltLabel; format="cap">Context).<label> = _prevctx
 <endif>
