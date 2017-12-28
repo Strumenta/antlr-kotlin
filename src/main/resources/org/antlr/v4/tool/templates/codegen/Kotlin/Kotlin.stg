@@ -536,12 +536,12 @@ TestSetInline(s) ::= <<
 
 // Java language spec 15.19 - shift operators mask operands rather than overflow to 0... need range test
 testShiftInRange(shiftAmount) ::= <<
-((<shiftAmount>) and 0x3f.inv) == 0
+((<shiftAmount>) and 0x3f.inv()) == 0
 >>
 
 // produces smaller bytecode only when bits.ttypes contains more than two items
 bitsetBitfieldComparison(s, bits) ::= <%
-(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and (<bits.ttypes:{ttype | (1L shl <offsetShift(ttype, bits.shift)>)}; separator=" or ">)) != 0)
+(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and (<bits.ttypes:{ttype | (1L shl <offsetShift(ttype, bits.shift)>)}; separator=" or ">)) != 0L)
 %>
 
 isZero ::= [
@@ -583,9 +583,9 @@ if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
 	<if(m.labels)><m.labels:{l | <labelref(l)> = _errHandler.recoverInline(this) as Token}><else>_errHandler.recoverInline(this)<endif>
 }
 else {
-	if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-	_errHandler.reportMatch(this);
-	consume();
+	if ( _input.LA(1)==Token.EOF ) matchedEOF = true
+	_errHandler.reportMatch(this)
+	consume()
 }
 >>
 
@@ -670,11 +670,11 @@ RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>"
 RuleContextListDecl(rdecl) ::= "var <rdecl.name> : List\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
-    "fun <t.name>() : TerminalNode = getToken(<parser.name>.<t.name>, 0)"
+    "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0)"
 ContextTokenListGetterDecl(t)  ::=
-    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.<t.name>)"
+    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id)"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
-fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.<t.name>, i)
+fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i)
 >>
 ContextRuleGetterDecl(r)       ::= <<
 fun <r.name>() : <r.ctxName>? = getRuleContext("<r.ctxName>",0)
@@ -703,7 +703,7 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1);"
 
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
-class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
+open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
 	<attrs:{a | <a>? = null}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
 	<if(ctorAttrs)>constructor(parent: ParserRuleContext, invokingState: int) : super(parent, invokingState){ ; }<endif>
