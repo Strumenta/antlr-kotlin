@@ -50,7 +50,14 @@ package <file.genPackage>;
 <endif>
 <namedActions.header>
 import com.strumenta.kotlinmultiplatform.Arrays
-import org.antlr.v4.kotlinruntime.facade.*
+import org.antlr.v4.kotlinruntime.*
+import org.antlr.v4.kotlinruntime.atn.*
+import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
+import org.antlr.v4.kotlinruntime.atn.ParserATNSimulator
+import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
+import org.antlr.v4.kotlinruntime.dfa.*
+import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
+import org.antlr.v4.kotlinruntime.tree.TerminalNode
 
 <parser>
 >>
@@ -220,8 +227,24 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
 
-class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.grammarFileName>", input) {
+class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 	// TODO verify version of runtime is compatible
+
+    override val grammarFileName: String
+        get() = "<parser.grammarFileName>"
+
+    override val tokenNames: Array\<String?>?
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    override val ruleNames: Array\<String>?
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    override val atn: ATN
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    override var inputStream: CharStream?
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+    override var tokenFactory: TokenFactory\<*>
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
 
     <if(parser.tokens)>
     enum class Tokens(val id: Int) {
@@ -245,7 +268,7 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">("<parser.g
         <atn>
 	}
 
-	private val interpreter : ParserATNSimulator
+	//private val interpreter : ParserATNSimulator
 
     <if(parser.tokens)>
     <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
@@ -276,7 +299,7 @@ vocabulary(literalNames, symbolicNames) ::= <<
 private val LITERAL_NAMES = Arrays.asList\<String?>(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 private val SYMBOLIC_NAMES = Arrays.asList\<String?>(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
-val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
+val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 >>
 
 dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
@@ -303,7 +326,7 @@ fun sempred(_localctx: RuleContext, ruleIndex: Int, predIndex: Int) : Boolean {
 
 parser_ctor(p) ::= <<
 init {
-	interpreter = createParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
+	interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
 }
 >>
 
@@ -338,7 +361,7 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
 fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <currentRule.name>(<args; separator=",">) : <currentRule.ctxType> {
-	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(_wrappingCtx!!, getState()<currentRule.args:{a | , <a.name>}>)
+	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(ctx!!, getState()<currentRule.args:{a | , <a.name>}>)
 	enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
 	<namedActions.init>
 	<locals; separator="\n">
@@ -355,8 +378,8 @@ fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <
 	<else>
 	catch (re: RecognitionException) {
 		_localctx.exception = re
-		_errHandler.reportError(this, re)
-		_errHandler.recover(this, re)
+		errorHandler.reportError(this, re)
+		errorHandler.recover(this, re)
 	}
 	<endif>
 	finally {
@@ -379,9 +402,9 @@ LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
 }
 
 private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType> {
-	var _parentctx : ParserRuleContext? = _wrappingCtx
+	var _parentctx : ParserRuleContext? = ctx
 	var _parentState : Int = getState()
-	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(_wrappingCtx, _parentState<currentRule.args:{a | , <a.name>}>)
+	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(ctx, _parentState<currentRule.args:{a | , <a.name>}>)
 	var _prevctx : <currentRule.ctxType>= _localctx
 	var _startState : Int = <currentRule.startState>
 	enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
@@ -397,8 +420,8 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType
 	}
 	catch (re: RecognitionException) {
 		_localctx.exception = re
-		_errHandler.reportError(this, re)
-		_errHandler.recover(this, re)
+		errorHandler.reportError(this, re)
+		errorHandler.recover(this, re)
 	}
 	finally {
 		<finallyAction>
@@ -423,8 +446,8 @@ if (true){
 >>
 
 LL1AltBlock(choice, preamble, alts, error) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this)
+this.state = <choice.stateNumber>
+errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _wrappingInput!!.LT(1)<endif>
 <preamble; separator="\n">
 when (_wrappingInput!!.LA(1)) {
@@ -434,8 +457,8 @@ else -> <error>
 >>
 
 LL1OptionalBlock(choice, alts, error) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this)
+this.state = <choice.stateNumber>
+errorHandler.sync(this)
 when (_wrappingInput!!.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
 	<alt>}; separator="\n">
@@ -444,8 +467,8 @@ else -> ;
 >>
 
 LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this)
+this.state = <choice.stateNumber>
+errorHandler.sync(this)
 <preamble; separator="\n">
 if (<expr>) {
 	<alts; separator="\n">
@@ -454,25 +477,25 @@ if (<expr>) {
 >>
 
 LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this);
+this.state = <choice.stateNumber>
+errorHandler.sync(this);
 <preamble; separator="\n">
 while (<loopExpr>) {
 	<alts; separator="\n">
-	setState(<choice.loopBackStateNumber>);
-	_errHandler.sync(this)
+	this.state = <choice.loopBackStateNumber>
+	errorHandler.sync(this)
 	<iteration>
 }
 >>
 
 LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
-setState(<choice.blockStartStateNumber>); <! alt block decision !>
-_errHandler.sync(this)
+this.state = <choice.blockStartStateNumber> <! alt block decision !>
+errorHandler.sync(this)
 <preamble; separator="\n">
 do {
 	<alts; separator="\n">
-	setState(<choice.stateNumber>) <! loopback/exit decision !>
-	_errHandler.sync(this)
+	this.state = <choice.stateNumber> <! loopback/exit decision !>
+	errorHandler.sync(this)
 	<iteration>
 } while ( <loopExpr> )
 >>
@@ -480,42 +503,42 @@ do {
 // LL(*) stuff
 
 AltBlock(choice, preamble, alts, error) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this)
+this.state = <choice.stateNumber>
+errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _wrappingInput!!.LT(1)<endif>
 <preamble; separator="\n">
-when ( getInterpreter().adaptivePredict(_wrappingInput,<choice.decision>,_wrappingCtx) ) {
+when ( getInterpreter().adaptivePredict(_wrappingInput,<choice.decision>,ctx) ) {
 <alts:{alt |<i> -> <alt>}; separator="\n">
 }
 >>
 
 OptionalBlock(choice, alts, error) ::= <<
-setState(<choice.stateNumber>)
-_errHandler.sync(this)
-when ( getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx) ) {
+this.state = <choice.stateNumber>
+errorHandler.sync(this)
+when ( getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,ctx) ) {
 <alts:{alt |
 <i>  <if(!choice.ast.greedy)>+1<endif>: -> <alt>}; separator="\n">
 }
 >>
 
 StarBlock(choice, alts, sync, iteration) ::= <<
-setState(<choice.stateNumber>);
-_errHandler.sync(this);
-_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
+this.state = <choice.stateNumber>
+errorHandler.sync(this);
+_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,ctx)
 while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
 		<iteration>
 		<alts> <! should only be one !>
 	}
-	setState(<choice.loopBackStateNumber>)
-	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
+	this.state = <choice.loopBackStateNumber>
+	errorHandler.sync(this)
+	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,ctx)
 }
 >>
 
 PlusBlock(choice, alts, error) ::= <<
-setState(<choice.blockStartStateNumber>); <! alt block decision !>
-_errHandler.sync(this)
+this.state = <choice.blockStartStateNumber> <! alt block decision !>
+errorHandler.sync(this)
 _alt = 1<if(!choice.ast.greedy)>+1<endif>;
 do {
 	when (_alt) {
@@ -523,9 +546,9 @@ do {
     <i><if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
 	else -> <error>
 	}
-	setState(<choice.loopBackStateNumber>) <! loopback/exit decision !>
-	_errHandler.sync(this)
-	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,_wrappingCtx)
+	this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
+	errorHandler.sync(this)
+	_alt = getInterpreter().adaptivePredict(_wrappingInput!!,<choice.decision>,ctx)
 } while ( _alt!=<choice.exitAlt> && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER )
 >>
 
@@ -565,12 +588,12 @@ cases(ttypes) ::= <<
 <ttypes:{t | <t> ->}; separator=" "> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
-setState(<r.stateNumber>)
+this.state = <r.stateNumber>
 <if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.name>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>);
 >>
 
 MatchToken(m) ::= <<
-setState(<m.stateNumber>)
+this.state = <m.stateNumber>
 <if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>) as Token
 >>
 
@@ -579,21 +602,21 @@ MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
 MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
-setState(<m.stateNumber>)
+this.state = <m.stateNumber>
 <if(m.labels)><m.labels:{l | <labelref(l)> = }>_wrappingInput!!.LT(1)<endif>
 <capture>
 if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
-	<if(m.labels)><m.labels:{l | <labelref(l)> = _errHandler.recoverInline(this) as Token}><else>_errHandler.recoverInline(this)<endif>
+	<if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
 }
 else {
 	if ( _wrappingInput!!.LA(1)==Tokens.EOF.id ) matchedEOF = true
-	_errHandler.reportMatch(this)
+	errorHandler.reportMatch(this)
 	consume()
 }
 >>
 
 Wildcard(w) ::= <<
-setState(<w.stateNumber>);
+this.state = <w.stateNumber>
 <if(w.labels)><w.labels:{l | <labelref(l)> = }><endif>matchWildcard();
 >>
 
@@ -604,7 +627,7 @@ Action(a, foo, chunks) ::= "<chunks>"
 ArgAction(a, chunks) ::= "<chunks>"
 
 SemPred(p, chunks, failChunks) ::= <<
-setState(<p.stateNumber>);
+this.state = <p.stateNumber>
 if (!(<chunks>)) throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>);
 >>
 
@@ -848,7 +871,7 @@ class <lexer.name>(val input: String) : <superClass; null="Lexer">("<lexer.gramm
 	<namedActions.members>
 
 	init {
-		setInterpreter(createLexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache))
+		setInterpreter(LexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache))
 	}
 
 	<dumpActions(lexer, "", actionFuncs, sempredFuncs)>
@@ -874,8 +897,8 @@ val serializedIntegersATN =
 <endif>
 val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
 init {
-	decisionToDFA = Array\<DFA>(ATN.getNumberOfDecisions(), {
-		createDFA(ATN.getDecisionState(it), it)
+	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
+		DFA(ATN.getDecisionState(it)!!, it)
 	})
 <!	org.antlr.v4.tool.DOTGenerator dot = new org.antlr.v4.tool.DOTGenerator(null);!>
 <!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
@@ -902,8 +925,8 @@ val serializedIntegersATN =
 <endif>
 val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
 init {
-	decisionToDFA = Array\<DFA>(ATN.getNumberOfDecisions(), {
-		createDFA(ATN.getDecisionState(it), it)
+	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
+		DFA(ATN.getDecisionState(it)!!, it)
 	})
 <!	org.antlr.v4.tool.DOTGenerator dot = new org.antlr.v4.tool.DOTGenerator(null);!>
 <!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
