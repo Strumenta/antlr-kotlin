@@ -13,7 +13,7 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
 	// TODO Verify the runtime version is correct
 
     override val ruleNames: Array<String>?
-        get() = MiniCalcLexer.Companion.ruleNames
+        get() = Rules.values().map { it.name }.toTypedArray()
 
     override val grammarFileName: String
         get() = "MiniCalcLexer.g4"
@@ -22,22 +22,8 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
 		get() = MiniCalcLexer.Companion.ATN
 
 	companion object {
-		lateinit var decisionToDFA : Array<DFA>
+		val decisionToDFA : Array<DFA>
 		val sharedContextCache = PredictionContextCache()
-
-		val ruleNames = arrayOf("NEWLINE", "WS", "INPUT", "VAR", "PRINT", "AS", 
-                          "INT", "DECIMAL", "STRING", "ID", "INTLIT", "DECLIT", 
-                          "PLUS", "MINUS", "ASTERISK", "DIVISION", "ASSIGN", 
-                          "LPAREN", "RPAREN", "STRING_OPEN", "UNMATCHED", 
-                          "ESCAPE_STRING_DELIMITER", "ESCAPE_SLASH", "ESCAPE_NEWLINE", 
-                          "ESCAPE_SHARP", "STRING_CLOSE", "INTERPOLATION_OPEN", 
-                          "STRING_CONTENT", "STR_UNMATCHED", "INTERPOLATION_CLOSE", 
-                          "INTERP_WS", "INTERP_AS", "INTERP_INT", "INTERP_DECIMAL", 
-                          "INTERP_STRING", "INTERP_INTLIT", "INTERP_DECLIT", 
-                          "INTERP_PLUS", "INTERP_MINUS", "INTERP_ASTERISK", 
-                          "INTERP_DIVISION", "INTERP_ASSIGN", "INTERP_LPAREN", 
-                          "INTERP_RPAREN", "INTERP_ID", "INTERP_STRING_OPEN", 
-                          "INTERP_UNMATCHED")
 
 		private val LITERAL_NAMES = Arrays.asList<String?>(null, null, null, "'input'", 
 		                                                   "'var'", "'print'", 
@@ -66,7 +52,19 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
 
 		val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 
-		val serializedIntegersATN =
+        val tokenNames: Array<String?> = Array<String?>(SYMBOLIC_NAMES.size) {
+            var el = VOCABULARY.getLiteralName(it)
+            if (el == null) {
+                el = VOCABULARY.getSymbolicName(it)
+            }
+
+            if (el == null) {
+                el = "<INVALID>"
+            }
+            el
+        }
+
+		private val serializedIntegersATN =
 			arrayOf(3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 2, 
 			31, 362, 8, 1, 8, 1, 8, 1, 4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 
 			9, 5, 4, 6, 9, 6, 4, 7, 9, 7, 4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 
@@ -243,17 +241,6 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
 
 
 		}
-			var tokenNames: Array<String?> = Array<String?>(SYMBOLIC_NAMES.size) {
-					var el = VOCABULARY.getLiteralName(it)
-					if (el == null) {
-						el = VOCABULARY.getSymbolicName(it)
-					}
-
-					if (el == null) {
-						el = "<INVALID>"
-					}
-					el
-				}
 	}
 
     enum class Tokens(val id: Int) {

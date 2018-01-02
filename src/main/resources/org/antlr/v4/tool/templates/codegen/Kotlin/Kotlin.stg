@@ -842,7 +842,7 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 	// TODO Verify the runtime version is correct
 
     override val ruleNames: Array\<String>?
-        get() = <lexer.name>.Companion.ruleNames
+        get() = Rules.values().map { it.name }.toTypedArray()
 
     override val grammarFileName: String
         get() = "<lexer.grammarFileName>"
@@ -851,12 +851,22 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 		get() = MiniCalcLexer.Companion.ATN
 
 	companion object {
-		lateinit var decisionToDFA : Array\<DFA>
+		val decisionToDFA : Array\<DFA>
 		val sharedContextCache = PredictionContextCache()
 
-		val ruleNames = arrayOf(<lexer.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
-
 		<vocabulary(lexer.literalNames, lexer.symbolicNames)>
+
+        val tokenNames: Array\<String?> = Array\<String?>(SYMBOLIC_NAMES.size) {
+            var el = VOCABULARY.getLiteralName(it)
+            if (el == null) {
+                el = VOCABULARY.getSymbolicName(it)
+            }
+
+            if (el == null) {
+                el = "\<INVALID>"
+            }
+            el
+        }
 
 		<atn>
 	}
@@ -910,7 +920,7 @@ public static final String _serializedATN = Utils.join(
 );
 <else>
 <! only one segment, can be inlined !>
-val serializedIntegersATN =
+private val serializedIntegersATN =
 	arrayOf(<model.serialized:{it | <it>}; wrap={<\n><\t>}, separator=", ">)
 <endif>
 val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
@@ -924,17 +934,6 @@ init {
 <!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
 <!	System.out.println(dot.getDOT(_ATN.ruleToStartState[2], ruleNames, false));!>
 }
-	var tokenNames: Array\<String?> = Array\<String?>(SYMBOLIC_NAMES.size) {
-			var el = VOCABULARY.getLiteralName(it)
-			if (el == null) {
-				el = VOCABULARY.getSymbolicName(it)
-			}
-
-			if (el == null) {
-				el = "\<INVALID>"
-			}
-			el
-		}
 >>
 
 SerializedATNEnriched(model) ::= <<
