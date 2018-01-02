@@ -825,18 +825,36 @@ package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
 import com.strumenta.kotlinmultiplatform.Arrays
-import org.antlr.v4.kotlinruntime.facade.*
+import org.antlr.v4.kotlinruntime.CharStream
+import org.antlr.v4.kotlinruntime.Lexer
+import org.antlr.v4.kotlinruntime.VocabularyImpl
+import org.antlr.v4.kotlinruntime.atn.ATN
+import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
+import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
+import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
+import org.antlr.v4.kotlinruntime.dfa.DFA
 
 <lexer>
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-class <lexer.name>(val input: String) : <superClass; null="Lexer">("<lexer.grammarFileName>", input) {
+class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 	// TODO Verify the runtime version is correct
+
+    override val ruleNames: Array\<String>?
+        get() = <lexer.name>.Companion.ruleNames
+
+    override val grammarFileName: String
+        get() = "<lexer.grammarFileName>"
+
+    override val atn: ATN
+		get() = MiniCalcLexer.Companion.ATN
 
 	companion object {
 		lateinit var decisionToDFA : Array\<DFA>
 		val sharedContextCache = PredictionContextCache()
+
+		val ruleNames = arrayOf(<lexer.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
 
 		<vocabulary(lexer.literalNames, lexer.symbolicNames)>
 
@@ -871,7 +889,7 @@ class <lexer.name>(val input: String) : <superClass; null="Lexer">("<lexer.gramm
 	<namedActions.members>
 
 	init {
-		setInterpreter(LexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache))
+		this.interpreter = LexerATNSimulator(this, ATN, decisionToDFA as Array\<DFA?>, sharedContextCache)
 	}
 
 	<dumpActions(lexer, "", actionFuncs, sempredFuncs)>

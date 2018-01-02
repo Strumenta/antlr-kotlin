@@ -1,13 +1,43 @@
 // Generated from java-escape by ANTLR 4.7.1
 import com.strumenta.kotlinmultiplatform.Arrays
-import org.antlr.v4.kotlinruntime.facade.*
+import org.antlr.v4.kotlinruntime.CharStream
+import org.antlr.v4.kotlinruntime.Lexer
+import org.antlr.v4.kotlinruntime.VocabularyImpl
+import org.antlr.v4.kotlinruntime.atn.ATN
+import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
+import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
+import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
+import org.antlr.v4.kotlinruntime.dfa.DFA
 
-class MiniCalcLexer(val input: String) : Lexer("MiniCalcLexer.g4", input) {
+class MiniCalcLexer(val input: CharStream) : Lexer(input) {
 	// TODO Verify the runtime version is correct
+
+    override val ruleNames: Array<String>?
+        get() = MiniCalcLexer.Companion.ruleNames
+
+    override val grammarFileName: String
+        get() = "MiniCalcLexer.g4"
+
+    override val atn: ATN
+		get() = MiniCalcLexer.Companion.ATN
 
 	companion object {
 		lateinit var decisionToDFA : Array<DFA>
 		val sharedContextCache = PredictionContextCache()
+
+		val ruleNames = arrayOf("NEWLINE", "WS", "INPUT", "VAR", "PRINT", "AS", 
+                          "INT", "DECIMAL", "STRING", "ID", "INTLIT", "DECLIT", 
+                          "PLUS", "MINUS", "ASTERISK", "DIVISION", "ASSIGN", 
+                          "LPAREN", "RPAREN", "STRING_OPEN", "UNMATCHED", 
+                          "ESCAPE_STRING_DELIMITER", "ESCAPE_SLASH", "ESCAPE_NEWLINE", 
+                          "ESCAPE_SHARP", "STRING_CLOSE", "INTERPOLATION_OPEN", 
+                          "STRING_CONTENT", "STR_UNMATCHED", "INTERPOLATION_CLOSE", 
+                          "INTERP_WS", "INTERP_AS", "INTERP_INT", "INTERP_DECIMAL", 
+                          "INTERP_STRING", "INTERP_INTLIT", "INTERP_DECLIT", 
+                          "INTERP_PLUS", "INTERP_MINUS", "INTERP_ASTERISK", 
+                          "INTERP_DIVISION", "INTERP_ASSIGN", "INTERP_LPAREN", 
+                          "INTERP_RPAREN", "INTERP_ID", "INTERP_STRING_OPEN", 
+                          "INTERP_UNMATCHED")
 
 		private val LITERAL_NAMES = Arrays.asList<String?>(null, null, null, "'input'", 
 		                                                   "'var'", "'print'", 
@@ -34,7 +64,7 @@ class MiniCalcLexer(val input: String) : Lexer("MiniCalcLexer.g4", input) {
 		                                                    "STRING_CONTENT", 
 		                                                    "INTERPOLATION_CLOSE")
 
-		val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
+		val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 
 		val serializedIntegersATN =
 			arrayOf(3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 2, 
@@ -207,10 +237,23 @@ class MiniCalcLexer(val input: String) : Lexer("MiniCalcLexer.g4", input) {
 			20, 2, 9, 21, 2, 9, 12, 2, 9, 22, 2)
 		val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
 		init {
-			decisionToDFA = Array<DFA>(ATN.getNumberOfDecisions(), {
-				createDFA(ATN.getDecisionState(it), it)
+			decisionToDFA = Array<DFA>(ATN.numberOfDecisions, {
+				DFA(ATN.getDecisionState(it)!!, it)
 			})
+
+
 		}
+			var tokenNames: Array<String?> = Array<String?>(SYMBOLIC_NAMES.size) {
+					var el = VOCABULARY.getLiteralName(it)
+					if (el == null) {
+						el = VOCABULARY.getSymbolicName(it)
+					}
+
+					if (el == null) {
+						el = "<INVALID>"
+					}
+					el
+				}
 	}
 
     enum class Tokens(val id: Int) {
@@ -309,7 +352,7 @@ class MiniCalcLexer(val input: String) : Lexer("MiniCalcLexer.g4", input) {
 
 
 	init {
-		setInterpreter(createLexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache))
+		this.interpreter = LexerATNSimulator(this, ATN, decisionToDFA as Array<DFA?>, sharedContextCache)
 	}
 
 }
