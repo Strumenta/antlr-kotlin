@@ -69,11 +69,11 @@ import kotlin.reflect.KClass
 ListenerFile(file, header, namedActions) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
 <if(file.genPackage)>
-package <file.genPackage>;
+package <file.genPackage>
 <endif>
 <header>
 
-import org.antlr.v4.kotlinruntime.facade.ParseTreeListener
+import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 
 /**
  * This interface defines a complete listener for a parse tree produced by
@@ -90,7 +90,7 @@ interface <file.grammarName>Listener : ParseTreeListener {
 <endif>
  * @param ctx the parse tree
  */
-fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context);
+fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)
 /**
 <if(file.listenerLabelRuleNames.(lname))>
  * Exit a parse tree produced by the {@code <lname>\}
@@ -107,13 +107,13 @@ fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Contex
 BaseListenerFile(file, header, namedActions) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
 <if(file.genPackage)>
-package <file.genPackage>;
+package <file.genPackage>
 <endif>
 <header>
 
-import org.antlr.v4.kotlinruntime.facade.ErrorNode
-import org.antlr.v4.kotlinruntime.facade.ParserRuleContext
-import org.antlr.v4.kotlinruntime.facade.TerminalNode
+import org.antlr.v4.kotlinruntime.ParserRuleContext
+import org.antlr.v4.kotlinruntime.tree.ErrorNode
+import org.antlr.v4.kotlinruntime.tree.TerminalNode
 
 /**
  * This class provides an empty implementation of {@link <file.grammarName>Listener},
@@ -140,35 +140,35 @@ override fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="ca
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	fun enterEveryRule(ctx: ParserRuleContext) { }
+	override fun enterEveryRule(ctx: ParserRuleContext) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	fun exitEveryRule(ctx: ParserRuleContext ) { }
+	override fun exitEveryRule(ctx: ParserRuleContext ) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	fun visitTerminal(node: TerminalNode ) { }
+	override fun visitTerminal(node: TerminalNode ) { }
 	/**
 	 * {@inheritDoc\}
 	 *
 	 * \<p>The default implementation does nothing.\</p>
 	 */
-	fun visitErrorNode(node: ErrorNode) { }
+	override fun visitErrorNode(node: ErrorNode) { }
 }
 >>
 
 VisitorFile(file, header, namedActions) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
 <if(file.genPackage)>
-package <file.genPackage>;
+package <file.genPackage>
 <endif>
 <header>
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
@@ -196,10 +196,10 @@ T visit<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx)
 BaseVisitorFile(file, header, namedActions) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
 <if(file.genPackage)>
-package <file.genPackage>;
+package <file.genPackage>
 <endif>
 <header>
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
 
 /**
  * This class provides an empty implementation of {@link <file.grammarName>Visitor},
@@ -447,7 +447,6 @@ enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 >>
 
 CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
-/*CodeBlockForAlt*/
 if (true){
 <locals; separator="\n">
 <preamble; separator="\n">
@@ -533,7 +532,7 @@ when ( interpreter!!.adaptivePredict(_input!!,<choice.decision>,context) ) {
 
 StarBlock(choice, alts, sync, iteration) ::= <<
 this.state = <choice.stateNumber>
-errorHandler.sync(this);
+errorHandler.sync(this)
 _alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
 while ( _alt!=<choice.exitAlt> && _alt!=INVALID_ALT_NUMBER ) {
 	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
@@ -549,7 +548,7 @@ while ( _alt!=<choice.exitAlt> && _alt!=INVALID_ALT_NUMBER ) {
 PlusBlock(choice, alts, error) ::= <<
 this.state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
-_alt = 1<if(!choice.ast.greedy)>+1<endif>;
+_alt = 1<if(!choice.ast.greedy)>+1<endif>
 do {
 	when (_alt) {
 	<alts:{alt|
@@ -581,8 +580,8 @@ bitsetBitfieldComparison(s, bits) ::= <%
 %>
 
 isZero ::= [
-"0":true,
-default:false
+    "0":true,
+    default:false
 ]
 
 offsetShift(shiftAmount, offset) ::= <%
@@ -599,7 +598,7 @@ cases(ttypes) ::= <<
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
-<if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.name>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>);
+<if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.name>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>)
 >>
 
 MatchToken(m) ::= <<
@@ -627,7 +626,7 @@ else {
 
 Wildcard(w) ::= <<
 this.state = <w.stateNumber>
-<if(w.labels)><w.labels:{l | <labelref(l)> = }><endif>matchWildcard();
+<if(w.labels)><w.labels:{l | <labelref(l)> = }><endif>matchWildcard()
 >>
 
 // ACTION STUFF
@@ -638,7 +637,7 @@ ArgAction(a, chunks) ::= "<chunks>"
 
 SemPred(p, chunks, failChunks) ::= <<
 this.state = <p.stateNumber>
-if (!(<chunks>)) throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>);
+if (!(<chunks>)) throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>)
 >>
 
 ExceptionClause(e, catchArg, catchAction) ::= <<
@@ -649,14 +648,14 @@ catch (<catchArg>) {
 
 // lexer actions are not associated with model objects
 
-LexerSkipCommand()  ::= "skip();"
-LexerMoreCommand()  ::= "more();"
-LexerPopModeCommand() ::= "popMode();"
+LexerSkipCommand()  ::= "skip()"
+LexerMoreCommand()  ::= "more()"
+LexerPopModeCommand() ::= "popMode()"
 
-LexerTypeCommand(arg, grammar)      ::= "_type = <arg>;"
-LexerChannelCommand(arg, grammar)   ::= "_channel = <arg>;"
-LexerModeCommand(arg, grammar)      ::= "_mode = <arg>;"
-LexerPushModeCommand(arg, grammar)  ::= "pushMode(<arg>);"
+LexerTypeCommand(arg, grammar)      ::= "_type = <arg>"
+LexerChannelCommand(arg, grammar)   ::= "_channel = <arg>"
+LexerModeCommand(arg, grammar)      ::= "_mode = <arg>"
+LexerPushModeCommand(arg, grammar)  ::= "pushMode(<arg>)"
 
 ActionText(t) ::= "<t.text>"
 ActionTemplate(t) ::= "<t.st>"
@@ -695,15 +694,15 @@ ThisRulePropertyRef_parser(r)	 ::= "this"
 
 NonLocalAttrRef(s)		 ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name>"
 SetNonLocalAttr(s, rhsChunks)	  ::=
-	"((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>;"
+	"((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>"
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "/*TokenDecl*/ var <t.name>: <TokenLabelType()>? = null"
-TokenTypeDecl(t) ::= "/*TokenTypeDecl*/ var <t.name>: Int"
-TokenListDecl(t) ::= "/*TokenListDecl*/ var <t.name> :Mutable\<Token> = ArrayList\<Token>()"
-RuleContextDecl(r) ::= "/*RuleContextDecl*/ var <r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "/*RuleContextListDecl*/ var <rdecl.name> : MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>? = null"
+TokenTypeDecl(t) ::= "var <t.name>: Int"
+TokenListDecl(t) ::= "var <t.name> :Mutable\<Token> = ArrayList\<Token>()"
+RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "var <rdecl.name> : MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
     "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0) as TerminalNode"
@@ -826,7 +825,7 @@ _prevctx = _localctx
 
 recRuleSetPrevCtx() ::= <<
 if ( _parseListeners!=null ) triggerExitRuleEvent()
-_prevctx = _localctx
+    _prevctx = _localctx
 >>
 
 
