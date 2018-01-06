@@ -1,6 +1,6 @@
 // Generated from java-escape by ANTLR 4.7.1
 
-import org.antlr.v4.kotlinruntime.facade.ParseTreeListener
+import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 
 /**
  * This interface defines a complete listener for a parse tree produced by

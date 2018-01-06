@@ -1,8 +1,8 @@
 // Generated from java-escape by ANTLR 4.7.1
 
-import org.antlr.v4.kotlinruntime.facade.ErrorNode
-import org.antlr.v4.kotlinruntime.facade.ParserRuleContext
-import org.antlr.v4.kotlinruntime.facade.TerminalNode
+import org.antlr.v4.kotlinruntime.ParserRuleContext
+import org.antlr.v4.kotlinruntime.tree.ErrorNode
+import org.antlr.v4.kotlinruntime.tree.TerminalNode
 
 /**
  * This class provides an empty implementation of {@link MiniCalcParserListener},
@@ -292,23 +292,23 @@ class MiniCalcParserBaseListener : MiniCalcParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	fun enterEveryRule(ctx: ParserRuleContext) { }
+	override fun enterEveryRule(ctx: ParserRuleContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	fun exitEveryRule(ctx: ParserRuleContext ) { }
+	override fun exitEveryRule(ctx: ParserRuleContext ) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	fun visitTerminal(node: TerminalNode ) { }
+	override fun visitTerminal(node: TerminalNode ) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	fun visitErrorNode(node: ErrorNode) { }
+	override fun visitErrorNode(node: ErrorNode) { }
 }
