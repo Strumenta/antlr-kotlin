@@ -1,0 +1,95 @@
+//dependencies {
+//    compile project(":antlr-kotlin-runtime-js")
+//    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+//    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+//    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+//}
+//
+//compileKotlin2Js {
+//    //kotlinOptions.outputFile = "${projectDir}/js/antlrkotlinruntimeexample.js"
+//    kotlinOptions.moduleKind = "plain"
+//    kotlinOptions.sourceMap = true
+//}
+//
+
+
+buildscript {
+    ext.kotlin_version = '1.2.10'
+
+    repositories {
+        //maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.com.craigburke.gradle:karma-gradle:1.4.4"
+    }
+}
+
+apply plugin: 'kotlin2js'
+apply plugin: 'com.craigburke.karma'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":antlr-kotlin-runtime-js")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+}
+
+def libDir = "$buildDir/lib"
+def compileOutput = compileKotlin2Js.outputFile
+def testOutput = compileTestKotlin2Js.outputFile
+
+task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+    configurations.testCompile.each {
+        from zipTree(it.absolutePath).matching { include '*.js' }
+    }
+
+    into libDir
+}
+
+karma {
+    dependencies(['mocha'])
+
+    frameworks = ['mocha']
+    browsers = ['PhantomJS']
+
+    files = [
+            "$libDir/kotlin.js",
+            "$libDir/*.js",
+            compileOutput,
+            testOutput
+    ]
+}
+
+karmaRun {
+    dependsOn compileTestKotlin2Js
+    dependsOn populateNodeModules
+}
+
+test.dependsOn karmaRun
+clean.dependsOn karmaClean
+
+task assembleWeb(type: Sync) {
+    configurations.compile.each { File file ->
+        from(zipTree(file.absolutePath), {
+            includeEmptyDirs = false
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") ||
+                        !path.startsWith("META-INF/"))
+            }
+        })
+    }
+    from compileKotlin2Js.destinationDir
+    into "${projectDir}/js"
+
+    dependsOn classes
+}
+
+assemble.dependsOn assembleWeb
