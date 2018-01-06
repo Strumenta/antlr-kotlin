@@ -14,7 +14,8 @@ The project is very recent and it should be considered experimental
 
 ## The Kotlin target
 
-TBW
+The Kotlin target is a plugin for the ANTLR generator. It should be added to the classpath used to run the ANTLR Tool.
+You will simply need to specify the language to be `Kotlin`.
 
 ## The Kotlin runtime library
 
