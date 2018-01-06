@@ -51,6 +51,7 @@ package <file.genPackage>;
 <namedActions.header>
 import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.getType
+import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -60,6 +61,7 @@ import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
+import kotlin.reflect.KClass
 
 <parser>
 >>
@@ -229,6 +231,10 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
 
+object solver : TypeDeclarator {
+	override val classesByName : List\<KClass\<*>\> = listOf(<parser.funcs:{f | <parser.name>.<f.name; format="cap">Context::class}; separator=",\n", wrap, anchor>)
+}
+
 class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 	// TODO verify version of runtime is compatible
 
@@ -280,8 +286,10 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
     <endif>
 
+    /* Named actions */
 	<namedActions.members>
 	<parser:(ctor)()>
+	/* Funcs */
 	<funcs; separator="\n">
 
 <if(sempredFuncs)>
@@ -705,13 +713,13 @@ ContextTokenListIndexedGetterDecl(t)  ::= <<
 fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i) as TerminalNode
 >>
 ContextRuleGetterDecl(r)       ::= <<
-fun find<r.name; format="cap">() : <r.ctxName>? = getRuleContext(getType("../<r.ctxName>"),0)
+fun find<r.name; format="cap">() : <r.ctxName>? = getRuleContext(solver.getType("<r.ctxName>"),0)
 >>
 ContextRuleListGetterDecl(r)   ::= <<
-fun find<r.name; format="cap">() : List\<<r.ctxName>\> = getRuleContexts(getType("../<r.ctxName>"))
+fun find<r.name; format="cap">() : List\<<r.ctxName>\> = getRuleContexts(solver.getType("<r.ctxName>"))
 >>
 ContextRuleListIndexedGetterDecl(r)   ::= <<
-fun find<r.name; format="cap">(i: Int) : <r.ctxName>? = getRuleContext(getType("../<r.ctxName>"),i)
+fun find<r.name; format="cap">(i: Int) : <r.ctxName>? = getRuleContext(solver.getType("<r.ctxName>"),i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
