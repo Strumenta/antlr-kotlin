@@ -10,4 +10,11 @@ open class BaseTest {
     protected fun assertTrue(a: Boolean) {
         asserter.assertTrue("$a was expected to be true", a)
     }
+
+    protected fun assertArrayEquals(a: CharArray, b: CharArray) {
+        assertEquals(a.size, b.size)
+        for (i in 0 until a.size) {
+            assertEquals(a[i], b[i])
+        }
+    }
 }

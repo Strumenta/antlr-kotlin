@@ -1,13 +1,13 @@
+import com.strumenta.minicalc.MiniCalcLexer
+import com.strumenta.minicalc.MiniCalcParser
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
-import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.ast.pos
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
-import org.junit.Test as test
-import org.junit.Assert.*
+import kotlin.test.Test as test
 
-class TestingParser {
+class MiniCalcParserTest : BaseTest() {
 
     @test fun simplestFileUsingHomogeneousAPI() {
         val input = ANTLRInputStream("input Int width\n")

@@ -1,11 +1,11 @@
+import com.strumenta.minicalc.MiniCalcLexer
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
-import org.junit.Test as test
-import org.junit.Assert.*
+import kotlin.test.Test as test
 
-class TestingLexer {
+class TestingLexer : BaseTest() {
 
     @test fun firstTokenDebug1() {
         val input = ANTLRInputStream("1 + 2")
@@ -33,6 +33,15 @@ class TestingLexer {
         val dfa = decisionToDFA[mode]
         assertEquals(true, dfa!!.s0 != null)
         assertEquals(0, dfa!!.s0!!.stateNumber)
+    }
+
+    @test fun firstToken() {
+        val input = ANTLRInputStream("1 + 2")
+        val lexer = MiniCalcLexer(input)
+        val token = lexer.nextToken()
+
+        assertEquals("1", token.text)
+        assertEquals(MiniCalcLexer.Tokens.INTLIT.id, token.type)
     }
 
     @test fun simpleTokens() {
