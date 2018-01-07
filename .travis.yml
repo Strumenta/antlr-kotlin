@@ -3,6 +3,6 @@ jdk:
   - oraclejdk8
 install: true
 script:
-  - cd antlr-kotlin-runtime-examples-jvm && ../gradlew check
-  - cd ../antlr-kotlin-runtime-examples-js && ../gradlew test
+  - ./gradlew :antlr-kotlin-runtime-jvm:test
+  - ./gradlew :antlr-kotlin-runtime-js:test
   
