@@ -1,23 +1,7 @@
-//dependencies {
-//    compile project(":antlr-kotlin-runtime-js")
-//    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-//    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-//    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
-//}
-//
-//compileKotlin2Js {
-//    //kotlinOptions.outputFile = "${projectDir}/js/antlrkotlinruntimeexample.js"
-//    kotlinOptions.moduleKind = "plain"
-//    kotlinOptions.sourceMap = true
-//}
-//
-
-
 buildscript {
     ext.kotlin_version = '1.2.10'
 
     repositories {
-        //maven { url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1' }
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
