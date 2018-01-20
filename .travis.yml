@@ -5,4 +5,6 @@ install: true
 script:
   - ./gradlew :antlr-kotlin-runtime-jvm:test
   - ./gradlew :antlr-kotlin-runtime-js:test
+  - ./gradlew install
+  - cd antlr-kotlin-runtime-examples-jvm && ../gradlew compileKotlin
   
