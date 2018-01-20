@@ -17,7 +17,7 @@
 package org.gradle.api.plugins.antlrkotlin.internal;
 
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlrkotlin.AntlrTask;
+import org.gradle.api.plugins.antlrkotlin.AntlrKotlinTask;
 import org.gradle.internal.impldep.com.google.common.collect.Lists;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class AntlrSpecFactory {
 
-    public AntlrSpec create(AntlrTask antlrTask, Set<File> grammarFiles, SourceDirectorySet sourceDirectorySet) {
+    public AntlrSpec create(AntlrKotlinTask antlrTask, Set<File> grammarFiles, SourceDirectorySet sourceDirectorySet) {
         List<String> arguments = Lists.newLinkedList(antlrTask.getArguments());
 
         if (antlrTask.isTrace() && !arguments.contains("-trace")) {

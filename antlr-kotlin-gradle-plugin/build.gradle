@@ -43,6 +43,7 @@ plugins {
     id 'maven'
 }
 
+group = 'com.strumenta.antlr-kotlin'
 version = '0.0.1'
 
 dependencies {

@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Generates parsers from Antlr grammars.
  */
 @CacheableTask
-public class AntlrTask extends SourceTask {
+public class AntlrKotlinTask extends SourceTask {
 
     private boolean trace;
     private boolean traceLexer;

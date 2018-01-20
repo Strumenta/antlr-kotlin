@@ -3,13 +3,16 @@ buildscript {
 
     repositories {
         mavenCentral()
+        mavenLocal()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:0.0.1"
     }
 }
 
 apply plugin: 'kotlin'
+apply plugin: 'com.strumenta.antlrkotlin'
 
 repositories {
     mavenCentral()

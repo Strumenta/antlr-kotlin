@@ -41,7 +41,7 @@ import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
  * A plugin for adding support for the ANTLR Kotlin target to {@link JavaPlugin java projects}.
  */
 public class AntlrKotlinPlugin implements Plugin<Project> {
-    public static final String ANTLR_CONFIGURATION_NAME = "antlr-kotlin";
+    public static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
     private final SourceDirectorySetFactory sourceDirectorySetFactory;
 
     @Inject
@@ -91,7 +91,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                         antlrDirectoryDelegate.getAntlr().srcDir(srcDir);
                         sourceSet.getAllSource().source(antlrDirectoryDelegate.getAntlr());
 
-                        // 2) create an AntlrTask for this sourceSet following the gradle
+                        // 2) create an AntlrKotlinTask for this sourceSet following the gradle
                         //    naming conventions via call to sourceSet.getTaskName()
                         final String taskName = sourceSet.getTaskName("generate", "GrammarSource");
                         AntlrTask antlrTask = project.getTasks().create(taskName, AntlrTask.class);
