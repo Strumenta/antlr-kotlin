@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:0.0.1"
     compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:0.0.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -30,12 +31,12 @@ dependencies {
 generateKotlinGrammarSource {
     maxHeapSize = "64m"
     //arguments += ['-package', 'me.tomassetti.minicalc']
-    //outputDirectory = new File("generated-src/antlr/llvm.main/me/tomassetti/minicalc".toString())
+    outputDirectory = new File("generated-src/antlr/".toString())
 }
 compileJava.dependsOn generateKotlinGrammarSource
 sourceSets {
     generated {
-        java.srcDir 'generated-src/antlr/llvm.main/'
+        java.srcDir 'generated-src/antlr/'
     }
 }
 compileJava.source sourceSets.generated.java, sourceSets.main.java
@@ -47,6 +48,6 @@ clean{
 
 idea {
     module {
-        sourceDirs += file("generated-src/antlr/llvm.main")
+        sourceDirs += file("generated-src/antlr/")
     }
 }

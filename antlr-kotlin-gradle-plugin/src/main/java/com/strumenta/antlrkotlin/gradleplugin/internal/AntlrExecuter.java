@@ -104,6 +104,7 @@ public class AntlrExecuter implements AntlrWorker {
                 boolean onWindows = OperatingSystem.current().isWindows();
                 for (File inputDirectory : spec.getInputDirectories()) {
                     final List<String> arguments = spec.getArguments();
+                    arguments.add("-Dlanguage=Kotlin");
                     arguments.add("-o");
                     arguments.add(spec.getOutputDirectory().getAbsolutePath());
                     for (File grammarFile : spec.getGrammarFiles()) {
