@@ -63,7 +63,7 @@ public class AntlrKotlinTask extends SourceTask {
     private boolean traceTreeWalker;
     private List<String> arguments = new ArrayList<String>();
 
-    private FileCollection antlrKotlinClasspath;
+    private FileCollection antlrClasspath;
 
     private File outputDirectory;
     private String maxHeapSize;
@@ -170,17 +170,17 @@ public class AntlrKotlinTask extends SourceTask {
      * @return The Ant task implementation classpath.
      */
     @Classpath
-    public FileCollection getAntlrKotlinClasspath() {
-        return antlrKotlinClasspath;
+    public FileCollection getAntlrClasspath() {
+        return antlrClasspath;
     }
 
     /**
      * Specifies the classpath containing the Ant ANTLR task implementation.
      *
-     * @param antlrKotlinClasspath The Ant task implementation classpath. Must not be null.
+     * @param antlrClasspath The Ant task implementation classpath. Must not be null.
      */
-    protected void setAntlrKotlinClasspath(FileCollection antlrKotlinClasspath) {
-        this.antlrKotlinClasspath = antlrKotlinClasspath;
+    protected void setAntlrClasspath(FileCollection antlrClasspath) {
+        this.antlrClasspath = antlrClasspath;
     }
 
     @Inject
@@ -223,7 +223,7 @@ public class AntlrKotlinTask extends SourceTask {
         LOGGER.debug("AntlrWorkerManager created");
         AntlrSpec spec = new AntlrSpecFactory().create(this, grammarFiles, sourceDirectorySet);
         LOGGER.debug("AntlrSpec created");
-        AntlrResult result = manager.runWorker(getProject().getProjectDir(), getWorkerProcessBuilderFactory(), getAntlrKotlinClasspath(), spec);
+        AntlrResult result = manager.runWorker(getProject().getProjectDir(), getWorkerProcessBuilderFactory(), getAntlrClasspath(), spec);
         LOGGER.debug("AntlrResult obtained");
         evaluate(result);
     }

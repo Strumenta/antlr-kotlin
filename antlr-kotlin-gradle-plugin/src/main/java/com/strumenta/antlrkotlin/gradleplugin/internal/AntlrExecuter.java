@@ -61,14 +61,14 @@ public class AntlrExecuter implements AntlrWorker {
                     Constructor<?> constructor = toolClass.getConstructor(String[].class);
                     return constructor.newInstance(new Object[]{args});
                 }
-            }catch(ClassNotFoundException cnf){
-                LOGGER.debug("Tool not loaded " + cnf.getMessage());
+            } catch(ClassNotFoundException cnf){
+                LOGGER.error("Tool not loaded " + cnf.getMessage());
                 throw cnf;
             } catch (InvocationTargetException e) {
-                LOGGER.debug("Tool not loaded " + e.getMessage());
+                LOGGER.error("Tool not loaded " + e.getMessage());
                 throw new GradleException("Failed to load ANTLR", e.getCause());
             } catch (Exception e) {
-                LOGGER.debug("Tool not loaded " + e.getMessage());
+                LOGGER.error("Tool not loaded " + e.getMessage());
                 throw new GradleException("Failed to load ANTLR", e);
             }
         }

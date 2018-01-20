@@ -18,16 +18,16 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 
 import org.gradle.api.file.SourceDirectorySet;
 import com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask;
-import org.gradle.internal.impldep.com.google.common.collect.Lists;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 public class AntlrSpecFactory {
 
     public AntlrSpec create(AntlrKotlinTask antlrTask, Set<File> grammarFiles, SourceDirectorySet sourceDirectorySet) {
-        List<String> arguments = Lists.newLinkedList(antlrTask.getArguments());
+        List<String> arguments = new LinkedList<>(antlrTask.getArguments());
 
         if (antlrTask.isTrace() && !arguments.contains("-trace")) {
             arguments.add("-trace");

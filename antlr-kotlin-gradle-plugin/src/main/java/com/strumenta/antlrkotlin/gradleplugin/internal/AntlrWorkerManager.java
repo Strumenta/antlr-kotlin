@@ -29,19 +29,19 @@ public class AntlrWorkerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrWorkerManager.class);
 
-    public AntlrResult runWorker(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrKotlinClasspath, AntlrSpec spec) {
+    public AntlrResult runWorker(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
         LOGGER.debug("Running worker");
-        AntlrWorker antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrKotlinClasspath, spec);
+        AntlrWorker antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec);
         return antlrWorker.runAntlr(spec);
     }
 
-    private AntlrWorker createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrKotlinClasspath, AntlrSpec spec) {
+    private AntlrWorker createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
         SingleRequestWorkerProcessBuilder<AntlrWorker> builder = workerFactory.singleRequestWorker(AntlrWorker.class, AntlrExecuter.class);
         builder.setBaseName("Gradle ANTLR-Kotlin Worker");
 
-        if (antlrKotlinClasspath != null) {
-            LOGGER.debug("Setting antlr classpath: " + antlrKotlinClasspath);
-            builder.applicationClasspath(antlrKotlinClasspath);
+        if (antlrClasspath != null) {
+            LOGGER.debug("Setting antlr classpath: " + antlrClasspath);
+            builder.applicationClasspath(antlrClasspath);
         } else {
             LOGGER.debug("Setting no antlr classpath");
         }
