@@ -6,3 +6,4 @@ build
 .idea
 out
 **/.DS_Store
+.java-version
