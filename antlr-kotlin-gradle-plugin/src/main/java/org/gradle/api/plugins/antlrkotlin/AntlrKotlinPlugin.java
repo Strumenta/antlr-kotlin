@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr;
+package org.gradle.api.plugins.antlrkotlin;
 
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -26,6 +26,8 @@ import org.gradle.api.internal.plugins.DslObject;
 import org.gradle.api.internal.tasks.DefaultSourceSet;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.antlr.AntlrSourceVirtualDirectory;
+import org.gradle.api.plugins.antlr.AntlrTask;
 import org.gradle.api.plugins.antlr.internal.AntlrSourceVirtualDirectoryImpl;
 import org.gradle.api.tasks.SourceSet;
 
@@ -36,14 +38,14 @@ import java.util.concurrent.Callable;
 import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
 
 /**
- * A plugin for adding Antlr support to {@link JavaPlugin java projects}.
+ * A plugin for adding support for the ANTLR Kotlin target to {@link JavaPlugin java projects}.
  */
-public class AntlrPlugin implements Plugin<Project> {
-    public static final String ANTLR_CONFIGURATION_NAME = "antlr";
+public class AntlrKotlinPlugin implements Plugin<Project> {
+    public static final String ANTLR_CONFIGURATION_NAME = "antlr-kotlin";
     private final SourceDirectorySetFactory sourceDirectorySetFactory;
 
     @Inject
-    public AntlrPlugin(SourceDirectorySetFactory sourceDirectorySetFactory) {
+    public AntlrKotlinPlugin(SourceDirectorySetFactory sourceDirectorySetFactory) {
         this.sourceDirectorySetFactory = sourceDirectorySetFactory;
     }
 

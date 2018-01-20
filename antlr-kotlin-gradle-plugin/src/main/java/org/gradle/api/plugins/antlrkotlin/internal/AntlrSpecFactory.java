@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr.internal;
+package org.gradle.api.plugins.antlrkotlin.internal;
 
-import com.google.common.collect.Lists;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlr.AntlrTask;
+import org.gradle.api.plugins.antlrkotlin.AntlrTask;
+import org.gradle.internal.impldep.com.google.common.collect.Lists;
 
 import java.io.File;
 import java.util.List;

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr.internal;
+package org.gradle.api.plugins.antlrkotlin.internal;
 
-import com.google.common.collect.Lists;
 import org.gradle.api.GradleException;
 import org.gradle.api.plugins.antlr.internal.antlr2.GenerationPlan;
 import org.gradle.api.plugins.antlr.internal.antlr2.GenerationPlanBuilder;
 import org.gradle.api.plugins.antlr.internal.antlr2.MetadataExtracter;
 import org.gradle.api.plugins.antlr.internal.antlr2.XRef;
+import org.gradle.internal.UncheckedException;
+import org.gradle.internal.impldep.com.google.common.collect.Lists;
 import org.gradle.internal.os.OperatingSystem;
 import org.gradle.internal.reflect.JavaReflectionUtil;
-import org.gradle.util.RelativePathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +117,14 @@ public class AntlrExecuter implements AntlrWorker {
             }
         }
 
+        public static String relativePath(File from, File to) {
+            try {
+                return org.apache.tools.ant.util.FileUtils.getRelativePath(from, to);
+            } catch (Exception e) {
+                throw UncheckedException.throwAsUncheckedException(e);
+            }
+        }
+
         /**
          * process used for antlr3/4
          */
@@ -134,7 +142,7 @@ public class AntlrExecuter implements AntlrWorker {
                     arguments.add("-o");
                     arguments.add(spec.getOutputDirectory().getAbsolutePath());
                     for (File grammarFile : spec.getGrammarFiles()) {
-                        String relativeGrammarFilePath = RelativePathUtil.relativePath(inputDirectory, grammarFile);
+                        String relativeGrammarFilePath = relativePath(inputDirectory, grammarFile);
                         if (onWindows) {
                             relativeGrammarFilePath = relativeGrammarFilePath.replace('/', File.separatorChar);
                         }

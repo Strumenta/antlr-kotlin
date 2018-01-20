@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.api.plugins.antlr.internal.antlr2;
+package org.gradle.api.plugins.antlrkotlin.internal.antlr2;
+
+import groovyjarjarantlr.preprocessor.GrammarFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,11 +27,11 @@ import java.util.List;
  */
 public class GrammarFileMetadata {
     private final File filePath;
-    private final antlr.preprocessor.GrammarFile antlrGrammarFile;
+    private final GrammarFile antlrGrammarFile;
     private final String packageName;
     private List<GrammarMetadata> grammarMetadatas = new ArrayList<GrammarMetadata>();
 
-    public GrammarFileMetadata(File filePath, antlr.preprocessor.GrammarFile antlrGrammarFile, String packageName) {
+    public GrammarFileMetadata(File filePath, GrammarFile antlrGrammarFile, String packageName) {
         this.filePath = filePath;
         this.antlrGrammarFile = antlrGrammarFile;
         this.packageName = packageName;
@@ -45,7 +47,7 @@ public class GrammarFileMetadata {
         return filePath;
     }
 
-    public antlr.preprocessor.GrammarFile getAntlrGrammarFile() {
+    public GrammarFile getAntlrGrammarFile() {
         return antlrGrammarFile;
     }
 

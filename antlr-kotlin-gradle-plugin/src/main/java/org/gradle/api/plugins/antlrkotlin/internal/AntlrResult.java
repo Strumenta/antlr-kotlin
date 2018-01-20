@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr.internal;
+package org.gradle.api.plugins.antlrkotlin.internal;
 
 import java.io.Serializable;
 

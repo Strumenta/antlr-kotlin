@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr;
+package org.gradle.api.plugins.antlrkotlin;
 
 import org.gradle.api.Action;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlr.internal.AntlrResult;
-import org.gradle.api.plugins.antlr.internal.AntlrSourceGenerationException;
-import org.gradle.api.plugins.antlr.internal.AntlrSpec;
-import org.gradle.api.plugins.antlr.internal.AntlrSpecFactory;
-import org.gradle.api.plugins.antlr.internal.AntlrWorkerManager;
+import org.gradle.api.plugins.antlrkotlin.internal.AntlrResult;
+import org.gradle.api.plugins.antlrkotlin.internal.AntlrSourceGenerationException;
+import org.gradle.api.plugins.antlrkotlin.internal.AntlrSpec;
+import org.gradle.api.plugins.antlrkotlin.internal.AntlrSpecFactory;
+import org.gradle.api.plugins.antlrkotlin.internal.AntlrWorkerManager;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.Classpath;
 import org.gradle.api.tasks.Input;
@@ -130,7 +130,6 @@ public class AntlrTask extends SourceTask {
             this.arguments = arguments;
         }
     }
-
 
     /**
      * List of command-line arguments passed to the antlr process

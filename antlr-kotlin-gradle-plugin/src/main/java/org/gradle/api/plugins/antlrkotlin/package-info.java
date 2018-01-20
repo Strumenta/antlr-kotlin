@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr.internal;
-
-import org.gradle.api.GradleException;
-import org.gradle.internal.exceptions.Contextual;
-
-@Contextual
-public class AntlrSourceGenerationException extends GradleException {
-    public AntlrSourceGenerationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-}
+/**
+ * A {@link org.gradle.api.Plugin} for generating parsers from Antlr grammars using the Kotlin target.
+ */
+package org.gradle.api.plugins.antlrkotlin;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlr;
+package org.gradle.api.plugins.antlrkotlin;
 
 import groovy.lang.Closure;
 import org.gradle.api.Action;

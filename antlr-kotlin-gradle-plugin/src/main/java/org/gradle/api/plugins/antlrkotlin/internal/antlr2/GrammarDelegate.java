@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.api.plugins.antlr.internal.antlr2;
+package org.gradle.api.plugins.antlrkotlin.internal.antlr2;
 
-import antlr.collections.impl.IndexedVector;
-import antlr.preprocessor.GrammarFile;
+import groovyjarjarantlr.collections.impl.IndexedVector;
+import groovyjarjarantlr.preprocessor.GrammarFile;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * Antlr defines its {@link antlr.preprocessor.Grammar} class as package-protected for some unfortunate reason. So this class acts as a delegate to the Antlr {@link antlr.preprocessor.Grammar} class,
+ * Antlr defines its {@link GrammarFile} class as package-protected for some unfortunate reason. So this class acts as a delegate to the Antlr {@link GrammarFile} class,
  * hiding all the ugly necessary reflection code.
  */
 public class GrammarDelegate {

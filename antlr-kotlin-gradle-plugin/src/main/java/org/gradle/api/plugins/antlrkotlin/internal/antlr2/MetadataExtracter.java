@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.api.plugins.antlr.internal.antlr2;
+package org.gradle.api.plugins.antlrkotlin.internal.antlr2;
 
+import groovyjarjarantlr.Tool;
+import groovyjarjarantlr.preprocessor.GrammarFile;
+import groovyjarjarantlr.preprocessor.Hierarchy;
+import org.gradle.api.Nullable;
 import org.gradle.api.UncheckedIOException;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,8 +38,8 @@ import java.util.regex.Pattern;
 public class MetadataExtracter {
 
     public XRef extractMetadata(Set<File> sources) {
-        antlr.Tool tool = new antlr.Tool();
-        antlr.preprocessor.Hierarchy hierarchy = new antlr.preprocessor.Hierarchy(tool);
+        Tool tool = new Tool();
+        Hierarchy hierarchy = new Hierarchy(tool);
 
         // first let antlr preprocess the grammars...
         for (File grammarFileFile : sources) {
@@ -58,7 +61,7 @@ public class MetadataExtracter {
             String grammarPackageName = getPackageName(grammarFileFile);
 
             final String grammarFilePath = grammarFileFile.getPath();
-            antlr.preprocessor.GrammarFile antlrGrammarFile = hierarchy.getFile(grammarFilePath);
+            GrammarFile antlrGrammarFile = hierarchy.getFile(grammarFilePath);
 
             GrammarFileMetadata grammarFileMetadata = new GrammarFileMetadata(grammarFileFile, antlrGrammarFile,
                     grammarPackageName);
