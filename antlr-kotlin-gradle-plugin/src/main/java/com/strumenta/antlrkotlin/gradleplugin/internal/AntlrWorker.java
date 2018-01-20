@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlrkotlin.internal;
+package com.strumenta.antlrkotlin.gradleplugin.internal;
 
 public interface AntlrWorker {
     AntlrResult runAntlr(AntlrSpec spec);

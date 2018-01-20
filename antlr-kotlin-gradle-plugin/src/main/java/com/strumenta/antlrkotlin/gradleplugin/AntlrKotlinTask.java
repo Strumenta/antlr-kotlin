@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlrkotlin;
+package com.strumenta.antlrkotlin.gradleplugin;
 
 import org.gradle.api.Action;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlrkotlin.internal.AntlrResult;
-import org.gradle.api.plugins.antlrkotlin.internal.AntlrSourceGenerationException;
-import org.gradle.api.plugins.antlrkotlin.internal.AntlrSpec;
-import org.gradle.api.plugins.antlrkotlin.internal.AntlrSpecFactory;
-import org.gradle.api.plugins.antlrkotlin.internal.AntlrWorkerManager;
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrResult;
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceGenerationException;
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpec;
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpecFactory;
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrWorkerManager;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.Classpath;
 import org.gradle.api.tasks.Input;
@@ -38,6 +38,8 @@ import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 import org.gradle.api.tasks.incremental.InputFileDetails;
 import org.gradle.process.internal.worker.WorkerProcessFactory;
 import org.gradle.util.GFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -53,13 +55,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @CacheableTask
 public class AntlrKotlinTask extends SourceTask {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinTask.class);
+
     private boolean trace;
     private boolean traceLexer;
     private boolean traceParser;
     private boolean traceTreeWalker;
     private List<String> arguments = new ArrayList<String>();
 
-    private FileCollection antlrClasspath;
+    private FileCollection antlrKotlinClasspath;
 
     private File outputDirectory;
     private String maxHeapSize;
@@ -166,17 +170,17 @@ public class AntlrKotlinTask extends SourceTask {
      * @return The Ant task implementation classpath.
      */
     @Classpath
-    public FileCollection getAntlrClasspath() {
-        return antlrClasspath;
+    public FileCollection getAntlrKotlinClasspath() {
+        return antlrKotlinClasspath;
     }
 
     /**
      * Specifies the classpath containing the Ant ANTLR task implementation.
      *
-     * @param antlrClasspath The Ant task implementation classpath. Must not be null.
+     * @param antlrKotlinClasspath The Ant task implementation classpath. Must not be null.
      */
-    protected void setAntlrClasspath(FileCollection antlrClasspath) {
-        this.antlrClasspath = antlrClasspath;
+    protected void setAntlrKotlinClasspath(FileCollection antlrKotlinClasspath) {
+        this.antlrKotlinClasspath = antlrKotlinClasspath;
     }
 
     @Inject
@@ -216,8 +220,11 @@ public class AntlrKotlinTask extends SourceTask {
         }
 
         AntlrWorkerManager manager = new AntlrWorkerManager();
+        LOGGER.debug("AntlrWorkerManager created");
         AntlrSpec spec = new AntlrSpecFactory().create(this, grammarFiles, sourceDirectorySet);
-        AntlrResult result = manager.runWorker(getProject().getProjectDir(), getWorkerProcessBuilderFactory(), getAntlrClasspath(), spec);
+        LOGGER.debug("AntlrSpec created");
+        AntlrResult result = manager.runWorker(getProject().getProjectDir(), getWorkerProcessBuilderFactory(), getAntlrKotlinClasspath(), spec);
+        LOGGER.debug("AntlrResult obtained");
         evaluate(result);
     }
 

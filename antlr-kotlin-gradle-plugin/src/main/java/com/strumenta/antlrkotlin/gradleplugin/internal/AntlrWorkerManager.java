@@ -14,29 +14,36 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlrkotlin.internal;
+package com.strumenta.antlrkotlin.gradleplugin.internal;
 
 import org.gradle.api.file.FileCollection;
 import org.gradle.process.internal.JavaExecHandleBuilder;
 import org.gradle.process.internal.worker.SingleRequestWorkerProcessBuilder;
 import org.gradle.process.internal.worker.WorkerProcessFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class AntlrWorkerManager {
 
-    public AntlrResult runWorker(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AntlrWorkerManager.class);
 
-        AntlrWorker antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec);
+    public AntlrResult runWorker(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrKotlinClasspath, AntlrSpec spec) {
+        LOGGER.debug("Running worker");
+        AntlrWorker antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrKotlinClasspath, spec);
         return antlrWorker.runAntlr(spec);
     }
 
-    private AntlrWorker createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
+    private AntlrWorker createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrKotlinClasspath, AntlrSpec spec) {
         SingleRequestWorkerProcessBuilder<AntlrWorker> builder = workerFactory.singleRequestWorker(AntlrWorker.class, AntlrExecuter.class);
-        builder.setBaseName("Gradle ANTLR Worker");
+        builder.setBaseName("Gradle ANTLR-Kotlin Worker");
 
-        if (antlrClasspath != null) {
-            builder.applicationClasspath(antlrClasspath);
+        if (antlrKotlinClasspath != null) {
+            LOGGER.debug("Setting antlr classpath: " + antlrKotlinClasspath);
+            builder.applicationClasspath(antlrKotlinClasspath);
+        } else {
+            LOGGER.debug("Setting no antlr classpath");
         }
         builder.sharedPackages(new String[] {"antlr", "org.antlr"});
         JavaExecHandleBuilder javaCommand = builder.getJavaCommand();

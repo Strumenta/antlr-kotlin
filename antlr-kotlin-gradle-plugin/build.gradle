@@ -28,7 +28,7 @@ dependencies {
     compileOnly "org.antlr:antlr4:4.7.1@jar"
     compileOnly "com.strumenta.antlr-kotlin:antlr-kotlin-target:0.0.1@jar"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testCompileOnly gradleTestKit()
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.assertj:assertj-core:3.6.2'
+//    testCompileOnly gradleTestKit()
+//    testImplementation 'junit:junit:4.12'
+//    testImplementation 'org.assertj:assertj-core:3.6.2'
 }

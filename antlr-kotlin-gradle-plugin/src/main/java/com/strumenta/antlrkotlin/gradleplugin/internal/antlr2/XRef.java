@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.api.plugins.antlrkotlin.internal.antlr2;
+package com.strumenta.antlrkotlin.gradleplugin.internal.antlr2;
 
 import groovyjarjarantlr.preprocessor.Hierarchy;
 

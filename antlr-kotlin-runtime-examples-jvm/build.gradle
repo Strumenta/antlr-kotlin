@@ -28,12 +28,12 @@ dependencies {
     //testCompile 'junit:junit:4.12'
 }
 
-generateGrammarSource {
+generateKotlinGrammarSource {
     maxHeapSize = "64m"
     //arguments += ['-package', 'me.tomassetti.minicalc']
     //outputDirectory = new File("generated-src/antlr/llvm.main/me/tomassetti/minicalc".toString())
 }
-compileJava.dependsOn generateGrammarSource
+compileJava.dependsOn generateKotlinGrammarSource
 sourceSets {
     generated {
         java.srcDir 'generated-src/antlr/llvm.main/'

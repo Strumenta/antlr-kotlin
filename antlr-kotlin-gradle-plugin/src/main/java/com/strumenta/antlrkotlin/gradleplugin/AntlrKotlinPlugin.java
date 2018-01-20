@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.gradle.api.plugins.antlrkotlin;
+package com.strumenta.antlrkotlin.gradleplugin;
 
+import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrExecuter;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -30,6 +31,8 @@ import org.gradle.api.plugins.antlr.AntlrSourceVirtualDirectory;
 import org.gradle.api.plugins.antlr.AntlrTask;
 import org.gradle.api.plugins.antlr.internal.AntlrSourceVirtualDirectoryImpl;
 import org.gradle.api.tasks.SourceSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -41,6 +44,8 @@ import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
  * A plugin for adding support for the ANTLR Kotlin target to {@link JavaPlugin java projects}.
  */
 public class AntlrKotlinPlugin implements Plugin<Project> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinPlugin.class);
+
     public static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
     private final SourceDirectorySetFactory sourceDirectorySetFactory;
 
@@ -61,7 +66,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
         antlrConfiguration.defaultDependencies(new Action<DependencySet>() {
             @Override
             public void execute(DependencySet dependencies) {
-                dependencies.add(project.getDependencies().create("antlr:antlr:2.7.7@jar"));
+                dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1@jar"));
             }
         });
 
@@ -70,7 +75,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
         // Wire the antlr configuration into all antlr tasks
         project.getTasks().withType(AntlrTask.class, new Action<AntlrTask>() {
             public void execute(AntlrTask antlrTask) {
-                antlrTask.getConventionMapping().map("antlrClasspath", new Callable<Object>() {
+                antlrTask.getConventionMapping().map("antlrKotlinClasspath", new Callable<Object>() {
                     public Object call() throws Exception {
                         return project.getConfigurations().getByName(ANTLR_CONFIGURATION_NAME);
                     }
@@ -93,7 +98,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
 
                         // 2) create an AntlrKotlinTask for this sourceSet following the gradle
                         //    naming conventions via call to sourceSet.getTaskName()
-                        final String taskName = sourceSet.getTaskName("generate", "GrammarSource");
+                        final String taskName = sourceSet.getTaskName("generateKotlin", "GrammarSource");
                         AntlrTask antlrTask = project.getTasks().create(taskName, AntlrTask.class);
                         antlrTask.setDescription("Processes the " + sourceSet.getName() + " Antlr grammars.");
 
