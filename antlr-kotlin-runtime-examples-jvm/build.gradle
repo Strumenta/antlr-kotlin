@@ -30,8 +30,8 @@ dependencies {
 
 generateGrammarSource {
     maxHeapSize = "64m"
-    arguments += ['-package', 'me.tomassetti.minicalc']
-    outputDirectory = new File("generated-src/antlr/llvm.main/me/tomassetti/minicalc".toString())
+    //arguments += ['-package', 'me.tomassetti.minicalc']
+    //outputDirectory = new File("generated-src/antlr/llvm.main/me/tomassetti/minicalc".toString())
 }
 compileJava.dependsOn generateGrammarSource
 sourceSets {

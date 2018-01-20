@@ -45,44 +45,44 @@ public class AntlrExecuter implements AntlrWorker {
             return antlrTool.process(spec);
         }
 
-        antlrTool = new Antlr3Tool();
-        if (antlrTool.available()) {
-            LOGGER.info("Processing with ANTLR 3");
-            return antlrTool.process(spec);
-        }
-
-        antlrTool = new Antlr2Tool();
-        if (antlrTool.available()) {
-            LOGGER.info("Processing with ANTLR 2");
-            return antlrTool.process(spec);
-        }
-        throw new IllegalStateException("No Antlr implementation available");
+//        antlrTool = new Antlr3Tool();
+//        if (antlrTool.available()) {
+//            LOGGER.info("Processing with ANTLR 3");
+//            return antlrTool.process(spec);
+//        }
+//
+//        antlrTool = new Antlr2Tool();
+//        if (antlrTool.available()) {
+//            LOGGER.info("Processing with ANTLR 2");
+//            return antlrTool.process(spec);
+//        }
+        throw new IllegalStateException("No ANTLR 4 implementation available");
     }
 
-    private static class Antlr3Tool extends AntlrTool {
-        @Override
-        int invoke(List<String> arguments, File inputDirectory) throws ClassNotFoundException {
-            final Object backedObject = loadTool("org.antlr.Tool", null);
-            String[] argArray = arguments.toArray(new String[0]);
-            if (inputDirectory != null) {
-                JavaReflectionUtil.method(backedObject, Void.class, "setInputDirectory", String.class).invoke(backedObject, inputDirectory.getAbsolutePath());
-                JavaReflectionUtil.method(backedObject, Void.class, "setForceRelativeOutput", boolean.class).invoke(backedObject, true);
-            }
-            JavaReflectionUtil.method(backedObject, Void.class, "processArgs", String[].class).invoke(backedObject, new Object[]{argArray});
-            JavaReflectionUtil.method(backedObject, Void.class, "process").invoke(backedObject);
-            return JavaReflectionUtil.method(backedObject, Integer.class, "getNumErrors").invoke(backedObject);
-        }
-
-        @Override
-        public boolean available() {
-            try {
-                loadTool("org.antlr.Tool", null);
-            } catch (ClassNotFoundException cnf) {
-                return false;
-            }
-            return true;
-        }
-    }
+//    private static class Antlr3Tool extends AntlrTool {
+//        @Override
+//        int invoke(List<String> arguments, File inputDirectory) throws ClassNotFoundException {
+//            final Object backedObject = loadTool("org.antlr.Tool", null);
+//            String[] argArray = arguments.toArray(new String[0]);
+//            if (inputDirectory != null) {
+//                JavaReflectionUtil.method(backedObject, Void.class, "setInputDirectory", String.class).invoke(backedObject, inputDirectory.getAbsolutePath());
+//                JavaReflectionUtil.method(backedObject, Void.class, "setForceRelativeOutput", boolean.class).invoke(backedObject, true);
+//            }
+//            JavaReflectionUtil.method(backedObject, Void.class, "processArgs", String[].class).invoke(backedObject, new Object[]{argArray});
+//            JavaReflectionUtil.method(backedObject, Void.class, "process").invoke(backedObject);
+//            return JavaReflectionUtil.method(backedObject, Integer.class, "getNumErrors").invoke(backedObject);
+//        }
+//
+//        @Override
+//        public boolean available() {
+//            try {
+//                loadTool("org.antlr.Tool", null);
+//            } catch (ClassNotFoundException cnf) {
+//                return false;
+//            }
+//            return true;
+//        }
+//    }
 
     private abstract static class AntlrTool {
         /**
@@ -91,8 +91,10 @@ public class AntlrExecuter implements AntlrWorker {
          * @throws ClassNotFoundException if class was not on the runtime classpath.
          */
         static Object loadTool(String className, String[] args) throws ClassNotFoundException {
+            LOGGER.debug("Loading tool " + className);
             try {
                 Class<?> toolClass = Class.forName(className); // ok to use caller classloader
+                LOGGER.debug("Tool loaded " + className);
                 if (args == null) {
                     return toolClass.newInstance();
                 } else {
@@ -100,10 +102,13 @@ public class AntlrExecuter implements AntlrWorker {
                     return constructor.newInstance(new Object[]{args});
                 }
             }catch(ClassNotFoundException cnf){
+                LOGGER.debug("Tool not loaded " + cnf.getMessage());
                 throw cnf;
             } catch (InvocationTargetException e) {
+                LOGGER.debug("Tool not loaded " + e.getMessage());
                 throw new GradleException("Failed to load ANTLR", e.getCause());
             } catch (Exception e) {
+                LOGGER.debug("Tool not loaded " + e.getMessage());
                 throw new GradleException("Failed to load ANTLR", e);
             }
         }
@@ -186,46 +191,46 @@ public class AntlrExecuter implements AntlrWorker {
         }
     }
 
-    private static class Antlr2Tool extends AntlrTool {
-        public AntlrResult doProcess(AntlrSpec spec) throws ClassNotFoundException {
-            XRef xref = new MetadataExtracter().extractMetadata(spec.getGrammarFiles());
-            List<GenerationPlan> generationPlans = new GenerationPlanBuilder(spec.getOutputDirectory()).buildGenerationPlans(xref);
-            for (GenerationPlan generationPlan : generationPlans) {
-                List<String> generationPlanArguments = Lists.newArrayList(spec.getArguments());
-                generationPlanArguments.add("-o");
-                generationPlanArguments.add(generationPlan.getGenerationDirectory().getAbsolutePath());
-                generationPlanArguments.add(generationPlan.getSource().getAbsolutePath());
-                try {
-                    invoke(generationPlanArguments, null);
-                } catch (RuntimeException e) {
-                    if (e.getMessage().equals("ANTLR Panic: Exiting due to errors.")) {
-                        return new AntlrResult(-1, e);
-                    }
-                    throw e;
-                }
-
-            }
-            return new AntlrResult(0);  // ANTLR 2 always returning 0
-        }
-
-        /**
-         * inputDirectory is not used in antlr2
-         * */
-        @Override
-        int invoke(List<String> arguments, File inputDirectory) throws ClassNotFoundException {
-            final Object backedAntlrTool = loadTool("antlr.Tool", null);
-            JavaReflectionUtil.method(backedAntlrTool, Integer.class, "doEverything", String[].class).invoke(backedAntlrTool, new Object[]{toArray(arguments)});
-            return 0;
-        }
-
-        @Override
-        public boolean available() {
-            try {
-                loadTool("antlr.Tool", null);
-            } catch (ClassNotFoundException cnf) {
-                return false;
-            }
-            return true;
-        }
-    }
+//    private static class Antlr2Tool extends AntlrTool {
+//        public AntlrResult doProcess(AntlrSpec spec) throws ClassNotFoundException {
+//            XRef xref = new MetadataExtracter().extractMetadata(spec.getGrammarFiles());
+//            List<GenerationPlan> generationPlans = new GenerationPlanBuilder(spec.getOutputDirectory()).buildGenerationPlans(xref);
+//            for (GenerationPlan generationPlan : generationPlans) {
+//                List<String> generationPlanArguments = Lists.newArrayList(spec.getArguments());
+//                generationPlanArguments.add("-o");
+//                generationPlanArguments.add(generationPlan.getGenerationDirectory().getAbsolutePath());
+//                generationPlanArguments.add(generationPlan.getSource().getAbsolutePath());
+//                try {
+//                    invoke(generationPlanArguments, null);
+//                } catch (RuntimeException e) {
+//                    if (e.getMessage().equals("ANTLR Panic: Exiting due to errors.")) {
+//                        return new AntlrResult(-1, e);
+//                    }
+//                    throw e;
+//                }
+//
+//            }
+//            return new AntlrResult(0);  // ANTLR 2 always returning 0
+//        }
+//
+//        /**
+//         * inputDirectory is not used in antlr2
+//         * */
+//        @Override
+//        int invoke(List<String> arguments, File inputDirectory) throws ClassNotFoundException {
+//            final Object backedAntlrTool = loadTool("antlr.Tool", null);
+//            JavaReflectionUtil.method(backedAntlrTool, Integer.class, "doEverything", String[].class).invoke(backedAntlrTool, new Object[]{toArray(arguments)});
+//            return 0;
+//        }
+//
+//        @Override
+//        public boolean available() {
+//            try {
+//                loadTool("antlr.Tool", null);
+//            } catch (ClassNotFoundException cnf) {
+//                return false;
+//            }
+//            return true;
+//        }
+//    }
 }
