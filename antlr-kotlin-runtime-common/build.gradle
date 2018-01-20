@@ -11,10 +11,14 @@ buildscript {
 }
 
 apply plugin: 'kotlin-platform-common'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
 }
+
+group = 'com.strumenta.antlr-kotlin'
+version = '0.0.1'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
