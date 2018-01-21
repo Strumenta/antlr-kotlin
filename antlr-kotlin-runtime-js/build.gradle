@@ -45,10 +45,14 @@ apply plugin: 'kotlin-platform-js'
 
 //apply plugin: 'kotlin2js'
 apply plugin: 'com.craigburke.karma'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
 }
+
+group = 'com.strumenta.antlr-kotlin'
+version = '0.0.1'
 
 dependencies {
     expectedBy project(':antlr-kotlin-runtime-common')

@@ -33,14 +33,13 @@ generateKotlinGrammarSource {
     //arguments += ['-package', 'me.tomassetti.minicalc']
     outputDirectory = new File("generated-src/antlr/".toString())
 }
-compileJava.dependsOn generateKotlinGrammarSource
+compileKotlin.dependsOn generateKotlinGrammarSource
 sourceSets {
     generated {
-        java.srcDir 'generated-src/antlr/'
+        kotlin.srcDir 'generated-src/antlr/'
     }
 }
-compileJava.source sourceSets.generated.java, sourceSets.main.java
-compileKotlin.source sourceSets.generated.java, sourceSets.main.java, sourceSets.main.kotlin
+compileKotlin.source sourceSets.generated.kotlin, sourceSets.main.kotlin
 
 clean{
     delete "generated-src"
