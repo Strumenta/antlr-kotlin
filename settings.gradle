@@ -1,9 +1,3 @@
 rootProject.name = 'antlr-kotlin'
 
-include 'antlr-kotlin-runtime-common',
-        'antlr-kotlin-runtime-jvm',
-        'antlr-kotlin-runtime-js',
-        //'antlr-kotlin-runtime-examples-jvm',
-        //'antlr-kotlin-runtime-examples-js',
-        'antlr-kotlin-target',
-        'antlr-kotlin-gradle-plugin'
+include 'antlr-kotlin-runtime-common', 'antlr-kotlin-runtime-jvm', 'antlr-kotlin-runtime-js', 'antlr-kotlin-target', 'antlr-kotlin-gradle-plugin'
