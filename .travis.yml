@@ -5,6 +5,10 @@ install: true
 script:
   - ./gradlew :antlr-kotlin-runtime-jvm:test
   - ./gradlew :antlr-kotlin-runtime-js:test
-  - ./gradlew install
+  - ./gradlew :antlr-kotlin-runtime-common:install
+  - ./gradlew :antlr-kotlin-runtime-jvm:install
+  - ./gradlew :antlr-kotlin-runtime-js:install
+  - ./gradlew :antlr-kotlin-target:install
+  - ./gradlew :antlr-kotlin-gradle-plugin:install
   - cd antlr-kotlin-runtime-examples-jvm && ../gradlew compileKotlin
   
