@@ -3,6 +3,8 @@ import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.Token
 import java.lang.RuntimeException
+import me.tomassetti.minicalc.MiniCalcLexer
+import me.tomassetti.minicalc.MiniCalcParser
 
 fun main(args: Array<String>) {
 
