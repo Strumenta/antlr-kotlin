@@ -242,11 +242,11 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
         get() = "<parser.grammarFileName>"
 
     override val tokenNames: Array\<String?>?
-        get() = MiniCalcParser.Companion.tokenNames
+        get() = <parser.name>.Companion.tokenNames
     override val ruleNames: Array\<String>?
-        get() = MiniCalcParser.Companion.ruleNames
+        get() = <parser.name>.Companion.ruleNames
     override val atn: ATN
-        get() = MiniCalcParser.Companion.ATN
+        get() = <parser.name>.Companion.ATN
 
     <if(parser.tokens)>
     enum class Tokens(val id: Int) {
@@ -859,7 +859,7 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
         get() = "<lexer.grammarFileName>"
 
     override val atn: ATN
-		get() = MiniCalcLexer.Companion.ATN
+		get() = <lexer.name>.Companion.ATN
 
 	companion object {
 		val decisionToDFA : Array\<DFA>
