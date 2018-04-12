@@ -11,20 +11,19 @@ package org.antlr.v4.kotlinruntime.misc
  * map; avoids mem creation.
  */
 class DoubleKeyMap<Key1, Key2, Value> {
-    internal var data: MutableMap<Key1, Map<Key2, Value>> = LinkedHashMap()
+    internal var data: MutableMap<Key1, MutableMap<Key2, Value>> = LinkedHashMap()
 
     fun put(k1: Key1, k2: Key2, v: Value): Value? {
-        TODO()
-//        var data2: MutableMap<Key2, Value>? = data[k1]
-//        var prev: Value? = null
-//        if (data2 == null) {
-//            data2 = LinkedHashMap()
-//            data.put(k1, data2)
-//        } else {
-//            prev = data2[k2]
-//        }
-//        data2.put(k2, v)
-//        return prev
+        var data2: MutableMap<Key2, Value>? = data[k1]
+        var prev: Value? = null
+        if (data2 == null) {
+            data2 = LinkedHashMap()
+            data.put(k1, data2)
+        } else {
+            prev = data2[k2]
+        }
+        data2.put(k2, v)
+        return prev
     }
 
     operator fun get(k1: Key1, k2: Key2): Value? {

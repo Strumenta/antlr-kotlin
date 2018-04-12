@@ -7,8 +7,6 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.BitSet
-import org.antlr.v4.kotlinruntime.atn.PredictionMode.Companion.hasConflictingAltSet
-import org.antlr.v4.kotlinruntime.atn.PredictionMode.Companion.hasStateAssociatedWithOneAlt
 import org.antlr.v4.kotlinruntime.misc.AbstractEqualityComparator
 import org.antlr.v4.kotlinruntime.misc.FlexibleHashMap
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
@@ -87,29 +85,7 @@ enum class PredictionMode {
 
     /** A Map that uses just the state and the stack context as the key.  */
     internal class AltAndContextMap : FlexibleHashMap<ATNConfig, BitSet>(AltAndContextConfigEqualityComparator.INSTANCE) {
-        override fun get(key: ATNConfig): BitSet? {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override val entries: MutableSet<MutableMap.MutableEntry<ATNConfig, BitSet>>
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-        override val keys: MutableSet<ATNConfig>
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-        override fun containsValue(value: BitSet): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override val size: Int
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-        override val values: MutableCollection<BitSet>
-            get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-        override fun containsKey(key: ATNConfig): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+        // TODO decorate?
     }
 
     private class AltAndContextConfigEqualityComparator private constructor() : AbstractEqualityComparator<ATNConfig>() {

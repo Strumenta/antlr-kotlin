@@ -14,17 +14,12 @@ import org.antlr.v4.kotlinruntime.atn.ATNSimulator
 import org.antlr.v4.kotlinruntime.atn.ParseInfo
 import org.antlr.v4.kotlinruntime.misc.Utils
 
-typealias CopyOnWriteArrayList<E> = ArrayList<E>
+typealias CopyOnWriteArrayList<E> = List<E>
 
 abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
 
-    private class MyCopyOnWriteArrayList : CopyOnWriteArrayList<ANTLRErrorListener>() {
-        init {
-            add(ConsoleErrorListener.INSTANCE)
-        }
-    }
-
-    private val _listeners = MyCopyOnWriteArrayList()
+    // TODO should be thread safe but is not!
+    private val _listeners = mutableListOf<ANTLRErrorListener>()
 
     /**
      * Get the ATN interpreter used by the recognizer for prediction.
