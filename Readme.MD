@@ -1,12 +1,12 @@
 # ANTLR Kotlin
 
-[![Build Status](https://travis-ci.org/ftomassetti/antlr-kotlin.svg?branch=master)](https://travis-ci.orgftomassetti/antlr-kotlin)
+[![Build Status](https://travis-ci.org/ftomassetti/antlr-kotlin.svg?branch=master)](https://travis-ci.org/ftomassetti/antlr-kotlin)
 
 This project contains everything is needed to support Kotlin as a target for ANTLR. 
 It means:
 
 * the **Kotlin target**: this is a plugin for the ANTLR code generator that produces lexers, parsers, and listeners
-* the **Kotlin runtime library**: this si a multi-platform library needed to run the lexers and parsers
+* the **Kotlin runtime library**: this is a multi-platform library needed to run the lexers and parsers
 
 ## Status
 
