@@ -60,7 +60,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
-
+compileKotlin2Js.kotlinOptions.moduleKind = "umd"
 
 
 //archivesBaseName = 'kotlin-multiplatform-recipes-js'
