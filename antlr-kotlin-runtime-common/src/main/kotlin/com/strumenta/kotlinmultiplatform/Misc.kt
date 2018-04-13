@@ -91,7 +91,9 @@ expect class UUID {
 }
 
 expect fun errMessage(message: String)
-expect fun outMessage(message: String)
+fun outMessage(message: String) {
+    println(message)
+}
 
 expect fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean
 
