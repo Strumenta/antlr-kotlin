@@ -16,28 +16,29 @@ import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 abstract class PredictionContext protected constructor(
-        /**
-         * Stores the computed hash code of this [PredictionContext]. The hash
-         * code is computed in parts to match the following reference algorithm.
-         *
-         * <pre>
-         * private int referenceHashCode() {
-         * int hash = [MurmurHash.initialize]([.INITIAL_HASH]);
-         *
-         * for (int i = 0; i &lt; [.size]; i++) {
-         * hash = [MurmurHash.update](hash, [getParent][.getParent](i));
-         * }
-         *
-         * for (int i = 0; i &lt; [.size]; i++) {
-         * hash = [MurmurHash.update](hash, [getReturnState][.getReturnState](i));
-         * }
-         *
-         * hash = [MurmurHash.finish](hash, 2 * [.size]);
-         * return hash;
-         * }
-        </pre> *
-         */
-        val cachedHashCode: Int) {
+    /**
+     * Stores the computed hash code of this [PredictionContext]. The hash
+     * code is computed in parts to match the following reference algorithm.
+     *
+     * <pre>
+     * private int referenceHashCode() {
+     * int hash = [MurmurHash.initialize]([.INITIAL_HASH]);
+     *
+     * for (int i = 0; i &lt; [.size]; i++) {
+     * hash = [MurmurHash.update](hash, [getParent][.getParent](i));
+     * }
+     *
+     * for (int i = 0; i &lt; [.size]; i++) {
+     * hash = [MurmurHash.update](hash, [getReturnState][.getReturnState](i));
+     * }
+     *
+     * hash = [MurmurHash.finish](hash, 2 * [.size]);
+     * return hash;
+     * }
+    </pre> *
+     */
+    val cachedHashCode: Int
+) {
     val id = globalNodeCount++
 
     /** This means only the [.EMPTY] (wildcard? not sure) context is in set.  */
@@ -206,9 +207,10 @@ abstract class PredictionContext protected constructor(
 
         // dispatch
         fun merge(
-                a: PredictionContext?, b: PredictionContext?,
-                rootIsWildcard: Boolean,
-                mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?): PredictionContext {
+            a: PredictionContext?, b: PredictionContext?,
+            rootIsWildcard: Boolean,
+            mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
+        ): PredictionContext {
             var a = a
             var b = b
             assert(a != null && b != null) // must be empty context, never null
@@ -217,9 +219,11 @@ abstract class PredictionContext protected constructor(
             if (a === b || a == b) return a!!
 
             if (a is SingletonPredictionContext && b is SingletonPredictionContext) {
-                return mergeSingletons(a as SingletonPredictionContext,
-                        b as SingletonPredictionContext,
-                        rootIsWildcard, mergeCache)
+                return mergeSingletons(
+                    a as SingletonPredictionContext,
+                    b as SingletonPredictionContext,
+                    rootIsWildcard, mergeCache
+                )
             }
 
             // At least one of a or b is array
@@ -229,16 +233,17 @@ abstract class PredictionContext protected constructor(
                 if (b is EmptyPredictionContext) return b
             }
 
-            TODO()
-//            // convert singleton so both are arrays to normalize
-//            if (a is SingletonPredictionContext) {
-//                a = ArrayPredictionContext((a as SingletonPredictionContext?)!!)
-//            }
-//            if (b is SingletonPredictionContext) {
-//                b = ArrayPredictionContext((b as SingletonPredictionContext?)!!)
-//            }
-//            return mergeArrays(a as ArrayPredictionContext?, b as ArrayPredictionContext?,
-//                    rootIsWildcard, mergeCache)
+            // convert singleton so both are arrays to normalize
+            if (a is SingletonPredictionContext) {
+                a = ArrayPredictionContext(a)
+            }
+            if (b is SingletonPredictionContext) {
+                b = ArrayPredictionContext((b as SingletonPredictionContext?)!!)
+            }
+            return mergeArrays(
+                a as ArrayPredictionContext, b as ArrayPredictionContext,
+                rootIsWildcard, mergeCache
+            )
         }
 
         /**
@@ -273,10 +278,11 @@ abstract class PredictionContext protected constructor(
          * @param mergeCache
          */
         fun mergeSingletons(
-                a: SingletonPredictionContext,
-                b: SingletonPredictionContext,
-                rootIsWildcard: Boolean,
-                mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?): PredictionContext {
+            a: SingletonPredictionContext,
+            b: SingletonPredictionContext,
+            rootIsWildcard: Boolean,
+            mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
+        ): PredictionContext {
             if (mergeCache != null) {
                 var previous = mergeCache!!.get(a, b)
                 if (previous != null) return previous
@@ -383,25 +389,27 @@ abstract class PredictionContext protected constructor(
          * @param rootIsWildcard `true` if this is a local-context merge,
          * otherwise false to indicate a full-context merge
          */
-        fun mergeRoot(a: SingletonPredictionContext,
-                      b: SingletonPredictionContext,
-                      rootIsWildcard: Boolean): PredictionContext? {
+        fun mergeRoot(
+            a: SingletonPredictionContext,
+            b: SingletonPredictionContext,
+            rootIsWildcard: Boolean
+        ): PredictionContext? {
             if (rootIsWildcard) {
                 if (a === EMPTY) return EMPTY  // * + b = *
                 if (b === EMPTY) return EMPTY  // a + * = *
             } else {
                 if (a === EMPTY && b === EMPTY) return EMPTY // $ + $ = $
-                TODO()
-//                if (a === EMPTY) { // $ + x = [x,$]
-//                    val payloads = intArrayOf(b.returnState, EMPTY_RETURN_STATE)
-//                    val parents = arrayOf<PredictionContext>(b.parent, null)
-//                    return ArrayPredictionContext(parents, payloads)
-//                }
-//                if (b === EMPTY) { // x + $ = [x,$] ($ is always last if present)
-//                    val payloads = intArrayOf(a.returnState, EMPTY_RETURN_STATE)
-//                    val parents = arrayOf<PredictionContext>(a.parent, null)
-//                    return ArrayPredictionContext(parents, payloads)
-//                }
+
+                if (a === EMPTY) { // $ + x = [x,$]
+                    val payloads = intArrayOf(b.returnState, EMPTY_RETURN_STATE)
+                    val parents = arrayOf(b.parent, null)
+                    return ArrayPredictionContext(parents, payloads)
+                }
+                if (b === EMPTY) { // x + $ = [x,$] ($ is always last if present)
+                    val payloads = intArrayOf(a.returnState, EMPTY_RETURN_STATE)
+                    val parents = arrayOf(a.parent, null)
+                    return ArrayPredictionContext(parents, payloads)
+                }
             }
             return null
         }
@@ -431,10 +439,11 @@ abstract class PredictionContext protected constructor(
          * <embed src="images/ArrayMerge_EqualTop.svg" type="image/svg+xml"></embed>
          */
         fun mergeArrays(
-                a: ArrayPredictionContext,
-                b: ArrayPredictionContext,
-                rootIsWildcard: Boolean,
-                mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?): PredictionContext {
+            a: ArrayPredictionContext,
+            b: ArrayPredictionContext,
+            rootIsWildcard: Boolean,
+            mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
+        ): PredictionContext {
             if (mergeCache != null) {
                 var previous = mergeCache!!.get(a, b)
                 if (previous != null) return previous
@@ -500,14 +509,16 @@ abstract class PredictionContext protected constructor(
             // trim merged if we combined a few that had same stack tops
             if (k < mergedParents.size) { // write index < last position; trim
                 if (k == 1) { // for just one merged element, return singleton top
-                    val a_ = SingletonPredictionContext.create(mergedParents[0],
-                            mergedReturnStates[0])
+                    val a_ = SingletonPredictionContext.create(
+                        mergedParents[0],
+                        mergedReturnStates[0]
+                    )
                     if (mergeCache != null) mergeCache!!.put(a, b, a_)
                     return a_
                 }
                 mergedParents = Arrays.copyOf<PredictionContext?>(mergedParents, k)
-                TODO()
-                //mergedReturnStates = Arrays.copyOf(mergedReturnStates, k)
+
+                mergedReturnStates = mergedReturnStates.copyOf(k)
             }
 
             val M = ArrayPredictionContext(mergedParents, mergedReturnStates)
@@ -523,8 +534,8 @@ abstract class PredictionContext protected constructor(
                 return b
             }
 
-            TODO()
-            //combineCommonParents(mergedParents)
+            //TODO efficiency
+            combineCommonParents(mergedParents.filterNotNull().toTypedArray())
 
             if (mergeCache != null) mergeCache!!.put(a, b, M)
             return M
@@ -545,8 +556,7 @@ abstract class PredictionContext protected constructor(
             }
 
             for (p in parents.indices) {
-                TODO()
-                //parents[p] = uniqueParents[parents[p]]
+                parents[p] = uniqueParents[parents[p]]!!
             }
         }
 
@@ -556,10 +566,7 @@ abstract class PredictionContext protected constructor(
             buf.append("digraph G {\n")
             buf.append("rankdir=LR;\n")
 
-            val nodes = getAllContextNodes(context)
-
-            TODO()
-            //Collections.sort(nodes, java.util.Comparator<PredictionContext> { o1, o2 -> o1.id - o2.id })
+            val nodes = getAllContextNodes(context).sortedBy { it.id }
 
             for (current in nodes) {
                 if (current is SingletonPredictionContext) {
@@ -609,9 +616,10 @@ abstract class PredictionContext protected constructor(
 
         // From Sam
         fun getCachedContext(
-                context: PredictionContext,
-                contextCache: PredictionContextCache,
-                visited: IdentityHashMap<PredictionContext, PredictionContext>): PredictionContext {
+            context: PredictionContext,
+            contextCache: PredictionContextCache,
+            visited: IdentityHashMap<PredictionContext, PredictionContext>
+        ): PredictionContext {
             if (context.isEmpty) {
                 return context
             }
@@ -698,9 +706,11 @@ abstract class PredictionContext protected constructor(
             return nodes
         }
 
-        fun getAllContextNodes_(context: PredictionContext?,
-                                nodes: MutableList<PredictionContext>,
-                                visited: MutableMap<PredictionContext, PredictionContext>) {
+        fun getAllContextNodes_(
+            context: PredictionContext?,
+            nodes: MutableList<PredictionContext>,
+            visited: MutableMap<PredictionContext, PredictionContext>
+        ) {
             if (context == null || visited.containsKey(context)) return
             visited.put(context, context)
             nodes.add(context)

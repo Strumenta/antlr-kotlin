@@ -6,9 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.assert
-
 class ArrayPredictionContext(
         /** Parent can be null only if full ctx mode and we make an array
          * from [.EMPTY] and non-empty. We merge [.EMPTY] by using null parent and
@@ -25,7 +22,7 @@ class ArrayPredictionContext(
 //    val isEmpty: Boolean
 //        get() = returnStates[0] == PredictionContext.EMPTY_RETURN_STATE
 //
-//    constructor(a: SingletonPredictionContext) : this(arrayOf<PredictionContext>(a.parent), intArrayOf(a.returnState)) {}
+    constructor(a: SingletonPredictionContext) : this(arrayOf<PredictionContext?>(a.parent), intArrayOf(a.returnState)) {}
 //
 //    init {
 //        assert(parents != null && parents.size > 0)

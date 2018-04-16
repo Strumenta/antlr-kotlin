@@ -28,8 +28,8 @@ class PredictionContextCache {
         return ctx
     }
 
-    operator fun get(ctx: PredictionContext): PredictionContext {
-        return cache[ctx]!!
+    operator fun get(ctx: PredictionContext): PredictionContext? {
+        return cache[ctx]
     }
 
     fun size(): Int {

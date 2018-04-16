@@ -7,11 +7,9 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.errMessage
-import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ATNState
 import org.antlr.v4.kotlinruntime.atn.RuleTransition
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 /**
  * This is the default implementation of [ANTLRErrorStrategy] used for
@@ -299,7 +297,8 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
             if (e.startToken!!.type == Token.EOF)
                 input = "<EOF>"
             else
-                TODO()
+            //TODO
+                input = e.startToken.text!!
                 //input = tokens!!.getText(e.startToken, e.offendingToken)!!
         } else {
             input = "<unknown input>"

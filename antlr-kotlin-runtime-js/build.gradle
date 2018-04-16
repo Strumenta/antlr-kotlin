@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.31'
 
     repositories {
         mavenCentral()
@@ -44,7 +44,6 @@ apply plugin: 'kotlin-platform-js'
 //apply plugin: 'com.moowork.node'
 
 //apply plugin: 'kotlin2js'
-apply plugin: 'com.craigburke.karma'
 apply plugin: 'maven'
 
 repositories {
@@ -61,7 +60,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
-
+compileKotlin2Js.kotlinOptions.moduleKind = "umd"
 
 
 //archivesBaseName = 'kotlin-multiplatform-recipes-js'
@@ -115,36 +114,3 @@ dependencies {
 //artifacts {
 //    archives sourcesJar
 //}
-def libDir = "$buildDir/lib"
-def compileOutput = compileKotlin2Js.outputFile
-def testOutput = compileTestKotlin2Js.outputFile
-
-task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
-    configurations.testCompile.each {
-        from zipTree(it.absolutePath).matching { include '*.js' }
-    }
-
-    into libDir
-}
-
-karma {
-    dependencies(['mocha'])
-
-    frameworks = ['mocha']
-    browsers = ['PhantomJS']
-
-    files = [
-            "$libDir/kotlin.js",
-            "$libDir/*.js",
-            compileOutput,
-            testOutput
-    ]
-}
-
-karmaRun {
-    dependsOn compileTestKotlin2Js
-    dependsOn populateNodeModules
-}
-
-test.dependsOn karmaRun
-clean.dependsOn karmaClean
