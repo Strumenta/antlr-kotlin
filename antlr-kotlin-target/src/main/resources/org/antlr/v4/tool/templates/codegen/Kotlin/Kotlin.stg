@@ -738,15 +738,16 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input!!.LA(1)"
 
 StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
 	::= <<
-open class <struct.name>(parent: ParserRuleContext?, invokingState: Int) : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif>(parent, invokingState)<if(interfaces)> : <interfaces; separator=", "><endif> {
+open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
         get() = Rules.RULE_<struct.derivedFromName>.id
         set(value) { throw RuntimeException() }
 	<attrs:{a | <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
-	<if(ctorAttrs)>constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : this(parent, invokingState){
-                   		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
-                   	}<endif>
+	<if(ctorAttrs)>constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){ ; }<endif>
+	constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
+		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
+	}
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
 	constructor() : super() { }
 	fun copyFrom(ctx: <struct.name>) {
