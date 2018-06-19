@@ -32,18 +32,18 @@ class LocalListener: MiniCalcParserBaseListener() {
     }
 
     private fun processPrintStatement(content: ParseTree) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("called processPrintStatement")
     }
 
     private fun processAssignmentStatement(content: ParseTree) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("called processAssignmentStatement")
     }
 
     private fun processVarDeclStatement(content: ParseTree) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("called processVarDeclStatement")
     }
 
     private fun processInputDeclStatement(content: ParseTree) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("called processInputDeclStatement")
     }
 }
