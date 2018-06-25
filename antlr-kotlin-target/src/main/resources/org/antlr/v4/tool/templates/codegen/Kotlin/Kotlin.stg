@@ -120,7 +120,7 @@ import org.antlr.v4.kotlinruntime.tree.TerminalNode
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-class <file.grammarName>BaseListener : <file.grammarName>Listener {
+open class <file.grammarName>BaseListener : <file.grammarName>Listener {
 	<file.listenerNames:{lname |
 /**
  * {@inheritDoc\}
@@ -517,7 +517,7 @@ errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
 <preamble; separator="\n">
 when ( interpreter!!.adaptivePredict(_input!!,<choice.decision>,context) ) {
-<alts:{alt |<i> -> <alt>}; separator="\n">
+<alts:{alt |<i> -> {<alt>\}}; separator="\n">
 }
 >>
 
@@ -526,7 +526,7 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 when ( interpreter!!.adaptivePredict(_input!!,<choice.decision>,context) ) {
 <alts:{alt |
-<i>  <if(!choice.ast.greedy)>+1<endif>: -> <alt>}; separator="\n">
+<i>  <if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
 }
 >>
 
@@ -672,17 +672,17 @@ SetAttr(s,rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>;"
 TokenLabelType() ::= "<file.TokenLabelType; null={Token}>"
 InputSymbolType() ::= "<file.InputSymbolType; null={Token}>"
 
-TokenPropertyRef_text(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getText():null)"
-TokenPropertyRef_type(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getType():0)"
-TokenPropertyRef_line(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getLine():0)"
-TokenPropertyRef_pos(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getCharPositionInLine():0)"
-TokenPropertyRef_channel(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getChannel():0)"
-TokenPropertyRef_index(t) ::= "(<ctx(t)>.<t.label>!=null?<ctx(t)>.<t.label>.getTokenIndex():0)"
-TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>!=null?Integer.valueOf(<ctx(t)>.<t.label>.getText()):0)"
+TokenPropertyRef_text(t) ::= "(<ctx(t)>.<t.label>?.text)"
+TokenPropertyRef_type(t) ::= "(<ctx(t)>.<t.label>?.type?:0)"
+TokenPropertyRef_line(t) ::= "(<ctx(t)>.<t.label>?.line?:0)"
+TokenPropertyRef_pos(t) ::= "(<ctx(t)>.<t.label>?.charPositionInLine()?:0)"
+TokenPropertyRef_channel(t) ::= "(<ctx(t)>.<t.label>?.channel()?:0)"
+TokenPropertyRef_index(t) ::= "(<ctx(t)>.<t.label>!?.tokenIndex()?:0)"
+TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.label.asInt()?:0)"
 
-RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>!=null?(<ctx(r)>.<r.label>.start):null)"
-RulePropertyRef_stop(r)	 ::= "(<ctx(r)>.<r.label>!=null?(<ctx(r)>.<r.label>.stop):null)"
-RulePropertyRef_text(r)	 ::= "(<ctx(r)>.<r.label>!=null?_input!!.getText(<ctx(r)>.<r.label>.start,<ctx(r)>.<r.label>.stop):null)"
+RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>?.start)"
+RulePropertyRef_stop(r)	 ::= "(<ctx(r)>.<r.label>?.stop)"
+RulePropertyRef_text(r)	 ::= "(<ctx(r)>.<r.label>?.let { _input!!.getText(it.start, it.stop)})"
 RulePropertyRef_ctx(r)	 ::= "<ctx(r)>.<r.label>"
 RulePropertyRef_parser(r)	 ::= "this"
 
@@ -707,9 +707,9 @@ RuleContextListDecl(rdecl) ::= "var <rdecl.name> : MutableList\<<rdecl.ctxName>>
 ContextTokenGetterDecl(t)      ::=
     "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0) as TerminalNode"
 ContextTokenListGetterDecl(t)  ::=
-    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id) as TerminalNode"
+    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id)"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
-fun <t.name>(int i) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i) as TerminalNode
+fun <t.name>(i: Int) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i) as TerminalNode
 >>
 ContextRuleGetterDecl(r)       ::= <<
 fun find<r.name; format="cap">() : <r.ctxName>? = getRuleContext(solver.getType("<r.ctxName>"),0)
@@ -782,7 +782,7 @@ fun \<T> accept(visitor : ParseTreeVisitor\<? extends T>) : T {
 }
 >>
 
-AttributeDecl(d) ::= "<d.name> : <d.type><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "val <d.name> <if(d.type)>: <d.type><endif><if(d.initValue)> = <d.initValue><endif>"
 
 /** If we don't know location of label def x, use this template */
 labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.name>"

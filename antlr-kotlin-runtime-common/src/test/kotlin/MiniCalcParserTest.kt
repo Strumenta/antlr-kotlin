@@ -4,6 +4,7 @@ import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
 import org.antlr.v4.kotlinruntime.ast.pos
+import org.antlr.v4.kotlinruntime.tree.ParseTreeWalker
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import kotlin.test.Test as test
 
@@ -103,6 +104,16 @@ class MiniCalcParserTest : BaseTest() {
         val parser = MiniCalcParser(CommonTokenStream(lexer))
 
         val root = parser.miniCalcFile()
+        assertEquals(pos(1, 0, 2, 0), root.position)
+    }
+
+    @test fun callListener() {
+        val input = ANTLRInputStream("input Int width\n")
+        val lexer = MiniCalcLexer(input)
+        val parser = MiniCalcParser(CommonTokenStream(lexer))
+        val root = parser.miniCalcFile()
+        val localListener = LocalListener()
+        ParseTreeWalker().walk(localListener, root)
         assertEquals(pos(1, 0, 2, 0), root.position)
     }
 }
