@@ -114,12 +114,13 @@ open class IntegerList {
     }
 
     fun removeAt(index: Int): Int {
-        TODO()
-//        val value = get(index)
-//        System.arraycopy(_data!!, index + 1, _data!!, index, _size - index - 1)
-//        _data[_size - 1] = 0
-//        _size--
-//        return value
+        val value = get(index)
+        for (i in 0 until _size - index - 1) {
+            _data!![index + i] = _data!![index + i + 1]
+        }
+        _data!![_size - 1] = 0
+        _size--
+        return value
     }
 
     fun removeRange(fromIndex: Int, toIndex: Int) {
