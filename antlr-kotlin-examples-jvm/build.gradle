@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:0.0.1"
+        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:$projectVersion"
     }
 }
 
@@ -21,8 +21,8 @@ repositories {
 }
 
 dependencies {
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:0.0.1"
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:0.0.1"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:$projectVersion"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$projectVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     //testCompile 'junit:junit:4.12'

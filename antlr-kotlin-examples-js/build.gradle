@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = kotlinVersion
 
     repositories {
         mavenCentral()
@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.com.craigburke.gradle:karma-gradle:1.4.4"
-        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:0.0.1"
+        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:$projectVersion"
     }
 }
 
@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:0.0.1"
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-js:0.0.1"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:$projectVersion"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-js:$projectVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
