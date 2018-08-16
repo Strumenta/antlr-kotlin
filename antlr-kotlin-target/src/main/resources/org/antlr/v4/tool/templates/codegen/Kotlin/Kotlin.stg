@@ -594,7 +594,7 @@ bitsetInlineComparison(s, bits) ::= <%
 %>
 
 cases(ttypes) ::= <<
-<ttypes:{t | <t> ->}; separator=" "> >>
+<ttypes:{t | <t> }; separator=", "> -> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
