@@ -96,9 +96,6 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
 
         fun build(): CodePointBuffer {
             requireNotNull(type) {"type should not be null"}
-            requireNotNull(byteBuffer) {"byteBuffer should not be null"}
-            requireNotNull(charBuffer) {"charbuffer should not be null"}
-            requireNotNull(intBuffer) {"intBuffer should not be null"}
             when (type) {
                 CodePointBuffer.Type.BYTE -> byteBuffer!!.flip()
                 CodePointBuffer.Type.CHAR -> charBuffer!!.flip()
