@@ -16,7 +16,6 @@ import com.strumenta.kotlinmultiplatform.toChars
  */
 open class IntegerList {
 
-
     private var _data: IntArray? = null
 
     private var _size: Int = 0
@@ -33,10 +32,10 @@ open class IntegerList {
             throw IllegalArgumentException()
         }
 
-        if (capacity == 0) {
-            _data = EMPTY_DATA
+        _data = if (capacity == 0) {
+            EMPTY_DATA
         } else {
-            _data = IntArray(capacity)
+            IntArray(capacity)
         }
     }
 
@@ -53,13 +52,12 @@ open class IntegerList {
     }
 
     fun add(value: Int) {
-        TODO()
-//        if (_data!!.size == _size) {
-//            ensureCapacity(_size + 1)
-//        }
-//
-//        _data[_size] = value
-//        _size++
+        if (_data!!.size == _size) {
+            ensureCapacity(_size + 1)
+        }
+
+        _data!![_size] = value
+        _size++
     }
 
     fun addAll(array: IntArray) {
@@ -262,20 +260,25 @@ open class IntegerList {
         }
 
         var newLength: Int
-        if (_data!!.size == 0) {
-            newLength = INITIAL_SIZE
+        newLength = if (_data!!.isEmpty()) {
+            INITIAL_SIZE
         } else {
-            newLength = _data!!.size
+            _data!!.size
         }
 
         while (newLength < capacity) {
-            newLength = newLength * 2
+            newLength *= 2
             if (newLength < 0 || newLength > MAX_ARRAY_SIZE) {
                 newLength = MAX_ARRAY_SIZE
             }
         }
 
-        _data = Arrays.copyOf(_data!!.toTypedArray(), newLength).toIntArray()
+        val originalArray = _data!!.toTypedArray()
+        val copiedArray = Arrays.copyOf(originalArray, newLength)
+        for (i in originalArray.size until copiedArray.size) {
+            copiedArray[i] = 0
+        }
+        _data = copiedArray.toIntArray()
     }
 
     /** Convert the list to a UTF-16 encoded char array. If all values are less
