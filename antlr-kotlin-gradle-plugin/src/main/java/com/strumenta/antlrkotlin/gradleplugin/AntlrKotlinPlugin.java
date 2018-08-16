@@ -64,7 +64,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
             @Override
             public void execute(DependencySet dependencies) {
                 dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
-                dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:0.0.1"));
+                dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:0.0.2"));
                 //dependencies.add(project.getDependencies().create("org.antlr:antlr4-runtime:4.7.1@jar"));
                 //dependencies.add(project.getDependencies().create("org.antlr:antlr-runtime:3.5.2@jar"));
             }
