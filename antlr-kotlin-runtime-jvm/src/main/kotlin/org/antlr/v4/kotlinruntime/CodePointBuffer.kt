@@ -25,12 +25,11 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
     }
 
     fun position(): Int {
-        when (type) {
-            CodePointBuffer.Type.BYTE -> return byteBuffer!!.position()
-            CodePointBuffer.Type.CHAR -> return charBuffer!!.position()
-            CodePointBuffer.Type.INT -> return intBuffer!!.position()
+        return when (type) {
+            CodePointBuffer.Type.BYTE -> byteBuffer!!.position()
+            CodePointBuffer.Type.CHAR -> charBuffer!!.position()
+            CodePointBuffer.Type.INT -> intBuffer!!.position()
         }
-        throw UnsupportedOperationException("Not reached")
     }
 
     fun position(newPosition: Int) {
@@ -42,30 +41,27 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
     }
 
     fun remaining(): Int {
-        when (type) {
-            CodePointBuffer.Type.BYTE -> return byteBuffer!!.remaining()
-            CodePointBuffer.Type.CHAR -> return charBuffer!!.remaining()
-            CodePointBuffer.Type.INT -> return intBuffer!!.remaining()
+        return when (type) {
+            CodePointBuffer.Type.BYTE -> byteBuffer!!.remaining()
+            CodePointBuffer.Type.CHAR -> charBuffer!!.remaining()
+            CodePointBuffer.Type.INT -> intBuffer!!.remaining()
         }
-        throw UnsupportedOperationException("Not reached")
     }
 
     operator fun get(offset: Int): Int {
-        when (type) {
-            CodePointBuffer.Type.BYTE -> return byteBuffer!!.get(offset).toInt()
-            CodePointBuffer.Type.CHAR -> return charBuffer!!.get(offset).toInt()
-            CodePointBuffer.Type.INT -> return intBuffer!!.get(offset)
+        return when (type) {
+            CodePointBuffer.Type.BYTE -> byteBuffer!!.get(offset).toInt()
+            CodePointBuffer.Type.CHAR -> charBuffer!!.get(offset).toInt()
+            CodePointBuffer.Type.INT -> intBuffer!!.get(offset)
         }
-        throw UnsupportedOperationException("Not reached")
     }
 
     internal fun arrayOffset(): Int {
-        when (type) {
-            CodePointBuffer.Type.BYTE -> return byteBuffer!!.arrayOffset()
-            CodePointBuffer.Type.CHAR -> return charBuffer!!.arrayOffset()
-            CodePointBuffer.Type.INT -> return intBuffer!!.arrayOffset()
+        return when (type) {
+            CodePointBuffer.Type.BYTE -> byteBuffer!!.arrayOffset()
+            CodePointBuffer.Type.CHAR -> charBuffer!!.arrayOffset()
+            CodePointBuffer.Type.INT -> intBuffer!!.arrayOffset()
         }
-        throw UnsupportedOperationException("Not reached")
     }
 
     internal fun byteArray(): ByteArray {
@@ -84,14 +80,10 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
     }
 
     class Builder internal constructor(initialBufferSize: Int) {
-        internal var type: Type? = null
-            private set
-        internal var byteBuffer: ByteBuffer? = null
-            private set
-        internal var charBuffer: CharBuffer? = null
-            private set
-        internal var intBuffer: IntBuffer? = null
-            private set
+        private var type: Type? = null
+        private var byteBuffer: ByteBuffer? = null
+        private var charBuffer: CharBuffer? = null
+        private var intBuffer: IntBuffer? = null
         private var prevHighSurrogate: Int = 0
 
         init {
@@ -103,6 +95,10 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
         }
 
         fun build(): CodePointBuffer {
+            requireNotNull(type)
+            requireNotNull(byteBuffer)
+            requireNotNull(charBuffer)
+            requireNotNull(intBuffer)
             when (type) {
                 CodePointBuffer.Type.BYTE -> byteBuffer!!.flip()
                 CodePointBuffer.Type.CHAR -> charBuffer!!.flip()
