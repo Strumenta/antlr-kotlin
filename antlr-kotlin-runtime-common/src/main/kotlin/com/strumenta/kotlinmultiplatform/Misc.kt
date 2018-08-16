@@ -25,7 +25,9 @@ expect object Arrays {
 
     fun <T> copyOf(original: Array<T>, size: Int): Array<T>
 
-    fun equals(a: Array<*>, b: Array<*>): Boolean
+    fun equals(a: Array<*>?, b: Array<*>?): Boolean
+
+    fun equals(a: IntArray?, b: IntArray?): Boolean
 
     fun toString(a: Array<*>): String
 }

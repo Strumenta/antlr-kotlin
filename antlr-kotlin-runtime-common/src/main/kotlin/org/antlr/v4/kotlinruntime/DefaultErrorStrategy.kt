@@ -396,19 +396,18 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
      * @param recognizer the parser instance
      */
     protected fun reportMissingToken(recognizer: Parser) {
-        TODO()
-//        if (inErrorRecoveryMode(recognizer)) {
-//            return
-//        }
-//
-//        beginErrorCondition(recognizer)
-//
-//        val t = recognizer.currentToken
-//        val expecting = getExpectedTokens(recognizer)
-//        val msg = "missing " + expecting.toString(recognizer.vocabulary) +
-//                " at " + getTokenErrorDisplay(t)
-//
-//        recognizer.notifyErrorListeners(t, msg, null)
+        if (inErrorRecoveryMode(recognizer)) {
+            return
+        }
+
+        beginErrorCondition(recognizer)
+
+        val t = recognizer.currentToken
+        val expecting = getExpectedTokens(recognizer)
+        val msg = "missing " + expecting.toString(recognizer.vocabulary) +
+                " at " + getTokenErrorDisplay(t)
+
+        recognizer.notifyErrorListeners(t!!, msg, null)
     }
 
     /**
