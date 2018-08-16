@@ -5,6 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime.dfa
 
+import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.Parser
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -120,14 +121,14 @@ class DFA constructor(
 
         // synchronization on s0 here is ok. when the DFA is turned into a
         // precedence DFA, s0 will be initialized once and not updated again
-        TODO()
+        //TODO()
 //        synchronized(s0) {
-//            // s0.edges is never null for a precedence DFA
-//            if (precedence >= s0!!.edges!!.size) {
-//                s0!!.edges = Arrays.copyOf<DFAState>(s0!!.edges!!, precedence + 1)
-//            }
+            // s0.edges is never null for a precedence DFA
+            if (precedence >= s0!!.edges!!.size) {
+                s0!!.edges = Arrays.copyOf<DFAState?>(s0!!.edges!!, precedence + 1)
+            }
 //
-//            s0!!.edges[precedence] = startState
+            s0!!.edges!![precedence] = startState
 //        }
     }
 
