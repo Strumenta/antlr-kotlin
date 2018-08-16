@@ -22,8 +22,7 @@ class DFA constructor(
      */
 
     val states: MutableMap<DFAState, DFAState> = HashMap<DFAState, DFAState>()
-
-    @Volatile
+    
     var s0: DFAState? = null
 
     /**
