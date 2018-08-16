@@ -30,7 +30,7 @@ class ProxyErrorListener(private val delegates: Collection<ANTLRErrorListener>?)
                              line: Int,
                              charPositionInLine: Int,
                              msg: String,
-                             e: RecognitionException) {
+                             e: RecognitionException?) {
         for (listener in delegates!!) {
             listener.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         }

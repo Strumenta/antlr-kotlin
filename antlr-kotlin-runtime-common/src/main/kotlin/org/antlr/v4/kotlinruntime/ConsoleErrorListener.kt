@@ -31,7 +31,7 @@ class ConsoleErrorListener : BaseErrorListener() {
                              line: Int,
                              charPositionInLine: Int,
                              msg: String,
-                             e: RecognitionException) {
+                             e: RecognitionException?) {
         errMessage("line $line:$charPositionInLine $msg")
     }
 

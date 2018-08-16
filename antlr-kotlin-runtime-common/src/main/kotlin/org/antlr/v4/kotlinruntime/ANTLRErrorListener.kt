@@ -54,7 +54,7 @@ interface ANTLRErrorListener {
                     line: Int,
                     charPositionInLine: Int,
                     msg: String,
-                    e: RecognitionException)
+                    e: RecognitionException?)
 
     /**
      * This method is called by the parser when a full-context prediction

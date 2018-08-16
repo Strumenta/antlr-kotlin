@@ -362,19 +362,18 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
      * @param recognizer the parser instance
      */
     protected fun reportUnwantedToken(recognizer: Parser) {
-        TODO()
-//        if (inErrorRecoveryMode(recognizer)) {
-//            return
-//        }
-//
-//        beginErrorCondition(recognizer)
-//
-//        val t = recognizer.currentToken
-//        val tokenName = getTokenErrorDisplay(t)
-//        val expecting = getExpectedTokens(recognizer)
-//        val msg = "extraneous input " + tokenName + " expecting " +
-//                expecting.toString(recognizer.vocabulary)
-//        recognizer.notifyErrorListeners(t, msg, null)
+        if (inErrorRecoveryMode(recognizer)) {
+            return
+        }
+
+        beginErrorCondition(recognizer)
+
+        val t = recognizer.currentToken
+        val tokenName = getTokenErrorDisplay(t)
+        val expecting = getExpectedTokens(recognizer)
+        val msg = "extraneous input " + tokenName + " expecting " +
+                expecting.toString(recognizer.vocabulary)
+        recognizer.notifyErrorListeners(t!!, msg, null)
     }
 
     /**
@@ -556,19 +555,18 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
         val nextTokenType = recognizer.readInputStream()!!.LA(2)
         val expecting = getExpectedTokens(recognizer)
         if (expecting.contains(nextTokenType)) {
-            TODO()
-//            reportUnwantedToken(recognizer)
+            reportUnwantedToken(recognizer)
 //            /*
 //			System.err.println("recoverFromMismatchedToken deleting "+
 //							   ((TokenStream)recognizer.getInputStream()).LT(1)+
 //							   " since "+((TokenStream)recognizer.getInputStream()).LT(2)+
 //							   " is what we want");
 //			*/
-//            recognizer.consume() // simply delete extra token
-//            // we want to return the token we're actually matching
-//            val matchedSymbol = recognizer.currentToken
-//            reportMatch(recognizer)  // we know current token is correct
-//            return matchedSymbol
+            recognizer.consume() // simply delete extra token
+            // we want to return the token we're actually matching
+            val matchedSymbol = recognizer.currentToken
+            reportMatch(recognizer)  // we know current token is correct
+            return matchedSymbol
         }
         return null
     }

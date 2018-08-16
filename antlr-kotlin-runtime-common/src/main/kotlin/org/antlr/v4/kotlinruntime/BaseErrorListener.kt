@@ -22,7 +22,7 @@ open class BaseErrorListener : ANTLRErrorListener {
                              line: Int,
                              charPositionInLine: Int,
                              msg: String,
-                             e: RecognitionException) {
+                             e: RecognitionException?) {
     }
 
     override fun reportAmbiguity(recognizer: Parser,

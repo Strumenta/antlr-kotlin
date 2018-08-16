@@ -560,7 +560,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         charPositionInLine = offendingToken.charPositionInLine
 
         val listener = errorListenerDispatch
-        listener.syntaxError(this, offendingToken, line, charPositionInLine, msg, e!!)
+        listener.syntaxError(this, offendingToken, line, charPositionInLine, msg, e)
     }
 
     //
