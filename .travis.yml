@@ -11,6 +11,6 @@ script:
   - ./gradlew :antlr-kotlin-target:install
   - ./gradlew :antlr-kotlin-gradle-plugin:install
   - cd antlr-kotlin-examples-jvm && ../gradlew check && cd ..
-  - cd antlr-kotlin-examples-js && ../gradlew check && cd ..
+#  - cd antlr-kotlin-examples-js && ../gradlew check && cd ..
 
   
