@@ -1,116 +1,32 @@
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlinVersion = kotlinVersion
 
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "gradle.plugin.com.craigburke.gradle:karma-gradle:1.4.4"
-        //classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
     }
 }
 
-//ext {
-//    nodeVersion = '8.9.4'
-//    qunitVersion = '2.4.1'
-//    libraries = [
-//            junit: "junit:junit:4.12",
-//            kotlin_stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-//            kotlin_stdlib_common: "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version",
-//            kotlin_stdlib_js: "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version",
-//            kotlin_test_annotations_common: "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version",
-//            kotlin_test_common: "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version",
-//            kotlin_test_js: "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version",
-//            kotlin_test_junit: "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version",
-//    ]
-//}
-
-//
-//apply plugin: 'kotlin-platform-js'
-//
-//repositories {
-//    mavenCentral()
-//}
-//
-//dependencies {
-//    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-//    expectedBy project(":antlr-kotlin-runtime-common")
-//    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
-//}
-
 apply plugin: 'kotlin-platform-js'
-//apply plugin: 'com.moowork.node'
-
-//apply plugin: 'kotlin2js'
 apply plugin: 'maven'
 
 repositories {
     mavenCentral()
 }
 
-group = 'com.strumenta.antlr-kotlin'
-version = '0.0.1'
+group = projectGroup
+version = projectVersion
 
 dependencies {
     expectedBy project(':antlr-kotlin-runtime-common')
-    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion"
 }
 
 compileKotlin2Js.kotlinOptions.moduleKind = "umd"
 
-
-//archivesBaseName = 'kotlin-multiplatform-recipes-js'
-
-//dependencies {
-//    expectedBy project(':antlr-kotlin-runtime-common')
-//    //compile libraries.kotlin_stdlib_js
-//    //testCompile libraries.kotlin_test_js
-//}
-
-//[compileKotlin2Js, compileTestKotlin2Js]*.configure {
-//    kotlinOptions.moduleKind = "umd"
-//    kotlinOptions.sourceMap = true
-//    kotlinOptions.sourceMapEmbedSources = "always"
-//}
-//
-//task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
-//    from compileKotlin2Js.destinationDir
-//
-//    configurations.testCompile.each {
-//        from zipTree(it.absolutePath).matching { include '*.js' }
-//    }
-//
-//    into "${buildDir}/node_modules"
-//}
-//
-//node {
-//    version = nodeVersion
-//    download = true
-//}
-//
-//task installQunit(type: NpmTask) {
-//    inputs.property('qunitVersion', qunitVersion)
-//    outputs.dir file('node_modules/qunit')
-//
-//    args = ['install', "qunit@${qunitVersion}"]
-//}
-//
-//task runQunit(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules, installQunit]) {
-//    script = file('node_modules/qunit/bin/qunit')
-//    args = [projectDir.toPath().relativize(file(compileTestKotlin2Js.outputFile).toPath())]
-//}
-//
-//test.dependsOn runQunit
-//
-//task sourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from sourceSets.main.kotlin
-//}
-//
-//artifacts {
-//    archives sourcesJar
-//}

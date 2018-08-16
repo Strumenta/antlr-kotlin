@@ -1,12 +1,11 @@
-
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlinVersion = kotlinVersion
 
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -17,14 +16,13 @@ repositories {
     mavenCentral()
 }
 
-group = 'com.strumenta.antlr-kotlin'
-version = '0.0.1'
-
+group = projectGroup
+version = projectVersion
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlinVersion"
     testCompile "junit:junit:4.12"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
 }
