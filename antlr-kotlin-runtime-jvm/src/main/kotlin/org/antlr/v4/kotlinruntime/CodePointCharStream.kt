@@ -101,7 +101,7 @@ private constructor(position: Int, protected val size: Int, protected val name: 
                     offset = position + i
                     return if (offset < 0) {
                         IntStream.EOF
-                    } else (byteArray[offset] and (0xFF as Byte)) as Int
+                    } else (byteArray[offset] and 0xFF.toByte()).toInt()
                 }
                 0 ->
                     // Undefined
@@ -110,7 +110,7 @@ private constructor(position: Int, protected val size: Int, protected val name: 
                     offset = position + i - 1
                     return if (offset >= size) {
                         IntStream.EOF
-                    } else (byteArray[offset] and (0xFF as Byte)) as Int
+                    } else (byteArray[offset] and 0xFF.toByte()).toInt()
                 }
             }
             throw UnsupportedOperationException("Not reached")
