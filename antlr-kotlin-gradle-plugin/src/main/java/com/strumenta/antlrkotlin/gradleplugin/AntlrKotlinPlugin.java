@@ -65,14 +65,15 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
         final Set<String> versions = new HashSet<>();
         project.getTasks().withType(AntlrKotlinTask.class).forEach(task -> {
             if (task.getVersion() != null) {
+                System.out.println("VERSION FOR TASK " + task.getVersion());
                 versions.add(task.getVersion());
             }
         });
         // TODO if we have more than one version throw an error
         String antlrKotlinVersion = versions.size() == 0 ? null : versions.iterator().next();
+        System.out.println("antlrKotlinVersion = " + antlrKotlinVersion);
 
         antlrConfiguration.defaultDependencies(dependencies -> {
-
 
             dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
             if (antlrKotlinVersion != null) {
