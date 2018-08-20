@@ -17,9 +17,7 @@
 package com.strumenta.antlrkotlin.gradleplugin;
 
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceVirtualDirectoryImpl;
-import org.gradle.api.Action;
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
+import org.gradle.api.*;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.internal.file.SourceDirectorySetFactory;
@@ -62,24 +60,18 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The Antlr libraries to be used for this project.");
 
-        final Set<String> versions = new HashSet<>();
-        project.getTasks().withType(AntlrKotlinTask.class).forEach(task -> {
-            if (task.getVersion() != null) {
-                System.out.println("VERSION FOR TASK " + task.getVersion());
-                versions.add(task.getVersion());
-            }
-        });
-        // TODO if we have more than one version throw an error
-        String antlrKotlinVersion = versions.size() == 0 ? null : versions.iterator().next();
-        System.out.println("antlrKotlinVersion = " + antlrKotlinVersion);
+        String antlrKotlinVersion = project.findProperty("antlrKotlinVersion").toString();
+
+        if (antlrKotlinVersion == null) {
+            LOGGER.error("Property antlrKotlinVersion not set");
+            throw new GradleException("Property antlrKotlinVersion not set");
+        }
 
         antlrConfiguration.defaultDependencies(dependencies -> {
 
             dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
-            if (antlrKotlinVersion != null) {
-                dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
+            dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
                         + antlrKotlinVersion));
-            }
         });
 
         project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);

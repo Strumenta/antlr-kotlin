@@ -68,7 +68,6 @@ public class AntlrKotlinTask extends SourceTask {
     private File outputDirectory;
     private String maxHeapSize;
     private SourceDirectorySet sourceDirectorySet;
-    private String version;
 
     /**
      * Specifies that all rules call {@code traceIn}/{@code traceOut}.
@@ -134,15 +133,6 @@ public class AntlrKotlinTask extends SourceTask {
         if (arguments != null) {
             this.arguments = arguments;
         }
-    }
-
-    @Input
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     /**

@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlinVersion = kotlinVersion
+    ext.antlrKotlinVersion = "dssdasd"
 
     repositories {
         mavenCentral()
@@ -16,6 +17,7 @@ repositories {
     mavenCentral()
 }
 
+antlrKotlinVersion = "dsdasd"
 group = projectGroup
 version = projectVersion
 
