@@ -69,14 +69,16 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
             }
         });
         // TODO if we have more than one version throw an error
-        String antlrKotlinVersion = versions.size() == 0 ? "0.0.2" : versions.iterator().next();
-        
+        String antlrKotlinVersion = versions.size() == 0 ? null : versions.iterator().next();
+
         antlrConfiguration.defaultDependencies(dependencies -> {
 
 
             dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
-            dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
-                    + antlrKotlinVersion));
+            if (antlrKotlinVersion != null) {
+                dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
+                        + antlrKotlinVersion));
+            }
         });
 
         project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
