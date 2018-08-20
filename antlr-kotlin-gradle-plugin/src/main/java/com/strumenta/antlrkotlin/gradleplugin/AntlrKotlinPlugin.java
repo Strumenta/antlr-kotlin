@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
@@ -60,62 +62,61 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The Antlr libraries to be used for this project.");
 
-        antlrConfiguration.defaultDependencies(new Action<DependencySet>() {
-            @Override
-            public void execute(DependencySet dependencies) {
-                dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
-                dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:0.0.2"));
-                //dependencies.add(project.getDependencies().create("org.antlr:antlr4-runtime:4.7.1@jar"));
-                //dependencies.add(project.getDependencies().create("org.antlr:antlr-runtime:3.5.2@jar"));
+        final Set<String> versions = new HashSet<>();
+        project.getTasks().withType(AntlrKotlinTask.class).forEach(task -> {
+            if (task.getVersion() != null) {
+                versions.add(task.getVersion());
             }
+        });
+        // TODO if we have more than one version throw an error
+        String antlrKotlinVersion = versions.size() == 0 ? "0.0.2" : versions.iterator().next();
+        
+        antlrConfiguration.defaultDependencies(dependencies -> {
+
+
+            dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
+            dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
+                    + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
 
         // Wire the antlr configuration into all antlr tasks
-        project.getTasks().withType(AntlrKotlinTask.class, new Action<AntlrKotlinTask>() {
-            public void execute(AntlrKotlinTask antlrTask) {
-                antlrTask.getConventionMapping().map("antlrClasspath", new Callable<Object>() {
-                    public Object call() throws Exception {
-                        Object result = project.getConfigurations().getByName(ANTLR_CONFIGURATION_NAME);
-                        LOGGER.debug("setting antlrClasspath to " + result);
-                        return result;
-                    }
-                });
-            }
-        });
+        project.getTasks().withType(AntlrKotlinTask.class, antlrTask -> antlrTask.getConventionMapping().map("antlrClasspath", () -> {
+            Object result = project.getConfigurations().getByName(ANTLR_CONFIGURATION_NAME);
+            LOGGER.debug("setting antlrClasspath to " + result);
+            return result;
+        }));
 
         project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().all(
-                new Action<SourceSet>() {
-                    public void execute(SourceSet sourceSet) {
-                        // for each source set we will:
-                        // 1) Add a new 'antlr' virtual directory mapping
-                        final AntlrSourceVirtualDirectoryImpl antlrDirectoryDelegate
-                                = new AntlrSourceVirtualDirectoryImpl(((DefaultSourceSet) sourceSet).getDisplayName(), sourceDirectorySetFactory);
-                        new DslObject(sourceSet).getConvention().getPlugins().put(
-                                AntlrSourceVirtualDirectory.NAME, antlrDirectoryDelegate);
-                        final String srcDir = "src/"+ sourceSet.getName() +"/antlr";
-                        antlrDirectoryDelegate.getAntlr().srcDir(srcDir);
-                        sourceSet.getAllSource().source(antlrDirectoryDelegate.getAntlr());
+                sourceSet -> {
+                    // for each source set we will:
+                    // 1) Add a new 'antlr' virtual directory mapping
+                    final AntlrSourceVirtualDirectoryImpl antlrDirectoryDelegate
+                            = new AntlrSourceVirtualDirectoryImpl(((DefaultSourceSet) sourceSet).getDisplayName(), sourceDirectorySetFactory);
+                    new DslObject(sourceSet).getConvention().getPlugins().put(
+                            AntlrSourceVirtualDirectory.NAME, antlrDirectoryDelegate);
+                    final String srcDir = "src/"+ sourceSet.getName() +"/antlr";
+                    antlrDirectoryDelegate.getAntlr().srcDir(srcDir);
+                    sourceSet.getAllSource().source(antlrDirectoryDelegate.getAntlr());
 
-                        // 2) create an AntlrKotlinTask for this sourceSet following the gradle
-                        //    naming conventions via call to sourceSet.getTaskName()
-                        final String taskName = sourceSet.getTaskName("generateKotlin", "GrammarSource");
-                        AntlrKotlinTask antlrTask = project.getTasks().create(taskName, AntlrKotlinTask.class);
-                        antlrTask.setDescription("Processes the " + sourceSet.getName() + " Antlr grammars.");
+                    // 2) create an AntlrKotlinTask for this sourceSet following the gradle
+                    //    naming conventions via call to sourceSet.getTaskName()
+                    final String taskName = sourceSet.getTaskName("generateKotlin", "GrammarSource");
+                    AntlrKotlinTask antlrTask = project.getTasks().create(taskName, AntlrKotlinTask.class);
+                    antlrTask.setDescription("Processes the " + sourceSet.getName() + " Antlr grammars.");
 
-                        // 3) set up convention mapping for default sources (allows user to not have to specify)
-                        antlrTask.setSource(antlrDirectoryDelegate.getAntlr());
+                    // 3) set up convention mapping for default sources (allows user to not have to specify)
+                    antlrTask.setSource(antlrDirectoryDelegate.getAntlr());
 
-                        // 4) Set up the Antlr output directory (adding to javac inputs!)
-                        final String outputDirectoryName = project.getBuildDir() + "/generated-src/antlr/" + sourceSet.getName();
-                        final File outputDirectory = new File(outputDirectoryName);
-                        antlrTask.setOutputDirectory(outputDirectory);
-                        sourceSet.getJava().srcDir(outputDirectory);
+                    // 4) Set up the Antlr output directory (adding to javac inputs!)
+                    final String outputDirectoryName = project.getBuildDir() + "/generated-src/antlr/" + sourceSet.getName();
+                    final File outputDirectory = new File(outputDirectoryName);
+                    antlrTask.setOutputDirectory(outputDirectory);
+                    sourceSet.getJava().srcDir(outputDirectory);
 
-                        // 6) register fact that antlr should be run before compiling
-                        project.getTasks().getByName(sourceSet.getCompileJavaTaskName()).dependsOn(taskName);
-                    }
+                    // 6) register fact that antlr should be run before compiling
+                    project.getTasks().getByName(sourceSet.getCompileJavaTaskName()).dependsOn(taskName);
                 });
     }
 }

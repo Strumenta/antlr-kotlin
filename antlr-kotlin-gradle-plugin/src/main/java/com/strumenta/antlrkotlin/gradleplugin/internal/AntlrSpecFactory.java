@@ -26,7 +26,8 @@ import java.util.Set;
 
 public class AntlrSpecFactory {
 
-    public AntlrSpec create(AntlrKotlinTask antlrTask, Set<File> grammarFiles, SourceDirectorySet sourceDirectorySet) {
+    public AntlrSpec create(AntlrKotlinTask antlrTask, Set<File> grammarFiles,
+                            SourceDirectorySet sourceDirectorySet) {
         List<String> arguments = new LinkedList<>(antlrTask.getArguments());
 
         if (antlrTask.isTrace() && !arguments.contains("-trace")) {
@@ -42,6 +43,7 @@ public class AntlrSpecFactory {
             arguments.add("-traceTreeWalker");
         }
 
-        return new AntlrSpec(arguments, grammarFiles, sourceDirectorySet.getSrcDirs(), antlrTask.getOutputDirectory(), antlrTask.getMaxHeapSize());
+        return new AntlrSpec(arguments, grammarFiles, sourceDirectorySet.getSrcDirs(), antlrTask.getOutputDirectory(),
+                antlrTask.getMaxHeapSize());
     }
 }
