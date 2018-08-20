@@ -485,11 +485,10 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
         }
 
         // even that didn't work; must throw the exception
-        val e: InputMismatchException
-        if (nextTokensContext == null) {
-            e = InputMismatchException(recognizer)
+        val e: InputMismatchException = if (nextTokensContext == null) {
+            InputMismatchException(recognizer)
         } else {
-            e = InputMismatchException(recognizer, nextTokensState, nextTokensContext!!)
+            InputMismatchException(recognizer, nextTokensState, nextTokensContext!!)
         }
 
         throw e
