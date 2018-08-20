@@ -60,7 +60,8 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The Antlr libraries to be used for this project.");
 
-        String antlrKotlinVersion = project.findProperty("antlrKotlinVersion").toString();
+        Object antlrKotlinVersionProp = project.findProperty("antlrKotlinVersion");
+        String antlrKotlinVersion = antlrKotlinVersionProp == null ? null : antlrKotlinVersionProp.toString();
 
         if (antlrKotlinVersion == null) {
             LOGGER.error("Property antlrKotlinVersion not set");
