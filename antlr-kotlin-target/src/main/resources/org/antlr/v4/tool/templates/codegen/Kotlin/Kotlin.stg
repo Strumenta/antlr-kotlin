@@ -705,7 +705,7 @@ RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>? = null"
 RuleContextListDecl(rdecl) ::= "var <rdecl.name> : MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 
 ContextTokenGetterDecl(t)      ::=
-    "fun <t.name>() : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, 0) as TerminalNode"
+    "fun <t.name>() : TerminalNode? = getToken(<parser.name>.Tokens.<t.name>.id, 0)"
 ContextTokenListGetterDecl(t)  ::=
     "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id)"
 ContextTokenListIndexedGetterDecl(t)  ::= <<
