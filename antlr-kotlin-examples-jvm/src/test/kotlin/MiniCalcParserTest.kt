@@ -67,12 +67,12 @@ class TestingParser {
         val inputDeclStmt = statement as MiniCalcParser.InputDeclarationStatementContext
         val inputDecl = statement.findInputDeclaration()!!
 
-        val inputKw = inputDecl.INPUT()
+        val inputKw = inputDecl.INPUT()!!
         assertEquals("input", inputKw.text)
 
         val type = inputDecl.findType()!!
 
-        val intKw = (type as MiniCalcParser.IntegerContext).INT()
+        val intKw = (type as MiniCalcParser.IntegerContext).INT()!!
         assertEquals("Int", intKw.text)
 
         val id = inputDecl.ID()!!
