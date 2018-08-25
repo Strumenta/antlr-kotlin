@@ -10,6 +10,7 @@ import com.strumenta.kotlinmultiplatform.errMessage
 import org.antlr.v4.kotlinruntime.atn.ATNState
 import org.antlr.v4.kotlinruntime.atn.RuleTransition
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
+import org.antlr.v4.kotlinruntime.misc.Pair
 
 /**
  * This is the default implementation of [ANTLRErrorStrategy] used for
@@ -589,27 +590,26 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
      * override this method to create the appropriate tokens.
      */
     protected fun getMissingSymbol(recognizer: Parser): Token {
-        TODO()
-//        val currentSymbol = recognizer.currentToken
-//        val expecting = getExpectedTokens(recognizer)
-//        var expectedTokenType = Token.INVALID_TYPE
-//        if (!expecting.isNil()) {
-//            expectedTokenType = expecting.getMinElement() // get any element
-//        }
-//        val tokenText: String
-//        if (expectedTokenType == Token.EOF)
-//            tokenText = "<missing EOF>"
-//        else
-//            tokenText = "<missing " + recognizer.vocabulary.getDisplayName(expectedTokenType) + ">"
-//        var current = currentSymbol
-//        val lookback = recognizer.inputStream!!.LT(-1)
-//        if (current.type == Token.EOF && lookback != null) {
-//            current = lookback
-//        }
-//        return recognizer.tokenFactory.create(Pair<TokenSource, CharStream>(current.tokenSource, current.tokenSource.inputStream), expectedTokenType, tokenText,
-//                Token.DEFAULT_CHANNEL,
-//                -1, -1,
-//                current.line, current.charPositionInLine)
+        val currentSymbol = recognizer.currentToken
+        val expecting = getExpectedTokens(recognizer)
+        var expectedTokenType = Token.INVALID_TYPE
+        if (!expecting.isNil) {
+            expectedTokenType = expecting.minElement // get any element
+        }
+        val tokenText: String
+        if (expectedTokenType == Token.EOF)
+            tokenText = "<missing EOF>"
+        else
+            tokenText = "<missing " + recognizer.vocabulary.getDisplayName(expectedTokenType) + ">"
+        var current = currentSymbol
+        val lookback = (recognizer.readInputStream() as TokenStream).LT(-1)
+        if (current!!.type == Token.EOF && lookback != null) {
+            current = lookback
+        }
+        return recognizer.tokenFactory.create(Pair(current.tokenSource, current.tokenSource!!.readInputStream()), expectedTokenType, tokenText,
+                Token.DEFAULT_CHANNEL,
+                -1, -1,
+                current.line, current.charPositionInLine)
     }
 
 
