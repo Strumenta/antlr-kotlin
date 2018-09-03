@@ -321,11 +321,10 @@ abstract class PredictionContext protected constructor(
                         payloads[0] = b.returnState
                         payloads[1] = a.returnState
                     }
-                    val parents = arrayOf(singleParent, singleParent)
-                    TODO()
-                    //val a_ = ArrayPredictionContext(parents!!, payloads)
-                    //if (mergeCache != null) mergeCache!!.put(a, b, a_)
-                    //return a_
+                    val parents : Array<PredictionContext?> = arrayOf(singleParent, singleParent)
+                    val a_ = ArrayPredictionContext(parents!!, payloads)
+                    if (mergeCache != null) mergeCache!!.put(a, b, a_)
+                    return a_
                 }
                 // parents differ and can't merge them. Just pack together
                 // into array; can't merge.
