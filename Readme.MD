@@ -1,6 +1,6 @@
 # ANTLR Kotlin
 
-[![Build Status](https://travis-ci.org/Strumenta/antlr-kotlin.svg?branch=master)](https://travis-ci.org/Strumenta/antlr-kotlin) [![Release](https://jitpack.io/v/com.strumenta/antlr-kotlin.svg)](https://jitpack.io/#com.example/Repo)
+[![Build Status](https://travis-ci.org/Strumenta/antlr-kotlin.svg?branch=master)](https://travis-ci.org/Strumenta/antlr-kotlin) [![Release](https://jitpack.io/v/com.strumenta/antlr-kotlin.svg)](https://jitpack.io/#com.strumenta/antlr-kotlin)
 
 This project contains everything is needed to support Kotlin as a target for ANTLR. 
 It means:
@@ -13,6 +13,74 @@ Because we product multi-platform code and a multi-platform runtime the code wri
 ## Status
 
 The project should be considered experimental. Several parsers have be implemented and work so far using this target but not all the features are complete and weel tested.
+
+## Using ANTLR-Kotlin with Gradle
+
+ANTLR-Kotlin is accessible on Maven & Gradle through Jitpack. In jitpack basically you can use every commit or tag as a version number. You can find recent versions on the [Jitpack page for ANTLR-Kotlin](https://jitpack.io/#com.strumenta/antlr-kotlin).
+
+```
+buildscript {
+    ext.kotlin_version = '1.2.60'
+    ext.antlrKotlinVersion = "b28896341f" // see notes on jitpack version
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:${antlrKotlinVersion}"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'idea'
+apply plugin: 'com.strumenta.antlrkotlin'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:${antlrKotlinVersion}"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:${antlrKotlinVersion}"
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'junit:junit:4.12'
+}
+
+def genFolder = new File( projectDir.path + '/generated-src/antlr/' )
+
+generateKotlinGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ['-package', 'com.strumenta.financialdsl']
+    outputDirectory = new File( genFolder.toString())
+}
+compileKotlin.dependsOn generateKotlinGrammarSource
+
+sourceSets {
+    generated {
+        kotlin.srcDir genFolder
+    }
+}
+compileKotlin.source sourceSets.generated.kotlin, sourceSets.main.kotlin
+
+clean{
+    delete fileTree(dir: genFolder , include: '*.kt')
+    delete fileTree(dir: genFolder , include: '*.interp')
+    delete fileTree(dir: genFolder , include: '*.tokens')
+}
+
+idea {
+    module {
+        sourceDirs += genFolder
+    }
+}
+```
 
 ## The Kotlin target
 
