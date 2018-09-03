@@ -61,6 +61,7 @@ import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
+import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 import kotlin.reflect.KClass
 
 <parser>
@@ -168,7 +169,8 @@ VisitorFile(file, header, namedActions) ::= <<
 package <file.genPackage>
 <endif>
 <header>
-import org.antlr.v4.runtime.tree.ParseTreeVisitor
+
+import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
@@ -189,7 +191,7 @@ interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
  * @param ctx the parse tree
  * @return the visitor result
  */
-T visit<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx);}; separator="\n">
+fun visit<lname; format="cap">(ctx : <file.parserName>.<lname; format="cap">Context) : T}; separator="\n">
 }
 >>
 
@@ -199,7 +201,8 @@ BaseVisitorFile(file, header, namedActions) ::= <<
 package <file.genPackage>
 <endif>
 <header>
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
+
+import org.antlr.v4.kotlinruntime.tree.AbstractParseTreeVisitor
 
 /**
  * This class provides an empty implementation of {@link <file.grammarName>Visitor},
@@ -209,7 +212,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
  * @param \<T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>, s <file.grammarName>Visitor\<T> {
+open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
 	<file.visitorNames:{lname |
 /**
  * {@inheritDoc\}
@@ -217,7 +220,7 @@ class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>, s <file.
  * \<p>The default implementation returns the result of calling
  * {@link #visitChildren\} on {@code ctx\}.\</p>
  */
-@Override public T visit<lname; format="cap">(<file.parserName>.<lname; format="cap">Context ctx) { return visitChildren(ctx); \}}; separator="\n">
+override fun visit<lname; format="cap">(ctx : <file.parserName>.<lname; format="cap">Context ) : T { return this!!.visitChildren(ctx)!! \}}; separator="\n">
 }
 >>
 
@@ -761,7 +764,7 @@ open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>Parse
 >>
 
 AltLabelStructDecl(struct,attrs,getters,dispatchMethods) ::= <<
-class <struct.name> : <currentRule.name; format="cap">Context {
+open class <struct.name> : <currentRule.name; format="cap">Context {
 	<attrs:{a | public <a>}; separator="\n">
 	<getters:{g | <g>}; separator="\n">
 	constructor(ctx: <currentRule.name; format="cap">Context) { copyFrom(ctx) }
@@ -776,9 +779,9 @@ override fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeL
 >>
 
 VisitorDispatchMethod(method) ::= <<
-fun \<T> accept(visitor : ParseTreeVisitor\<? extends T>) : T {
-	if ( visitor is <parser.grammarName>Visitor ) return (visitor as <parser.grammarName>Visitor\<? extends T>).visit<struct.derivedFromName; format="cap">(this)
-	else return visitor.visitChildren(this)
+override fun \<T> accept(visitor : ParseTreeVisitor\<out T>) : T {
+	if ( visitor is <parser.grammarName>Visitor ) return (visitor as <parser.grammarName>Visitor\<out T>).visit<struct.derivedFromName; format="cap">(this)
+	else return visitor.visitChildren(this)!!
 }
 >>
 
