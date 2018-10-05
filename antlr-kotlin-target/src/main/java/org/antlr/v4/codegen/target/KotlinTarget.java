@@ -77,7 +77,7 @@ public class KotlinTarget extends Target {
 	public int getSerializedATNSegmentLimit() {
 		// 65535 is the class file format byte limit for a UTF-8 encoded string literal
 		// 3 is the maximum number of bytes it takes to encode a value in the range 0-0xFFFF
-		return 65535 / 3;
+		return 65535 / 6;
 	}
 
 	@Override
@@ -145,7 +145,11 @@ public class KotlinTarget extends Target {
 
 	@Override
 	public String encodeIntAsCharEscape(int v) {
-		return Integer.toString(v);
+		if (v < Character.MIN_VALUE || v > Character.MAX_VALUE) {
+			throw new IllegalArgumentException(String.format("Cannot encode the specified value: %d", v));
+		}
+
+		return "\\u" + Integer.toHexString(v | 0x10000).substring(1, 5);
 	}
 
 	@Override
