@@ -5,7 +5,7 @@ actual object Collections {
         return asList.toList()
     }
 
-    actual fun <T, U> unmodifiableMap(t: T): U {
+    actual fun <T, U> unmodifiableMap(map: Map<T, U>): MutableMap<T, U> {
         TODO("Collections.unmodifiableMap not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
