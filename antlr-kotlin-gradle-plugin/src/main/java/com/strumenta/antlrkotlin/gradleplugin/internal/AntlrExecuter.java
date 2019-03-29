@@ -19,6 +19,8 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 import org.gradle.api.GradleException;
 import org.gradle.internal.UncheckedException;
 import org.gradle.internal.os.OperatingSystem;
+import org.gradle.internal.reflect.JavaMethod;
+import org.gradle.internal.reflect.JavaPropertyReflectionUtil;
 import org.gradle.internal.reflect.JavaReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,10 +137,11 @@ public class AntlrExecuter implements AntlrWorker {
         int invoke(List<String> arguments, File inputDirectory) throws ClassNotFoundException {
             final Object backedObject = loadTool("org.antlr.v4.Tool", toArray(arguments));
             if (inputDirectory != null) {
-                JavaReflectionUtil.writeableField(backedObject.getClass(), "inputDirectory").setValue(backedObject, inputDirectory);
+
+                JavaPropertyReflectionUtil.writeableProperty(backedObject.getClass(), "inputDirectory", null).setValue(backedObject, inputDirectory);
             }
-            JavaReflectionUtil.method(backedObject, Void.class, "processGrammarsOnCommandLine").invoke(backedObject);
-            return JavaReflectionUtil.method(backedObject, Integer.class, "getNumErrors").invoke(backedObject);
+            JavaMethod.of(backedObject, Void.class, "processGrammarsOnCommandLine").invoke(backedObject);
+            return JavaMethod.of(backedObject, Integer.class, "getNumErrors").invoke(backedObject);
         }
 
         @Override
