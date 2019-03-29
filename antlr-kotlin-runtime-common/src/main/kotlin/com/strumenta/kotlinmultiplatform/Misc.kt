@@ -53,13 +53,19 @@ expect object Collections {
 
 }
 
-expect object Math {
+object Math {
+    fun min(a: Int, b: Int): Int {
+        return kotlin.math.min(a, b)
+    }
 
-    fun min(a: Int, b: Int): Int
+    fun max(a: Int, b: Int): Int {
+        return kotlin.math.max(a, b)
+    }
 
-    fun max(a: Int, b: Int): Int
+    fun floor(d: Double): Double {
+        return kotlin.math.floor(d)
+    }
 
-    fun floor(d: Double): Double
 }
 
 expect fun isCharUppercase(firstChar: Char): Boolean
