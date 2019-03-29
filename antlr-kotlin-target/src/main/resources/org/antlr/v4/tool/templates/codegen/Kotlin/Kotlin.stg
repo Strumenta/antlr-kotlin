@@ -52,6 +52,7 @@ package <file.genPackage>;
 import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
+import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -473,8 +474,8 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 when (_input!!.LA(1)) {
 <choice.altLook,alts:{look,alt| <cases(ttypes=look)>
-	<alt>}; separator="\n">
-else -> ;
+	<if(alt)><alt><else>Unit<endif>}; separator="\n">
+else -> Unit
 }
 >>
 
@@ -839,6 +840,7 @@ package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
 import com.strumenta.kotlinmultiplatform.Arrays
+import org.antlr.v4.runtime.misc.Utils
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -923,21 +925,18 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 SerializedATN(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-private static final int _serializedATNSegments = <length(model.segments)>;
-<model.segments:{segment|private static final String _serializedATNSegment<i0> =
-	"<segment; wrap={"+<\n><\t>"}>";}; separator="\n">
-public static final String _serializedATN = Utils.join(
-	new String[] {
-		<model.segments:{segment | _serializedATNSegment<i0>}; separator=",\n">
-	},
+<model.segments:{segment|private const val serializedATNSegment<i0> : String =
+	"<segment>";}; separator="\n">
+private val serializedATN : String = Utils.join(
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
 	""
-);
+)
 <else>
 <! only one segment, can be inlined !>
-private val serializedIntegersATN =
-	arrayOf(<model.serialized:{it | <it>}; wrap={<\n><\t>}, separator=", ">)
+private const val serializedATN : String = "<model.serialized>"
+
 <endif>
-val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
+val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)
@@ -953,21 +952,18 @@ init {
 SerializedATNEnriched(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-private static final int _serializedATNSegments = <length(model.segments)>;
-<model.segments:{segment|private static final String _serializedATNSegment<i0> =
-	"<segment; wrap={"+<\n><\t>"}>";}; separator="\n">
-public static final String _serializedATN = Utils.join(
-	new String[] {
-		<model.segments:{segment | _serializedATNSegment<i0>}; separator=",\n">
-	},
+<model.segments:{segment|private const val serializedATNSegment<i0> : String  =
+	"<segment>";}; separator="\n">
+private val serializedATN : String = Utils.join(
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
 	""
 );
 <else>
 <! only one segment, can be inlined !>
-val serializedIntegersATN =
-	arrayOf(<model.serializedIntegers; wrap={<\n><\t>}, separator=",">)
+private const val serializedATN : String = "<model.serialized>"
+
 <endif>
-val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
+val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)

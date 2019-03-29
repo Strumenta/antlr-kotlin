@@ -47,10 +47,9 @@ expect class BitSet {
 
 expect object Collections {
     fun unmodifiableList(asList: Collection<*>): List<*>
-    fun <T, U> unmodifiableMap(t: T): U
+    fun <T, U> unmodifiableMap(map: Map<T, U>): MutableMap<T, U>
     fun <T : Comparable<T>> min(precedencePredicates: List<T>): T
     fun <T : Comparable<T>> max(precedencePredicates: List<T>): T
-
 }
 
 object Math {

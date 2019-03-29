@@ -145,7 +145,11 @@ public class KotlinTarget extends Target {
 
 	@Override
 	public String encodeIntAsCharEscape(int v) {
-		return Integer.toString(v);
+		if (v < Character.MIN_VALUE || v > Character.MAX_VALUE) {
+			throw new IllegalArgumentException(String.format("Cannot encode the specified value: %d", v));
+		}
+
+		return "\\u" + Integer.toHexString(v | 0x10000).substring(1, 5);
 	}
 
 	@Override

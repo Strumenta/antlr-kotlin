@@ -5,16 +5,16 @@ actual object Collections {
         return asList.toList()
     }
 
-    actual fun <T, U> unmodifiableMap(t: T): U {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    actual fun <T, U> unmodifiableMap(map: Map<T, U>): MutableMap<T, U> {
+        return java.util.Collections.unmodifiableMap(map)
     }
 
     actual fun <T : Comparable<T>> min(precedencePredicates: List<T>): T {
-        TODO()
+        return java.util.Collections.min(precedencePredicates)
     }
 
     actual fun <T : Comparable<T>> max(precedencePredicates: List<T>): T {
-        TODO()
+        return java.util.Collections.max(precedencePredicates)
     }
 
 }
