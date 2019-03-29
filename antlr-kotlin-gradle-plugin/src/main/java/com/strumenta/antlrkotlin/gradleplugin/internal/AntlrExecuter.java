@@ -19,14 +19,13 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 import org.gradle.api.GradleException;
 import org.gradle.internal.UncheckedException;
 import org.gradle.internal.os.OperatingSystem;
-import org.gradle.internal.reflect.JavaMethod;
-import org.gradle.internal.reflect.JavaPropertyReflectionUtil;
-import org.gradle.internal.reflect.JavaReflectionUtil;
+import org.gradle.internal.reflect.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -138,7 +137,7 @@ public class AntlrExecuter implements AntlrWorker {
             final Object backedObject = loadTool("org.antlr.v4.Tool", toArray(arguments));
             if (inputDirectory != null) {
 
-                JavaPropertyReflectionUtil.writeableProperty(backedObject.getClass(), "inputDirectory", null).setValue(backedObject, inputDirectory);
+                writeableField(backedObject.getClass(), "inputDirectory").setValue(backedObject, inputDirectory);
             }
             JavaMethod.of(backedObject, Void.class, "processGrammarsOnCommandLine").invoke(backedObject);
             return JavaMethod.of(backedObject, Integer.class, "getNumErrors").invoke(backedObject);
@@ -154,5 +153,60 @@ public class AntlrExecuter implements AntlrWorker {
             return true;
         }
     }
+
+    /**
+     * Locates the field with the given name as a writable property. Searches only public properties.
+     *
+     * @throws org.gradle.internal.reflect.NoSuchPropertyException when the given property does not exist.
+     */
+    private static PropertyMutator writeableField(Class<?> target, String fieldName) throws NoSuchPropertyException {
+        Field field = findField(target, fieldName);
+        if (field != null) {
+            return new FieldBackedPropertyMutator(fieldName, field);
+        }
+        throw new NoSuchPropertyException(String.format("Could not find writeable field '%s' on class %s.", fieldName, target.getSimpleName()));
+    }
+
+    private static Field findField(Class<?> target, String fieldName) {
+        Field[] fields = target.getFields();
+        for (Field field : fields) {
+            if (fieldName.equals(field.getName())) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    private static class FieldBackedPropertyMutator implements PropertyMutator {
+        private final String name;
+        private final Field field;
+
+        FieldBackedPropertyMutator(String name, Field field) {
+            this.name = name;
+            this.field = field;
+        }
+
+        @Override
+        public String toString() {
+            return "field " + field.getDeclaringClass().getSimpleName() + "." + name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Class<?> getType() {
+            return field.getType();
+        }
+
+        public void setValue(Object target, Object value) {
+            try {
+                field.set(target, value);
+            } catch (IllegalAccessException e) {
+                throw UncheckedException.throwAsUncheckedException(e);
+            }
+        }
+    }
+
 
 }
