@@ -1,0 +1,10 @@
+allprojects {
+    repositories {
+        jcenter() 
+    }
+}
+
+apply plugin: 'idea'
+
+group = projectGroup
+version = projectVersion
