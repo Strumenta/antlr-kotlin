@@ -40,8 +40,8 @@ class LexerInterpreter(override val grammarFileName: String, override val vocabu
             throw IllegalArgumentException("The ATN must be a lexer ATN.")
         }
         this.tokenNames = arrayOfNulls(atn.maxTokenType)
-        for (i in tokenNames.indices) {
-            tokenNames[i] = vocabulary!!.getDisplayName(i)
+        for (i in tokenNames!!.indices) {
+            tokenNames!![i] = vocabulary!!.getDisplayName(i)
         }
 
         this.ruleNames = ruleNames.toTypedArray()
