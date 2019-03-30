@@ -32,7 +32,7 @@ dependencies {
 
 generateKotlinGrammarSource {
     version = projectVersion
-    maxHeapSize = "64m"
+    maxHeapSize = "1024m"
     arguments += ['-package', 'me.tomassetti.minicalc', '-visitor']
     outputDirectory = new File("generated-src/antlr/".toString())
 }
