@@ -235,11 +235,12 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
 
-object solver : TypeDeclarator {
-	override val classesByName : List\<KClass\<*>\> = listOf(<parser.funcs:{f | <parser.name>.<f.name; format="cap">Context::class}; separator=",\n", wrap, anchor>)
-}
-
 class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
+
+    object solver : TypeDeclarator {
+        override val classesByName : List\<KClass\<*>\> = listOf(<parser.funcs:{f | <parser.name>.<f.name; format="cap">Context::class}; separator=",\n", wrap, anchor>)
+    }
+
 	// TODO verify version of runtime is compatible
 
     override val grammarFileName: String
