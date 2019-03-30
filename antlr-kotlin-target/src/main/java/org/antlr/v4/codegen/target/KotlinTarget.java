@@ -29,7 +29,7 @@ public class KotlinTarget extends Target {
 		"null", "package", "private", "internal",
 		"public", "return",
 		"this", "throw", "true", "try",
-		"while"
+		"while", "object"
 	};
 
 	/** Avoid grammar symbols in this set to prevent conflicts in gen'd code. */
