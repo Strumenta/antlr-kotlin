@@ -85,7 +85,7 @@ abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
      *
      * @return The default value returned by visitor methods.
      */
-    protected fun defaultResult(): T? {
+    protected open fun defaultResult(): T? {
         return null
     }
 
