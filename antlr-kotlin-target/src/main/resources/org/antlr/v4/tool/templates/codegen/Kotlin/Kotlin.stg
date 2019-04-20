@@ -52,7 +52,7 @@ package <file.genPackage>;
 import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
-import org.antlr.v4.runtime.misc.Utils;
+import org.antlr.v4.kotlinruntime.misc.Utils;
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -63,6 +63,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
+import com.strumenta.kotlinmultiplatform.toCharArray
 import kotlin.reflect.KClass
 
 <parser>
@@ -841,7 +842,7 @@ package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
 import com.strumenta.kotlinmultiplatform.Arrays
-import org.antlr.v4.runtime.misc.Utils
+import org.antlr.v4.kotlinruntime.misc.Utils
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -850,6 +851,7 @@ import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
+import com.strumenta.kotlinmultiplatform.toCharArray
 
 <lexer>
 >>
