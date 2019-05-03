@@ -17,13 +17,14 @@
 package com.strumenta.antlrkotlin.gradleplugin;
 
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceVirtualDirectoryImpl;
+import com.strumenta.antlrkotlin.gradleplugin.internal.SourceDirectorySetFactory;
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.internal.file.SourceDirectorySetFactory;
 import org.gradle.api.internal.plugins.DslObject;
 import org.gradle.api.internal.tasks.DefaultSourceSet;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.slf4j.Logger;
@@ -44,8 +45,8 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
     private final SourceDirectorySetFactory sourceDirectorySetFactory;
 
     @Inject
-    public AntlrKotlinPlugin(SourceDirectorySetFactory sourceDirectorySetFactory) {
-        this.sourceDirectorySetFactory = sourceDirectorySetFactory;
+    public AntlrKotlinPlugin(final ObjectFactory objectFactory) {
+        this.sourceDirectorySetFactory = name -> objectFactory.sourceDirectorySet(name, name);
     }
 
     public void apply(final Project project) {
