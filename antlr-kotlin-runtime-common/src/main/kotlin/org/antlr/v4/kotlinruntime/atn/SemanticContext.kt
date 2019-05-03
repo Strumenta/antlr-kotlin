@@ -10,6 +10,7 @@ import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Collections
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
+import org.antlr.v4.kotlinruntime.atn.SemanticContext.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 import org.antlr.v4.kotlinruntime.misc.Utils
 

@@ -1,7 +1,5 @@
 package com.strumenta.kotlinmultiplatform
 
-import org.w3c.dom.CharacterData
-
 actual fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean {
     TODO("Char.Companion.isSupplementaryCodePoint not implemented") //To change body of created functions use File | Settings | File Templates.
 }

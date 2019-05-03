@@ -5,7 +5,10 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.*
+import com.strumenta.kotlinmultiplatform.Math
+import com.strumenta.kotlinmultiplatform.assert
+import com.strumenta.kotlinmultiplatform.convertToString
+import com.strumenta.kotlinmultiplatform.toCharArray
 import org.antlr.v4.kotlinruntime.misc.Interval
 
 /**

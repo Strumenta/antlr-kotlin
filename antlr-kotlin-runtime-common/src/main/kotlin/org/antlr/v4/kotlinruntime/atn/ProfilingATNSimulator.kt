@@ -7,10 +7,7 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.Parser
-import org.antlr.v4.kotlinruntime.ParserRuleContext
-import org.antlr.v4.kotlinruntime.TokenStream
-import org.antlr.v4.kotlinruntime.dfa.DFA
-import org.antlr.v4.kotlinruntime.dfa.DFAState
+
 //
 //import java.util.BitSet
 //

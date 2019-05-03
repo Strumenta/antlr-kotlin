@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.Parser
-import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.Interval
 

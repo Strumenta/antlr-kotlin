@@ -6,8 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import org.antlr.v4.kotlinruntime.dfa.DFA
-
 /**
  * This class provides access to specific and aggregate statistics gathered
  * during profiling of a parser.

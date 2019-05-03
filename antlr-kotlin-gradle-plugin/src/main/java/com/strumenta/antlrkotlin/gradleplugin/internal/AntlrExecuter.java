@@ -19,7 +19,9 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 import org.gradle.api.GradleException;
 import org.gradle.internal.UncheckedException;
 import org.gradle.internal.os.OperatingSystem;
-import org.gradle.internal.reflect.*;
+import org.gradle.internal.reflect.JavaMethod;
+import org.gradle.internal.reflect.NoSuchPropertyException;
+import org.gradle.internal.reflect.PropertyMutator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

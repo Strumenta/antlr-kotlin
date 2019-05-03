@@ -2,7 +2,6 @@ import com.strumenta.minicalc.MiniCalcLexer
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext
-import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import kotlin.test.Test as test
 
 class TestingLexer : BaseTest() {

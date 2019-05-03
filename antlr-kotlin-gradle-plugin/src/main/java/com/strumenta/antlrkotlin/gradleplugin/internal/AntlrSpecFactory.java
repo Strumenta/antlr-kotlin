@@ -16,8 +16,8 @@
 
 package com.strumenta.antlrkotlin.gradleplugin.internal;
 
-import org.gradle.api.file.SourceDirectorySet;
 import com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask;
+import org.gradle.api.file.SourceDirectorySet;
 
 import java.io.File;
 import java.util.LinkedList;
