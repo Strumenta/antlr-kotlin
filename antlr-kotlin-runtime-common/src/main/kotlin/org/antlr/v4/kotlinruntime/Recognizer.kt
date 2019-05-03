@@ -106,7 +106,8 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
      */
     val ruleIndexMap: Map<String, Int>
         get() {
-            val ruleNames = ruleNames ?: throw UnsupportedOperationException("The current recognizer does not provide a list of rule names.")
+            val ruleNames = ruleNames
+                    ?: throw UnsupportedOperationException("The current recognizer does not provide a list of rule names.")
 
             synchronized(ruleIndexMapCache) {
                 var result: MutableMap<String, Int>? = ruleIndexMapCache[ruleNames]
@@ -159,10 +160,10 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
 
     //abstract var inputStream: CharStream?
 
-    protected var inputStream : IntStream? = null
+    protected var inputStream: IntStream? = null
 
     abstract fun assignInputStream(newValue: IntStream?)
-    abstract fun readInputStream() : IntStream?
+    abstract fun readInputStream(): IntStream?
 
 
     abstract var tokenFactory: TokenFactory<*>

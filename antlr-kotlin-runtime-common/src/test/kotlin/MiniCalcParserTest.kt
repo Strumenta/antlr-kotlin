@@ -10,7 +10,8 @@ import kotlin.test.Test as test
 
 class MiniCalcParserTest : BaseTest() {
 
-    @test fun simplestFileUsingHomogeneousAPI() {
+    @test
+    fun simplestFileUsingHomogeneousAPI() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         var parser = MiniCalcParser(CommonTokenStream(lexer))
@@ -51,7 +52,8 @@ class MiniCalcParserTest : BaseTest() {
         assertEquals("\n", newline.text)
     }
 
-    @test fun simplestFileUsingHetereogeneousAPI() {
+    @test
+    fun simplestFileUsingHetereogeneousAPI() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         val parser = MiniCalcParser(CommonTokenStream(lexer))
@@ -80,7 +82,8 @@ class MiniCalcParserTest : BaseTest() {
         assertEquals("\n", newline.text)
     }
 
-    @test fun rootStartPoint() {
+    @test
+    fun rootStartPoint() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         val parser = MiniCalcParser(CommonTokenStream(lexer))
@@ -89,7 +92,8 @@ class MiniCalcParserTest : BaseTest() {
         assertEquals(Point(1, 0), root.start?.startPoint())
     }
 
-    @test fun rootStopPoint() {
+    @test
+    fun rootStopPoint() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         val parser = MiniCalcParser(CommonTokenStream(lexer))
@@ -98,7 +102,8 @@ class MiniCalcParserTest : BaseTest() {
         assertEquals(Point(2, 0), root.stop?.endPoint())
     }
 
-    @test fun rootPosition() {
+    @test
+    fun rootPosition() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         val parser = MiniCalcParser(CommonTokenStream(lexer))
@@ -107,7 +112,8 @@ class MiniCalcParserTest : BaseTest() {
         assertEquals(pos(1, 0, 2, 0), root.position)
     }
 
-    @test fun callListener() {
+    @test
+    fun callListener() {
         val input = ANTLRInputStream("input Int width\n")
         val lexer = MiniCalcLexer(input)
         val parser = MiniCalcParser(CommonTokenStream(lexer))

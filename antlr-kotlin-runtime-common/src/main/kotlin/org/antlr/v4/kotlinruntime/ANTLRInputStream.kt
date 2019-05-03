@@ -34,7 +34,7 @@ open class ANTLRInputStream : CharStream {
 
     /** What is name or source of this char stream?  */
     var name: String? = null
-//
+    //
     override val sourceName: String
         get() = if (name == null || name!!.isEmpty()) {
             IntStream.UNKNOWN_SOURCE_NAME
@@ -111,7 +111,8 @@ open class ANTLRInputStream : CharStream {
     fun reset() {
         p = 0
     }
-//
+
+    //
     override fun consume() {
         if (p >= n) {
             assert(LA(1) == IntStream.EOF)
@@ -165,7 +166,8 @@ open class ANTLRInputStream : CharStream {
     override fun mark(): Int {
         return -1
     }
-//
+
+    //
     override fun release(marker: Int) {}
 
     /** consume() ahead until p==index; can't just set p=index as we must
@@ -189,7 +191,7 @@ open class ANTLRInputStream : CharStream {
         var stop = interval.b
         if (stop >= n) stop = n - 1
         val count = stop - start + 1
-        return if (start >= n) "" else data!!.copyOfRange(start, start+count).convertToString()
+        return if (start >= n) "" else data!!.copyOfRange(start, start + count).convertToString()
         //		System.err.println("data: "+Arrays.toString(data)+", n="+n+
         //						   ", start="+start+
         //						   ", stop="+stop);

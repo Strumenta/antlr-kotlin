@@ -39,7 +39,7 @@ open class ParserRuleContext : RuleContext {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
 
-        /** If we are debugging or building a parse tree for a visitor,
+    /** If we are debugging or building a parse tree for a visitor,
      * we need to track all of the tokens and rule invocations associated
      * with this rule's context. This is empty for parsing w/o tree constr.
      * operation because we don't the need to track the details about
@@ -82,14 +82,14 @@ open class ParserRuleContext : RuleContext {
      * (for example, zero length or error productions) this token may precede start.
      */
     var stop: Token? = null
-//
+    //
 //    /**
 //     * The exception that forced this rule to return. If the rule successfully
 //     * completed, this is `null`.
 //     */
     var exception: RecognitionException? = null
 
-            /** Override to make type more specific  */
+    /** Override to make type more specific  */
 //    var parent: ParserRuleContext? = null
 //        get() = super.readParent() as ParserRuleContext?
 //        set

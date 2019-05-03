@@ -194,17 +194,17 @@ public class AntlrKotlinTask extends SourceTask {
         final Set<File> sourceFiles = getSource().getFiles();
         final AtomicBoolean cleanRebuild = new AtomicBoolean();
         inputs.outOfDate(
-            new Action<InputFileDetails>() {
-                public void execute(InputFileDetails details) {
-                    File input = details.getFile();
-                    if (sourceFiles.contains(input)) {
-                        grammarFiles.add(input);
-                    } else {
-                        // classpath change?
-                        cleanRebuild.set(true);
+                new Action<InputFileDetails>() {
+                    public void execute(InputFileDetails details) {
+                        File input = details.getFile();
+                        if (sourceFiles.contains(input)) {
+                            grammarFiles.add(input);
+                        } else {
+                            // classpath change?
+                            cleanRebuild.set(true);
+                        }
                     }
                 }
-            }
         );
         inputs.removed(new Action<InputFileDetails>() {
             @Override
@@ -230,20 +230,20 @@ public class AntlrKotlinTask extends SourceTask {
 
     private void evaluate(AntlrResult result) {
         int errorCount = result.getErrorCount();
-        if(errorCount < 0) {
+        if (errorCount < 0) {
             throw new AntlrSourceGenerationException("There were errors during grammar generation", result.getException());
         } else if (errorCount == 1) {
             throw new AntlrSourceGenerationException("There was 1 error during grammar generation", result.getException());
         } else if (errorCount > 1) {
             throw new AntlrSourceGenerationException("There were "
-                + errorCount
-                + " errors during grammar generation", result.getException());
+                    + errorCount
+                    + " errors during grammar generation", result.getException());
         }
     }
 
     /**
      * Sets the source for this task. Delegates to {@link #setSource(Object)}.
-     *
+     * <p>
      * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
      * is used to determine the relative output path of the generated source
      * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up
@@ -259,7 +259,7 @@ public class AntlrKotlinTask extends SourceTask {
 
     /**
      * Sets the source for this task. Delegates to {@link SourceTask#setSource(Object)}.
-     *
+     * <p>
      * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
      * is used to determine the relative output path of the generated source
      * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up

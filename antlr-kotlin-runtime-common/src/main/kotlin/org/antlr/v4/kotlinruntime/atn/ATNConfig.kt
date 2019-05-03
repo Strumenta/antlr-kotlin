@@ -85,9 +85,9 @@ open class ATNConfig {
     }
 
     constructor(state: ATNState,
-                              alt: Int,
-                              context: PredictionContext?,
-                              semanticContext: SemanticContext = SemanticContext.NONE) {
+                alt: Int,
+                context: PredictionContext?,
+                semanticContext: SemanticContext = SemanticContext.NONE) {
         this.state = state
         this.alt = alt
         this.context = context
@@ -103,8 +103,8 @@ open class ATNConfig {
     }
 
     constructor(c: ATNConfig, state: ATNState,
-                              context: PredictionContext? = c.context,
-                              semanticContext: SemanticContext? = c.semanticContext) {
+                context: PredictionContext? = c.context,
+                semanticContext: SemanticContext? = c.semanticContext) {
         this.state = state
         this.alt = c.alt
         this.context = context

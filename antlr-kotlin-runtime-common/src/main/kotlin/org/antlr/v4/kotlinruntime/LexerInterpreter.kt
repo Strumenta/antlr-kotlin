@@ -15,7 +15,6 @@ import org.antlr.v4.kotlinruntime.dfa.DFA
 class LexerInterpreter(override val grammarFileName: String, override val vocabulary: Vocabulary, ruleNames: Collection<String>, channelNames: Collection<String>, modeNames: Collection<String>, override val atn: ATN, input: CharStream) : Lexer(input) {
 
 
-
     @Deprecated("")
     @get:Deprecated("")
     override val tokenNames: Array<String?>?

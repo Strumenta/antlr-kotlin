@@ -51,7 +51,7 @@ interface TokenSource {
      */
     //var inputStream: CharStream?
 
-    fun readInputStream() : CharStream?
+    fun readInputStream(): CharStream?
 
     /**
      * Gets the name of the underlying input source. This method returns a

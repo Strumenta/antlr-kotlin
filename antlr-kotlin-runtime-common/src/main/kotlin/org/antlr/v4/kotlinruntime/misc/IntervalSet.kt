@@ -366,13 +366,13 @@ class IntervalSet : IntSet {
                     buf.append("<EOF>")
                 else if (elemAreChar)
                     TODO()
-                    //buf.append("'").appendCodePoint(a).append("'")
+                //buf.append("'").appendCodePoint(a).append("'")
                 else
                     buf.append(a)
             } else {
                 if (elemAreChar)
                     TODO()
-                    //buf.append("'").appendCodePoint(a).append("'..'").appendCodePoint(b).append("'")
+                //buf.append("'").appendCodePoint(a).append("'..'").appendCodePoint(b).append("'")
                 else
                     buf.append(a).append("..").append(b)
             }

@@ -69,7 +69,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
 
             dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
             dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
-                        + antlrKotlinVersion));
+                    + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
@@ -89,7 +89,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                             = new AntlrSourceVirtualDirectoryImpl(((DefaultSourceSet) sourceSet).getDisplayName(), sourceDirectorySetFactory);
                     new DslObject(sourceSet).getConvention().getPlugins().put(
                             AntlrSourceVirtualDirectory.NAME, antlrDirectoryDelegate);
-                    final String srcDir = "src/"+ sourceSet.getName() +"/antlr";
+                    final String srcDir = "src/" + sourceSet.getName() + "/antlr";
                     antlrDirectoryDelegate.getAntlr().srcDir(srcDir);
                     sourceSet.getAllSource().source(antlrDirectoryDelegate.getAntlr());
 

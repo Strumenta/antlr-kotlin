@@ -5,6 +5,7 @@
  */
 
 package org.antlr.v4.kotlinruntime
+
 //
 //import org.antlr.v4.runtime.atn.*
 //import org.antlr.v4.runtime.dfa.DFA

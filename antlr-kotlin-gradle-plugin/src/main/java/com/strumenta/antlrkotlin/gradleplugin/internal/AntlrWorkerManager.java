@@ -45,7 +45,7 @@ public class AntlrWorkerManager {
         } else {
             LOGGER.debug("Setting no antlr classpath");
         }
-        builder.sharedPackages(new String[] {"antlr", "org.antlr"});
+        builder.sharedPackages(new String[]{"antlr", "org.antlr"});
         JavaExecHandleBuilder javaCommand = builder.getJavaCommand();
         javaCommand.setWorkingDir(workingDir);
         javaCommand.setMaxHeapSize(spec.getMaxHeapSize());

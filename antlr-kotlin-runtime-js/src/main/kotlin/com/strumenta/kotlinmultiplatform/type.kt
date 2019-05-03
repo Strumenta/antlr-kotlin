@@ -6,7 +6,7 @@ actual fun Type.isInstance(any: Any?): Boolean {
     return javaClass.kotlin.isInstance(any)
 }
 
-actual fun TypeDeclarator.getType(name: String) : Type {
+actual fun TypeDeclarator.getType(name: String): Type {
     //TODO("Type getType is not implemented. TypeDeclarator: $this, name: $name")
 
     return Type(this.classesByName.find { it.simpleName == name }!!.js)

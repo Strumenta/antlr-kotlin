@@ -15,7 +15,7 @@ import org.antlr.v4.kotlinruntime.Parser
 // * @since 4.3
 // */
 class ProfilingATNSimulator(parser: Parser) : ParserATNSimulator(parser, parser.interpreter!!.atn, parser.interpreter!!.decisionToDFA, parser.interpreter!!.sharedContextCache!!) {
-//    // ---------------------------------------------------------------------
+    //    // ---------------------------------------------------------------------
 //
     var decisionInfo: Array<DecisionInfo>? = null
 //    protected var numDecisions: Int = 0

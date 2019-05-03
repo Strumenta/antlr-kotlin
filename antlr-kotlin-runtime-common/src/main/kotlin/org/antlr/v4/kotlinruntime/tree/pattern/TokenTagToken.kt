@@ -28,7 +28,6 @@ constructor(
         /**
          * This is the backing field for [.getTokenName].
          */
-
         /**
          * Gets the token name.
          * @return The token name.
@@ -38,7 +37,6 @@ constructor(
         /**
          * This is the backing field for [.getLabel].
          */
-
         /**
          * Gets the accessLabel associated with the rule tag.
          *

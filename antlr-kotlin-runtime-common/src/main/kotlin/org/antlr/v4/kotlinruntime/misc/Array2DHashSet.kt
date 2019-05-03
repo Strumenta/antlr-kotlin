@@ -261,11 +261,11 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
         val b = getBucket(obj)
         val bucket = buckets[b] ?: // no bucket
-                return false
+        return false
 
         for (i in bucket.indices) {
             val e = bucket[i] ?: // empty slot; not there
-                    return false
+            return false
 
             if (comparator.equals(e, obj)) {          // found it
                 TODO()

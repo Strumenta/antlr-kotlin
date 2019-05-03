@@ -375,7 +375,8 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
                             continue
                         }
 
-                        val maybeLoopEndState = state.transition(state.numberOfTransitions - 1).target as? LoopEndState ?: continue
+                        val maybeLoopEndState = state.transition(state.numberOfTransitions - 1).target as? LoopEndState
+                                ?: continue
 
                         if (maybeLoopEndState.epsilonOnlyTransitions && maybeLoopEndState.transition(0).target is RuleStopState) {
                             endState = state

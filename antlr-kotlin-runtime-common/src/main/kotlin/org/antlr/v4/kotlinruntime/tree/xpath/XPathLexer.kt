@@ -4,6 +4,7 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 package org.antlr.v4.kotlinruntime.tree.xpath
+
 //
 //import org.antlr.v4.runtime.*
 //import org.antlr.v4.runtime.atn.ATN

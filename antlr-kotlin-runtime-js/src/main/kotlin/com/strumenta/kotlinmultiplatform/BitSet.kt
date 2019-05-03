@@ -10,10 +10,12 @@ actual class BitSet {
         if (bitIndex < 0) throw IllegalArgumentException()
         setBits.add(bitIndex)
     }
+
     actual fun clear(bitIndex: Int) {
         if (bitIndex < 0) throw IllegalArgumentException()
         setBits.remove(bitIndex)
     }
+
     actual fun get(bitIndex: Int): Boolean {
         if (bitIndex < 0) throw IllegalArgumentException()
         return setBits.contains(bitIndex)

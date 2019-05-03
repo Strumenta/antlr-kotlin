@@ -20,17 +20,18 @@ actual object Arrays {
     actual fun <T> asList(vararg elements: T): List<T> {
         return java.util.Arrays.asList(*elements)
     }
+
     actual fun <T> copyOf(original: Array<T>, size: Int): Array<T> {
         return java.util.Arrays.copyOf(original, size)
     }
 
-    actual fun equals(a: Array<*>?, b: Array<*>?) : Boolean {
+    actual fun equals(a: Array<*>?, b: Array<*>?): Boolean {
         if (a == null) return b == null
         if (b == null) return false
         return java.util.Arrays.equals(a, b)
     }
 
-    actual fun equals(a: IntArray?, b: IntArray?) : Boolean {
+    actual fun equals(a: IntArray?, b: IntArray?): Boolean {
         if (a == null) return b == null
         if (b == null) return false
         return java.util.Arrays.equals(a, b)

@@ -24,7 +24,8 @@ interface Tree {
 //        this.parent = value
 //    }
 
-    fun readParent() : Tree?
+    fun readParent(): Tree?
+
     /**
      * This method returns whatever object represents the data at this note. For
      * example, for parse trees, the payload can be a [Token] representing

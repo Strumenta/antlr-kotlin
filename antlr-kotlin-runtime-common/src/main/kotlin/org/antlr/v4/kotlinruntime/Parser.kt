@@ -550,8 +550,8 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
     }
 
     fun notifyErrorListeners(
-        offendingToken: Token, msg: String,
-        e: RecognitionException?
+            offendingToken: Token, msg: String,
+            e: RecognitionException?
     ) {
         numberOfSyntaxErrors++
         var line = -1
@@ -678,8 +678,8 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 
 
     @Deprecated(
-        "Use\n" +
-                "\t  {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead."
+            "Use\n" +
+                    "\t  {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead."
     )
     fun enterRecursionRule(localctx: ParserRuleContext, ruleIndex: Int) {
         enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex]!!.stateNumber, ruleIndex, 0)
