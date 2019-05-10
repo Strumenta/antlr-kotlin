@@ -3,14 +3,8 @@ jdk:
   - oraclejdk8
 install: true
 script:
-  - ./gradlew :antlr-kotlin-runtime-jvm:test
-  - ./gradlew :antlr-kotlin-runtime-js:test
-  - ./gradlew :antlr-kotlin-runtime-common:install
-  - ./gradlew :antlr-kotlin-runtime-jvm:install
-  - ./gradlew :antlr-kotlin-runtime-js:install
-  - ./gradlew :antlr-kotlin-target:install
-  - ./gradlew :antlr-kotlin-gradle-plugin:install
+  - ./gradlew test
+  - ./gradlew publishToMavenLocal
   - cd antlr-kotlin-examples-jvm && ../gradlew check && cd ..
 #  - cd antlr-kotlin-examples-js && ../gradlew check && cd ..
 
-  
