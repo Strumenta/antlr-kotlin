@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.tree.pattern
 
-import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.misc.MultiMap
+import org.antlr.v4.kotlinruntime.tree.ParseTree
 
 /**
  * Represents the result of matching a [ParseTree] against a tree pattern.

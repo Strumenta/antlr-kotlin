@@ -25,14 +25,14 @@ actual class UUID {
     private val node: Long
 
     enum class Variant(val value: Int, val bitsLength: Int) {
-        VARIANT_0(0,3),
+        VARIANT_0(0, 3),
         VARIANT_1(1, 2),
         VARIANT_2(2, 3),
         VARIANT_FUTURE(3, 3)
     }
 
     actual companion object {
-        actual fun fromString(encoded: String) : UUID {
+        actual fun fromString(encoded: String): UUID {
             val parts = encoded.split("-")
             require(parts.size == 5)
             require(parts[0].length == 8)
@@ -51,7 +51,7 @@ actual class UUID {
             val topBit2nd = clock_seq_hi_and_res.shr(14).and(0x1L)
             val topBit3nd = clock_seq_hi_and_res.shr(13).and(0x1L)
 
-            val variantEnum : Variant = when {
+            val variantEnum: Variant = when {
                 topBit1st == 0L -> /* Variant 0 */ throw UnsupportedOperationException()
                 topBit1st == 1L && topBit2nd == 1L && topBit3nd == 1L -> /* Variant future */ throw UnsupportedOperationException()
                 topBit1st == 1L && topBit2nd == 0L -> Variant.VARIANT_1
@@ -65,8 +65,8 @@ actual class UUID {
             val timeHi = time_hi_and_version.and(0xFFFL)
             val variant = 2L // TODO fixme variantEnum.value.toLong()
             val clock_seq = when (variantEnum.bitsLength) {
-                2 ->  clock_seq_hi_and_res.and(0x3FFFL)
-                3 ->  clock_seq_hi_and_res.and(0x1FFFL)
+                2 -> clock_seq_hi_and_res.and(0x3FFFL)
+                3 -> clock_seq_hi_and_res.and(0x1FFFL)
                 else -> throw UnsupportedOperationException()
             }
             val node = parts[4].toLong(radix = 16)

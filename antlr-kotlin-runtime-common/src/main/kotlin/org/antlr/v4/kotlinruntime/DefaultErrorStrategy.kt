@@ -300,7 +300,7 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
             else
             //TODO
                 input = e.startToken.text!!
-                //input = tokens!!.getText(e.startToken, e.offendingToken)!!
+            //input = tokens!!.getText(e.startToken, e.offendingToken)!!
         } else {
             input = "<unknown input>"
         }

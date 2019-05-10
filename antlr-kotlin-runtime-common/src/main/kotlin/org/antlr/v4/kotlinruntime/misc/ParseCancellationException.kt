@@ -21,7 +21,7 @@ class ParseCancellationException : RuntimeException {
 
     constructor() {}
 
-    constructor(message: String)  {}
+    constructor(message: String) {}
 
     constructor(cause: Throwable) {
         TODO()

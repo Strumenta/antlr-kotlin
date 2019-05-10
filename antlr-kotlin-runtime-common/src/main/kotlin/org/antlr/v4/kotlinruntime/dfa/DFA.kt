@@ -23,7 +23,7 @@ class DFA constructor(
      */
 
     val states: MutableMap<DFAState, DFAState> = HashMap<DFAState, DFAState>()
-    
+
     var s0: DFAState? = null
 
     /**
@@ -123,12 +123,12 @@ class DFA constructor(
         // precedence DFA, s0 will be initialized once and not updated again
         //TODO()
 //        synchronized(s0) {
-            // s0.edges is never null for a precedence DFA
-            if (precedence >= s0!!.edges!!.size) {
-                s0!!.edges = Arrays.copyOf<DFAState?>(s0!!.edges!!, precedence + 1)
-            }
+        // s0.edges is never null for a precedence DFA
+        if (precedence >= s0!!.edges!!.size) {
+            s0!!.edges = Arrays.copyOf<DFAState?>(s0!!.edges!!, precedence + 1)
+        }
 //
-            s0!!.edges!![precedence] = startState
+        s0!!.edges!![precedence] = startState
 //        }
     }
 

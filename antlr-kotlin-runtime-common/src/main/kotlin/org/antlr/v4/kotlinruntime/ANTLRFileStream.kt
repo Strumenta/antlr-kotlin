@@ -5,8 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import org.antlr.v4.kotlinruntime.misc.Utils
-
 ///**
 // * This is an [ANTLRInputStream] that is loaded from a file all at once
 // * when you construct the object.

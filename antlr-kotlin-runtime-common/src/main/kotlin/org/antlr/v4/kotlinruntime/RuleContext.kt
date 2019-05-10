@@ -78,13 +78,13 @@ open class RuleContext : RuleNode {
     /** What context invoked this rule?  */
     /** @since 4.7. {@see ParseTree#setParent} comment
      */
-    protected var parent : RuleContext?
+    protected var parent: RuleContext?
 
     fun assignParent(value: RuleContext?) {
         this.parent = value
     }
 
-    override fun readParent() : RuleContext? {
+    override fun readParent(): RuleContext? {
         return this.parent
     }
 

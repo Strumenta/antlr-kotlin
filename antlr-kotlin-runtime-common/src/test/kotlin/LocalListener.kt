@@ -8,7 +8,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTree
  * Date: 13/06/2018
  * Time: 09:52
  */
-class LocalListener: MiniCalcParserBaseListener() {
+class LocalListener : MiniCalcParserBaseListener() {
 
     override fun exitMiniCalcFile(ctx: MiniCalcParser.MiniCalcFileContext) {
 

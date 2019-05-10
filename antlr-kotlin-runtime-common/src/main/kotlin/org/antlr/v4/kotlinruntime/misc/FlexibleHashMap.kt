@@ -10,11 +10,11 @@ package org.antlr.v4.kotlinruntime.misc
  * varying hashCode/equals.
  */
 open class FlexibleHashMap<K, V> constructor(
-    comparator: AbstractEqualityComparator<K>? = null,
-    initialCapacity: Int = INITAL_CAPACITY,
-    initialBucketCapacity: Int = INITAL_BUCKET_CAPACITY
+        comparator: AbstractEqualityComparator<K>? = null,
+        initialCapacity: Int = INITAL_CAPACITY,
+        initialBucketCapacity: Int = INITAL_BUCKET_CAPACITY
 ) : MutableMap<K, V> {
-    
+
     //TODO efficiency
     override val keys: MutableSet<K>
         get() = buckets.filterNotNull().flatMap { it.filterNotNull().map { it.key } }.toMutableSet()

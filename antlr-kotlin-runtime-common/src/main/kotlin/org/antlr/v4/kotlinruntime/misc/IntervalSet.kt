@@ -7,9 +7,9 @@ package org.antlr.v4.kotlinruntime.misc
 
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.Token
+import org.antlr.v4.kotlinruntime.Token.Companion.EOF
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
-import org.antlr.v4.kotlinruntime.Token.Companion.EOF
 
 /**
  * This class implements the [IntSet] backed by a sorted array of
@@ -366,13 +366,13 @@ class IntervalSet : IntSet {
                     buf.append("<EOF>")
                 else if (elemAreChar)
                     TODO()
-                    //buf.append("'").appendCodePoint(a).append("'")
+                //buf.append("'").appendCodePoint(a).append("'")
                 else
                     buf.append(a)
             } else {
                 if (elemAreChar)
                     TODO()
-                    //buf.append("'").appendCodePoint(a).append("'..'").appendCodePoint(b).append("'")
+                //buf.append("'").appendCodePoint(a).append("'..'").appendCodePoint(b).append("'")
                 else
                     buf.append(a).append("..").append(b)
             }

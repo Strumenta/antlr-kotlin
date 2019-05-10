@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.BitSet
-import org.antlr.v4.kotlinruntime.atn.ATNConfig
 import org.antlr.v4.kotlinruntime.atn.ATNConfigSet
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.misc.Interval

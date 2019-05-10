@@ -20,8 +20,8 @@ private fun formatMessage(predicate: String?, message: String?): String {
  * prediction.
  */
 class FailedPredicateException constructor(recognizer: Parser,
-                                                         val predicate: String? = null,
-                                                         message: String? = null) : RecognitionException(recognizer, recognizer.readInputStream()!!, recognizer.context!!, formatMessage(predicate, message)) {
+                                           val predicate: String? = null,
+                                           message: String? = null) : RecognitionException(recognizer, recognizer.readInputStream()!!, recognizer.context!!, formatMessage(predicate, message)) {
     var ruleIndex: Int = -1
     var predIndex: Int = -1
 
@@ -39,7 +39,6 @@ class FailedPredicateException constructor(recognizer: Parser,
         TODO()
         //this.offendingToken = recognizer.currentToken
     }
-
 
 
 }

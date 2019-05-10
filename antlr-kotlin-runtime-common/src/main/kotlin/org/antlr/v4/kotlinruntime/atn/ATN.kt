@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
+import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
-import org.antlr.v4.kotlinruntime.ParserRuleContext
 
 /**  */
 class ATN

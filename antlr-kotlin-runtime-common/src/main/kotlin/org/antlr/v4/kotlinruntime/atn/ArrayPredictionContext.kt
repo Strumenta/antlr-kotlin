@@ -18,14 +18,15 @@ class ArrayPredictionContext(
          * [.EMPTY_RETURN_STATE] is always last.
          */
         val returnStates: IntArray?) : PredictionContext(PredictionContext.calculateHashCode(parents!!, returnStates!!)) {
-//
+    //
 //    override// since EMPTY_RETURN_STATE can only appear in the last position, we
 //            // don't need to verify that size==1
 //    val isEmpty: Boolean
 //        get() = returnStates[0] == PredictionContext.EMPTY_RETURN_STATE
 //
     constructor(a: SingletonPredictionContext) : this(arrayOf<PredictionContext?>(a.parent), intArrayOf(a.returnState)) {}
-//
+
+    //
 //    init {
 //        assert(parents != null && parents.size > 0)
 //        assert(returnStates != null && returnStates.size > 0)
@@ -42,7 +43,8 @@ class ArrayPredictionContext(
     override fun getReturnState(index: Int): Int {
         return returnStates!![index]
     }
-//
+
+    //
 //    //	@Override
 //    //	public int findReturnState(int returnState) {
 //    //		return Arrays.binarySearch(returnStates, returnState);

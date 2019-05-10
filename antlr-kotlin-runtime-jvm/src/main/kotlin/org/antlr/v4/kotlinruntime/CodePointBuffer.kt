@@ -95,7 +95,7 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
         }
 
         fun build(): CodePointBuffer {
-            requireNotNull(type) {"type should not be null"}
+            requireNotNull(type) { "type should not be null" }
             when (type) {
                 CodePointBuffer.Type.BYTE -> byteBuffer!!.flip()
                 CodePointBuffer.Type.CHAR -> charBuffer!!.flip()
@@ -270,8 +270,8 @@ class CodePointBuffer private constructor(internal val type: Type, private val b
             // CharBuffers hold twice as much per unit as ByteBuffers, so start with half the capacity.
             val newBuffer = CharBuffer.allocate(Math.max(byteBuffer!!.remaining() + toAppend, byteBuffer!!.capacity() / 2))
             while (byteBuffer!!.hasRemaining()) {
-                val b0 : Byte = byteBuffer!!.get()
-                val b1 : Byte = 0xFF.toByte()
+                val b0: Byte = byteBuffer!!.get()
+                val b1: Byte = 0xFF.toByte()
                 newBuffer.put((b0 and b1).toChar())
             }
             type = Type.CHAR

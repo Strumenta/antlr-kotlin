@@ -19,7 +19,9 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 import org.gradle.api.GradleException;
 import org.gradle.internal.UncheckedException;
 import org.gradle.internal.os.OperatingSystem;
-import org.gradle.internal.reflect.*;
+import org.gradle.internal.reflect.JavaMethod;
+import org.gradle.internal.reflect.NoSuchPropertyException;
+import org.gradle.internal.reflect.PropertyMutator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,7 @@ public class AntlrExecuter implements AntlrWorker {
                     Constructor<?> constructor = toolClass.getConstructor(String[].class);
                     return constructor.newInstance(new Object[]{args});
                 }
-            } catch(ClassNotFoundException cnf){
+            } catch (ClassNotFoundException cnf) {
                 LOGGER.error("Tool not loaded " + cnf.getMessage());
                 throw cnf;
             } catch (InvocationTargetException e) {

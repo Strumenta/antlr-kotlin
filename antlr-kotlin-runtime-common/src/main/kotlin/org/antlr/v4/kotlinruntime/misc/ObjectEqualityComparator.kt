@@ -33,7 +33,6 @@ class ObjectEqualityComparator<in T> : AbstractEqualityComparator<T>() {
     }
 
 
-
     companion object {
         val INSTANCE = ObjectEqualityComparator<Any?>()
     }

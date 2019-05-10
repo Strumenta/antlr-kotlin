@@ -21,7 +21,6 @@ internal class TextChunk
         /**
          * This is the backing field for [.getText].
          */
-
         /**
          * Gets the raw text of this chunk.
          *

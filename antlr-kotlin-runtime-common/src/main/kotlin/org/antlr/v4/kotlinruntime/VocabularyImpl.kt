@@ -123,8 +123,8 @@ constructor(literalNames: Array<String?>?, symbolicNames: Array<String?>?, displ
                 return EMPTY_VOCABULARY
             }
 
-            val literalNames : Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
-            val symbolicNames : Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
+            val literalNames: Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
+            val symbolicNames: Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
             for (i in tokenNames.indices) {
                 val tokenName = tokenNames[i] ?: continue
 

@@ -5,14 +5,16 @@ import kotlin.test.Test as test
 
 class IntegerListTest {
 
-    @test fun addToIntegerList() {
+    @test
+    fun addToIntegerList() {
         val il = IntegerList()
         il.add(10)
         assertEquals(1, il.size())
         assertEquals(10, il[0])
     }
 
-    @test fun removeAtIntegerList() {
+    @test
+    fun removeAtIntegerList() {
         val il = IntegerList()
         il.add(10)
         il.add(12)

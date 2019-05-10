@@ -74,9 +74,9 @@ constructor(
      * {@inheritDoc}
      */
     override// have to calculate the result from the line/column of the previous
-            // token, along with the text of the token.
-            // only reach this if tokens is empty, meaning EOF occurs at the first
-            // position in the input
+    // token, along with the text of the token.
+    // only reach this if tokens is empty, meaning EOF occurs at the first
+    // position in the input
     val charPositionInLine: Int
         get() {
             if (i < tokens!!.size) {
@@ -102,10 +102,10 @@ constructor(
      * {@inheritDoc}
      */
     override// have to calculate the result from the line/column of the previous
-            // token, along with the text of the token.
-            // if no text is available, assume the token did not contain any newline characters.
-            // only reach this if tokens is empty, meaning EOF occurs at the first
-            // position in the input
+    // token, along with the text of the token.
+    // if no text is available, assume the token did not contain any newline characters.
+    // only reach this if tokens is empty, meaning EOF occurs at the first
+    // position in the input
     val line: Int
         get() {
             if (i < tokens!!.size) {

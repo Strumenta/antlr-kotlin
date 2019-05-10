@@ -7,9 +7,7 @@
 package org.antlr.v4.kotlinruntime.misc
 
 import org.antlr.v4.kotlinruntime.Vocabulary
-import org.antlr.v4.kotlinruntime.VocabularyImpl
 import org.antlr.v4.kotlinruntime.atn.ATN
-import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 
 
 // A class to read plain text interpreter data produced by ANTLR.

@@ -28,7 +28,7 @@ interface ParseTree : SyntaxTree {
     //    this.parent = value
     //}
 
-    override fun readParent() : ParseTree?
+    override fun readParent(): ParseTree?
 
     /** Return the combined text of all leaf nodes. Does not get any
      * off-channel tokens (if any) so won't return whitespace and

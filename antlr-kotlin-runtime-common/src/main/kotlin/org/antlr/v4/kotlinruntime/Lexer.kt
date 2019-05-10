@@ -40,7 +40,8 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
         this.inputStream = input as CharStream
         this._tokenFactorySourcePair = Pair<TokenSource, CharStream>(this, readInputStream())
     }
-    override fun readInputStream() : CharStream? {
+
+    override fun readInputStream(): CharStream? {
         return this.inputStream as CharStream?
     }
 
@@ -266,8 +267,6 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
         mode(_modeStack.pop())
         return _mode
     }
-
-
 
 
     /** By default does not support multiple emits per nextToken invocation

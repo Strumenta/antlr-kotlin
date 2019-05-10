@@ -1109,7 +1109,8 @@ open class ParserATNSimulator(
                 continue
             }
 
-            val updatedContext = config.semanticContext!!.evalPrecedence(parser!!, _outerContext!!) ?: // the configuration was eliminated
+            val updatedContext = config.semanticContext!!.evalPrecedence(parser!!, _outerContext!!)
+                    ?: // the configuration was eliminated
                     continue
 
             statesFromAlt1.put(config.state.stateNumber, config.context!!)

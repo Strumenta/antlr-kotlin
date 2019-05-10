@@ -17,23 +17,21 @@
 package com.strumenta.antlrkotlin.gradleplugin;
 
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceVirtualDirectoryImpl;
-import org.gradle.api.*;
+import com.strumenta.antlrkotlin.gradleplugin.internal.SourceDirectorySetFactory;
+import org.gradle.api.GradleException;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.DependencySet;
-import org.gradle.api.internal.file.SourceDirectorySetFactory;
 import org.gradle.api.internal.plugins.DslObject;
 import org.gradle.api.internal.tasks.DefaultSourceSet;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
-import org.gradle.api.tasks.SourceSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Callable;
 
 import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
 
@@ -47,8 +45,8 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
     private final SourceDirectorySetFactory sourceDirectorySetFactory;
 
     @Inject
-    public AntlrKotlinPlugin(SourceDirectorySetFactory sourceDirectorySetFactory) {
-        this.sourceDirectorySetFactory = sourceDirectorySetFactory;
+    public AntlrKotlinPlugin(final ObjectFactory objectFactory) {
+        this.sourceDirectorySetFactory = name -> objectFactory.sourceDirectorySet(name, name);
     }
 
     public void apply(final Project project) {
@@ -72,7 +70,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
 
             dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
             dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
-                        + antlrKotlinVersion));
+                    + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
@@ -92,7 +90,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                             = new AntlrSourceVirtualDirectoryImpl(((DefaultSourceSet) sourceSet).getDisplayName(), sourceDirectorySetFactory);
                     new DslObject(sourceSet).getConvention().getPlugins().put(
                             AntlrSourceVirtualDirectory.NAME, antlrDirectoryDelegate);
-                    final String srcDir = "src/"+ sourceSet.getName() +"/antlr";
+                    final String srcDir = "src/" + sourceSet.getName() + "/antlr";
                     antlrDirectoryDelegate.getAntlr().srcDir(srcDir);
                     sourceSet.getAllSource().source(antlrDirectoryDelegate.getAntlr());
 

@@ -27,7 +27,7 @@ actual object Arrays {
         return res as Array<T>
     }
 
-    actual fun equals(a: Array<*>?, b: Array<*>?) : Boolean {
+    actual fun equals(a: Array<*>?, b: Array<*>?): Boolean {
         if (a == null) return b == null
         if (b == null) return false
         if (a.size != b.size) {
@@ -41,7 +41,7 @@ actual object Arrays {
         return true
     }
 
-    actual fun equals(a: IntArray?, b: IntArray?) : Boolean {
+    actual fun equals(a: IntArray?, b: IntArray?): Boolean {
         if (a == null) return b == null
         if (b == null) return false
         if (a.size != b.size) {
@@ -56,6 +56,6 @@ actual object Arrays {
     }
 
     actual fun toString(a: Array<*>): String {
-        return "[${a.joinToString(separator = ", ") { it?.toString() ?: "null"}}]"
+        return "[${a.joinToString(separator = ", ") { it?.toString() ?: "null" }}]"
     }
 }

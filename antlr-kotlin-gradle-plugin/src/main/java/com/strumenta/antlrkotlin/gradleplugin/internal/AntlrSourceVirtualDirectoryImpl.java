@@ -18,7 +18,6 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 import groovy.lang.Closure;
 import org.gradle.api.Action;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.internal.file.SourceDirectorySetFactory;
 import org.gradle.api.plugins.antlr.AntlrSourceVirtualDirectory;
 import org.gradle.util.ConfigureUtil;
 

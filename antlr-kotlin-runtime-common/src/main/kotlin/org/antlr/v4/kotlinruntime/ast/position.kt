@@ -14,17 +14,19 @@ data class Point(val line: Int, val column: Int) {
     /**
      * Translate the Point to an offset in the original code stream.
      */
-    fun offset(code: String) : Int {
+    fun offset(code: String): Int {
         val lines = code.split("\n")
         require(lines.size >= line) {
-            "The point does not exist in the given text. It indicates line $line but there are only ${lines.size} lines" }
+            "The point does not exist in the given text. It indicates line $line but there are only ${lines.size} lines"
+        }
         require(lines[line - 1].length >= column) {
-            "The column does not exist in the given text. Line $line has ${lines[line - 1].length} columns, the point indicates column $column" }
+            "The column does not exist in the given text. Line $line has ${lines[line - 1].length} columns, the point indicates column $column"
+        }
         val newLines = this.line - 1
         return lines.subList(0, this.line - 1).foldRight(0, { it, acc -> it.length + acc }) + newLines + column
     }
 
-    fun isBefore(other: Point) : Boolean = line < other.line || (line == other.line && column < other.column)
+    fun isBefore(other: Point): Boolean = line < other.line || (line == other.line && column < other.column)
     fun advance(text: String): Point {
         val matches = Regex("\r\n|\r|\n").findAll(text)
         val line = this.line + matches.count()
@@ -43,7 +45,8 @@ data class Position(val start: Point, val end: Point) {
 
     init {
         require(start.isBefore(end) || start == end) {
-            "End should follows start or be the same as start (start: $start, end: $end)" }
+            "End should follows start or be the same as start (start: $start, end: $end)"
+        }
     }
 
     /**
@@ -55,7 +58,7 @@ data class Position(val start: Point, val end: Point) {
 
     fun length(code: String) = end.offset(code) - start.offset(code)
 
-    fun contains(point: Point) : Boolean {
+    fun contains(point: Point): Boolean {
         return ((point == start || start.isBefore(point)) && (point == end || point.isBefore(end)))
     }
 }
@@ -63,4 +66,4 @@ data class Position(val start: Point, val end: Point) {
 /**
  * Utility function to create a Position
  */
-fun pos(startLine:Int, startCol:Int, endLine:Int, endCol:Int) = Position(Point(startLine,startCol), Point(endLine,endCol))
+fun pos(startLine: Int, startCol: Int, endLine: Int, endCol: Int) = Position(Point(startLine, startCol), Point(endLine, endCol))

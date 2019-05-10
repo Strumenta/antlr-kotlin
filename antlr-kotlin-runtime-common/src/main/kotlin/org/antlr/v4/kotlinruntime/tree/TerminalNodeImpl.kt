@@ -7,13 +7,12 @@
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.Parser
-import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.Interval
 
 open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
 
-    private var parent : ParseTree? = null
+    private var parent: ParseTree? = null
 
     override fun assignParent(value: ParseTree?) {
         this.parent = value

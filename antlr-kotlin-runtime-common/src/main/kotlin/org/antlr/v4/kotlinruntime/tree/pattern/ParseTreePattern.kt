@@ -27,7 +27,6 @@ class ParseTreePattern
         /**
          * This is the backing field for [.getMatcher].
          */
-
         /**
          * Get the [ParseTreePatternMatcher] which created this tree pattern.
          *
@@ -39,7 +38,6 @@ class ParseTreePattern
         /**
          * This is the backing field for [.getPattern].
          */
-
         /**
          * Get the tree pattern in concrete syntax form.
          *
@@ -61,7 +59,6 @@ class ParseTreePattern
         /**
          * This is the backing field for [.getPatternTree].
          */
-
         /**
          * Get the tree pattern as a [ParseTree]. The rule and token tags from
          * the pattern are present in the parse tree as terminal nodes with a symbol
