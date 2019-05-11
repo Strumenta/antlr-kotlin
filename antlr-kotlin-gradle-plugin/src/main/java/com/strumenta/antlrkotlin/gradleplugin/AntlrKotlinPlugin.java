@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.File;
 
-import static org.gradle.api.plugins.JavaPlugin.COMPILE_CONFIGURATION_NAME;
+import static org.gradle.api.plugins.JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME;
 
 /**
  * A plugin for adding support for the ANTLR Kotlin target to {@link JavaPlugin java projects}.
@@ -73,7 +73,7 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                     + antlrKotlinVersion));
         });
 
-        project.getConfigurations().getByName(COMPILE_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
+        project.getConfigurations().getByName(IMPLEMENTATION_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
 
         // Wire the antlr configuration into all antlr tasks
         project.getTasks().withType(AntlrKotlinTask.class, antlrTask -> antlrTask.getConventionMapping().map("antlrClasspath", () -> {
