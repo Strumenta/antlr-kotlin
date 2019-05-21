@@ -15,10 +15,10 @@
  */
 package com.strumenta.antlrkotlin.gradleplugin.internal;
 
+import com.strumenta.antlrkotlin.gradleplugin.AntlrSourceVirtualDirectory;
 import groovy.lang.Closure;
 import org.gradle.api.Action;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlr.AntlrSourceVirtualDirectory;
 import org.gradle.util.ConfigureUtil;
 
 /**
