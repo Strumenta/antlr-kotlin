@@ -21,6 +21,8 @@ import org.gradle.internal.exceptions.Contextual;
 
 @Contextual
 public class AntlrSourceGenerationException extends GradleException {
+    private static final long serialVersionUID = 8666360695042870678L;
+
     public AntlrSourceGenerationException(String message, Throwable cause) {
         super(message, cause);
     }
