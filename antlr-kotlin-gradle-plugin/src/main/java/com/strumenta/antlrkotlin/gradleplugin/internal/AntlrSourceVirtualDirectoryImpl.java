@@ -27,9 +27,8 @@ import org.gradle.util.ConfigureUtil;
 public class AntlrSourceVirtualDirectoryImpl implements AntlrSourceVirtualDirectory {
     private final SourceDirectorySet antlr;
 
-    public AntlrSourceVirtualDirectoryImpl(String parentDisplayName, SourceDirectorySetFactory sourceDirectorySetFactory) {
-        final String displayName = parentDisplayName + " Antlr source";
-        antlr = sourceDirectorySetFactory.create(displayName);
+    public AntlrSourceVirtualDirectoryImpl(SourceDirectorySet sourceDirectorySet) {
+        antlr = sourceDirectorySet;
         antlr.getFilter().include("**/*.g");
         antlr.getFilter().include("**/*.g4");
     }
