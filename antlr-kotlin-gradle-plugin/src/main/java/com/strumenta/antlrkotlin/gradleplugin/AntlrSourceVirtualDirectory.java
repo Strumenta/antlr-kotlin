@@ -42,7 +42,7 @@ public interface AntlrSourceVirtualDirectory {
      * @param configureClosure The closure to use to configure the Antlr source.
      * @return this
      */
-    AntlrSourceVirtualDirectory antlr(Closure configureClosure);
+    AntlrSourceVirtualDirectory antlr(Closure<SourceDirectorySet> configureClosure);
 
     /**
      * Configures the Antlr source for this set. The given action is used to configure the {@link org.gradle.api.file.SourceDirectorySet} (see

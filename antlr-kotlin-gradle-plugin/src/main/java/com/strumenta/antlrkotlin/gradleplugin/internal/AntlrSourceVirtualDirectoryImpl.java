@@ -39,7 +39,7 @@ public class AntlrSourceVirtualDirectoryImpl implements AntlrSourceVirtualDirect
     }
 
     @Override
-    public AntlrSourceVirtualDirectory antlr(Closure configureClosure) {
+    public AntlrSourceVirtualDirectory antlr(Closure<SourceDirectorySet> configureClosure) {
         ConfigureUtil.configure(configureClosure, getAntlr());
         return this;
     }
