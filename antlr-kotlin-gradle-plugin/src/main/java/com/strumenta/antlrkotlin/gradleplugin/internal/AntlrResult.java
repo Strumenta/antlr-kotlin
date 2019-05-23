@@ -20,6 +20,8 @@ import java.io.Serializable;
 
 public class AntlrResult implements Serializable {
 
+    private static final long serialVersionUID = -4823328630306967783L;
+
     private final int errorCount;
     private final Exception exception;
 

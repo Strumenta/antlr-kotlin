@@ -15,10 +15,10 @@
  */
 package com.strumenta.antlrkotlin.gradleplugin.internal;
 
+import com.strumenta.antlrkotlin.gradleplugin.AntlrSourceVirtualDirectory;
 import groovy.lang.Closure;
 import org.gradle.api.Action;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.antlr.AntlrSourceVirtualDirectory;
 import org.gradle.util.ConfigureUtil;
 
 /**
@@ -27,9 +27,8 @@ import org.gradle.util.ConfigureUtil;
 public class AntlrSourceVirtualDirectoryImpl implements AntlrSourceVirtualDirectory {
     private final SourceDirectorySet antlr;
 
-    public AntlrSourceVirtualDirectoryImpl(String parentDisplayName, SourceDirectorySetFactory sourceDirectorySetFactory) {
-        final String displayName = parentDisplayName + " Antlr source";
-        antlr = sourceDirectorySetFactory.create(displayName);
+    public AntlrSourceVirtualDirectoryImpl(SourceDirectorySet sourceDirectorySet) {
+        antlr = sourceDirectorySet;
         antlr.getFilter().include("**/*.g");
         antlr.getFilter().include("**/*.g4");
     }
@@ -40,7 +39,7 @@ public class AntlrSourceVirtualDirectoryImpl implements AntlrSourceVirtualDirect
     }
 
     @Override
-    public AntlrSourceVirtualDirectory antlr(Closure configureClosure) {
+    public AntlrSourceVirtualDirectory antlr(Closure<SourceDirectorySet> configureClosure) {
         ConfigureUtil.configure(configureClosure, getAntlr());
         return this;
     }

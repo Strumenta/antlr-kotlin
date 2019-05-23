@@ -24,6 +24,8 @@ import java.util.Set;
 
 public class AntlrSpec implements Serializable {
 
+    private static final long serialVersionUID = 1943554582158475699L;
+
     private List<String> arguments;
     private Set<File> inputDirectories;
     private Set<File> grammarFiles;
