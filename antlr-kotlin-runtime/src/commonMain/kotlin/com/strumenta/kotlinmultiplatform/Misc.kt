@@ -30,6 +30,7 @@ expect object Arrays {
     fun equals(a: IntArray?, b: IntArray?): Boolean
 
     fun toString(a: Array<*>): String
+    fun toString(a: IntArray): String
 }
 
 expect class BitSet {
@@ -112,7 +113,8 @@ expect fun Char.Companion.maxValue(): Char
 
 expect fun <T> Array<T>.clone(): Array<T>
 
-expect fun <T> arraycopy(tokens: Array<T>, p: Int, tokens1: Array<T>, i: Int, i1: Int)
+expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int)
+expect fun arraycopy(src: IntArray, srcPos: Int, dest: IntArray, destPos: Int, length: Int)
 
 expect class Type
 

@@ -121,15 +121,10 @@ class DFA constructor(
 
         // synchronization on s0 here is ok. when the DFA is turned into a
         // precedence DFA, s0 will be initialized once and not updated again
-        //TODO()
-//        synchronized(s0) {
         // s0.edges is never null for a precedence DFA
         if (precedence >= s0!!.edges!!.size) {
             s0!!.edges = Arrays.copyOf<DFAState?>(s0!!.edges!!, precedence + 1)
         }
-//
-        s0!!.edges!![precedence] = startState
-//        }
     }
 
     /**
@@ -137,11 +132,10 @@ class DFA constructor(
      */
 
     fun getStates(): List<DFAState> {
-        val result = ArrayList<DFAState>(states.keys)
-        TODO()
-        //Collections.sort<DFAState>(result, java.util.Comparator<Any> { o1, o2 -> o1.stateNumber - o2.stateNumber })
+        val result = ArrayList(states.keys)
+        result.sortBy { it.stateNumber }
 
-        //return result
+        return result
     }
 
     override fun toString(): String {

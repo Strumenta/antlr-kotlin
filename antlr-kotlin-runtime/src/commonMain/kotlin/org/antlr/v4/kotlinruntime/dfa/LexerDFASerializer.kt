@@ -11,10 +11,9 @@ import org.antlr.v4.kotlinruntime.VocabularyImpl
 class LexerDFASerializer(dfa: DFA) : DFASerializer(dfa, VocabularyImpl.EMPTY_VOCABULARY) {
 
     protected override fun getEdgeLabel(i: Int): String {
-        TODO()
-//        return StringBuilder("'")
-//                .appendCodePoint(i)
-//                .append("'")
-//                .toString()
+        return StringBuilder("'")
+                .append(i.toChar())
+                .append("'")
+                .toString()
     }
 }

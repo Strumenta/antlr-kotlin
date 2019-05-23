@@ -5,10 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.charCount
-import com.strumenta.kotlinmultiplatform.isSupplementaryCodePoint
-import com.strumenta.kotlinmultiplatform.toChars
+import com.strumenta.kotlinmultiplatform.*
 
 /**
  *
@@ -40,9 +37,8 @@ open class IntegerList {
     }
 
     constructor(list: IntegerList) {
-        TODO()
-        //_data = list._data!!.clone()
-        //_size = list._size
+        _data = list._data!!.copyOf()
+        _size = list._size
     }
 
     constructor(list: Collection<Int>) : this(list.size) {
@@ -55,34 +51,29 @@ open class IntegerList {
         if (_data!!.size == _size) {
             ensureCapacity(_size + 1)
         }
-
         _data!![_size] = value
         _size++
     }
 
     fun addAll(array: IntArray) {
-        TODO()
-//        ensureCapacity(_size + array.size)
-//        System.arraycopy(array, 0, _data!!, _size, array.size)
-//        _size += array.size
+        ensureCapacity(_size + array.size)
+        Arrays
+        arraycopy(array, 0, _data!!, _size, array.size)
+        _size += array.size
     }
 
     fun addAll(list: IntegerList) {
-        TODO()
-//        ensureCapacity(_size + list._size)
-//        System.arraycopy(list._data!!, 0, _data!!, _size, list._size)
-//        _size += list._size
+        ensureCapacity(_size + list._size)
+        arraycopy(list._data!!, 0, _data!!, _size, list._size)
+        _size += list._size
     }
 
     fun addAll(list: Collection<Int>) {
-        TODO()
-//        ensureCapacity(_size + list.size)
-//        var current = 0
-//        for (x in list) {
-//            _data[_size + current] = x
-//            current++
-//        }
-//        _size += list.size
+        ensureCapacity(_size + list.size)
+        list.forEachIndexed { index, x ->
+            _data!![_size + index] = x
+        }
+        _size += list.size
     }
 
     operator fun get(index: Int): Int {
@@ -124,17 +115,15 @@ open class IntegerList {
     }
 
     fun removeRange(fromIndex: Int, toIndex: Int) {
-        TODO()
-//        if (fromIndex < 0 || toIndex < 0 || fromIndex > _size || toIndex > _size) {
-//            throw IndexOutOfBoundsException()
-//        }
-//        if (fromIndex > toIndex) {
-//            throw IllegalArgumentException()
-//        }
-//
-//        System.arraycopy(_data!!, toIndex, _data!!, fromIndex, _size - toIndex)
-//        Arrays.fill(_data!!, _size - (toIndex - fromIndex), _size, 0)
-//        _size -= toIndex - fromIndex
+        if (fromIndex < 0 || toIndex < 0 || fromIndex > _size || toIndex > _size) {
+            throw IndexOutOfBoundsException()
+        }
+        if (fromIndex > toIndex) {
+            throw IllegalArgumentException()
+        }
+
+        arraycopy(_data!!, toIndex, _data!!, fromIndex, _size - toIndex)
+        _size -= toIndex - fromIndex
     }
 
     fun size(): Int {
@@ -142,31 +131,28 @@ open class IntegerList {
     }
 
     fun trimToSize() {
-        TODO()
-//        if (_data!!.size == _size) {
-//            return
-//        }
-//
-//        _data = Arrays.copyOf(_data!!, _size)
+        if (_data!!.size == _size) {
+            return
+        }
+        _data = _data!!.copyOf(_size)
     }
 
     fun clear() {
-        TODO()
 //        Arrays.fill(_data!!, 0, _size, 0)
-//        _size = 0
+        _size = 0
     }
 
     fun toArray(): IntArray {
-        TODO()
-//        return if (_size == 0) {
-//            EMPTY_DATA
-//        } else Arrays.copyOf(_data!!, _size)
+        return if (_size == 0) {
+            EMPTY_DATA
+        } else {
+            _data!!.copyOf()
+        }
 
     }
 
     fun sort() {
-        TODO()
-        //Arrays.sort(_data!!, 0, _size)
+        _data!!.sort()
     }
 
     /**
@@ -234,12 +220,12 @@ open class IntegerList {
      * Returns a string representation of this list.
      */
     override fun toString(): String {
-        TODO()
-        //return Arrays.toString(toArray())
+        return Arrays.toString(toArray())
     }
 
     fun binarySearch(key: Int): Int {
-        TODO()
+        return _data!!.indexOf(key)
+        // TODO
         //return Arrays.binarySearch(_data!!, 0, _size, key)
     }
 
@@ -251,7 +237,13 @@ open class IntegerList {
             throw IllegalArgumentException()
         }
 
-        TODO()
+        // TODO
+        val i = _data!!.sliceArray(fromIndex..(toIndex - 1)).indexOf(key)
+        return if (i == -1) {
+            -1
+        } else {
+            i + fromIndex
+        }
         //return Arrays.binarySearch(_data!!, fromIndex, toIndex, key)
     }
 

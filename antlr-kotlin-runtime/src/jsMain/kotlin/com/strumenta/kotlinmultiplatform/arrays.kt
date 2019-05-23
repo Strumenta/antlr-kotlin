@@ -8,8 +8,16 @@ actual fun IntArray.indices(): List<Int> {
     TODO("IntArray.indices not implemented") //To change body of created functions use File | Settings | File Templates.
 }
 
-actual fun <T> arraycopy(tokens: Array<T>, p: Int, tokens1: Array<T>, i: Int, i1: Int) {
-    TODO("arraycopy not implemented")
+actual fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int) {
+    0.until(length).forEach { i ->
+        dest[destPos + i] = src[srcPos + i]
+    }
+}
+
+actual fun arraycopy(src: IntArray, srcPos: Int, dest: IntArray, destPos: Int, length: Int) {
+    0.until(length).forEach { i ->
+        dest[destPos + i] = src[srcPos + i]
+    }
 }
 
 actual fun <T> Array<T>.clone(): Array<T> {
@@ -57,5 +65,9 @@ actual object Arrays {
 
     actual fun toString(a: Array<*>): String {
         return "[${a.joinToString(separator = ", ") { it?.toString() ?: "null" }}]"
+    }
+
+    actual fun toString(a: IntArray): String {
+        return "[${a.joinToString(separator = ", ") { it.toString() }}]"
     }
 }
