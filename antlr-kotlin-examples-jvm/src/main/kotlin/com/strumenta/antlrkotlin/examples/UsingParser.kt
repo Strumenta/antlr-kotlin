@@ -1,10 +1,7 @@
-import org.antlr.v4.kotlinruntime.ANTLRInputStream
-import org.antlr.v4.kotlinruntime.CharStream
+package com.strumenta.antlrkotlin.examples
+
+import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
-import org.antlr.v4.kotlinruntime.Token
-import java.lang.RuntimeException
-import me.tomassetti.minicalc.MiniCalcLexer
-import me.tomassetti.minicalc.MiniCalcParser
 
 fun main(args: Array<String>) {
 
@@ -17,15 +14,15 @@ fun main(args: Array<String>) {
 //        }
 //    }
 
-    val input = ANTLRInputStream("input Int width\n")
+    val input = CharStreams.fromString("input Int width\n")
     val lexer = MiniCalcLexer(input)
-    var parser = MiniCalcParser(CommonTokenStream(lexer))
+    val parser = MiniCalcParser(CommonTokenStream(lexer))
     try {
         val root = parser.miniCalcFile()
         println("Parsed: ${root.javaClass}")
         println("Parsed: ${root.childCount}")
         println("Parsed: ${root.children!![0].javaClass}")
-    } catch (e : Throwable) {
+    } catch (e: Throwable) {
         println("Error: $e")
     }
 }
