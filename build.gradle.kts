@@ -7,16 +7,13 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$embeddedKotlinVersion")
     }
 }
 
-group = ProjectInfo.group
-version = ProjectInfo.version
-
 allprojects {
-    group = ProjectInfo.group
-    version = ProjectInfo.version
+    group = "com.strumenta.antlr-kotlin"
+    version = "0.0.4"
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = "1.8"
