@@ -20,7 +20,9 @@ import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceVirtualDirecto
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.dsl.DependencyHandler;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.plugins.DslObject;
 import org.gradle.api.internal.tasks.DefaultSourceSet;
@@ -40,10 +42,17 @@ import static org.gradle.api.plugins.JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAM
 public class AntlrKotlinPlugin implements Plugin<Project> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinPlugin.class);
 
-    public static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
+    private static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
 
     public void apply(final Project project) {
         project.getPluginManager().apply(JavaPlugin.class);
+        setupClasspath(project);
+        setupTask(project);
+    }
+
+    private void setupClasspath(final Project project) {
+        AntlrKotlinPluginExtension extension = project.getExtensions()
+                .create("AntlrKotlinPluginExtension", AntlrKotlinPluginExtension.class);
 
         // set up a configuration named 'antlr' for the user to specify the antlr libs to use in case
         // they want a specific version etc.
@@ -51,23 +60,29 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The Antlr libraries to be used for this project.");
 
-        Object antlrKotlinVersionProp = project.findProperty("antlrKotlinVersion");
-        String antlrKotlinVersion = antlrKotlinVersionProp == null ? null : antlrKotlinVersionProp.toString();
+        antlrConfiguration.defaultDependencies(defaultDependencies -> {
+            DependencyHandler projectDependencies = project.getDependencies();
+            String antlrKotlinVersion = extension.getAntlrKotlinVersion();
+            String antlrVersion = extension.getAntlrVersion();
+            String platform = extension.getPlatform();
 
-        if (antlrKotlinVersion == null) {
-            LOGGER.error("Property antlrKotlinVersion not set");
-            throw new GradleException("Property antlrKotlinVersion not set");
-        }
+            LOGGER.info("using antlr4 version {}", antlrVersion);
+            defaultDependencies.add(projectDependencies
+                    .create("org.antlr:antlr4:" + antlrVersion));
 
-        antlrConfiguration.defaultDependencies(dependencies -> {
+            LOGGER.info("using antlr-kotlin-target version {}", antlrKotlinVersion);
+            defaultDependencies.add(projectDependencies
+                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-target:" + antlrKotlinVersion));
 
-            dependencies.add(project.getDependencies().create("org.antlr:antlr4:4.7.1"));
-            dependencies.add(project.getDependencies().create("com.strumenta.antlr-kotlin:antlr-kotlin-target:"
-                    + antlrKotlinVersion));
+            LOGGER.info("using antlr-kotlin-runtime-{} version {}", platform, antlrKotlinVersion);
+            defaultDependencies.add(projectDependencies
+                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-" + platform + ":" + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(IMPLEMENTATION_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
+    }
 
+    private void setupTask(final Project project) {
         // Wire the antlr configuration into all antlr tasks
         project.getTasks().withType(AntlrKotlinTask.class, antlrTask -> antlrTask.getConventionMapping().map("antlrClasspath", () -> {
             Object result = project.getConfigurations().getByName(ANTLR_CONFIGURATION_NAME);
@@ -75,9 +90,10 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
             return result;
         }));
 
+        //noinspection UnstableApiUsage
         final ObjectFactory objectFactory = project.getObjects();
 
-        project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().all(
+        project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().forEach(
                 sourceSet -> {
                     // for each source set we will:
                     // 1) Add a new 'antlr' virtual directory mapping
@@ -109,7 +125,13 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                     sourceSet.getJava().srcDir(outputDirectory);
 
                     // 6) register fact that antlr should be run before compiling
-                    project.getTasks().getByName(sourceSet.getCompileJavaTaskName()).dependsOn(taskName);
+                    Task compileKotlin = project.getTasks().findByName("compileKotlin");
+                    if (compileKotlin == null) {
+                        String message = "missing kotlin task, please add the gradle kotlin plugin to the build!";
+                        LOGGER.error(message);
+                        throw new GradleException(message);
+                    }
+                    compileKotlin.dependsOn(taskName);
                 });
     }
 }
