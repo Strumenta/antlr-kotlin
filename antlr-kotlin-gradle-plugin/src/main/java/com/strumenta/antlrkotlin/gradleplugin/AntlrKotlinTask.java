@@ -67,6 +67,7 @@ public class AntlrKotlinTask extends SourceTask {
 
     private File outputDirectory;
     private String maxHeapSize;
+    private String packageName;
     private SourceDirectorySet sourceDirectorySet;
 
     /**
@@ -127,6 +128,18 @@ public class AntlrKotlinTask extends SourceTask {
 
     public void setMaxHeapSize(String maxHeapSize) {
         this.maxHeapSize = maxHeapSize;
+    }
+
+    /**
+     * The package name of the generated files.
+     */
+    @Internal
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public void setArguments(List<String> arguments) {
