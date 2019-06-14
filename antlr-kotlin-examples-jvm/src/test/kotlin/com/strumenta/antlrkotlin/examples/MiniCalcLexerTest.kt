@@ -1,41 +1,51 @@
-import org.antlr.v4.kotlinruntime.ANTLRInputStream
+package com.strumenta.antlrkotlin.examples
+
+import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext
-import kotlin.test.*
-import me.tomassetti.minicalc.MiniCalcLexer
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class TestingLexer {
 
-    @Test fun firstTokenDebug1() {
-        val input = ANTLRInputStream("1 + 2")
+    @Test
+    fun firstTokenDebug1() {
+        val input = CharStreams.fromString("1 + 2")
         val lexer = MiniCalcLexer(input)
         val interpreter = lexer.interpreter
         val result = interpreter!!.match(input, 0)
         assertEquals(11, result)
     }
 
-    @Test fun checkMaxs() {
+    @Test
+    fun checkMaxs() {
         assertEquals(2147483647, PredictionContext.EMPTY_RETURN_STATE)
     }
 
-    @Test fun emptyPredictionContext() {
+    @Test
+    fun emptyPredictionContext() {
         assertEquals(true, EmptyPredictionContext().hasEmptyPath())
         assertEquals(true, EmptyPredictionContext().isEmpty)
     }
 
-    @Test fun firstTokenDebug2() {
-        val input = ANTLRInputStream("1 + 2")
+    @Test
+    fun firstTokenDebug2() {
+        val input = CharStreams.fromString("1 + 2")
         val lexer = MiniCalcLexer(input)
         val interpreter = lexer.interpreter
         val decisionToDFA = interpreter!!.decisionToDFA
         val mode = 0
         val dfa = decisionToDFA[mode]
-        assertEquals(true, dfa!!.s0 != null)
-        assertEquals(0, dfa!!.s0!!.stateNumber)
+        assertNotNull(dfa)
+        val s0 = dfa.s0
+        assertNotNull(s0)
+        assertEquals(0, s0.stateNumber)
     }
 
-    @Test fun firstToken() {
-        val input = ANTLRInputStream("1 + 2")
+    @Test
+    fun firstToken() {
+        val input = CharStreams.fromString("1 + 2")
         val lexer = MiniCalcLexer(input)
         val token = lexer.nextToken()
 
@@ -43,8 +53,9 @@ class TestingLexer {
         assertEquals(MiniCalcLexer.Tokens.INTLIT.id, token.type)
     }
 
-    @Test fun simpleTokens() {
-        val input = ANTLRInputStream("1 + 2")
+    @Test
+    fun simpleTokens() {
+        val input = CharStreams.fromString("1 + 2")
         val lexer = MiniCalcLexer(input)
         val tokens = lexer.allTokens
         assertEquals(5, tokens.size)

@@ -1,10 +1,9 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk8
 install: true
 script:
   - ./gradlew test
   - ./gradlew publishToMavenLocal
-  - cd antlr-kotlin-examples-jvm && ../gradlew check && cd ..
-#  - cd antlr-kotlin-examples-js && ../gradlew check && cd ..
-
+  - cd antlr-kotlin-examples-jvm && ../gradlew --info check && cd ..
+#  - cd antlr-kotlin-examples-js && ../gradlew --info check && cd ..

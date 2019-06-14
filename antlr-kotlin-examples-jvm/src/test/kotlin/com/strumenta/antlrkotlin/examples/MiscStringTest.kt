@@ -1,5 +1,8 @@
+package com.strumenta.antlrkotlin.examples
+
 import com.strumenta.kotlinmultiplatform.toCharArray
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 fun assertArrayEquals(a: CharArray, b: CharArray) {
     assertEquals(a.size, b.size)
@@ -14,11 +17,13 @@ class MiscStringTest {
 //        assertArrayEquals(charArrayOf(), "".toCharArray())
 //    }
 
-    @Test fun testToCharArrayEmptyLength() {
+    @Test
+    fun testToCharArrayEmptyLength() {
         assertEquals(0, "".toCharArray().size)
     }
 
-    @Test fun testToCharArrayEmptyEl0() {
+    @Test
+    fun testToCharArrayEmptyEl0() {
         assertEquals('a', "abc def".toCharArray()[0])
     }
 
