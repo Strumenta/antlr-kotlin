@@ -33,10 +33,13 @@ tasks.generateKotlinGrammarSource {
 
 /*
 // use this settings if you want to add the generated sources to version control
+// outputDirectory defaults to build/generated-src/antlr/main
 tasks.generateKotlinGrammarSource {
     outputDirectory = File("src/main/kotlin-antlr")
 }
 
+// if you change the outputDirectory,
+// you have to add it the to the kotlin compiler source directory list
 configure<SourceSetContainer> {
     named("main") {
         withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {

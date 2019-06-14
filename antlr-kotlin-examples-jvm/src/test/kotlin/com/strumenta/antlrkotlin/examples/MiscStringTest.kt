@@ -14,7 +14,7 @@ fun assertArrayEquals(a: CharArray, b: CharArray) {
 class MiscStringTest {
 
 //    @Test fun testToCharArrayEmpty() {
-//        com.strumenta.antlrkotlin.examples.assertArrayEquals(charArrayOf(), "".toCharArray())
+//        assertArrayEquals(charArrayOf(), "".toCharArray())
 //    }
 
     @Test
@@ -28,7 +28,7 @@ class MiscStringTest {
     }
 
 //    @Test fun testToCharArray() {
-//        com.strumenta.antlrkotlin.examples.assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
+//        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
 //    }
 
 }
