@@ -38,6 +38,8 @@ kotlin {
         
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
+                implementation(kotlin("reflect"))
+                implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
         }
@@ -50,16 +52,23 @@ kotlin {
 
         js().compilations["main"].kotlinOptions {            
             metaInfo = true
-            outputFile = "$project.buildDir.path/js/${project.name}.js"
+            outputFile = "${project.buildDir.path}/js/${project.name}.js"
             sourceMap = true
             moduleKind = "umd"            
         }
         
         js().compilations["test"].defaultSourceSet {
             dependencies {
-                implementation(kotlin("test-js"))
-            }
-        }        
+                implementation(kotlin("test-js"))                
+            }            
+        }
+
+        js().compilations["test"].kotlinOptions {            
+            metaInfo = true
+            outputFile = "$project.buildDir.path/js/${project.name}.js"
+            sourceMap = true
+            moduleKind = "umd"            
+        }            
     }    
 }
 
@@ -78,7 +87,11 @@ tasks {
 
     artifacts {        
         add("archives", javadocJar)
-    }
+    }    
+
+    test {
+        dependsOn("jvmTest")
+    }    
 }
 
 // data for publishing the package
@@ -183,3 +196,7 @@ signing {
     sign(publishing.publications["jvm"])
     sign(publishing.publications["js"])        
 }
+
+/*tasks.register<Test>("test") {    
+    dependsOn("jvmTest")
+}*/
