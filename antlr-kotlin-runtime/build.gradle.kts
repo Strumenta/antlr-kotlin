@@ -47,7 +47,7 @@ kotlin {
         js().compilations["main"].defaultSourceSet {                        
             dependencies {
                 implementation(kotlin("stdlib-js"))
-            }                        
+            }
         }            
 
         js().compilations["main"].kotlinOptions {            
@@ -196,7 +196,3 @@ signing {
     sign(publishing.publications["jvm"])
     sign(publishing.publications["js"])        
 }
-
-/*tasks.register<Test>("test") {    
-    dependsOn("jvmTest")
-}*/
