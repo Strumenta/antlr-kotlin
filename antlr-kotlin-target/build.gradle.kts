@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     compile("org.antlr:antlr4:${Versions.antlr}")      
-    implementation(kotlin("stdlib")) 
+    implementation(kotlin("stdlib-jdk8")) 
 }
 
 tasks.register<Jar>("sourcesJar") {    

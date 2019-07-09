@@ -8,12 +8,17 @@ plugins {
 
 dependencies {
     compile("org.antlr:antlr4:${Versions.antlr}")  
-    implementation(kotlin("stdlib")) 
+    implementation(kotlin("stdlib-jdk8")) 
 }
 
 kotlin {
     // default targets for jvm and js
-    jvm()
+    jvm() {
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"            
+        }
+    }
+    
     js()
 
     sourceSets {
@@ -35,9 +40,17 @@ kotlin {
                 implementation(kotlin("stdlib-jdk8"))
             }
         }        
+
+        jvm().compilations["main"].kotlinOptions {            
+           jvmTarget = "1.8"           
+        }
+
+        jvm().compilations["test"].kotlinOptions {            
+           jvmTarget = "1.8"           
+        }
         
         jvm().compilations["test"].defaultSourceSet {
-            dependencies {
+            dependencies {                
                 implementation(kotlin("reflect"))
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -64,8 +77,7 @@ kotlin {
         }
 
         js().compilations["test"].kotlinOptions {            
-            metaInfo = true
-            outputFile = "$project.buildDir.path/js/${project.name}.js"
+            metaInfo = true            
             sourceMap = true
             moduleKind = "umd"            
         }            
