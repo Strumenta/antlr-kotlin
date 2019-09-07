@@ -127,13 +127,18 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                     // 6) register fact that antlr should be run before compiling
                     // compileKotlin is not available in the newer Multiplatform Kotlin plugins.
                     // Also, that error message gave me serious headaches figuring it out. ~Greg
-                    Task buildTask = project.getTasks().findByName("build");
-                    if (buildTask == null) {
-                        String message = "Error configuring " + ANTLR_CONFIGURATION_NAME + " plugin: build task not found!";
+                    String compileTaskName = "compileKotlin";
+                    Task compileTask = project.getTasks().findByName(compileTaskName);
+                    if (compileTask == null) {
+                        compileTaskName += "Metadata";
+                        compileTask = project.getTasks().findByName(compileTaskName);
+                    }
+                    if (compileTask == null) {
+                        String message = "Error configuring " + ANTLR_CONFIGURATION_NAME + " plugin: " + compileTaskName + " task not found!";
                         LOGGER.error(message);
                         throw new GradleException(message);
                     }
-                    buildTask.dependsOn(taskName);
+                    compileTask.dependsOn(taskName);
                 });
     }
 }
