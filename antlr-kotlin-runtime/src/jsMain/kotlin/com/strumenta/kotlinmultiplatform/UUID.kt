@@ -64,13 +64,13 @@ actual class UUID {
             val timeMid = parts[1].toLong(radix = 16)
             val timeHi = time_hi_and_version.and(0xFFFL)
             val variant = 2L // TODO fixme variantEnum.value.toLong()
-            val clock_seq = when (variantEnum.bitsLength) {
+            val clockSeq = when (variantEnum.bitsLength) {
                 2 -> clock_seq_hi_and_res.and(0x3FFFL)
                 3 -> clock_seq_hi_and_res.and(0x1FFFL)
                 else -> throw UnsupportedOperationException()
             }
             val node = parts[4].toLong(radix = 16)
-            return UUID(version, timeLow, timeMid, timeHi, variant, clock_seq, node)
+            return UUID(version, timeLow, timeMid, timeHi, variant, clockSeq, node)
         }
     }
 

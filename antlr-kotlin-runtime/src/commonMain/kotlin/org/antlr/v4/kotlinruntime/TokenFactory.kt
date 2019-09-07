@@ -6,8 +6,6 @@
 
 package org.antlr.v4.kotlinruntime
 
-import org.antlr.v4.kotlinruntime.misc.Pair
-
 /** The default mechanism for creating tokens. It's used by default in Lexer and
  * the error handling strategy (to create missing tokens).  Notifying the parser
  * of a new factory means that it notifies its token source and error strategy.
@@ -17,7 +15,7 @@ interface TokenFactory<Symbol : Token> {
      * error handling strategy. If text!=null, than the start and stop positions
      * are wiped to -1 in the text override is set in the CommonToken.
      */
-    fun create(source: Pair<TokenSource, CharStream>, type: Int, text: String?,
+    fun create(source: Pair<TokenSource?, CharStream?>, type: Int, text: String?,
                channel: Int, start: Int, stop: Int,
                line: Int, charPositionInLine: Int): Symbol
 

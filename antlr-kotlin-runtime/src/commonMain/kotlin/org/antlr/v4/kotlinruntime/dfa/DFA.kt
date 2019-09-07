@@ -5,7 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime.dfa
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.Parser
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -41,20 +40,20 @@ class DFA constructor(
      *
      * @return `true` if this is a precedence DFA; otherwise,
      * `false`.
-     * @see Parser.getPrecedence
-     */
-    /**
-     * Sets whether this is a precedence DFA.
-     *
-     * @param precedenceDfa `true` if this is a precedence DFA; otherwise,
-     * `false`
-     *
-     * @throws UnsupportedOperationException if `precedenceDfa` does not
-     * match the value of [.isPrecedenceDfa] for the current DFA.
-     *
+     * @see Parser.precedence
      */
     var isPrecedenceDfa: Boolean
         get() = precedenceDfa
+        /**
+         * Sets whether this is a precedence DFA.
+         *
+         * @param precedenceDfa `true` if this is a precedence DFA; otherwise,
+         * `false`
+         *
+         * @throws UnsupportedOperationException if `precedenceDfa` does not
+         * match the value of [.isPrecedenceDfa] for the current DFA.
+         *
+         */
         @Deprecated("This method no longer performs any action.")
         set(precedenceDfa) {
             if (precedenceDfa != isPrecedenceDfa) {
@@ -89,8 +88,8 @@ class DFA constructor(
      * @see .isPrecedenceDfa
      */
     fun getPrecedenceStartState(precedence: Int): DFAState? {
-        if (!isPrecedenceDfa) {
-            throw IllegalStateException("Only precedence DFAs may contain a precedence start state.")
+        check(isPrecedenceDfa) {
+            "Only precedence DFAs may contain a precedence start state."
         }
 
         // s0.edges is never null for a precedence DFA
@@ -111,8 +110,8 @@ class DFA constructor(
      * @see .isPrecedenceDfa
      */
     fun setPrecedenceStartState(precedence: Int, startState: DFAState) {
-        if (!isPrecedenceDfa) {
-            throw IllegalStateException("Only precedence DFAs may contain a precedence start state.")
+        check(isPrecedenceDfa) {
+            "Only precedence DFAs may contain a precedence start state."
         }
 
         if (precedence < 0) {
@@ -123,8 +122,10 @@ class DFA constructor(
         // precedence DFA, s0 will be initialized once and not updated again
         // s0.edges is never null for a precedence DFA
         if (precedence >= s0!!.edges!!.size) {
-            s0!!.edges = Arrays.copyOf<DFAState?>(s0!!.edges!!, precedence + 1)
+            s0!!.edges = s0!!.edges!!.copyOf(precedence + 1)
         }
+
+        s0!!.edges!![precedence] = startState
     }
 
     /**

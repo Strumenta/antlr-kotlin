@@ -20,10 +20,10 @@ package org.antlr.v4.kotlinruntime
  */
 class InterpreterRuleContext : ParserRuleContext {
     /** This is the backing field for [.getRuleIndex].  */
-    override var ruleIndex = -1
-        set(value: Int) {
-            super.ruleIndex = value
-        }
+//    override var ruleIndex = -1
+//        set(value: Int) {
+//            field = value
+//        }
 
     constructor() {}
 

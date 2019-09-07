@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.IdentityHashMap
 import com.strumenta.kotlinmultiplatform.assert
 import org.antlr.v4.kotlinruntime.EMPTY_RULECTX
@@ -60,7 +59,7 @@ abstract class PredictionContext protected constructor(
         return cachedHashCode
     }
 
-    abstract override fun equals(obj: Any?): Boolean
+    abstract override fun equals(other: Any?): Boolean
 
     fun toString(recog: Recognizer<*, *>): String {
         return toString()
@@ -107,9 +106,9 @@ abstract class PredictionContext protected constructor(
                         localBuffer.append(' ')
                     }
 
-                    val atn = recognizer!!.atn
-                    val s = atn.states.get(stateNumber)
-                    val ruleName = recognizer!!.ruleNames!![s!!.ruleIndex]
+                    val atn = recognizer.atn
+                    val s = atn.states[stateNumber]
+                    val ruleName = recognizer.ruleNames!![s!!.ruleIndex]
                     localBuffer.append(ruleName)
                 } else if (p.getReturnState(index) != EMPTY_RETURN_STATE) {
                     if (!p.isEmpty) {
@@ -158,31 +157,29 @@ abstract class PredictionContext protected constructor(
          * Return [.EMPTY] if `outerContext` is empty or null.
          */
         fun fromRuleContext(atn: ATN, outerContext: RuleContext?): PredictionContext {
-            var outerContext = outerContext
-            if (outerContext == null) outerContext = EMPTY_RULECTX
+            val outerContext1 = outerContext ?: EMPTY_RULECTX
 
             // if we are in RuleContext of start rule, s, then PredictionContext
             // is EMPTY. Nobody called us. (if we are empty, return empty)
-            if (outerContext!!.readParent() == null || outerContext === EMPTY_RULECTX) {
-                return PredictionContext.EMPTY
+            if (outerContext1.readParent() == null || outerContext1 === EMPTY_RULECTX) {
+                return EMPTY
             }
 
             // If we have a parent, convert it to a PredictionContext graph
-            var parent: PredictionContext = EMPTY
-            parent = PredictionContext.fromRuleContext(atn, outerContext!!.readParent())
+            val parent = fromRuleContext(atn, outerContext1.readParent())
 
-            val state = atn.states.get(outerContext!!.invokingState)
+            val state = atn.states[outerContext1.invokingState]
             val transition = state!!.transition(0) as RuleTransition
             return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
         }
 
-        public fun calculateEmptyHashCode(): Int {
+        fun calculateEmptyHashCode(): Int {
             var hash = MurmurHash.initialize(INITIAL_HASH)
             hash = MurmurHash.finish(hash, 0)
             return hash
         }
 
-        public fun calculateHashCode(parent: PredictionContext, returnState: Int): Int {
+        fun calculateHashCode(parent: PredictionContext, returnState: Int): Int {
             var hash = MurmurHash.initialize(INITIAL_HASH)
             hash = MurmurHash.update(hash, parent)
             hash = MurmurHash.update(hash, returnState)
@@ -190,7 +187,7 @@ abstract class PredictionContext protected constructor(
             return hash
         }
 
-        public fun calculateHashCode(parents: Array<PredictionContext?>, returnStates: IntArray): Int {
+        fun calculateHashCode(parents: Array<PredictionContext?>, returnStates: IntArray): Int {
             var hash = MurmurHash.initialize(INITIAL_HASH)
 
             for (parent in parents) {
@@ -211,17 +208,17 @@ abstract class PredictionContext protected constructor(
                 rootIsWildcard: Boolean,
                 mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
         ): PredictionContext {
-            var a = a
-            var b = b
-            assert(a != null && b != null) // must be empty context, never null
+            var a1 = a
+            var b1 = b
+            assert(a1 != null && b1 != null) // must be empty context, never null
 
             // share same graph if both same
-            if (a === b || a == b) return a!!
+            if (a1 === b1 || a1 == b1) return a1!!
 
-            if (a is SingletonPredictionContext && b is SingletonPredictionContext) {
+            if (a1 is SingletonPredictionContext && b1 is SingletonPredictionContext) {
                 return mergeSingletons(
-                        a as SingletonPredictionContext,
-                        b as SingletonPredictionContext,
+                        a1 as SingletonPredictionContext,
+                        b1 as SingletonPredictionContext,
                         rootIsWildcard, mergeCache
                 )
             }
@@ -229,19 +226,19 @@ abstract class PredictionContext protected constructor(
             // At least one of a or b is array
             // If one is $ and rootIsWildcard, return $ as * wildcard
             if (rootIsWildcard) {
-                if (a is EmptyPredictionContext) return a
-                if (b is EmptyPredictionContext) return b
+                if (a1 is EmptyPredictionContext) return a1
+                if (b1 is EmptyPredictionContext) return b1
             }
 
             // convert singleton so both are arrays to normalize
-            if (a is SingletonPredictionContext) {
-                a = ArrayPredictionContext(a)
+            if (a1 is SingletonPredictionContext) {
+                a1 = ArrayPredictionContext(a1)
             }
-            if (b is SingletonPredictionContext) {
-                b = ArrayPredictionContext((b as SingletonPredictionContext?)!!)
+            if (b1 is SingletonPredictionContext) {
+                b1 = ArrayPredictionContext((b1 as SingletonPredictionContext?)!!)
             }
             return mergeArrays(
-                    a as ArrayPredictionContext, b as ArrayPredictionContext,
+                    a1 as ArrayPredictionContext, b1 as ArrayPredictionContext,
                     rootIsWildcard, mergeCache
             )
         }
@@ -284,15 +281,15 @@ abstract class PredictionContext protected constructor(
                 mergeCache: DoubleKeyMap<PredictionContext, PredictionContext, PredictionContext>?
         ): PredictionContext {
             if (mergeCache != null) {
-                var previous = mergeCache!!.get(a, b)
+                var previous = mergeCache[a, b]
                 if (previous != null) return previous
-                previous = mergeCache!!.get(b, a)
+                previous = mergeCache[b, a]
                 if (previous != null) return previous
             }
 
             val rootMerge = mergeRoot(a, b, rootIsWildcard)
             if (rootMerge != null) {
-                if (mergeCache != null) mergeCache!!.put(a, b, rootMerge)
+                mergeCache?.put(a, b, rootMerge)
                 return rootMerge
             }
 
@@ -305,9 +302,9 @@ abstract class PredictionContext protected constructor(
                 // merge parents x and y, giving array node with x,y then remainders
                 // of those graphs.  dup a, a' points at merged array
                 // new joined parent so create new singleton pointing to it, a'
-                val a_ = SingletonPredictionContext.create(parent, a.returnState)
-                if (mergeCache != null) mergeCache!!.put(a, b, a_)
-                return a_
+                val c = SingletonPredictionContext.create(parent, a.returnState)
+                mergeCache?.put(a, b, c)
+                return c
             } else { // a != b payloads differ
                 // see if we can collapse parents due to $+x parents if local ctx
                 var singleParent: PredictionContext? = null
@@ -498,9 +495,9 @@ abstract class PredictionContext protected constructor(
                     k++
                 }
             } else {
-                for (p in j until b.returnStates!!.size) {
+                for (p in j until b.returnStates.size) {
                     mergedParents[k] = b.parents!![p]
-                    mergedReturnStates[k] = b.returnStates!![p]
+                    mergedReturnStates[k] = b.returnStates[p]
                     k++
                 }
             }
@@ -512,10 +509,10 @@ abstract class PredictionContext protected constructor(
                             mergedParents[0],
                             mergedReturnStates[0]
                     )
-                    if (mergeCache != null) mergeCache!!.put(a, b, a_)
+                    mergeCache?.put(a, b, a_)
                     return a_
                 }
-                mergedParents = Arrays.copyOf<PredictionContext?>(mergedParents, k)
+                mergedParents = mergedParents.copyOf(k)
 
                 mergedReturnStates = mergedReturnStates.copyOf(k)
             }
@@ -525,18 +522,18 @@ abstract class PredictionContext protected constructor(
             // if we created same array as a or b, return that instead
             // TODO: track whether this is possible above during merge sort for speed
             if (M == a) {
-                if (mergeCache != null) mergeCache!!.put(a, b, a)
+                mergeCache?.put(a, b, a)
                 return a
             }
             if (M == b) {
-                if (mergeCache != null) mergeCache!!.put(a, b, b)
+                mergeCache?.put(a, b, b)
                 return b
             }
 
             //TODO efficiency
             combineCommonParents(mergedParents.filterNotNull().toTypedArray())
 
-            if (mergeCache != null) mergeCache!!.put(a, b, M)
+            mergeCache?.put(a, b, M)
             return M
         }
 
@@ -550,7 +547,7 @@ abstract class PredictionContext protected constructor(
             for (p in parents.indices) {
                 val parent = parents[p]
                 if (!uniqueParents.containsKey(parent)) { // don't replace
-                    uniqueParents.put(parent, parent)
+                    uniqueParents[parent] = parent
                 }
             }
 
@@ -581,7 +578,7 @@ abstract class PredictionContext protected constructor(
                 buf.append(" [shape=box, accessLabel=\"")
                 buf.append("[")
                 var first = true
-                for (inv in arr!!.returnStates!!) {
+                for (inv in arr.returnStates!!) {
                     if (!first) buf.append(", ")
                     if (inv == EMPTY_RETURN_STATE)
                         buf.append("$")

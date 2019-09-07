@@ -14,8 +14,7 @@ class NotSetTransition(target: ATNState, set: IntervalSet) : SetTransition(targe
         get() = Transition.NOT_SET
 
     override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return (symbol >= minVocabSymbol
-                && symbol <= maxVocabSymbol
+        return (symbol in minVocabSymbol..maxVocabSymbol
                 && !super.matches(symbol, minVocabSymbol, maxVocabSymbol))
     }
 

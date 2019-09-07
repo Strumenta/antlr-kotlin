@@ -5,3 +5,5 @@ include(
         "antlr-kotlin-target",
         "antlr-kotlin-gradle-plugin"
 )
+
+enableFeaturePreview("GRADLE_METADATA")

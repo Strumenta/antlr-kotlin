@@ -49,7 +49,6 @@ ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 package <file.genPackage>;
 <endif>
 <namedActions.header>
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import org.antlr.v4.kotlinruntime.misc.Utils;
@@ -63,7 +62,6 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
-import com.strumenta.kotlinmultiplatform.toCharArray
 import kotlin.reflect.KClass
 
 <parser>
@@ -312,8 +310,8 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
-private val LITERAL_NAMES = Arrays.asList\<String?>(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
-private val SYMBOLIC_NAMES = Arrays.asList\<String?>(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val LITERAL_NAMES = listOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val SYMBOLIC_NAMES = listOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
 val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 >>
@@ -841,7 +839,6 @@ LexerFile(lexerFile, lexer, namedActions) ::= <<
 package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.misc.Utils
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
@@ -851,7 +848,6 @@ import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
-import com.strumenta.kotlinmultiplatform.toCharArray
 
 <lexer>
 >>
@@ -939,7 +935,7 @@ private val serializedATN : String = Utils.join(
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.map { it }.toCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)
@@ -966,7 +962,7 @@ private val serializedATN : String = Utils.join(
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.map { it }.toCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)

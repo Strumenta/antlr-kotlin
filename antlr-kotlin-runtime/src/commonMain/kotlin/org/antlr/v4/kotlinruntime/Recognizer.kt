@@ -6,13 +6,10 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Collections
-import com.strumenta.kotlinmultiplatform.NullPointerException
 import com.strumenta.kotlinmultiplatform.WeakHashMap
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ATNSimulator
 import org.antlr.v4.kotlinruntime.atn.ParseInfo
-import org.antlr.v4.kotlinruntime.misc.Utils
 
 typealias CopyOnWriteArrayList<E> = List<E>
 
@@ -74,24 +71,24 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
         get() {
             val vocabulary = vocabulary
             synchronized(tokenTypeMapCache) {
-                var result: MutableMap<String, Int>? = tokenTypeMapCache[vocabulary]
+                var result: Map<String, Int>? = tokenTypeMapCache[vocabulary]
                 if (result == null) {
-                    result = HashMap()
+                    val tmp = HashMap<String, Int>()
                     for (i in 0..atn.maxTokenType) {
                         val literalName = vocabulary.getLiteralName(i)
                         if (literalName != null) {
-                            result.put(literalName, i)
+                            tmp[literalName] = i
                         }
 
                         val symbolicName = vocabulary.getSymbolicName(i)
                         if (symbolicName != null) {
-                            result.put(symbolicName, i)
+                            tmp[symbolicName] = i
                         }
                     }
 
-                    result.put("EOF", Token.EOF)
-                    result = Collections.unmodifiableMap(result)
-                    tokenTypeMapCache.put(vocabulary, result!!)
+                    tmp["EOF"] = Token.EOF
+                    result = tmp.toMap()
+                    tokenTypeMapCache[vocabulary] = result
                 }
 
                 return result
@@ -110,10 +107,10 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
                     ?: throw UnsupportedOperationException("The current recognizer does not provide a list of rule names.")
 
             synchronized(ruleIndexMapCache) {
-                var result: MutableMap<String, Int>? = ruleIndexMapCache[ruleNames]
+                var result: Map<String, Int>? = ruleIndexMapCache[ruleNames]
                 if (result == null) {
-                    result = Collections.unmodifiableMap(Utils.toMap(ruleNames))
-                    ruleIndexMapCache.put(ruleNames, result!!)
+                    result = ruleNames.mapIndexed { i, it -> it to i }.toMap()
+                    ruleIndexMapCache[ruleNames] = result
                 }
 
                 return result!!
@@ -195,12 +192,12 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
             "\t  {@link DefaultErrorStrategy#getTokenErrorDisplay}.")
     fun getTokenErrorDisplay(t: Token?): String {
         if (t == null) return "<no token>"
-        var s: String? = t!!.text
+        var s: String? = t.text
         if (s == null) {
-            if (t!!.type == Token.EOF) {
-                s = "<EOF>"
+            s = if (t.type == Token.EOF) {
+                "<EOF>"
             } else {
-                s = "<" + t!!.type + ">"
+                "<" + t.type + ">"
             }
         }
         s = s.replace("\n", "\\n")
@@ -243,7 +240,7 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
     companion object {
         val EOF = -1
 
-        private val tokenTypeMapCache = WeakHashMap<Vocabulary, MutableMap<String, Int>>()
-        private val ruleIndexMapCache = WeakHashMap<Array<String>, MutableMap<String, Int>>()
+        private val tokenTypeMapCache = WeakHashMap<Vocabulary, Map<String, Int>>()
+        private val ruleIndexMapCache = WeakHashMap<Array<String>, Map<String, Int>>()
     }
 }

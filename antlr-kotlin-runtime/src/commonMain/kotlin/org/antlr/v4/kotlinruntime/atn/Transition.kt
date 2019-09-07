@@ -6,9 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.Collections
-import com.strumenta.kotlinmultiplatform.NullPointerException
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
 /** An ATN transition between any two ATN states.  Subclasses define
@@ -72,7 +69,7 @@ abstract class Transition protected constructor(
         val PRECEDENCE = 10
 
 
-        val serializationNames = Collections.unmodifiableList(Arrays.asList(
+        val serializationNames = listOf(
                 "INVALID",
                 "EPSILON",
                 "RANGE",
@@ -84,7 +81,7 @@ abstract class Transition protected constructor(
                 "NOT_SET",
                 "WILDCARD",
                 "PRECEDENCE"
-        ))
+        )
 
 //        val serializationTypes = Collections.unmodifiableMap<Class<out Transition>, Int>(object : HashMap<Class<out Transition>, Int>() {
 //            init {

@@ -6,8 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.Collections
 import com.strumenta.kotlinmultiplatform.errMessage
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
@@ -71,6 +69,7 @@ import org.antlr.v4.kotlinruntime.misc.IntervalSet
  *
  * <embed src="images/OptionalNonGreedy.svg" type="image/svg+xml"></embed>
  */
+
 abstract class ATNState {
 
     /** Which ATN are we in?  */
@@ -100,9 +99,9 @@ abstract class ATNState {
         return stateNumber
     }
 
-    override fun equals(o: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         // are these states same object?
-        return if (o is ATNState) stateNumber == o.stateNumber else false
+        return if (other is ATNState) stateNumber == other.stateNumber else false
     }
 
     override fun toString(): String {
@@ -182,7 +181,7 @@ abstract class ATNState {
         val PLUS_LOOP_BACK = 11
         val LOOP_END = 12
 
-        val serializationNames = Collections.unmodifiableList(Arrays.asList(
+        val serializationNames = listOf(
                 "INVALID",
                 "BASIC",
                 "RULE_START",
@@ -196,8 +195,8 @@ abstract class ATNState {
                 "STAR_LOOP_ENTRY",
                 "PLUS_LOOP_BACK",
                 "LOOP_END"
-        ))
+        )
 
-        val INVALID_STATE_NUMBER = -1
+        const val INVALID_STATE_NUMBER = -1
     }
 }

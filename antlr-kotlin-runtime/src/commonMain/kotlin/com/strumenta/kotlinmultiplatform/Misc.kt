@@ -2,35 +2,22 @@ package com.strumenta.kotlinmultiplatform
 
 import kotlin.reflect.KClass
 
-expect fun <T> Array<T>.indices(): List<Int>
+fun <T> Array<T>.indices(): List<Int> = this.indices.toList()
 
-expect fun IntArray.indices(): List<Int>
+fun assert(condition: Boolean) = require(condition)
 
-expect fun String.toCharArray(): CharArray
+fun CharArray.convertToString(): String = this.joinToString("")
 
-expect class RuntimeException(message: String) : Throwable
+object Arrays {
+    fun equals(a: Array<*>?, b: Array<*>?): Boolean {
+        return (a == null && b == null) ||
+                ((a != null && b != null) && a.contentEquals(b))
+    }
 
-expect fun assert(condition: Boolean)
-
-fun CharArray.convertToString(): String {
-    var s = ""
-    this.forEach { s += it }
-    return s
-}
-
-expect object Arrays {
-    //    fun <T> equals(a: Array<T>, b: Array<T>): Boolean
-//    fun equals(a: IntArray, b: IntArray): Boolean
-    fun <T> asList(vararg elements: T): List<T>
-
-    fun <T> copyOf(original: Array<T>, size: Int): Array<T>
-
-    fun equals(a: Array<*>?, b: Array<*>?): Boolean
-
-    fun equals(a: IntArray?, b: IntArray?): Boolean
-
-    fun toString(a: Array<*>): String
-    fun toString(a: IntArray): String
+    fun equals(a: IntArray?, b: IntArray?): Boolean {
+        return (a == null && b == null) ||
+                ((a != null && b != null) && a.contentEquals(b))
+    }
 }
 
 expect class BitSet {
@@ -47,8 +34,6 @@ expect class BitSet {
 //expect class ArrayList<T> : List<T>
 
 expect object Collections {
-    fun unmodifiableList(asList: Collection<*>): List<*>
-    fun <T, U> unmodifiableMap(map: Map<T, U>): MutableMap<T, U>
     fun <T : Comparable<T>> min(precedencePredicates: List<T>): T
     fun <T : Comparable<T>> max(precedencePredicates: List<T>): T
 }
@@ -72,15 +57,9 @@ expect fun isCharUppercase(firstChar: Char): Boolean
 
 expect fun isCharLowerCase(firstChar: Char): Boolean
 
-
 //expect open class CopyOnWriteArrayList<T> : MutableList<T> {
 //
 //}
-
-expect class NullPointerException : Throwable {
-    constructor()
-    constructor(message: String)
-}
 
 expect class WeakHashMap<K, V> : MutableMap<K, V> {
     constructor()
@@ -110,8 +89,6 @@ expect fun Char.Companion.toChars(codePoint: Int, resultArray: CharArray, result
 expect fun Char.Companion.charCount(i: Int): Byte
 
 expect fun Char.Companion.maxValue(): Char
-
-expect fun <T> Array<T>.clone(): Array<T>
 
 expect fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int)
 expect fun arraycopy(src: IntArray, srcPos: Int, dest: IntArray, destPos: Int, length: Int)

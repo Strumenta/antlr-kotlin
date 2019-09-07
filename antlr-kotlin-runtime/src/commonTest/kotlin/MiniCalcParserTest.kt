@@ -8,6 +8,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeWalker
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import kotlin.test.Test as test
 
+
 class MiniCalcParserTest : BaseTest() {
 
     @test

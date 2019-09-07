@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.misc.Interval
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 /**
  * This default implementation of [TokenFactory] creates
@@ -44,7 +43,7 @@ constructor(
          */
         protected val copyText: Boolean = false) : TokenFactory<CommonToken> {
 
-    override fun create(source: Pair<TokenSource, CharStream>, type: Int, text: String?,
+    override fun create(source: Pair<TokenSource?, CharStream?>, type: Int, text: String?,
                         channel: Int, start: Int, stop: Int,
                         line: Int, charPositionInLine: Int): CommonToken {
         val t = CommonToken(source, type, channel, start, stop)
@@ -52,8 +51,8 @@ constructor(
         t.charPositionInLine = charPositionInLine
         if (text != null) {
             t.text = text
-        } else if (copyText && source.b != null) {
-            t.text = source.b.getText(Interval.of(start, stop))
+        } else if (copyText && source.second != null) {
+            t.text = source.second!!.getText(Interval.of(start, stop))
         }
 
         return t

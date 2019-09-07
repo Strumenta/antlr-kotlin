@@ -6,14 +6,16 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.*
+import com.strumenta.kotlinmultiplatform.BitSet
+import com.strumenta.kotlinmultiplatform.assert
+import com.strumenta.kotlinmultiplatform.errMessage
+import com.strumenta.kotlinmultiplatform.outMessage
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 
 ///**
@@ -1190,7 +1192,7 @@ open class ParserATNSimulator(
 
         // nonambig alts are null in altToPred
         if (nPredAlts == 0) altToPred = null
-        if (debug) println("getPredsForAmbigAlts result " + Arrays.toString(altToPred!!))
+        if (debug) println("getPredsForAmbigAlts result " + altToPred!!.joinToString())
         return altToPred
     }
 
@@ -1268,8 +1270,8 @@ open class ParserATNSimulator(
     protected fun getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(configs: ATNConfigSet,
                                                                           outerContext: ParserRuleContext): Int {
         val sets = splitAccordingToSemanticValidity(configs, outerContext)
-        val semValidConfigs = sets.a
-        val semInvalidConfigs = sets.b
+        val semValidConfigs = sets.first
+        val semInvalidConfigs = sets.second
         var alt = getAltThatFinishedDecisionEntryRule(semValidConfigs!!)
         if (alt != ATN.INVALID_ALT_NUMBER) { // semantically/syntactically viable path exists
             return alt

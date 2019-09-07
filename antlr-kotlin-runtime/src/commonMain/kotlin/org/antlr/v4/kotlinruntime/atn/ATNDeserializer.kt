@@ -10,7 +10,6 @@ import com.strumenta.kotlinmultiplatform.UUID
 import com.strumenta.kotlinmultiplatform.maxValue
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 //import java.io.InvalidClassException
 //import java.util.ArrayList
@@ -114,21 +113,21 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
             val s = stateFactory(stype, ruleIndex)
             if (stype == ATNState.LOOP_END) { // special case
                 val loopBackStateNumber = toInt(data[p++])
-                loopBackStateNumbers.add(Pair<LoopEndState, Int>(s as LoopEndState?, loopBackStateNumber))
+                loopBackStateNumbers.add(Pair(s as LoopEndState, loopBackStateNumber))
             } else if (s is BlockStartState) {
                 val endStateNumber = toInt(data[p++])
-                endStateNumbers.add(Pair<BlockStartState, Int>(s as BlockStartState?, endStateNumber))
+                endStateNumbers.add(Pair(s, endStateNumber))
             }
             atn.addState(s)
         }
 
         // delay the assignment of loop back and end states until we know all the state instances have been initialized
         for (pair in loopBackStateNumbers) {
-            pair.a!!.loopBackState = atn.states.get(pair.b!!)
+            pair.first.loopBackState = atn.states[pair.second]
         }
 
         for (pair in endStateNumbers) {
-            pair.a!!.endState = atn.states.get(pair.b!!) as BlockEndState
+            pair.first.endState = atn.states[pair.second] as BlockEndState
         }
 
         val numNonGreedyStates = toInt(data[p++])
@@ -180,7 +179,7 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
                 continue
             }
 
-            val stopState = state as RuleStopState
+            val stopState = state
             atn.ruleToStopState!![state.ruleIndex] = stopState
             atn.ruleToStartState!![state.ruleIndex]!!.stopState = stopState
         }
@@ -763,7 +762,7 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
     }
 
     fun deserializeIntegers(serializedIntegersATN: Array<Int>): ATN {
-        val chars = serializedIntegersATN.map { it.toChar() }.toCharArray()
+        val chars = serializedIntegersATN.map { it.toChar() }.map { it }.toCharArray()
         return deserialize(chars)
     }
 

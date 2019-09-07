@@ -11,19 +11,19 @@ fun assertArrayEquals(a: CharArray, b: CharArray) {
 class MiscStringTest {
 
     @Test fun testToCharArrayEmpty() {
-        assertArrayEquals(charArrayOf(), "".toCharArray())
+        assertArrayEquals(charArrayOf(), "".map { it }.toCharArray())
     }
 
     @Test fun testToCharArrayEmptyLength() {
-        assertEquals(0, "".toCharArray().size)
+        assertEquals(0, "".map { it }.toCharArray().size)
     }
 
     @Test fun testToCharArrayEmptyEl0() {
-        assertEquals('a', "abc def".toCharArray()[0])
+        assertEquals('a', "abc def".map { it }.toCharArray()[0])
     }
 
-    @Test fun testToCharArray() {
-        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
+    @Test fun testmap { it }.toCharArray() {
+        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".map { it }.toCharArray())
     }
 
 }

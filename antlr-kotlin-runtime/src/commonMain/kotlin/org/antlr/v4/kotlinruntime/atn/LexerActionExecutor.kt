@@ -6,8 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.clone
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.IntStream
 import org.antlr.v4.kotlinruntime.Lexer
@@ -90,10 +88,10 @@ class LexerActionExecutor
         for (i in lexerActions.indices) {
             if (lexerActions[i].isPositionDependent && lexerActions[i] !is LexerIndexedCustomAction) {
                 if (updatedLexerActions == null) {
-                    updatedLexerActions = lexerActions.clone()
+                    updatedLexerActions = lexerActions.copyOf()
                 }
 
-                updatedLexerActions!![i] = LexerIndexedCustomAction(offset, lexerActions[i])
+                updatedLexerActions[i] = LexerIndexedCustomAction(offset, lexerActions[i])
             }
         }
 
@@ -130,9 +128,9 @@ class LexerActionExecutor
             for (lexerAction in lexerActions) {
                 var mutableLexerAction = lexerAction
                 if (mutableLexerAction is LexerIndexedCustomAction) {
-                    val offset = (mutableLexerAction as LexerIndexedCustomAction).offset
+                    val offset = mutableLexerAction.offset
                     input.seek(startIndex + offset)
-                    mutableLexerAction = (mutableLexerAction as LexerIndexedCustomAction).action
+                    mutableLexerAction = mutableLexerAction.action
                     requiresSeek = startIndex + offset != stopIndex
                 } else if (mutableLexerAction.isPositionDependent) {
                     input.seek(stopIndex)
@@ -152,15 +150,15 @@ class LexerActionExecutor
         return this.hashCode
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
+    override fun equals(other: Any?): Boolean {
+        if (other === this) {
             return true
-        } else if (obj !is LexerActionExecutor) {
+        } else if (other !is LexerActionExecutor) {
             return false
         }
 
-        val other = obj as LexerActionExecutor?
-        return hashCode == other!!.hashCode && Arrays.equals(lexerActions, other.lexerActions)
+        val other1 = other as LexerActionExecutor?
+        return hashCode == other1!!.hashCode && lexerActions.contentEquals(other1.lexerActions)
     }
 
     companion object {
@@ -182,12 +180,13 @@ class LexerActionExecutor
          */
         fun append(lexerActionExecutor: LexerActionExecutor?, lexerAction: LexerAction): LexerActionExecutor {
             if (lexerActionExecutor == null) {
-                return LexerActionExecutor(arrayOf<LexerAction>(lexerAction))
+                return LexerActionExecutor(arrayOf(lexerAction))
             }
 
-            val lexerActions = Arrays.copyOf<LexerAction>(lexerActionExecutor.lexerActions, lexerActionExecutor.lexerActions.size + 1)
-            lexerActions[lexerActions.size - 1] = lexerAction
-            return LexerActionExecutor(lexerActions)
+            val lexerActions = lexerActionExecutor.lexerActions
+                    .copyOf(lexerActionExecutor.lexerActions.size + 1)
+            lexerActions[lexerActions.lastIndex] = lexerAction
+            return LexerActionExecutor(lexerActions.filterNotNull().toTypedArray())
         }
     }
 }

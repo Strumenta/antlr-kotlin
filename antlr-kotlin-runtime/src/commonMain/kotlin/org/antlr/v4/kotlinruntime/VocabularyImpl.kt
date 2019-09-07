@@ -5,7 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.isCharUppercase
 
@@ -119,12 +118,12 @@ constructor(literalNames: Array<String?>?, symbolicNames: Array<String?>?, displ
          * the display names of tokens.
          */
         fun fromTokenNames(tokenNames: Array<String?>?): Vocabulary {
-            if (tokenNames == null || tokenNames.size == 0) {
+            if (tokenNames == null || tokenNames.isEmpty()) {
                 return EMPTY_VOCABULARY
             }
 
-            val literalNames: Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
-            val symbolicNames: Array<String?> = Arrays.copyOf(tokenNames as Array<String?>, tokenNames.size)
+            val literalNames: Array<String?> = tokenNames.copyOf(tokenNames.size)
+            val symbolicNames: Array<String?> = tokenNames.copyOf(tokenNames.size)
             for (i in tokenNames.indices) {
                 val tokenName = tokenNames[i] ?: continue
 
@@ -148,16 +147,3 @@ constructor(literalNames: Array<String?>?, symbolicNames: Array<String?>?, displ
         }
     }
 }
-
-/**
- * Constructs a new instance of [VocabularyImpl] from the specified
- * literal and symbolic token names.
- *
- * @param literalNames The literal names assigned to tokens, or `null`
- * if no literal names are assigned.
- * @param symbolicNames The symbolic names assigned to tokens, or
- * `null` if no symbolic names are assigned.
- *
- * @see .getLiteralName
- * @see .getSymbolicName
- */

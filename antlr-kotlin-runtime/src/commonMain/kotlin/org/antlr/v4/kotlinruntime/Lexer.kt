@@ -6,11 +6,9 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.outMessage
-import com.strumenta.kotlinmultiplatform.toCharArray
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.misc.IntegerStack
 import org.antlr.v4.kotlinruntime.misc.Interval
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 /** A lexer is recognizer that draws input symbols from a character stream.
  * lexer grammars result in a subclass of this object. A Lexer object
@@ -35,10 +33,10 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun assignInputStream(input: CharStream?) {
         this.inputStream = null
-        this._tokenFactorySourcePair = Pair<TokenSource, CharStream>(this, inputStream)
+        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, inputStream)
         reset()
         this.inputStream = input as CharStream
-        this._tokenFactorySourcePair = Pair<TokenSource, CharStream>(this, readInputStream())
+        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, readInputStream())
     }
 
     override fun readInputStream(): CharStream? {
@@ -46,7 +44,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
     }
 
 
-    protected var _tokenFactorySourcePair: Pair<TokenSource, CharStream>? = null
+    protected var _tokenFactorySourcePair: Pair<TokenSource, CharStream?>? = null
 
     /** How to create token objects  */
     override var tokenFactory: TokenFactory<out Token> = CommonTokenFactory.DEFAULT
@@ -318,7 +316,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun getErrorDisplay(s: String): String {
         val buf = StringBuilder()
-        for (c in s.toCharArray()) {
+        for (c in s.map { it }.toCharArray()) {
             buf.append(getErrorDisplay(c.toInt()))
         }
         return buf.toString()

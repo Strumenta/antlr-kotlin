@@ -6,35 +6,14 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
+import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korio.lang.Charset
+import com.soywiz.korio.lang.Charsets
 import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.toCharArray
 
 object Utils {
-    // Seriously: why isn't this built in to java? ugh!
-    fun <T> join(iter: Iterator<T>, separator: String): String {
-        val buf = StringBuilder()
-        while (iter.hasNext()) {
-            buf.append(iter.next())
-            if (iter.hasNext()) {
-                buf.append(separator)
-            }
-        }
-        return buf.toString()
-    }
 
-    fun <T> join(array: Array<T>, separator: String): String {
-        val builder = StringBuilder()
-        for (i in array.indices) {
-            builder.append(array[i])
-            if (i < array.size - 1) {
-                builder.append(separator)
-            }
-        }
-
-        return builder.toString()
-    }
-
-    fun numNonnull(data: Array<Any>?): Int {
+    fun numNonnull(data: Array<Any?>?): Int {
         var n = 0
         if (data == null) return n
         for (o in data) {
@@ -50,7 +29,7 @@ object Utils {
 
     fun escapeWhitespace(s: String, escapeSpaces: Boolean): String {
         val buf = StringBuilder()
-        for (c in s.toCharArray()) {
+        for (c in s.map { it }.toCharArray()) {
             if (c == ' ' && escapeSpaces)
                 buf.append('\u00B7')
             else if (c == '\t')
@@ -65,45 +44,16 @@ object Utils {
         return buf.toString()
     }
 
-//    fun writeFile(fileName: String, content: String, encoding: String? = null) {
-//        val f = File(fileName)
-//        val fos = FileOutputStream(f)
-//        val osw: OutputStreamWriter
-//        if (encoding != null) {
-//            osw = OutputStreamWriter(fos, encoding)
-//        } else {
-//            osw = OutputStreamWriter(fos)
-//        }
-//
-//        try {
-//            osw.write(content)
-//        } finally {
-//            osw.close()
-//        }
-//    }
-//
-//    fun readFile(fileName: String, encoding: String? = null): CharArray {
-//        val f = File(fileName)
-//        val size = f.length().toInt()
-//        val isr: InputStreamReader
-//        val fis = FileInputStream(fileName)
-//        if (encoding != null) {
-//            isr = InputStreamReader(fis, encoding)
-//        } else {
-//            isr = InputStreamReader(fis)
-//        }
-//        var data: CharArray? = null
-//        try {
-//            data = CharArray(size)
-//            val n = isr.read(data)
-//            if (n < data.size) {
-//                data = Arrays.copyOf(data, n)
-//            }
-//        } finally {
-//            isr.close()
-//        }
-//        return data
-//    }
+    suspend fun writeFile(fileName: String, content: String, charset: Charset = Charsets.UTF8) {
+        resourcesVfs[fileName].writeString(content, charset = charset)
+    }
+
+    suspend fun readFile(fileName: String, charset: Charset = Charsets.UTF8): CharArray {
+        val f = resourcesVfs[fileName]
+        return f.readLines(charset)
+                .joinToString("\n")
+                .map { it }.toCharArray()
+    }
 
     /** Convert array of strings to stringindex map. Useful for
      * converting rulenames to nameruleindex map.
@@ -111,13 +61,13 @@ object Utils {
     fun toMap(keys: Array<String>): Map<String, Int> {
         val m = HashMap<String, Int>()
         for (i in keys.indices) {
-            m.put(keys[i], i)
+            m[keys[i]] = i
         }
         return m
     }
 
     fun toCharArray(data: IntegerList?): CharArray? {
-        return if (data == null) null else data!!.toCharArray()
+        return data?.toCharArray()
     }
 
     fun toSet(bits: BitSet): IntervalSet {
@@ -136,12 +86,11 @@ object Utils {
         if (s == null) return null
         val buf = StringBuilder()
         var col = 0
-        for (i in 0 until s.length) {
-            val c = s[i]
-            when (c) {
+        for (element in s) {
+            when (element) {
                 '\n' -> {
                     col = 0
-                    buf.append(c)
+                    buf.append(element)
                 }
                 '\t' -> {
                     val n = tabSize - col % tabSize
@@ -150,7 +99,7 @@ object Utils {
                 }
                 else -> {
                     col++
-                    buf.append(c)
+                    buf.append(element)
                 }
             }
         }
@@ -181,8 +130,8 @@ object Utils {
      */
     fun count(s: String, x: Char): Int {
         var n = 0
-        for (i in 0 until s.length) {
-            if (s[i] == x) {
+        for (element in s) {
+            if (element == x) {
                 n++
             }
         }

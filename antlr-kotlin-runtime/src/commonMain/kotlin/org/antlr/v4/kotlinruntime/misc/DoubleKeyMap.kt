@@ -18,11 +18,11 @@ class DoubleKeyMap<Key1, Key2, Value> {
         var prev: Value? = null
         if (data2 == null) {
             data2 = LinkedHashMap()
-            data.put(k1, data2)
+            data[k1] = data2
         } else {
             prev = data2[k2]
         }
-        data2.put(k2, v)
+        data2[k2] = v
         return prev
     }
 

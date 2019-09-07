@@ -171,7 +171,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //                if (result == null) {
 //                    val deserializationOptions = ATNDeserializationOptions()
 //                    deserializationOptions.setGenerateRuleBypassTransitions(true)
-//                    result = ATNDeserializer(deserializationOptions).deserialize(serializedAtn!!.toCharArray())
+//                    result = ATNDeserializer(deserializationOptions).deserialize(serializedAtn!!.map { it }.toCharArray())
 //                    bypassAltsAtnCache.put(serializedAtn, result)
 //                }
 //
