@@ -16,24 +16,12 @@
 
 package com.strumenta.antlrkotlin.gradleplugin;
 
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrResult;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceGenerationException;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpec;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpecFactory;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrWorkerManager;
+import com.strumenta.antlrkotlin.gradleplugin.internal.*;
 import org.gradle.api.Action;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.tasks.CacheableTask;
-import org.gradle.api.tasks.Classpath;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.Internal;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.PathSensitive;
-import org.gradle.api.tasks.PathSensitivity;
-import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 import org.gradle.api.tasks.incremental.InputFileDetails;
 import org.gradle.process.internal.worker.WorkerProcessFactory;
@@ -254,21 +242,24 @@ public class AntlrKotlinTask extends SourceTask {
         }
     }
 
-    /**
-     * Sets the source for this task. Delegates to {@link #setSource(Object)}.
-     * <p>
-     * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
-     * is used to determine the relative output path of the generated source
-     * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up
-     * flattened in the specified output directory.
-     *
-     * @param source The source.
-     * @since 4.0
-     */
-    @Override
-    public void setSource(FileTree source) {
-        setSource((Object) source);
-    }
+// Remove this: this is just simply unnecessary, it overwrites the default setter operator
+// and invalidates the expression ``source = "src/my/source/path"`` in Gradle Kotlin DSL.
+// It also does not provide any help in the long run. ~Greg
+//    /**
+//     * Sets the source for this task. Delegates to {@link #setSource(Object)}.
+//     * <p>
+//     * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
+//     * is used to determine the relative output path of the generated source
+//     * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up
+//     * flattened in the specified output directory.
+//     *
+//     * @param source The source.
+//     * @since 4.0
+//     */
+//    @Override
+//    public void setSource(FileTree source) {
+//        setSource((Object) source);
+//    }
 
     /**
      * Sets the source for this task. Delegates to {@link SourceTask#setSource(Object)}.

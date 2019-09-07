@@ -42,7 +42,7 @@ import static org.gradle.api.plugins.JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAM
 public class AntlrKotlinPlugin implements Plugin<Project> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinPlugin.class);
 
-    private static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
+    private static final String ANTLR_CONFIGURATION_NAME = "antlr-kotlin";
 
     public void apply(final Project project) {
         project.getPluginManager().apply(JavaPlugin.class);
@@ -125,13 +125,15 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                     sourceSet.getJava().srcDir(outputDirectory);
 
                     // 6) register fact that antlr should be run before compiling
-                    Task compileKotlin = project.getTasks().findByName("compileKotlin");
-                    if (compileKotlin == null) {
-                        String message = "missing kotlin task, please add the gradle kotlin plugin to the build!";
+                    // compileKotlin is not available in the newer Multiplatform Kotlin plugins.
+                    // Also, that error message gave me serious headaches figuring it out. ~Greg
+                    Task buildTask = project.getTasks().findByName("build");
+                    if (buildTask == null) {
+                        String message = "Error configuring " + ANTLR_CONFIGURATION_NAME + " plugin: build task not found!";
                         LOGGER.error(message);
                         throw new GradleException(message);
                     }
-                    compileKotlin.dependsOn(taskName);
+                    buildTask.dependsOn(taskName);
                 });
     }
 }
