@@ -33,22 +33,19 @@ kotlin {
         val commonAntlr by creating {
             dependencies {
                 api(kotlin("stdlib-common"))
+                // add antlr-kotlin-runtime
+                // otherwise, the generated sources will not compile
+                api("com.strumenta.antlr-kotlin:antlr-kotlin-runtime:$antlrKotlinVersion")
             }
             // you have to add the generated sources the to the kotlin compiler source directory list
             kotlin.srcDir("build/generated-src/commonAntlr/kotlin")
         }
 
-        val jvmAntlr by creating {
+        val commonMain by getting {
             dependsOn(commonAntlr)
-            dependencies {
-                // add antlr-kotlin-runtime-jvm
-                // otherwise, the generated sources will not compile
-                api("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
-            }
         }
 
         val jvmMain by getting {
-            dependsOn(jvmAntlr)
             dependencies {
                 api(kotlin("stdlib-jdk8"))
                 api(kotlin("reflect"))
