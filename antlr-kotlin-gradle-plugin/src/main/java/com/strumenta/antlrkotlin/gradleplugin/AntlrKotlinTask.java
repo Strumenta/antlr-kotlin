@@ -196,7 +196,7 @@ public class AntlrKotlinTask extends SourceTask {
      *
      * @param antlrClasspath The Ant task implementation classpath. Must not be null.
      */
-    protected void setAntlrClasspath(FileCollection antlrClasspath) {
+    public void setAntlrClasspath(FileCollection antlrClasspath) {
         this.antlrClasspath = antlrClasspath;
     }
 
