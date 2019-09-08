@@ -20,6 +20,7 @@ The project should be considered experimental. Several parsers have been impleme
 ANTLR-Kotlin is accessible on Maven & Gradle through Jitpack. In jitpack basically you can use every commit or tag as a version number. You can find recent versions on the [Jitpack page for ANTLR-Kotlin](https://jitpack.io/#com.strumenta/antlr-kotlin).
 
 For an example how to use ANTLR-Kotlin see the [JVM Example Project](antlr-kotlin-examples-jvm/build.gradle.kts).
+There is also an [Kotlin Multiplatform Project Example](antlr-kotlin-examples-mpp/build.gradle.kts).
 
 ## The Kotlin target
 

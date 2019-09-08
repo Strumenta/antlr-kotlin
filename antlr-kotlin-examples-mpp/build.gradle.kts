@@ -21,14 +21,51 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.50"
+    kotlin("multiplatform") version "1.3.50"
     // do not add the plugin here, it contains only a task
     //id("com.strumenta.antlr-kotlin") version "0.0.5"
 }
 
+kotlin {
+    jvm()
+
+    sourceSets {
+        val commonAntlr by creating {
+            dependencies {
+                api(kotlin("stdlib-common"))
+            }
+            // you have to add the generated sources the to the kotlin compiler source directory list
+            kotlin.srcDir("build/generated-src/commonAntlr/kotlin")
+        }
+
+        val jvmAntlr by creating {
+            dependsOn(commonAntlr)
+            dependencies {
+                // add antlr-kotlin-runtime-jvm
+                // otherwise, the generated sources will not compile
+                api("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
+            }
+        }
+
+        val jvmMain by getting {
+            dependsOn(jvmAntlr)
+            dependencies {
+                api(kotlin("stdlib-jdk8"))
+                api(kotlin("reflect"))
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                api(kotlin("test-junit5"))
+            }
+        }
+    }
+}
+
 // in antlr-kotlin-plugin <0.0.5, the configuration was applied by the plugin.
 // starting from verison 0.0.5, you have to apply it manually:
-tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generateKotlinGrammarSource") {
+tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generateKotlinCommonGrammarSource") {
     // the classpath used to run antlr code generation
     antlrClasspath = configurations.detachedConfiguration(
             // antlr itself
@@ -41,30 +78,10 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
     arguments = listOf("-no-visitor", "-no-listener")
     source = project.objects
             .sourceDirectorySet("antlr", "antlr")
-            .srcDir("src/main/antlr").apply {
+            .srcDir("src/commonAntlr/antlr").apply {
                 include("*.g4")
             }
-    outputDirectory = File("build/generated-src/antlr/main")
+    outputDirectory = File("build/generated-src/commonAntlr/kotlin")
     // use this settings if you want to add the generated sources to version control
-    // outputDirectory defaults to build/generated-src/antlr/main
-    // outputDirectory = File("src/main/kotlin-antlr")
-}
-
-// you have to add it the to the kotlin compiler source directory list
-configure<SourceSetContainer> {
-    named("main") {
-        withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
-            kotlin.srcDir("build/generated-src/antlr/main")
-            // kotlin.srcDir("src/main/kotlin-antlr")
-        }
-    }
-}
-
-dependencies {
-    compile(kotlin("stdlib-jdk8"))
-    compile(kotlin("reflect"))
-    testImplementation(kotlin("test-junit5"))
-    // add antlr-kotlin-runtime-jvm
-    // otherwise, the generated sources will not compile
-    compile("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
+    // outputDirectory = File("src/commonAntlr/kotlin")
 }
