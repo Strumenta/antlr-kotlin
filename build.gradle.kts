@@ -29,3 +29,8 @@ allprojects {
         maven("https://oss.jfrog.org/oss-snapshot-local/")
     }
 }
+
+tasks.withType<Wrapper> {
+    gradleVersion = "5.6.2"
+    distributionType = Wrapper.DistributionType.ALL
+}
