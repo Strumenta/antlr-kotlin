@@ -904,6 +904,8 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 		<endif>
 	}
 
+	override val channelNames = Channels.values().map(Channels::name).toTypedArray()
+
 	enum class Modes(val id: Int) {
 		DEFAULT_MODE(0),
 		<if(rest(lexer.modes))>
