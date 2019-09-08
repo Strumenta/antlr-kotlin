@@ -12,20 +12,6 @@ plugins {
     id("com.strumenta.antlr-kotlin") version "0.0.4"
 }
 
-/*
-AntlrKotlinPluginExtension {
-    // use this setting to change the antlr-kotlin-runtime version used by this example project
-    // defaults to the version used by antlr-kotlin
-    // DO NOT CHANGE unless you know what are you doing!
-    antlrKotlinVersion = "0.0.4"
-
-    // use this setting to change the antlr version used by this example project at runtime
-    // defaults to the version used by antlr-kotlin
-    // DO NOT CHANGE unless you know what are you doing!
-    antlrVersion = "4.7.1"
-}
-*/
-
 tasks.generateKotlinGrammarSource {
     maxHeapSize = "64m"
     packageName = "com.strumenta.antlrkotlin.examples"
