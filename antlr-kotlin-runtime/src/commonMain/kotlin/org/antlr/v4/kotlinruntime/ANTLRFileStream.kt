@@ -12,10 +12,8 @@ import org.antlr.v4.kotlinruntime.misc.Utils
 /**
  * This is an [ANTLRInputStream] that is loaded from a file all at once
  * when you construct the object.
- *
  */
 @Deprecated("as of 4.7 Please use {@link CharStreams} interface.")
-
 class ANTLRFileStream
 private constructor(override val sourceName: String, val charset: Charset = UTF8)
     : ANTLRInputStream() {
