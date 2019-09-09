@@ -74,9 +74,11 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
             defaultDependencies.add(projectDependencies
                     .create("com.strumenta.antlr-kotlin:antlr-kotlin-target:" + antlrKotlinVersion));
 
-            LOGGER.info("using antlr-kotlin-runtime-{} version {}", platform, antlrKotlinVersion);
-            defaultDependencies.add(projectDependencies
-                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-" + platform + ":" + antlrKotlinVersion));
+            // FIXME: removed it until I figure out how to make it work for Multiplatform project.
+            //  Now dependent libs need to setup the dependencies explicitly
+//            LOGGER.info("using antlr-kotlin-runtime version {}", antlrKotlinVersion);
+//            defaultDependencies.add(projectDependencies
+//                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-runtime:" + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(IMPLEMENTATION_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
