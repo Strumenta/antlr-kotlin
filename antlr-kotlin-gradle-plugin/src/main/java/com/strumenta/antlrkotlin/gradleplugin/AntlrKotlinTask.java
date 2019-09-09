@@ -242,24 +242,21 @@ public class AntlrKotlinTask extends SourceTask {
         }
     }
 
-// Remove this: this is just simply unnecessary, it overwrites the default setter operator
-// and invalidates the expression ``source = "src/my/source/path"`` in Gradle Kotlin DSL.
-// It also does not provide any help in the long run. ~Greg
-//    /**
-//     * Sets the source for this task. Delegates to {@link #setSource(Object)}.
-//     * <p>
-//     * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
-//     * is used to determine the relative output path of the generated source
-//     * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up
-//     * flattened in the specified output directory.
-//     *
-//     * @param source The source.
-//     * @since 4.0
-//     */
-//    @Override
-//    public void setSource(FileTree source) {
-//        setSource((Object) source);
-//    }
+    /**
+     * Sets the source for this task. Delegates to {@link #setSource(Object)}.
+     * <p>
+     * If the source is of type {@link SourceDirectorySet}, then the relative path of each source grammar files
+     * is used to determine the relative output path of the generated source
+     * If the source is not of type {@link SourceDirectorySet}, then the generated source files end up
+     * flattened in the specified output directory.
+     *
+     * @param source The source.
+     * @since 4.0
+     */
+    @Override
+    public void setSource(FileTree source) {
+        setSource((Object) source);
+    }
 
     /**
      * Sets the source for this task. Delegates to {@link SourceTask#setSource(Object)}.
