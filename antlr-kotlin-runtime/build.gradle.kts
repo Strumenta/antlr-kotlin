@@ -5,6 +5,8 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    jcenter()
+    maven("https://dl.bintray.com/korlibs/korlibs/")
 }
 
 apply(plugin = "maven-publish")
