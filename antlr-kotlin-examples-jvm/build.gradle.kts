@@ -54,7 +54,6 @@ configure<SourceSetContainer> {
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile(kotlin("reflect"))
-    compile("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-metadata:$projectVersion")
     compile("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$projectVersion")
     testImplementation(kotlin("test-junit5"))
 }

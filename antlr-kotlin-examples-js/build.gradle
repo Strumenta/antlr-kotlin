@@ -25,7 +25,6 @@ repositories {
 }
 
 dependencies {
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-metadata:$projectVersion"
     compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-js:$projectVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"

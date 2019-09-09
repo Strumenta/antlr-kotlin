@@ -1,6 +1,5 @@
 buildscript {
     val kotlinVersion = "1.3.50"
-    ext["kotlinVersion"] = kotlinVersion
 
     repositories {
         mavenLocal()
