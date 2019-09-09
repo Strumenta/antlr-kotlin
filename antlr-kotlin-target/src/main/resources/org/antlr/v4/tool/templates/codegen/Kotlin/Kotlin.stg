@@ -52,7 +52,6 @@ package <file.genPackage>;
 import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
-import org.antlr.v4.kotlinruntime.misc.Utils;
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -928,10 +927,8 @@ SerializedATN(model) ::= <<
 <! requires segmented representation !>
 <model.segments:{segment|private const val serializedATNSegment<i0> : String =
 	"<segment>";}; separator="\n">
-private val serializedATN : String = Utils.join(
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
-	""
-)
+private val serializedATN : String =
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
 private const val serializedATN : String = "<model.serialized>"
@@ -955,10 +952,8 @@ SerializedATNEnriched(model) ::= <<
 <! requires segmented representation !>
 <model.segments:{segment|private const val serializedATNSegment<i0> : String  =
 	"<segment>";}; separator="\n">
-private val serializedATN : String = Utils.join(
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
-	""
-);
+private val serializedATN : String =
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
 private const val serializedATN : String = "<model.serialized>"
