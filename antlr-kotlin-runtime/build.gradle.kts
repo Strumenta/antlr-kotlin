@@ -6,8 +6,6 @@ repositories {
     mavenCentral()
     mavenLocal()
 }
-group = "org.antlr"
-version = "0.0.1"
 
 apply(plugin = "maven-publish")
 
@@ -19,11 +17,13 @@ kotlin {
         nodejs {
         }
     }
+    /* TODO: Add Native target
     // For ARM, should be changed to iosArm32 or iosArm64
     // For Linux, should be changed to e.g. linuxX64
     // For MacOS, should be changed to e.g. macosX64
     // For Windows, should be changed to e.g. mingwX64
-//    mingwX64("mingw")
+    mingwX64("mingw")
+     */
     sourceSets {
         commonMain {
             dependencies {
@@ -59,20 +59,11 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-//        val mingwMain by getting {
-//        }
-//        val mingwTest by getting {
-//        }
-    }
-
-    // Note that the Kotlin metadata is here, too.
-    // The mingwx64() target is automatically skipped as incompatible in Linux builds.
-    configure(listOf(metadata(), jvm(), js())) {
-        mavenPublication {
-            val targetPublication = this@mavenPublication
-            tasks.withType<AbstractPublishToMaven>()
-                    .matching { it.publication == targetPublication }
-                    .all { onlyIf { findProperty("isLinux") == "true" } }
+        /* TODO: Add Native target
+        val mingwMain by getting {
         }
+        val mingwTest by getting {
+        }
+        */
     }
 }
