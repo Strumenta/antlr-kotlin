@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.2.60'
-    ext.projectVersion = '0.0.2'
+    ext.kotlin_version = '1.3.50'
+    ext.projectVersion = '0.0.5'
 
     repositories {
         mavenCentral()
@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-common:$projectVersion"
+    compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-metadata:$projectVersion"
     compile "com.strumenta.antlr-kotlin:antlr-kotlin-runtime-js:$projectVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
