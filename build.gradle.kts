@@ -1,4 +1,7 @@
 buildscript {
+    val kotlinVersion = "1.3.50"
+    ext["kotlinVersion"] = kotlinVersion
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -7,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 
@@ -19,7 +22,7 @@ allprojects {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
         options.compilerArgs.add("-Xlint:all")
-        options.setDeprecation(true)
+        options.isDeprecation = true
     }
 
     repositories {
