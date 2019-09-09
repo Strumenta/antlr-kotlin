@@ -49,6 +49,7 @@ ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 package <file.genPackage>;
 <endif>
 <namedActions.header>
+import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import org.antlr.v4.kotlinruntime.misc.Utils;
@@ -839,7 +840,8 @@ LexerFile(lexerFile, lexer, namedActions) ::= <<
 package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
-import org.antlr.v4.kotlinruntime.misc.Utils
+
+import com.strumenta.kotlinmultiplatform.asCharArray
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -935,7 +937,7 @@ private val serializedATN : String = Utils.join(
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.map { it }.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)
@@ -962,7 +964,7 @@ private val serializedATN : String = Utils.join(
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.map { it }.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)

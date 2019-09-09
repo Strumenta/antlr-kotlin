@@ -7,6 +7,7 @@ fun <T> Array<T>.indices(): List<Int> = this.indices.toList()
 fun assert(condition: Boolean) = require(condition)
 
 fun CharArray.convertToString(): String = this.joinToString("")
+fun String.asCharArray(): CharArray = this.map { it }.toCharArray()
 
 object Arrays {
     fun equals(a: Array<*>?, b: Array<*>?): Boolean {

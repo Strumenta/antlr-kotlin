@@ -1,26 +1,26 @@
+import com.strumenta.kotlinmultiplatform.asCharArray
 import kotlin.test.Test as test
-
 
 class MiscStringTest : BaseTest() {
 
     @test
-    fun testToCharArrayEmpty() {
-        assertArrayEquals(charArrayOf(), "".map { it }.toCharArray())
+    fun testAsCharArrayEmpty() {
+        assertArrayEquals(charArrayOf(), "".asCharArray())
     }
 
     @test
-    fun testToCharArrayEmptyLength() {
-        assertEquals(0, "".map { it }.toCharArray().size)
+    fun testAsCharArrayEmptyLength() {
+        assertEquals(0, "".asCharArray().size)
     }
 
     @test
-    fun testToCharArrayEmptyEl0() {
-        assertEquals('a', "abc def".map { it }.toCharArray()[0])
+    fun testAsCharArrayEmptyEl0() {
+        assertEquals('a', "abc def".asCharArray()[0])
     }
 
     @test
-    fun testToCharArray() {
-        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".map { it }.toCharArray())
+    fun testAsCharArray() {
+        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".asCharArray())
     }
 
 }

@@ -290,7 +290,9 @@ open class IntegerList {
             // Calculate the precise result size if we encounter
             // a code point > 0xFFFF
             if (!calculatedPreciseResultSize && Char.isSupplementaryCodePoint(codePoint)) {
-                resultArray = resultArray.toTypedArray().copyOf(charArraySize()).filterNotNull().map { it }.toCharArray()
+                resultArray = resultArray.toTypedArray().copyOf(charArraySize())
+                        .filterNotNull()
+                        .toCharArray()
                 calculatedPreciseResultSize = true
             }
             // This will throw IllegalArgumentException if

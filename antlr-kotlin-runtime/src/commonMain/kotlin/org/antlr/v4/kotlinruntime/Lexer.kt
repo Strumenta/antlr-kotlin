@@ -5,6 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
+import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.outMessage
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.misc.IntegerStack
@@ -316,7 +317,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun getErrorDisplay(s: String): String {
         val buf = StringBuilder()
-        for (c in s.map { it }.toCharArray()) {
+        for (c in s.asCharArray()) {
             buf.append(getErrorDisplay(c.toInt()))
         }
         return buf.toString()

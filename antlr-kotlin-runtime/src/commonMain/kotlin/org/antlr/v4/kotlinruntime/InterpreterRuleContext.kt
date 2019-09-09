@@ -19,11 +19,6 @@ package org.antlr.v4.kotlinruntime
  * provide equivalent functionality.
  */
 class InterpreterRuleContext : ParserRuleContext {
-    /** This is the backing field for [.getRuleIndex].  */
-//    override var ruleIndex = -1
-//        set(value: Int) {
-//            field = value
-//        }
 
     constructor() {}
 
