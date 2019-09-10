@@ -49,6 +49,9 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
     // outputDirectory = File("src/main/kotlin-antlr")
 }
 
+// run generate task before build
+tasks.getByName("compileKotlin").dependsOn("generateKotlinGrammarSource")
+
 // you have to add it the to the kotlin compiler source directory list
 configure<SourceSetContainer> {
     named("main") {

@@ -82,3 +82,6 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
     // use this settings if you want to add the generated sources to version control
     // outputDirectory = File("src/commonAntlr/kotlin")
 }
+
+// run generate task before build
+tasks.getByName("compileKotlinJvm").dependsOn("generateKotlinCommonGrammarSource")
