@@ -3,13 +3,17 @@ repositories {
     mavenLocal()
     // used to download antlr4
     mavenCentral()
+    // used to download korio
+    jcenter()
     // used to download antlr-kotlin-runtime
     maven("https://jitpack.io")
 }
 
+val projectVersion = "0.0.5"
+
 plugins {
-    kotlin("jvm") version "1.3.31"
-    id("com.strumenta.antlr-kotlin") version "0.0.4"
+    kotlin("jvm") version "1.3.50"
+    id("com.strumenta.antlr-kotlin") version "0.0.5"
 }
 
 /*
@@ -52,5 +56,6 @@ configure<SourceSetContainer> {
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     compile(kotlin("reflect"))
+    compile("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$projectVersion")
     testImplementation(kotlin("test-junit5"))
 }

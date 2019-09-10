@@ -6,9 +6,9 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.Math
+import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.convertToString
-import com.strumenta.kotlinmultiplatform.toCharArray
 import org.antlr.v4.kotlinruntime.misc.Interval
 
 /**
@@ -43,8 +43,9 @@ open class ANTLRInputStream : CharStream {
     constructor() {}
 
     /** Copy data in string to a local char array  */
+    
     constructor(input: String) {
-        this.data = input.toCharArray()
+        this.data = input.asCharArray()
         this.n = input.length
     }
 //

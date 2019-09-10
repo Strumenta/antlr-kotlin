@@ -1,7 +1,6 @@
 package com.strumenta.minicalc
 
 // Generated from java-escape by ANTLR 4.7.1
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import com.strumenta.kotlinmultiplatform.getType
 import org.antlr.v4.kotlinruntime.*
@@ -95,7 +94,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
                 "inputDeclaration", "varDeclaration", "assignment",
                 "expression", "stringLiteralContent", "type")
 
-        private val LITERAL_NAMES = Arrays.asList<String?>(null, null, null,
+        private val LITERAL_NAMES = listOf(null, null, null,
                 "'input'", "'var'",
                 "'print'", null,
                 null, null, null,
@@ -107,7 +106,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
                 "'\\n'", "'\\#'",
                 null, "'#{'",
                 null, "'}'")
-        private val SYMBOLIC_NAMES = Arrays.asList<String?>(null, "NEWLINE",
+        private val SYMBOLIC_NAMES = listOf(null, "NEWLINE",
                 "WS", "INPUT",
                 "VAR", "PRINT",
                 "AS", "INT",

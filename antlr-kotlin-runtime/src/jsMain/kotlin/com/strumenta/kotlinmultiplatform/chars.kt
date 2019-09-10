@@ -12,12 +12,6 @@ actual fun Char.Companion.maxValue(): Char {
     return '\uFFFF'
 }
 
-actual fun String.toCharArray(): CharArray {
-    return CharArray(this.length) {
-        this[it]
-    }
-}
-
 actual fun Char.Companion.toChars(codePoint: Int, resultArray: CharArray, resultIdx: Int): Int {
     TODO("Char.Companion.toChars not implemented") //To change body of created functions use File | Settings | File Templates.
 }

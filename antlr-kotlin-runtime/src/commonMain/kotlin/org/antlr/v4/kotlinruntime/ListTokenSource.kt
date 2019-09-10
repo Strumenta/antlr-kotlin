@@ -7,8 +7,6 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.Math
-import com.strumenta.kotlinmultiplatform.NullPointerException
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 /**
  * Provides an implementation of [TokenSource] as a wrapper around a list
@@ -162,7 +160,7 @@ constructor(
                 }
 
                 val stop = Math.max(-1, start - 1)
-                eofToken = tokenFactory.create(Pair<TokenSource, CharStream>(this, readInputStream()), Token.EOF, "EOF", Token.DEFAULT_CHANNEL, start, stop, line, charPositionInLine)
+                eofToken = tokenFactory.create(Pair<TokenSource, CharStream?>(this, readInputStream()), Token.EOF, "EOF", Token.DEFAULT_CHANNEL, start, stop, line, charPositionInLine)
             }
 
             return eofToken!!
@@ -192,11 +190,3 @@ constructor(
 //
 //    }
 }
-/**
- * Constructs a new [ListTokenSource] instance from the specified
- * collection of [Token] objects.
- *
- * @param tokens The collection of [Token] objects to provide as a
- * [TokenSource].
- * @exception NullPointerException if `tokens` is `null`
- */

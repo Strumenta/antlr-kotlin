@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.dfa
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
@@ -150,7 +149,7 @@ class DFAState {
         val other = o as DFAState?
         // TODO (sam): what to do when configs==null?
         //		System.out.println("DFAState.equals: "+configs+(sameSet?"==":"!=")+other.configs);
-        return configs!!.equals(other!!.configs)
+        return configs!! == other!!.configs
     }
 
     override fun toString(): String {
@@ -159,7 +158,7 @@ class DFAState {
         if (isAcceptState) {
             buf.append("=>")
             if (predicates != null) {
-                buf.append(Arrays.toString(predicates!!))
+                buf.append(predicates!!.joinToString())
             } else {
                 buf.append(prediction)
             }

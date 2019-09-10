@@ -42,7 +42,7 @@ import static org.gradle.api.plugins.JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAM
 public class AntlrKotlinPlugin implements Plugin<Project> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinPlugin.class);
 
-    private static final String ANTLR_CONFIGURATION_NAME = "antlrkotlin";
+    private static final String ANTLR_CONFIGURATION_NAME = "antlr-kotlin";
 
     public void apply(final Project project) {
         project.getPluginManager().apply(JavaPlugin.class);
@@ -74,9 +74,11 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
             defaultDependencies.add(projectDependencies
                     .create("com.strumenta.antlr-kotlin:antlr-kotlin-target:" + antlrKotlinVersion));
 
-            LOGGER.info("using antlr-kotlin-runtime-{} version {}", platform, antlrKotlinVersion);
-            defaultDependencies.add(projectDependencies
-                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-" + platform + ":" + antlrKotlinVersion));
+            // FIXME: removed it until I figure out how to make it work for Multiplatform project.
+            //  Now dependent libs need to setup the dependencies explicitly
+//            LOGGER.info("using antlr-kotlin-runtime version {}", antlrKotlinVersion);
+//            defaultDependencies.add(projectDependencies
+//                    .create("com.strumenta.antlr-kotlin:antlr-kotlin-runtime:" + antlrKotlinVersion));
         });
 
         project.getConfigurations().getByName(IMPLEMENTATION_CONFIGURATION_NAME).extendsFrom(antlrConfiguration);
@@ -125,13 +127,20 @@ public class AntlrKotlinPlugin implements Plugin<Project> {
                     sourceSet.getJava().srcDir(outputDirectory);
 
                     // 6) register fact that antlr should be run before compiling
-                    Task compileKotlin = project.getTasks().findByName("compileKotlin");
-                    if (compileKotlin == null) {
-                        String message = "missing kotlin task, please add the gradle kotlin plugin to the build!";
+                    // compileKotlin is not available in the newer Multiplatform Kotlin plugins.
+                    // Also, that error message gave me serious headaches figuring it out. ~Greg
+                    String compileTaskName = "compileKotlin";
+                    Task compileTask = project.getTasks().findByName(compileTaskName);
+                    if (compileTask == null) {
+                        compileTaskName += "Metadata";
+                        compileTask = project.getTasks().findByName(compileTaskName);
+                    }
+                    if (compileTask == null) {
+                        String message = "Error configuring " + ANTLR_CONFIGURATION_NAME + " plugin: " + compileTaskName + " task not found!";
                         LOGGER.error(message);
                         throw new GradleException(message);
                     }
-                    compileKotlin.dependsOn(taskName);
+                    compileTask.dependsOn(taskName);
                 });
     }
 }

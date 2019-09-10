@@ -16,24 +16,12 @@
 
 package com.strumenta.antlrkotlin.gradleplugin;
 
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrResult;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceGenerationException;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpec;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpecFactory;
-import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrWorkerManager;
+import com.strumenta.antlrkotlin.gradleplugin.internal.*;
 import org.gradle.api.Action;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.tasks.CacheableTask;
-import org.gradle.api.tasks.Classpath;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.Internal;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.PathSensitive;
-import org.gradle.api.tasks.PathSensitivity;
-import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
 import org.gradle.api.tasks.incremental.InputFileDetails;
 import org.gradle.process.internal.worker.WorkerProcessFactory;

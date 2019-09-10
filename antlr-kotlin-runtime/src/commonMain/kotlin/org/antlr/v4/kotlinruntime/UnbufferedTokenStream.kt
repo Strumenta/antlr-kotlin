@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.arraycopy
 import com.strumenta.kotlinmultiplatform.assert
@@ -180,7 +179,7 @@ class UnbufferedTokenStream<T : Token> constructor(tokenSource: TokenSource, buf
 
     protected fun add(t: Token) {
         if (n >= tokens.size) {
-            tokens = Arrays.copyOf<Token?>(tokens, tokens.size * 2)
+            tokens = tokens.copyOf(tokens.size * 2)
         }
 
         if (t is WritableToken) {

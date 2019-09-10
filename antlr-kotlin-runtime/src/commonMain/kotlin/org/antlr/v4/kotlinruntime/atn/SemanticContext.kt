@@ -12,7 +12,6 @@ import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.atn.SemanticContext.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
-import org.antlr.v4.kotlinruntime.misc.Utils
 
 /** A tree structure used to record the semantic context in which
  * an ATN configuration is valid.  It's either a single predicate,
@@ -93,13 +92,12 @@ abstract class SemanticContext {
             return hashCode
         }
 
-        override fun equals(obj: Any?): Boolean {
-            if (obj !is Predicate) return false
-            if (this === obj) return true
-            val p = obj as Predicate?
-            return this.ruleIndex == p!!.ruleIndex &&
-                    this.predIndex == p.predIndex &&
-                    this.isCtxDependent == p.isCtxDependent
+        override fun equals(other: Any?): Boolean {
+            if (other !is Predicate) return false
+            if (this === other) return true
+            return this.ruleIndex == other.ruleIndex &&
+                    this.predIndex == other.predIndex &&
+                    this.isCtxDependent == other.isCtxDependent
         }
 
         override fun toString(): String {
@@ -107,16 +105,8 @@ abstract class SemanticContext {
         }
     }
 
-    class PrecedencePredicate : SemanticContext, Comparable<PrecedencePredicate> {
-        val precedence: Int
-
-        protected constructor() {
-            this.precedence = 0
-        }
-
-        constructor(precedence: Int) {
-            this.precedence = precedence
-        }
+    class PrecedencePredicate(val precedence: Int = 0)
+        : SemanticContext(), Comparable<PrecedencePredicate> {
 
         override fun eval(parser: Recognizer<*, *>, parserCallStack: RuleContext): Boolean {
             return parser.precpred(parserCallStack, precedence)
@@ -124,14 +114,14 @@ abstract class SemanticContext {
 
         override fun evalPrecedence(parser: Recognizer<*, *>, parserCallStack: RuleContext): SemanticContext? {
             return if (parser.precpred(parserCallStack, precedence)) {
-                SemanticContext.NONE
+                NONE
             } else {
                 null
             }
         }
 
-        override fun compareTo(o: PrecedencePredicate): Int {
-            return precedence - o.precedence
+        override fun compareTo(other: PrecedencePredicate): Int {
+            return precedence - other.precedence
         }
 
         override fun hashCode(): Int {
@@ -140,17 +130,15 @@ abstract class SemanticContext {
             return hashCode
         }
 
-        override fun equals(obj: Any?): Boolean {
-            if (obj !is PrecedencePredicate) {
+        override fun equals(other: Any?): Boolean {
+            if (other !is PrecedencePredicate) {
                 return false
             }
 
-            if (this === obj) {
+            if (this === other) {
                 return true
             }
-
-            val other = obj as PrecedencePredicate?
-            return this.precedence == other!!.precedence
+            return this.precedence == other.precedence
         }
 
         override// precedence >= _precedenceStack.peek()
@@ -186,21 +174,21 @@ abstract class SemanticContext {
         val opnds: Array<SemanticContext>
 
         override val operands: Collection<SemanticContext>
-            get() = Arrays.asList(*opnds)
+            get() = opnds.toList()
 
         init {
             val operands = HashSet<SemanticContext>()
             if (a is AND)
-                operands.addAll(Arrays.asList(*a.opnds))
+                operands.addAll(a.opnds.toList())
             else
                 operands.add(a)
             if (b is AND)
-                operands.addAll(Arrays.asList(*b.opnds))
+                operands.addAll(b.opnds.toList())
             else
                 operands.add(b)
 
             val precedencePredicates = filterPrecedencePredicates(operands)
-            if (!precedencePredicates.isEmpty()) {
+            if (precedencePredicates.isNotEmpty()) {
                 // interested in the transition with the lowest precedence
                 val reduced = Collections.min(precedencePredicates)
                 operands.add(reduced)
@@ -209,11 +197,10 @@ abstract class SemanticContext {
             opnds = operands.toTypedArray()
         }
 
-        override fun equals(obj: Any?): Boolean {
-            if (this === obj) return true
-            if (obj !is AND) return false
-            val other = obj as AND?
-            return Arrays.equals(this.opnds, other!!.opnds)
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is AND) return false
+            return Arrays.equals(this.opnds, other.opnds)
         }
 
         override fun hashCode(): Int {
@@ -262,14 +249,14 @@ abstract class SemanticContext {
 
             var result: SemanticContext? = operands[0]
             for (i in 1 until operands.size) {
-                result = SemanticContext.and(result, operands[i])
+                result = and(result, operands[i])
             }
 
             return result
         }
 
         override fun toString(): String {
-            return Utils.join(Arrays.asList(*opnds).iterator(), "&&")
+            return opnds.toList().joinToString("&&")
         }
     }
 
@@ -281,21 +268,21 @@ abstract class SemanticContext {
         val opnds: Array<SemanticContext>
 
         override val operands: Collection<SemanticContext>
-            get() = Arrays.asList(*opnds)
+            get() = opnds.toList()
 
         init {
             val operands = HashSet<SemanticContext>()
             if (a is OR)
-                operands.addAll(Arrays.asList(*a.opnds))
+                operands.addAll(a.opnds.toList())
             else
                 operands.add(a)
             if (b is OR)
-                operands.addAll(Arrays.asList(*b.opnds))
+                operands.addAll(b.opnds.toList())
             else
                 operands.add(b)
 
             val precedencePredicates = filterPrecedencePredicates(operands)
-            if (!precedencePredicates.isEmpty()) {
+            if (precedencePredicates.isNotEmpty()) {
                 // interested in the transition with the highest precedence
                 val reduced = Collections.max(precedencePredicates)
                 operands.add(reduced)
@@ -304,11 +291,10 @@ abstract class SemanticContext {
             this.opnds = operands.toTypedArray()
         }
 
-        override fun equals(obj: Any?): Boolean {
-            if (this === obj) return true
-            if (obj !is OR) return false
-            val other = obj as OR?
-            return Arrays.equals(this.opnds, other!!.opnds)
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is OR) return false
+            return Arrays.equals(this.opnds, other.opnds)
         }
 
         override fun hashCode(): Int {
@@ -357,14 +343,14 @@ abstract class SemanticContext {
 
             var result: SemanticContext? = operands[0]
             for (i in 1 until operands.size) {
-                result = SemanticContext.or(result, operands[i])
+                result = or(result, operands[i])
             }
 
             return result
         }
 
         override fun toString(): String {
-            return Utils.join(Arrays.asList(*opnds).iterator(), "||")
+            return opnds.toList().joinToString("||")
         }
     }
 
@@ -415,10 +401,7 @@ abstract class SemanticContext {
                 }
             }
 
-            return if (result == null) {
-                emptyList<PrecedencePredicate>()
-            } else result
-
+            return result ?: emptyList()
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.strumenta.minicalc
 
 // Generated from java-escape by ANTLR 4.7.1
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -27,7 +26,7 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
         val decisionToDFA: Array<DFA>
         val sharedContextCache = PredictionContextCache()
 
-        private val LITERAL_NAMES = Arrays.asList<String?>(null, null, null, "'input'",
+        private val LITERAL_NAMES = listOf(null, null, null, "'input'",
                 "'var'", "'print'",
                 null, null, null, null,
                 null, null, null, null,
@@ -36,7 +35,7 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
                 "'\\\"'", "'\\\\'",
                 "'\\n'", "'\\#'", null,
                 "'#{'", null, "'}'")
-        private val SYMBOLIC_NAMES = Arrays.asList<String?>(null, "NEWLINE", "WS",
+        private val SYMBOLIC_NAMES = listOf(null, "NEWLINE", "WS",
                 "INPUT", "VAR", "PRINT",
                 "AS", "INT", "DECIMAL",
                 "STRING", "ID", "INTLIT",

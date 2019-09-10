@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.assert
 
@@ -84,7 +83,7 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
         // FULL BUCKET, expand and add to end
         val oldLength = bucket.size
-        bucket = Arrays.copyOf(bucket, bucket.size * 2)
+        bucket = bucket.copyOf(bucket.size * 2) as Array<T>
         buckets[b] = bucket
         bucket[oldLength] = o // add to end
         n++
@@ -161,7 +160,7 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
                     newBucket = newTable[b]
                     if (bucketLength == newBucket.size) {
                         // expand
-                        newBucket = Arrays.copyOf(newBucket, newBucket.size * 2)
+                        newBucket = newBucket.copyOf(newBucket.size * 2) as Array<T>
                         newTable[b] = newBucket
                     }
                 }
@@ -229,7 +228,7 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
     fun <U> toArray(a: Array<U>): Array<U> {
         var a = a
         if (a.size < size) {
-            a = Arrays.copyOf(a, size)
+            a = a.copyOf(size) as Array<U>
         }
 
         var i = 0

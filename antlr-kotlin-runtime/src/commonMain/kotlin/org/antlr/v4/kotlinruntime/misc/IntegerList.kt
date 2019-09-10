@@ -220,7 +220,7 @@ open class IntegerList {
      * Returns a string representation of this list.
      */
     override fun toString(): String {
-        return Arrays.toString(toArray())
+        return toArray().joinToString()
     }
 
     fun binarySearch(key: Int): Int {
@@ -267,11 +267,11 @@ open class IntegerList {
         }
 
         val originalArray = _data!!.toTypedArray()
-        val copiedArray = Arrays.copyOf(originalArray, newLength)
+        val copiedArray = originalArray.copyOf(newLength)
         for (i in originalArray.size until copiedArray.size) {
             copiedArray[i] = 0
         }
-        _data = copiedArray.toIntArray()
+        _data = copiedArray.filterNotNull().toIntArray()
     }
 
     /** Convert the list to a UTF-16 encoded char array. If all values are less
@@ -290,7 +290,9 @@ open class IntegerList {
             // Calculate the precise result size if we encounter
             // a code point > 0xFFFF
             if (!calculatedPreciseResultSize && Char.isSupplementaryCodePoint(codePoint)) {
-                resultArray = Arrays.copyOf(resultArray.toTypedArray(), charArraySize()).toCharArray()
+                resultArray = resultArray.toTypedArray().copyOf(charArraySize())
+                        .filterNotNull()
+                        .toCharArray()
                 calculatedPreciseResultSize = true
             }
             // This will throw IllegalArgumentException if

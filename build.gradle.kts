@@ -1,4 +1,6 @@
 buildscript {
+    val kotlinVersion = "1.3.50"
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -7,19 +9,19 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$embeddedKotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 
 allprojects {
     group = "com.strumenta.antlr-kotlin"
-    version = "0.0.4"
+    version = "0.0.5"
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
         options.compilerArgs.add("-Xlint:all")
-        options.setDeprecation(true)
+        options.isDeprecation = true
     }
 
     repositories {

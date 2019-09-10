@@ -4,6 +4,7 @@ import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext
 import kotlin.test.Test as test
 
+
 class TestingLexer : BaseTest() {
 
     @test

@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.tree
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.Predicate
@@ -20,8 +19,8 @@ object Trees {
      * parse trees and extract data appropriately.
      */
     fun toStringTree(t: Tree, recog: Parser?): String {
-        val ruleNames = if (recog != null) recog!!.ruleNames else null
-        val ruleNamesList = if (ruleNames != null) Arrays.asList<String>(*ruleNames!!) else null
+        val ruleNames = recog?.ruleNames
+        val ruleNamesList = if (ruleNames != null) listOf(*ruleNames) else null
         return toStringTree(t, ruleNamesList)
     }
 
@@ -45,33 +44,33 @@ object Trees {
     }
 
     fun getNodeText(t: Tree, recog: Parser?): String {
-        val ruleNames = if (recog != null) recog!!.ruleNames else null
-        val ruleNamesList = if (ruleNames != null) Arrays.asList<String>(*ruleNames!!) else null
+        val ruleNames = recog?.ruleNames
+        val ruleNamesList = if (ruleNames != null) listOf(*ruleNames) else null
         return getNodeText(t, ruleNamesList)
     }
 
     fun getNodeText(t: Tree, ruleNames: List<String>?): String {
         if (ruleNames != null) {
             if (t is RuleContext) {
-                val ruleIndex = (t as RuleContext).ruleContext.ruleIndex
-                val ruleName = ruleNames.get(ruleIndex)
-                val altNumber = (t as RuleContext).altNumber
+                val ruleIndex = t.ruleContext.ruleIndex
+                val ruleName = ruleNames[ruleIndex]
+                val altNumber = t.altNumber
                 return if (altNumber != ATN.INVALID_ALT_NUMBER) {
-                    ruleName + ":" + altNumber
+                    "$ruleName:$altNumber"
                 } else ruleName
             } else if (t is ErrorNode) {
                 return t.toString()
             } else if (t is TerminalNode) {
-                val symbol = (t as TerminalNode).symbol
+                val symbol = t.symbol
                 if (symbol != null) {
-                    return symbol!!.text!!
+                    return symbol.text!!
                 }
             }
         }
         // no recog for rule names
         val payload = t.payload
         return if (payload is Token) {
-            (payload as Token).text!!
+            payload.text!!
         } else t.payload.toString()
     }
 
@@ -89,14 +88,13 @@ object Trees {
      *
      * @since 4.5.1
      */
-    fun getAncestors(t: Tree): List<out Tree> {
-        var t = t
-        if (t.readParent() == null) return emptyList<Tree>()
+    fun getAncestors(t: Tree): List<Tree> {
+        if (t.readParent() == null) return emptyList()
         val ancestors = ArrayList<Tree>()
-        t = t.readParent()!!
-        while (t != null) {
-            ancestors.add(0, t) // insert at start
-            t = t.readParent()!!
+        var t1: Tree? = t.readParent()
+        while (t1 != null) {
+            ancestors.add(0, t1) // insert at start
+            t1 = t1.readParent()
         }
         return ancestors
     }
@@ -107,11 +105,11 @@ object Trees {
      * @since 4.5.1
      */
     fun isAncestorOf(t: Tree?, u: Tree?): Boolean {
-        if (t == null || u == null || t!!.readParent() == null) return false
-        var p: Tree? = u!!.readParent()
+        if (t == null || u == null || t.readParent() == null) return false
+        var p: Tree? = u.readParent()
         while (p != null) {
             if (t === p) return true
-            p = p!!.readParent()
+            p = p.readParent()
         }
         return false
     }
@@ -206,13 +204,13 @@ object Trees {
                                 startIndex: Int,
                                 stopIndex: Int) {
         if (t == null) return
-        for (i in 0 until t!!.childCount) {
-            val child = t!!.getChild(i)
+        for (i in 0 until t.childCount) {
+            val child = t.getChild(i)
             val range = child!!.sourceInterval
             if (child is ParserRuleContext && (range.b < startIndex || range.a > stopIndex)) {
                 if (isAncestorOf(child, root)) { // replace only if subtree doesn't have displayed root
                     val abbrev = CommonToken(Token.INVALID_TYPE, "...")
-                    t!!.children!!.set(i, TerminalNodeImpl(abbrev))
+                    t.children!![i] = TerminalNodeImpl(abbrev)
                 }
             }
         }
@@ -222,14 +220,14 @@ object Trees {
      *
      * @since 4.5.1
      */
-    fun findNodeSuchThat(t: Tree?, pred: Predicate<Tree>): Tree? {
-        if (pred.test(t!!)) return t
+    fun findNodeSuchThat(t: Tree?, pred: Predicate<Tree?>): Tree? {
+        if (pred.test(t)) return t
 
         if (t == null) return null
 
-        val n = t!!.childCount
+        val n = t.childCount
         for (i in 0 until n) {
-            val u = findNodeSuchThat(t!!.getChild(i), pred)
+            val u = findNodeSuchThat(t.getChild(i), pred)
             if (u != null) return u
         }
         return null

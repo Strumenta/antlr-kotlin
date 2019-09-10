@@ -5,7 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.ParseTree
@@ -214,8 +213,8 @@ open class RuleContext : RuleNode {
 
     // recog null unless ParserRuleContext, in which case we use subclass toString(...)
     fun toString(recog: Recognizer<*, *>?, stop: RuleContext = EMPTY_RULECTX): String {
-        val ruleNames = if (recog != null) recog!!.ruleNames else null
-        val ruleNamesList = if (ruleNames != null) Arrays.asList<String>(*ruleNames!!) else null
+        val ruleNames = recog?.ruleNames
+        val ruleNamesList = if (ruleNames != null) listOf(*ruleNames) else null
         return toString(ruleNamesList, stop)
     }
 
