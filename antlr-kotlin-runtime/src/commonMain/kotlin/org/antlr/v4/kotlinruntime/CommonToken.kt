@@ -6,7 +6,6 @@
 package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.misc.Interval
-import org.antlr.v4.kotlinruntime.misc.Pair
 
 open class CommonToken : WritableToken {
 
@@ -45,7 +44,7 @@ open class CommonToken : WritableToken {
      * [Pair] containing these values.
      */
 
-    protected var source: Pair<TokenSource, CharStream>
+    protected var source: Pair<TokenSource?, CharStream?>
 
     /**
      * This is the backing field for [.getText] when the token text is
@@ -73,11 +72,11 @@ open class CommonToken : WritableToken {
      */
     override var stopIndex: Int = 0
 
-    override val tokenSource: TokenSource
-        get() = source.a!!
+    override val tokenSource: TokenSource?
+        get() = source.first
 
     override val inputStream: CharStream?
-        get() = source.b
+        get() = source.second
 
     /**
      * Constructs a new [CommonToken] with the specified token type.
@@ -89,15 +88,15 @@ open class CommonToken : WritableToken {
         this.source = EMPTY_SOURCE
     }
 
-    constructor(source: Pair<TokenSource, CharStream>, type: Int, channel: Int, start: Int, stop: Int) {
+    constructor(source: Pair<TokenSource?, CharStream?>, type: Int, channel: Int, start: Int, stop: Int) {
         this.source = source
         this.type = type
         this.channel = channel
         this.startIndex = start
         this.stopIndex = stop
-        if (source.a != null) {
-            this.line = source.a.line
-            this.charPositionInLine = source.a.charPositionInLine
+        if (source.first != null) {
+            this.line = source.first!!.line
+            this.charPositionInLine = source.first!!.charPositionInLine
         }
     }
 
@@ -226,6 +225,6 @@ open class CommonToken : WritableToken {
          * An empty [Pair] which is used as the default value of
          * [.source] for tokens that do not have a source.
          */
-        protected val EMPTY_SOURCE = Pair<TokenSource, CharStream>(null, null)
+        protected val EMPTY_SOURCE = Pair<TokenSource?, CharStream?>(null, null)
     }
 }

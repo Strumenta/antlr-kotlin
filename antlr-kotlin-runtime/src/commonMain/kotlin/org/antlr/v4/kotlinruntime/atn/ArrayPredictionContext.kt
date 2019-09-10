@@ -17,7 +17,7 @@ class ArrayPredictionContext(
         /** Sorted for merge, no duplicates; if present,
          * [.EMPTY_RETURN_STATE] is always last.
          */
-        val returnStates: IntArray?) : PredictionContext(PredictionContext.calculateHashCode(parents!!, returnStates!!)) {
+        val returnStates: IntArray?) : PredictionContext(calculateHashCode(parents!!, returnStates!!)) {
     //
 //    override// since EMPTY_RETURN_STATE can only appear in the last position, we
 //            // don't need to verify that size==1
@@ -50,19 +50,18 @@ class ArrayPredictionContext(
 //    //		return Arrays.binarySearch(returnStates, returnState);
 //    //	}
 //
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
-        } else if (o !is ArrayPredictionContext) {
+        } else if (other !is ArrayPredictionContext) {
             return false
         }
 
-        if (this.hashCode() != o.hashCode()) {
+        if (this.hashCode() != other.hashCode()) {
             return false // can't be same if hash is different
         }
 
-        val a = o as ArrayPredictionContext?
-        return Arrays.equals(returnStates, a!!.returnStates) && Arrays.equals(parents, a.parents)
+        return Arrays.equals(returnStates, other.returnStates) && Arrays.equals(parents, other.parents)
     }
 //
 //    override fun toString(): String {

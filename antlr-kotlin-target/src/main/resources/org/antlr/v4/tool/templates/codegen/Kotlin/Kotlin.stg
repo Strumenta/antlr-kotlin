@@ -49,10 +49,9 @@ ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 package <file.genPackage>;
 <endif>
 <namedActions.header>
-import com.strumenta.kotlinmultiplatform.Arrays
+import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
-import org.antlr.v4.kotlinruntime.misc.Utils;
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -63,7 +62,6 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
-import com.strumenta.kotlinmultiplatform.toCharArray
 import kotlin.reflect.KClass
 
 <parser>
@@ -312,8 +310,8 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
-private val LITERAL_NAMES = Arrays.asList\<String?>(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
-private val SYMBOLIC_NAMES = Arrays.asList\<String?>(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val LITERAL_NAMES = listOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val SYMBOLIC_NAMES = listOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
 val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 >>
@@ -841,8 +839,8 @@ LexerFile(lexerFile, lexer, namedActions) ::= <<
 package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
-import com.strumenta.kotlinmultiplatform.Arrays
-import org.antlr.v4.kotlinruntime.misc.Utils
+
+import com.strumenta.kotlinmultiplatform.asCharArray
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
@@ -851,7 +849,6 @@ import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
-import com.strumenta.kotlinmultiplatform.toCharArray
 
 <lexer>
 >>
@@ -932,16 +929,14 @@ SerializedATN(model) ::= <<
 <! requires segmented representation !>
 <model.segments:{segment|private const val serializedATNSegment<i0> : String =
 	"<segment>";}; separator="\n">
-private val serializedATN : String = Utils.join(
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
-	""
-)
+private val serializedATN : String =
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)
@@ -959,16 +954,14 @@ SerializedATNEnriched(model) ::= <<
 <! requires segmented representation !>
 <model.segments:{segment|private const val serializedATNSegment<i0> : String  =
 	"<segment>";}; separator="\n">
-private val serializedATN : String = Utils.join(
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).iterator(),
-	""
-);
+private val serializedATN : String =
+	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
 private const val serializedATN : String = "<model.serialized>"
 
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
 init {
 	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
 		DFA(ATN.getDecisionState(it)!!, it)

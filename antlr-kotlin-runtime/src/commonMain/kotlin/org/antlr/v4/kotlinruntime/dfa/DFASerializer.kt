@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.dfa
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
 
@@ -36,7 +35,7 @@ open class DFASerializer {
             if (s.edges != null) n = s.edges!!.size
             for (i in 0 until n) {
                 val t = s.edges!![i]
-                if (t != null && t!!.stateNumber != Int.MAX_VALUE) {
+                if (t != null && t.stateNumber != Int.MAX_VALUE) {
                     buf.append(getStateString(s))
                     val label = getEdgeLabel(i)
                     buf.append("-").append(label).append("->").append(getStateString(t)).append('\n')
@@ -59,7 +58,7 @@ open class DFASerializer {
         val baseStateStr = (if (s.isAcceptState) ":" else "") + "s" + n + if (s.requiresFullContext) "^" else ""
         return if (s.isAcceptState) {
             if (s.predicates != null) {
-                baseStateStr + "=>" + Arrays.toString(s.predicates!!)
+                baseStateStr + "=>" + s.predicates!!.joinToString()
             } else {
                 baseStateStr + "=>" + s.prediction
             }

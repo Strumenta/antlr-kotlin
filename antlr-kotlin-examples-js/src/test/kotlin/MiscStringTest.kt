@@ -1,4 +1,4 @@
-import com.strumenta.kotlinmultiplatform.toCharArray
+import com.strumenta.kotlinmultiplatform.asCharArray
 import kotlin.test.*
 
 fun assertArrayEquals(a: CharArray, b: CharArray) {
@@ -11,19 +11,19 @@ fun assertArrayEquals(a: CharArray, b: CharArray) {
 class MiscStringTest {
 
     @Test fun testToCharArrayEmpty() {
-        assertArrayEquals(charArrayOf(), "".toCharArray())
+        assertArrayEquals(charArrayOf(), "".asCharArray())
     }
 
     @Test fun testToCharArrayEmptyLength() {
-        assertEquals(0, "".toCharArray().size)
+        assertEquals(0, "".asCharArray().size)
     }
 
     @Test fun testToCharArrayEmptyEl0() {
-        assertEquals('a', "abc def".toCharArray()[0])
+        assertEquals('a', "abc def".asCharArray()[0])
     }
 
     @Test fun testToCharArray() {
-        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
+        assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".asCharArray())
     }
 
 }

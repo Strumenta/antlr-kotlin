@@ -26,7 +26,7 @@ class PrecedencePredicateTransition(target: ATNState, val precedence: Int) : Abs
     }
 
     override fun toString(): String {
-        return precedence.toString() + " >= _p"
+        return "$precedence >= _p"
     }
 
 }
