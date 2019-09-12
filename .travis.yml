@@ -6,4 +6,5 @@ script:
   - ./gradlew test
   - ./gradlew publishToMavenLocal
   - cd antlr-kotlin-examples-jvm && ../gradlew --info check && cd ..
+  - cd antlr-kotlin-examples-mpp && ../gradlew --info check && cd ..
 #  - cd antlr-kotlin-examples-js && ../gradlew --info check && cd ..

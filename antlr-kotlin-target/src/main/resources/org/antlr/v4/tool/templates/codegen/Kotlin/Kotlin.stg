@@ -310,8 +310,8 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
-private val LITERAL_NAMES = listOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
-private val SYMBOLIC_NAMES = listOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val LITERAL_NAMES: List\<String?> = listOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val SYMBOLIC_NAMES: List\<String?> = listOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
 val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 >>
@@ -900,6 +900,8 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
 		<lexer.channels:{c | <c>(<lexer.channels.(c)>)}; separator=",\n", wrap, anchor>
 		<endif>
 	}
+
+	override val channelNames = Channels.values().map(Channels::name).toTypedArray()
 
 	enum class Modes(val id: Int) {
 		DEFAULT_MODE(0),

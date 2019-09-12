@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -162,6 +163,9 @@ public class AntlrKotlinTask extends SourceTask {
      * @param outputDirectory The output directory. Must not be null.
      */
     public void setOutputDirectory(File outputDirectory) {
+        if (!outputDirectory.isAbsolute()) {
+            outputDirectory = new File(getProject().getProjectDir(), outputDirectory.getPath());
+        }
         this.outputDirectory = outputDirectory;
     }
 
@@ -180,7 +184,7 @@ public class AntlrKotlinTask extends SourceTask {
      *
      * @param antlrClasspath The Ant task implementation classpath. Must not be null.
      */
-    protected void setAntlrClasspath(FileCollection antlrClasspath) {
+    public void setAntlrClasspath(FileCollection antlrClasspath) {
         this.antlrClasspath = antlrClasspath;
     }
 
