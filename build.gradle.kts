@@ -18,13 +18,16 @@ buildscript {
 val version: String by project
 // we create an alias here...
 val versionProperty = version
+// do the same for group
+val group: String by project
+val groupProperty = group
 
 allprojects {
-    group = "com.strumenta.antlr-kotlin"
     // ... because `version` is another var here.
     // when version is hardcoded here, jitpack can not overwrite it.
     // the default version can now be changed in gradle.properties
     version = versionProperty
+    group = groupProperty
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = "1.8"
