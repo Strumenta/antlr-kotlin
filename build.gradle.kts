@@ -20,7 +20,12 @@ val version: String by project
 val versionProperty = version
 // do the same for group
 val group: String by project
-val groupProperty = group
+val groupProperty = if (group.endsWith(".antlr-kotlin")) {
+    group
+} else {
+    // just another jitpack hack
+    "$group.antlr-kotlin"
+}
 
 allprojects {
     // ... because `version` is another var here.
