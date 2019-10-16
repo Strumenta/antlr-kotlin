@@ -13,9 +13,18 @@ buildscript {
     }
 }
 
+// a small hack: the variable must be named like the property
+// jitpack will pass -Pversion=..., so `val version` is required here.
+val version: String by project
+// we create an alias here...
+val versionProperty = version
+
 allprojects {
     group = "com.strumenta.antlr-kotlin"
-    version = "0.0.5"
+    // ... because `version` is another var here.
+    // when version is hardcoded here, jitpack can not overwrite it.
+    // the default version can now be changed in gradle.properties
+    version = versionProperty
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = "1.8"
