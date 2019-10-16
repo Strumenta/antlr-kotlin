@@ -1,9 +1,9 @@
 //val antlrVersion = "4.7.1"
-val antlrKotlinVersion = "0.0.5"
+val antlrKotlinVersion = "0.0.6"
 
 buildscript {
     // we have to re-declare this here :-(
-    val antlrKotlinVersion = "0.0.5"
+    val antlrKotlinVersion = "0.0.6"
 
     dependencies {
         // add the plugin to the classpath
