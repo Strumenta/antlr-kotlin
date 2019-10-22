@@ -11,7 +11,28 @@ open class BaseTest {
         asserter.assertTrue("$a was expected to be true", a)
     }
 
+    protected fun assertArrayEquals(a: ByteArray, b: ByteArray) {
+        assertEquals(a.size, b.size)
+        for (i in 0 until a.size) {
+            assertEquals(a[i], b[i])
+        }
+    }
+
     protected fun assertArrayEquals(a: CharArray, b: CharArray) {
+        assertEquals(a.size, b.size)
+        for (i in 0 until a.size) {
+            assertEquals(a[i], b[i])
+        }
+    }
+
+    protected fun assertArrayEquals(a: IntArray, b: IntArray) {
+        assertEquals(
+                a.joinToString(", ", "[", "]"),
+                b.joinToString(", ", "[", "]")
+        )
+    }
+
+    protected fun <T> assertArrayEquals(a: Array<T>, b: Array<T>) {
         assertEquals(a.size, b.size)
         for (i in 0 until a.size) {
             assertEquals(a[i], b[i])
