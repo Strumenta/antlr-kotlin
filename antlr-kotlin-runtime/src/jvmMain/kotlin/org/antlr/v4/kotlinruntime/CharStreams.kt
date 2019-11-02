@@ -9,11 +9,9 @@ package org.antlr.v4.kotlinruntime
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
-import java.nio.CharBuffer
 import java.nio.channels.Channels
 import java.nio.channels.ReadableByteChannel
 import java.nio.charset.Charset
-import java.nio.charset.CodingErrorAction
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
@@ -57,8 +55,8 @@ import java.nio.file.Paths
  *
  * @since 4.7
  */
-object CharStreams {
-    private val DEFAULT_BUFFER_SIZE = 4096
+actual object CharStreams : AbstractCharStreams() {
+    private const val DEFAULT_BUFFER_SIZE = 4096
 
     /**
      * Creates a [CharStream] given a path to a file on disk and the
@@ -66,28 +64,11 @@ object CharStreams {
      *
      * Reads the entire contents of the file into the result before returning.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun fromPath(path: Path, charset: Charset = StandardCharsets.UTF_8): CharStream {
-        val size = Files.size(path)
         Files.newByteChannel(path).use { channel ->
-            return fromChannel(
-                    channel,
-                    charset,
-                    DEFAULT_BUFFER_SIZE,
-                    CodingErrorAction.REPLACE,
-                    path.toString(),
-                    size)
+            return fromChannel(channel, charset, path.toString())
         }
-    }
-
-    /**
-     * Creates a [CharStream] given a string containing a
-     * path to a UTF-8 file on disk.
-     *
-     * Reads the entire contents of the file into the result before returning.
-     */
-    @Throws(IOException::class)
-    fun fromFileName(fileName: String): CharStream {
-        return fromPath(Paths.get(fileName), StandardCharsets.UTF_8)
     }
 
     /**
@@ -98,21 +79,19 @@ object CharStreams {
      * Reads the entire contents of the file into the result before returning.
      */
     @Throws(IOException::class)
-    fun fromFileName(fileName: String, charset: Charset): CharStream {
+    fun fromFileName(fileName: String, charset: Charset = StandardCharsets.UTF_8): CharStream {
         return fromPath(Paths.get(fileName), charset)
     }
 
     @Throws(IOException::class)
     @JvmOverloads
-    fun fromStream(`is`: InputStream, charset: Charset = StandardCharsets.UTF_8, inputSize: Long = -1): CharStream {
+    fun fromStream(
+            `is`: InputStream,
+            charset: Charset = StandardCharsets.UTF_8,
+            sourceName: String = IntStream.UNKNOWN_SOURCE_NAME
+    ): CharStream {
         Channels.newChannel(`is`).use { channel ->
-            return fromChannel(
-                    channel,
-                    charset,
-                    DEFAULT_BUFFER_SIZE,
-                    CodingErrorAction.REPLACE,
-                    IntStream.UNKNOWN_SOURCE_NAME,
-                    inputSize)
+            return fromChannel(channel, charset, sourceName)
         }
     }
 
@@ -124,124 +103,24 @@ object CharStreams {
      * the result before returning, then closes the `channel`.
      */
     @Throws(IOException::class)
-    @JvmOverloads
-    fun fromChannel(channel: ReadableByteChannel, charset: Charset = StandardCharsets.UTF_8): CharStream {
-        return fromChannel(
-                channel,
-                DEFAULT_BUFFER_SIZE,
-                CodingErrorAction.REPLACE,
-                IntStream.UNKNOWN_SOURCE_NAME)
-    }
-
-//    /**
-//     * Creates a [CharStream] given a [Reader] and its
-//     * source name. Closes the reader before returning.
-//     */
-//    @Throws(IOException::class)
-//    @JvmOverloads
-//    fun fromReader(r: Reader, sourceName: String = IntStream.UNKNOWN_SOURCE_NAME): CodePointCharStream {
-//        try {
-//            val codePointBufferBuilder = CodePointBuffer.builder(DEFAULT_BUFFER_SIZE)
-//            val charBuffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE)
-//            while (r.read(charBuffer) != -1) {
-//                charBuffer.flip()
-//                codePointBufferBuilder.append(charBuffer)
-//                charBuffer.compact()
-//            }
-//            return CodePointCharStream.fromBuffer(codePointBufferBuilder.build(), sourceName)
-//        } finally {
-//            r.close()
-//        }
-//    }
-
-    /**
-     * Creates a [CharStream] given a [String] and the `sourceName`
-     * from which it came.
-     */
-    @JvmOverloads
-    fun fromString(s: String, sourceName: String = IntStream.UNKNOWN_SOURCE_NAME): CodePointCharStream {
-        // Initial guess assumes no code points > U+FFFF: one code
-        // point for each code unit in the string
-        val codePointBufferBuilder = CodePointBuffer.builder(s.length)
-        // TODO: CharBuffer.wrap(String) rightfully returns a read-only buffer
-        // which doesn't expose its array, so we make a copy.
-        val cb = CharBuffer.allocate(s.length)
-        cb.put(s)
-        cb.flip()
-        codePointBufferBuilder.append(cb)
-        return CodePointCharStream.fromBuffer(codePointBufferBuilder.build(), sourceName)
-    }
-
-    /**
-     * Creates a [CharStream] given an opened [ReadableByteChannel]
-     * containing UTF-8 bytes.
-     *
-     * Reads the entire contents of the `channel` into
-     * the result before returning, then closes the `channel`.
-     */
-    @Throws(IOException::class)
     fun fromChannel(
             channel: ReadableByteChannel,
-            bufferSize: Int,
-            decodingErrorAction: CodingErrorAction,
-            sourceName: String): CodePointCharStream {
-        return fromChannel(channel, StandardCharsets.UTF_8, bufferSize, decodingErrorAction, sourceName, -1)
-    }
-
-    @Throws(IOException::class)
-    fun fromChannel(
-            channel: ReadableByteChannel,
-            charset: Charset,
-            bufferSize: Int,
-            decodingErrorAction: CodingErrorAction,
-            sourceName: String,
-            inputSize: Long): CodePointCharStream {
-        var inputSize = inputSize
-        try {
-            val utf8BytesIn = ByteBuffer.allocate(bufferSize)
-            val utf16CodeUnitsOut = CharBuffer.allocate(bufferSize)
-            if (inputSize == -1L) {
-                inputSize = bufferSize.toLong()
-            } else if (inputSize > Integer.MAX_VALUE) {
-                // ByteBuffer et al don't support long sizes
-                throw IOException(String.format("inputSize %d larger than max %d", inputSize, Integer.MAX_VALUE))
-            }
-            val codePointBufferBuilder = CodePointBuffer.builder(inputSize.toInt())
-            val decoder = charset
-                    .newDecoder()
-                    .onMalformedInput(decodingErrorAction)
-                    .onUnmappableCharacter(decodingErrorAction)
+            charset: Charset = StandardCharsets.UTF_8,
+            sourceName: String = IntStream.UNKNOWN_SOURCE_NAME): CharStream {
+        channel.use { readableByteChannel ->
+            val utf8BytesIn = ByteBuffer.allocate(DEFAULT_BUFFER_SIZE)
 
             var endOfInput = false
+            var bytes = ByteArray(0)
             while (!endOfInput) {
-                val bytesRead = channel.read(utf8BytesIn)
+                utf8BytesIn.rewind()
+                val bytesRead = readableByteChannel.read(utf8BytesIn)
                 endOfInput = bytesRead == -1
+                bytes += utf8BytesIn.array()
                 utf8BytesIn.flip()
-                val result = decoder.decode(
-                        utf8BytesIn,
-                        utf16CodeUnitsOut,
-                        endOfInput)
-                if (result.isError() && decodingErrorAction == CodingErrorAction.REPORT) {
-                    result.throwException()
-                }
-                utf16CodeUnitsOut.flip()
-                codePointBufferBuilder.append(utf16CodeUnitsOut)
                 utf8BytesIn.compact()
-                utf16CodeUnitsOut.compact()
             }
-            // Handle any bytes at the end of the file which need to
-            // be represented as errors or substitution characters.
-            val flushResult = decoder.flush(utf16CodeUnitsOut)
-            if (flushResult.isError() && decodingErrorAction == CodingErrorAction.REPORT) {
-                flushResult.throwException()
-            }
-            utf16CodeUnitsOut.flip()
-            codePointBufferBuilder.append(utf16CodeUnitsOut)
-
-            val codePointBuffer = codePointBufferBuilder.build()
-            return CodePointCharStream.fromBuffer(codePointBuffer, sourceName)
-        } finally {
-            channel.close()
+            return StringCharStream(String(bytes, charset), sourceName)
         }
     }
 }// Utility class; do not construct.
