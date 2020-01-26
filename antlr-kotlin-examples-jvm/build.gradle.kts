@@ -1,9 +1,13 @@
 //val antlrVersion = "4.7.1"
 val antlrKotlinVersion = "0.0.6"
+// you can also use a jitpack version:
+//val antlrKotlinVersion = "86a86f1968"
 
 buildscript {
     // we have to re-declare this here :-(
     val antlrKotlinVersion = "0.0.6"
+    // you can also use a jitpack version (we have to re-declare this here):
+    //val antlrKotlinVersion = "86a86f1968"
 
     dependencies {
         // add the plugin to the classpath
