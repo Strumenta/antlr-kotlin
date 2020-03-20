@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -220,7 +219,7 @@ public class AntlrKotlinTask extends SourceTask {
             }
         });
         if (cleanRebuild.get()) {
-            GFileUtils.cleanDirectory(outputDirectory);
+            GFileUtils.deleteDirectory(outputDirectory);
             grammarFiles.addAll(sourceFiles);
         }
 
