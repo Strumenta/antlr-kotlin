@@ -9,6 +9,7 @@ import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
+import kotlin.native.concurrent.ThreadLocal
 
 class MiniCalcLexer(val input: CharStream) : Lexer(input) {
     // TODO Verify the runtime version is correct
@@ -22,6 +23,7 @@ class MiniCalcLexer(val input: CharStream) : Lexer(input) {
     override val atn: ATN
         get() = MiniCalcLexer.Companion.ATN
 
+    @ThreadLocal
     companion object {
         val decisionToDFA: Array<DFA>
         val sharedContextCache = PredictionContextCache()

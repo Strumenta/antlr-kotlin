@@ -17,19 +17,28 @@ kotlin {
         nodejs {
         }
     }
-    /* TODO: Add Native target
-    // For ARM, should be changed to iosArm32 or iosArm64
-    // For Linux, should be changed to e.g. linuxX64
-    // For MacOS, should be changed to e.g. macosX64
-    // For Windows, should be changed to e.g. mingwX64
-    mingwX64("mingw")
-     */
+
+    // Create a target for the host platform.
+    val hostTarget = System.getProperty("os.name").let { hostOs ->
+        when {
+            hostOs == "Mac OS X" -> macosX64("native")
+            hostOs == "Linux" -> linuxX64("native")
+            hostOs.startsWith("Windows") -> mingwX64("native")
+            else -> null
+        }
+    }
+    hostTarget?.apply {
+        binaries {
+            staticLib()
+        }
+    }
     sourceSets {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("com.soywiz.korlibs.korio:korio:1.8.1")
+                implementation("com.soywiz.korlibs.korio:korio:1.10.1")
+                implementation("com.benasher44:uuid:0.1.0")
             }
         }
         commonTest {
@@ -59,11 +68,9 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        /* TODO: Add Native target
-        val mingwMain by getting {
+        val nativeMain by getting {
         }
-        val mingwTest by getting {
+        val nativeTest by getting {
         }
-        */
     }
 }

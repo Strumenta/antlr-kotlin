@@ -10,6 +10,7 @@ import com.strumenta.kotlinmultiplatform.BitSet
 import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.errMessage
 import com.strumenta.kotlinmultiplatform.outMessage
+import com.strumenta.kotlinmultiplatform.synchronized
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState

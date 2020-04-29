@@ -105,3 +105,5 @@ interface TypeDeclarator {
 expect fun TypeDeclarator.getType(name: String): Type
 
 //expect fun toInt32(c: Char) : Int
+
+expect inline fun <R> synchronized(lock: Any, block: () -> R): R

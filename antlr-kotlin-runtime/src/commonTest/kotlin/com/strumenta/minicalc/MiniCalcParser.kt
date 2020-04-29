@@ -12,6 +12,7 @@ import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
+import kotlin.native.concurrent.ThreadLocal
 import kotlin.reflect.KClass
 
 object solver : TypeDeclarator {
@@ -86,6 +87,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
         RULE_type(9)
     }
 
+    @ThreadLocal
     companion object {
         protected val decisionToDFA: Array<DFA>
         protected val sharedContextCache = PredictionContextCache()

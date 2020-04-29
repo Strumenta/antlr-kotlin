@@ -7,6 +7,7 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.IdentityHashMap
+import com.strumenta.kotlinmultiplatform.synchronized
 import com.strumenta.kotlinmultiplatform.UUID
 import org.antlr.v4.kotlinruntime.dfa.DFAState
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
