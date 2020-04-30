@@ -9,7 +9,7 @@ It means:
 * the **Kotlin target**: this is a plugin for the ANTLR code generator that produces lexers, parsers, and listeners
 * the **Kotlin runtime library**: this is a multi-platform library needed to run the lexers and parsers
 
-Because we produce multi-platform code and a multi-platform runtime, the code written using the Kotlin target for ANTLR can run both on the JVM and in the browser. 
+Because we produce multi-platform code and a multi-platform runtime, the code written using the Kotlin target for ANTLR can run on the JVM, in the browser, and natively on Mac, Windows, and Linux.
 
 ## Status
 
@@ -33,7 +33,6 @@ You will simply need to specify the language to be `Kotlin`.
 ## The Kotlin runtime library
 
 This project contains the runtime for the Kotlin target of ANTLR. This runtime is built as a multi-platform project
-running on the JVM and the JS platforms. We plan to extend it to support other platforms when the multi-platform Kotlin
-projects will permit so.
+running on the JVM, JS, and Kotlin/Native platforms.
 
 You will need to use ANTLR 4 and the Kotlin target to generate ANTLR Lexers and Parsers in Kotlin. 
