@@ -9,7 +9,7 @@ It means:
 * the **Kotlin target**: this is a plugin for the ANTLR code generator that produces lexers, parsers, and listeners
 * the **Kotlin runtime library**: this is a multi-platform library needed to run the lexers and parsers
 
-Because we produce multi-platform code and a multi-platform runtime, the code written using the Kotlin target for ANTLR can run both on the JVM, in the browser, and natively on Mac, Windows, and Linux.
+Because we produce multi-platform code and a multi-platform runtime, the code written using the Kotlin target for ANTLR can run on the JVM, in the browser, and natively on Mac, Windows, and Linux.
 
 ## Status
 
