@@ -5,6 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
+import com.strumenta.kotlinmultiplatform.synchronized
 import org.antlr.v4.kotlinruntime.atn.ParseInfo
 import org.antlr.v4.kotlinruntime.atn.ParserATNSimulator
 import org.antlr.v4.kotlinruntime.atn.ProfilingATNSimulator

@@ -8,6 +8,7 @@ package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.outMessage
+import com.strumenta.kotlinmultiplatform.synchronized
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
@@ -78,7 +79,6 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
     }
 
     fun match(input: CharStream, mode: Int): Int {
-        match_calls++
         this.mode = mode
         val mark = input.mark()
         try {
@@ -689,7 +689,5 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
 
         val MIN_DFA_EDGE = 0
         val MAX_DFA_EDGE = 127 // forces unicode to stay in ATN
-
-        var match_calls = 0
     }
 }

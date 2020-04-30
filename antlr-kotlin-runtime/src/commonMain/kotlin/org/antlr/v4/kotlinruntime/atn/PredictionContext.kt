@@ -38,8 +38,6 @@ abstract class PredictionContext protected constructor(
          */
         val cachedHashCode: Int
 ) {
-    val id = globalNodeCount++
-
     /** This means only the [.EMPTY] (wildcard? not sure) context is in set.  */
     open val isEmpty: Boolean
         get() = this === EMPTY
@@ -150,8 +148,6 @@ abstract class PredictionContext protected constructor(
         val EMPTY_RETURN_STATE = Int.MAX_VALUE
 
         private val INITIAL_HASH = 1
-
-        var globalNodeCount = 0
 
         /** Convert a [RuleContext] tree to a [PredictionContext] graph.
          * Return [.EMPTY] if `outerContext` is empty or null.
@@ -554,60 +550,6 @@ abstract class PredictionContext protected constructor(
             for (p in parents.indices) {
                 parents[p] = uniqueParents[parents[p]]!!
             }
-        }
-
-        fun toDOTString(context: PredictionContext?): String {
-            if (context == null) return ""
-            val buf = StringBuilder()
-            buf.append("digraph G {\n")
-            buf.append("rankdir=LR;\n")
-
-            val nodes = getAllContextNodes(context).sortedBy { it.id }
-
-            for (current in nodes) {
-                if (current is SingletonPredictionContext) {
-                    val s = current.id.toString()
-                    buf.append("  s").append(s)
-                    var returnState = current.getReturnState(0).toString()
-                    if (current is EmptyPredictionContext) returnState = "$"
-                    buf.append(" [accessLabel=\"").append(returnState).append("\"];\n")
-                    continue
-                }
-                val arr = current as ArrayPredictionContext
-                buf.append("  s").append(arr.id)
-                buf.append(" [shape=box, accessLabel=\"")
-                buf.append("[")
-                var first = true
-                for (inv in arr.returnStates!!) {
-                    if (!first) buf.append(", ")
-                    if (inv == EMPTY_RETURN_STATE)
-                        buf.append("$")
-                    else
-                        buf.append(inv)
-                    first = false
-                }
-                buf.append("]")
-                buf.append("\"];\n")
-            }
-
-            for (current in nodes) {
-                if (current === EMPTY) continue
-                for (i in 0 until current.size()) {
-                    if (current.getParent(i) == null) continue
-                    val s = current.id.toString()
-                    buf.append("  s").append(s)
-                    buf.append("->")
-                    buf.append("s")
-                    buf.append(current.getParent(i)!!.id)
-                    if (current.size() > 1)
-                        buf.append(" [accessLabel=\"parent[$i]\"];\n")
-                    else
-                        buf.append(";\n")
-                }
-            }
-
-            buf.append("}\n")
-            return buf.toString()
         }
 
         // From Sam

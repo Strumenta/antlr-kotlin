@@ -6,6 +6,7 @@
 
 package org.antlr.v4.kotlinruntime
 
+import com.strumenta.kotlinmultiplatform.synchronized
 import com.strumenta.kotlinmultiplatform.WeakHashMap
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ATNSimulator
