@@ -87,7 +87,7 @@ object RuntimeMetaData {
      * @return The currently executing version of the ANTLR 4 library
      */
 
-    val runtimeVersion = "4.7.1"
+    val runtimeVersion = "4.8"
 
     /**
      * This method provides the ability to detect mismatches between the version

@@ -1,4 +1,4 @@
-//val antlrVersion = "4.7.1"
+//val antlrVersion = "4.8"
 val antlrKotlinVersion = "0.0.6"
 // you can also use a jitpack version:
 //val antlrKotlinVersion = "86a86f1968"

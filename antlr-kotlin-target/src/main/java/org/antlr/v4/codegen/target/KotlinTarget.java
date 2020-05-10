@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class KotlinTarget extends Target {
 
-	private static final String VERSION = "4.7.1";
+	private static final String VERSION = "4.8";
 
 	/**
 	 * The Kotlin target can cache the code generation templates.

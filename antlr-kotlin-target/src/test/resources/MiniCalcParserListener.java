@@ -1,4 +1,4 @@
-// Generated from src/test/resources/MiniCalcParser.g4 by ANTLR 4.7.1
+// Generated from src/test/resources/MiniCalcParser.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

@@ -1,6 +1,6 @@
 package com.strumenta.minicalc
 
-// Generated from java-escape by ANTLR 4.7.1
+// Generated from java-escape by ANTLR 4.8
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.VocabularyImpl
