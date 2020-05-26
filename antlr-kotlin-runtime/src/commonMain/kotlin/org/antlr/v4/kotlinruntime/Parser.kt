@@ -678,10 +678,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
     }
 
 
-    @Deprecated(
-            "Use\n" +
-                    "\t  {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead."
-    )
+    @Deprecated("Use {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead.")
     fun enterRecursionRule(localctx: ParserRuleContext, ruleIndex: Int) {
         enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex]!!.stateNumber, ruleIndex, 0)
     }

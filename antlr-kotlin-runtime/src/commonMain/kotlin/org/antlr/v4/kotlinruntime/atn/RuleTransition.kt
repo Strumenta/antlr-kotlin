@@ -22,8 +22,7 @@ class RuleTransition(ruleStart: RuleStartState,
         get() = true
 
 
-    @Deprecated("Use\n" +
-            "\t  {@link #RuleTransition(RuleStartState, int, int, ATNState)} instead.")
+    @Deprecated("Use {@link #RuleTransition(RuleStartState, int, int, ATNState)} instead.")
     constructor(ruleStart: RuleStartState,
                 ruleIndex: Int,
                 followState: ATNState) : this(ruleStart, ruleIndex, 0, followState) {
