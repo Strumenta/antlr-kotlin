@@ -18,16 +18,22 @@ kotlin {
         }
     }
 
-    // Create a target for the host platform.
-    val hostTarget = System.getProperty("os.name").let { hostOs ->
-        when {
-            hostOs == "Mac OS X" -> macosX64("native")
-            hostOs == "Linux" -> linuxX64("native")
-            hostOs.startsWith("Windows") -> mingwX64("native")
-            else -> null
+    ios("ios") {
+        binaries {
+            staticLib()
         }
     }
-    hostTarget?.apply {
+    linuxX64("linux") {
+        binaries {
+            staticLib()
+        }
+    }
+    macosX64("mac") {
+        binaries {
+            staticLib()
+        }
+    }
+    mingwX64("windows") {
         binaries {
             staticLib()
         }
@@ -68,9 +74,19 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        val nativeMain by getting {
+        val nativeMain by creating {
         }
-        val nativeTest by getting {
+        val iosMain by getting {
+            dependsOn(nativeMain)
+        }
+        val linuxMain by getting {
+            dependsOn(nativeMain)
+        }
+        val macMain by getting {
+            dependsOn(nativeMain)
+        }
+        val windowsMain by getting {
+            dependsOn(nativeMain)
         }
     }
 }
