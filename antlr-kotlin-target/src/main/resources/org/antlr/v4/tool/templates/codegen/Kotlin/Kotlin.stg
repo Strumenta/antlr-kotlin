@@ -62,6 +62,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
+import kotlin.native.concurrent.ThreadLocal
 import kotlin.reflect.KClass
 
 <parser>
@@ -263,6 +264,7 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
         <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
     }
 
+    @ThreadLocal
 	companion object {
 	    protected val decisionToDFA : Array\<DFA>
     	protected val sharedContextCache = PredictionContextCache()
@@ -849,6 +851,7 @@ import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
+import kotlin.native.concurrent.ThreadLocal
 
 <lexer>
 >>
@@ -866,6 +869,7 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
     override val atn: ATN
 		get() = <lexer.name>.Companion.ATN
 
+    @ThreadLocal
 	companion object {
 		val decisionToDFA : Array\<DFA>
 		val sharedContextCache = PredictionContextCache()
