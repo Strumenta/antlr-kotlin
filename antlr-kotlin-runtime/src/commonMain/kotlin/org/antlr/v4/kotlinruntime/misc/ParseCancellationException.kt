@@ -21,15 +21,13 @@ class ParseCancellationException : RuntimeException {
 
     constructor() {}
 
-    constructor(message: String) {}
+    constructor(message: String) : super (message) {}
 
-    constructor(cause: Throwable) {
-        TODO()
+    constructor(cause: Throwable) : super(cause) {
         //initCause(cause)
     }
 
-    constructor(message: String, cause: Throwable) {
-        TODO()
+    constructor(message: String, cause: Throwable) : super(message, cause) {
         //initCause(cause)
     }
 
