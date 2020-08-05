@@ -186,11 +186,12 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
      * your token objects because you don't have to go modify your lexer
      * so that it creates a new Java type.
      *
+     * This method is not called by the ANTLR 4 Runtime. Specific
+     * implementations of [ANTLRErrorStrategy] may provide a similar
+     * feature when necessary. For example, see
+     * [DefaultErrorStrategy.getTokenErrorDisplay].
      */
-    @Deprecated("This method is not called by the ANTLR 4 Runtime. Specific\n" +
-            "\t  implementations of {@link ANTLRErrorStrategy} may provide a similar\n" +
-            "\t  feature when necessary. For example, see\n" +
-            "\t  {@link DefaultErrorStrategy#getTokenErrorDisplay}.")
+    @Deprecated("""This method is not called by the ANTLR 4 Runtime.""")
     fun getTokenErrorDisplay(t: Token?): String {
         if (t == null) return "<no token>"
         var s: String? = t.text
