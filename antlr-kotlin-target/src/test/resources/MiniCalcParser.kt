@@ -1,4 +1,4 @@
-// Generated from java-escape by ANTLR 4.7.1
+// Generated from java-escape by ANTLR 4.8
 import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator

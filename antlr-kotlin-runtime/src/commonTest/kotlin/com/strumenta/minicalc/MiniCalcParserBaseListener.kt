@@ -4,7 +4,7 @@ import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.tree.ErrorNode
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 
-// Generated from java-escape by ANTLR 4.7.1
+// Generated from java-escape by ANTLR 4.8
 
 /**
  * This class provides an empty implementation of {@link MiniCalcParserListener},

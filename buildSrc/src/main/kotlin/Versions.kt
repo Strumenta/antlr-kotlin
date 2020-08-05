@@ -1,3 +1,3 @@
 object Versions {
-    val antlr = "4.7.1"
+    val antlr = "4.8"
 }
