@@ -6,9 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.lang.Charset
-import com.soywiz.korio.lang.Charsets
 import com.strumenta.kotlinmultiplatform.BitSet
 import com.strumenta.kotlinmultiplatform.asCharArray
 
@@ -45,15 +42,8 @@ object Utils {
         return buf.toString()
     }
 
-    suspend fun writeFile(fileName: String, content: String, charset: Charset = Charsets.UTF8) {
-        resourcesVfs[fileName].writeString(content, charset = charset)
-    }
-
-    suspend fun readFile(fileName: String, charset: Charset = Charsets.UTF8): CharArray {
-        val f = resourcesVfs[fileName]
-        return f.readLines(charset)
-                .joinToString("\n")
-                .asCharArray()
+    suspend fun readFile(fileName: String): CharArray {
+        return Platform.readFile(fileName).asCharArray()
     }
 
     /** Convert array of strings to stringindex map. Useful for

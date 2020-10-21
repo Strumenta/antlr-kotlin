@@ -20,8 +20,6 @@ repositories {
     mavenLocal()
     // used to download antlr4
     mavenCentral()
-    // used to download korio
-    jcenter()
     // used to download antlr-kotlin-runtime
     maven("https://jitpack.io")
 }

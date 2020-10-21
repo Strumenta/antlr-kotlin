@@ -5,8 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.soywiz.korio.lang.Charset
-import com.soywiz.korio.lang.UTF8
 import org.antlr.v4.kotlinruntime.misc.Utils
 
 /**
@@ -15,19 +13,19 @@ import org.antlr.v4.kotlinruntime.misc.Utils
  */
 @Deprecated("as of 4.7 Please use {@link CharStreams} interface.")
 class ANTLRFileStream
-private constructor(override val sourceName: String, val charset: Charset = UTF8)
+private constructor(override val sourceName: String)
     : ANTLRInputStream() {
 
     companion object {
-        suspend fun invoke(fileName: String, charset: Charset = UTF8): ANTLRFileStream {
-            val fs = ANTLRFileStream(fileName, charset)
+        suspend fun invoke(fileName: String): ANTLRFileStream {
+            val fs = ANTLRFileStream(fileName)
             fs.load()
             return fs
         }
     }
 
     private suspend fun load() {
-        data = Utils.readFile(sourceName, charset)
+        data = Utils.readFile(sourceName)
         this.n = data!!.size
     }
 }

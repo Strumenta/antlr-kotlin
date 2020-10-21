@@ -43,7 +43,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("com.soywiz.korlibs.korio:korio:1.10.1")
                 implementation("com.benasher44:uuid:0.1.0")
             }
         }
