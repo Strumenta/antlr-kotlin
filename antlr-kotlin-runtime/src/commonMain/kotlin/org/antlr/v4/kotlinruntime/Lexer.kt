@@ -34,7 +34,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun assignInputStream(input: CharStream?) {
         this.inputStream = null
-        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, inputStream)
+        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, null)
         reset()
         this.inputStream = input as CharStream
         this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, readInputStream())
