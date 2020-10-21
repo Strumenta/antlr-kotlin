@@ -18,6 +18,7 @@ package com.strumenta.antlrkotlin.gradleplugin.internal;
 
 import org.gradle.api.file.FileCollection;
 import org.gradle.process.internal.JavaExecHandleBuilder;
+import org.gradle.process.internal.worker.RequestHandler;
 import org.gradle.process.internal.worker.SingleRequestWorkerProcessBuilder;
 import org.gradle.process.internal.worker.WorkerProcessFactory;
 import org.slf4j.Logger;
@@ -31,12 +32,12 @@ public class AntlrWorkerManager {
 
     public AntlrResult runWorker(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
         LOGGER.debug("Running worker");
-        AntlrWorker antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec);
-        return antlrWorker.runAntlr(spec);
+        RequestHandler<AntlrSpec, AntlrResult> antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec);
+        return antlrWorker.run(spec);
     }
 
-    private AntlrWorker createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
-        SingleRequestWorkerProcessBuilder<AntlrWorker> builder = workerFactory.singleRequestWorker(AntlrWorker.class, AntlrExecuter.class);
+    private RequestHandler<AntlrSpec, AntlrResult> createWorkerProcess(File workingDir, WorkerProcessFactory workerFactory, FileCollection antlrClasspath, AntlrSpec spec) {
+        SingleRequestWorkerProcessBuilder<AntlrSpec, AntlrResult> builder = workerFactory.singleRequestWorker(AntlrExecuter.class);
         builder.setBaseName("Gradle ANTLR-Kotlin Worker");
 
         if (antlrClasspath != null) {
@@ -45,7 +46,7 @@ public class AntlrWorkerManager {
         } else {
             LOGGER.debug("Setting no antlr classpath");
         }
-        builder.sharedPackages(new String[]{"antlr", "org.antlr"});
+        builder.sharedPackages("antlr", "org.antlr");
         JavaExecHandleBuilder javaCommand = builder.getJavaCommand();
         javaCommand.setWorkingDir(workingDir);
         javaCommand.setMaxHeapSize(spec.getMaxHeapSize());
