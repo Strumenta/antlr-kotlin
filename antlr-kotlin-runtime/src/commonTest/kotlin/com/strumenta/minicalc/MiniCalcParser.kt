@@ -14,6 +14,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
+import kotlin.native.concurrent.ThreadLocal
 import kotlin.reflect.KClass
 
 class MiniCalcParser(input: TokenStream) : Parser(input) {
@@ -91,6 +92,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
         RULE_type(9)
     }
 
+    @ThreadLocal
     companion object {
         protected val decisionToDFA : Array<DFA>
         protected val sharedContextCache = PredictionContextCache()
