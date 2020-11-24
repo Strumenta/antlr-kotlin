@@ -74,10 +74,13 @@ configure<SourceSetContainer> {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8"))
-    compile(kotlin("reflect"))
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
     testImplementation(kotlin("test-junit5"))
     // add antlr-kotlin-runtime-jvm
     // otherwise, the generated sources will not compile
-    compile("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
+    implementation("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
 }
+
+// to allow -x jsBrowserTest, see .ci.sh
+tasks.register("jsBrowserTest")

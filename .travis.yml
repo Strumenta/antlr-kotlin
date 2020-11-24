@@ -3,9 +3,4 @@ jdk:
   - openjdk8
 install: true
 script:
-# JS tests will fail because no headless chrome can be found, so we skip tests
-  - ./gradlew test -x jsBrowserTest
-  - ./gradlew publishToMavenLocal -x jsBrowserTest
-  - cd antlr-kotlin-examples-jvm && ../gradlew --info check && cd ..
-  - cd antlr-kotlin-examples-mpp && ../gradlew --info check && cd ..
-#  - cd antlr-kotlin-examples-js && ../gradlew --info check && cd ..
+  - ./ci.sh

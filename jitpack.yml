@@ -1,3 +1,2 @@
 install:
-  # jitpack JS tests will fail because no headless chrome can be found, so we skip tests
-  - ./gradlew build publishToMavenLocal -x jsBrowserTest -Pversion=$VERSION -Pgroup=$GROUP
+  - ./ci.sh -Pversion=$VERSION -Pgroup=$GROUP
