@@ -1,17 +1,46 @@
+// a small hack: the variable must be named like the property
+// jitpack will pass -Pversion=..., so `val version` is required here.
+val version: String by project
+// we create an alias here...
+val versionProperty = version
+// do the same for group
+val group: String by project
+val groupProperty = if (group.endsWith(".antlr-kotlin")) {
+    group
+} else {
+    // just another jitpack hack
+    "$group.antlr-kotlin"
+}
+
 //val antlrVersion = "4.7.1"
-val antlrKotlinVersion = "0.0.7"
+val antlrKotlinVersion = versionProperty
 // you can also use a jitpack version:
 //val antlrKotlinVersion = "86a86f1968"
 
 buildscript {
     // we have to re-declare this here :-(
-    val antlrKotlinVersion = "0.0.7"
+
+    // a small hack: the variable must be named like the property
+    // jitpack will pass -Pversion=..., so `val version` is required here.
+    val version: String by project
+    // we create an alias here...
+    val versionProperty = version
+    // do the same for group
+    val group: String by project
+    val groupProperty = if (group.endsWith(".antlr-kotlin")) {
+        group
+    } else {
+        // just another jitpack hack
+        "$group.antlr-kotlin"
+    }
+
+    val antlrKotlinVersion = versionProperty
     // you can also use a jitpack version (we have to re-declare this here):
     //val antlrKotlinVersion = "86a86f1968"
 
     dependencies {
         // add the plugin to the classpath
-        classpath("com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:$antlrKotlinVersion")
+        classpath("$groupProperty:antlr-kotlin-gradle-plugin:$antlrKotlinVersion")
     }
 }
 
@@ -41,7 +70,7 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
             // project.dependencies.create("org.antlr:antlr4:$antlrVersion"),
 
             // antlr target, required to create kotlin code
-            project.dependencies.create("com.strumenta.antlr-kotlin:antlr-kotlin-target:$antlrKotlinVersion")
+            project.dependencies.create("$groupProperty:antlr-kotlin-target:$antlrKotlinVersion")
     )
     maxHeapSize = "64m"
     packageName = "com.strumenta.antlrkotlin.examples"
@@ -79,7 +108,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     // add antlr-kotlin-runtime-jvm
     // otherwise, the generated sources will not compile
-    implementation("com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
+    implementation("$groupProperty:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
 }
 
 // to allow -x jsBrowserTest, see .ci.sh
