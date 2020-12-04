@@ -59,8 +59,7 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
      * @return A [Vocabulary] instance providing information about the
      * vocabulary used by the grammar.
      */
-    open val vocabulary: Vocabulary
-        get() = VocabularyImpl.fromTokenNames(tokenNames)
+    abstract val vocabulary: Vocabulary
 
     /**
      * Get a map from token names to token types.

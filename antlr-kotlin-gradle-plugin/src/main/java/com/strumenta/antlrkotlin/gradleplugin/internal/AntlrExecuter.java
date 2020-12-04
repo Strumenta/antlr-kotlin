@@ -22,6 +22,7 @@ import org.gradle.internal.os.OperatingSystem;
 import org.gradle.internal.reflect.JavaMethod;
 import org.gradle.internal.reflect.NoSuchPropertyException;
 import org.gradle.internal.reflect.PropertyMutator;
+import org.gradle.process.internal.worker.RequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,12 +32,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class AntlrExecuter implements AntlrWorker {
+public class AntlrExecuter implements RequestHandler<AntlrSpec, AntlrResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrExecuter.class);
 
     @Override
-    public AntlrResult runAntlr(AntlrSpec spec) {
+    public AntlrResult run(AntlrSpec spec) {
         AntlrTool antlrTool = new Antlr4Tool();
         if (antlrTool.available()) {
             LOGGER.info("Processing with ANTLR 4");

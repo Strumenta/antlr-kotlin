@@ -106,7 +106,7 @@ open class FlexibleHashMap<K, V> constructor(
         throw UnsupportedOperationException()
     }
 
-    override fun putAll(m: Map<out K, out V>) {
+    override fun putAll(from: Map<out K, V>) {
         throw UnsupportedOperationException()
     }
 //

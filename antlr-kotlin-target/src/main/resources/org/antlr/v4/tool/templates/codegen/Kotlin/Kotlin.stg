@@ -251,6 +251,8 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
         get() = <parser.name>.Companion.ruleNames
     override val atn: ATN
         get() = <parser.name>.Companion.ATN
+    override val vocabulary: Vocabulary
+        get() = <parser.name>.Companion.VOCABULARY
 
     <if(parser.tokens)>
     enum class Tokens(val id: Int) {
@@ -263,6 +265,7 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
         <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
     }
 
+	@ThreadLocal
 	companion object {
 	    protected val decisionToDFA : Array\<DFA>
     	protected val sharedContextCache = PredictionContextCache()
@@ -843,6 +846,8 @@ package <lexerFile.genPackage>
 import com.strumenta.kotlinmultiplatform.asCharArray
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.Lexer
+import org.antlr.v4.kotlinruntime.ThreadLocal
+import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
@@ -866,6 +871,10 @@ class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
     override val atn: ATN
 		get() = <lexer.name>.Companion.ATN
 
+    override val vocabulary: Vocabulary
+        get() = <lexer.name>.Companion.VOCABULARY
+
+	@ThreadLocal
 	companion object {
 		val decisionToDFA : Array\<DFA>
 		val sharedContextCache = PredictionContextCache()

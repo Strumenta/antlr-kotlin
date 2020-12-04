@@ -298,9 +298,9 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 ////        return true
 //    }
 
-    override fun addAll(c: Collection<out T>): Boolean {
+    override fun addAll(elements: Collection<T>): Boolean {
         var changed = false
-        for (o in c) {
+        for (o in elements) {
             val existing = getOrAdd(o)
             if (existing !== o) changed = true
         }

@@ -69,12 +69,12 @@ class MiniCalcParserTest : BaseTest() {
         val inputDecl = statement.findInputDeclaration()!!
 
         val inputKw = inputDecl.INPUT()
-        assertEquals("input", inputKw.text)
+        assertEquals("input", inputKw!!.text)
 
         val type = inputDecl.findType()!!
 
         val intKw = (type as MiniCalcParser.IntegerContext).INT()
-        assertEquals("Int", intKw.text)
+        assertEquals("Int", intKw!!.text)
 
         val id = inputDecl.ID()!!
         assertEquals("width", id.text)
