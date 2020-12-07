@@ -111,5 +111,6 @@ dependencies {
     implementation("$groupProperty:antlr-kotlin-runtime-jvm:$antlrKotlinVersion")
 }
 
-// to allow -x jsBrowserTest, see .ci.sh
-tasks.register("jsBrowserTest")
+// to allow -x jsIrBrowserTest -x jsLegacyBrowserTest, see .ci.sh
+tasks.register("jsIrBrowserTest")
+tasks.register("jsLegacyBrowserTest")
