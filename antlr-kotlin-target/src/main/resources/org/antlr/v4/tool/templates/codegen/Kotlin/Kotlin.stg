@@ -45,6 +45,14 @@ javaTypeInitMap ::= [
 
 ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
+@file:Suppress(
+  "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE",
+  "SENSELESS_COMPARISON",
+  "UNUSED_PARAMETER",
+  "UNUSED_VALUE",
+  "USELESS_CAST",
+)
+
 <if(file.genPackage)>
 package <file.genPackage>;
 <endif>
@@ -197,6 +205,8 @@ fun visit<lname; format="cap">(ctx : <file.parserName>.<lname; format="cap">Cont
 
 BaseVisitorFile(file, header, namedActions) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
+@file:Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+
 <if(file.genPackage)>
 package <file.genPackage>
 <endif>
@@ -300,9 +310,9 @@ class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
 	<funcs; separator="\n">
 
 <if(sempredFuncs)>
-	override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int) : Boolean {
+	override fun sempred(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) : Boolean {
 		when (ruleIndex) {
-		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
+		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, actionIndex)}; separator="\n">
 		}
 		return true
 	}
@@ -838,6 +848,8 @@ if ( _parseListeners!=null ) triggerExitRuleEvent()
 
 LexerFile(lexerFile, lexer, namedActions) ::= <<
 <fileHeader(lexerFile.grammarFileName, lexerFile.ANTLRVersion)>
+@file:Suppress("unused", "UNCHECKED_CAST")
+
 <if(lexerFile.genPackage)>
 package <lexerFile.genPackage>
 <endif>
