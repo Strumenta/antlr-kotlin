@@ -3,7 +3,7 @@
 set -eu
 
 # JS tests will fail because no headless chrome can be found, so we skip tests
-extra="-x jsBrowserTest"
+extra="-x jsIrBrowserTest -x jsLegacyBrowserTest"
 if [ -n "$*" ]; then
   extra="$extra $*"
 fi

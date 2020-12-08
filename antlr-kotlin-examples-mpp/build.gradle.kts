@@ -129,5 +129,6 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
 // you can call the task manually in this case to update the generated sources
 tasks.getByName("compileKotlinJvm").dependsOn("generateKotlinCommonGrammarSource")
 
-// to allow -x jsBrowserTest, see .ci.sh
-tasks.register("jsBrowserTest")
+// to allow -x jsIrBrowserTest -x jsLegacyBrowserTest, see .ci.sh
+tasks.register("jsIrBrowserTest")
+tasks.register("jsLegacyBrowserTest")
