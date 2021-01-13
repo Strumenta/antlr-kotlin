@@ -1,5 +1,5 @@
-import com.strumenta.minicalc.MiniCalcParser
-import com.strumenta.minicalc.MiniCalcParserBaseListener
+import com.strumenta.antlrkotlin.examples.MiniCalcParser
+import com.strumenta.antlrkotlin.examples.MiniCalcParserBaseListener
 import org.antlr.v4.kotlinruntime.tree.ParseTree
 
 /**

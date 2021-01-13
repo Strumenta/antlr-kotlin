@@ -82,9 +82,9 @@ tasks.register<com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask>("generate
             }
     // outputDirectory is required, put it into the build directory
     // if you do not want to add the generated sources to version control
-    outputDirectory = File("build/generated-src/antlr/main")
+    //outputDirectory = File("build/generated-src/antlr/main")
     // use this settings if you want to add the generated sources to version control
-    // outputDirectory = File("src/main/kotlin-antlr")
+    outputDirectory = File("src/main/kotlin-antlr")
 }
 
 // run generate task before build
@@ -96,8 +96,8 @@ tasks.getByName("compileKotlin").dependsOn("generateKotlinGrammarSource")
 configure<SourceSetContainer> {
     named("main") {
         withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
-            kotlin.srcDir("build/generated-src/antlr/main")
-            // kotlin.srcDir("src/main/kotlin-antlr")
+            // kotlin.srcDir("build/generated-src/antlr/main")
+            kotlin.srcDir("src/main/kotlin-antlr")
         }
     }
 }

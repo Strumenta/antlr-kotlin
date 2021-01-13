@@ -1,4 +1,4 @@
-import com.strumenta.minicalc.MiniCalcLexer
+import com.strumenta.antlrkotlin.examples.MiniCalcLexer
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext

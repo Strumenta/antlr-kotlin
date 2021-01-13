@@ -1,4 +1,4 @@
-package com.strumenta.minicalc
+package com.strumenta.antlrkotlin.examples
 
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.tree.ErrorNode

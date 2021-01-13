@@ -1,5 +1,5 @@
-import com.strumenta.minicalc.MiniCalcLexer
-import com.strumenta.minicalc.MiniCalcParser
+import com.strumenta.antlrkotlin.examples.MiniCalcLexer
+import com.strumenta.antlrkotlin.examples.MiniCalcParser
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
