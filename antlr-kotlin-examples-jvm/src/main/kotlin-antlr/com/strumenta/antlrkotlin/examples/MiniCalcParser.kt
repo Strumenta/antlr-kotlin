@@ -1,5 +1,6 @@
 // Generated from java-escape by ANTLR 4.7.1
-import com.strumenta.kotlinmultiplatform.Arrays
+package com.strumenta.antlrkotlin.examples;
+import com.strumenta.kotlinmultiplatform.asCharArray
 import com.strumenta.kotlinmultiplatform.getType
 import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import org.antlr.v4.kotlinruntime.*
@@ -11,22 +12,24 @@ import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
+import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 import kotlin.reflect.KClass
 
-object solver : TypeDeclarator {
-	override val classesByName : List<KClass<*>> = listOf(MiniCalcParser.MiniCalcFileContext::class,
-                                                       MiniCalcParser.LineContext::class,
-                                                       MiniCalcParser.StatementContext::class,
-                                                       MiniCalcParser.PrintContext::class,
-                                                       MiniCalcParser.InputDeclarationContext::class,
-                                                       MiniCalcParser.VarDeclarationContext::class,
-                                                       MiniCalcParser.AssignmentContext::class,
-                                                       MiniCalcParser.ExpressionContext::class,
-                                                       MiniCalcParser.StringLiteralContentContext::class,
-                                                       MiniCalcParser.TypeContext::class)
-}
-
 class MiniCalcParser(input: TokenStream) : Parser(input) {
+
+    object solver : TypeDeclarator {
+        override val classesByName : List<KClass<*>> = listOf(MiniCalcParser.MiniCalcFileContext::class,
+                                                              MiniCalcParser.LineContext::class,
+                                                              MiniCalcParser.StatementContext::class,
+                                                              MiniCalcParser.PrintContext::class,
+                                                              MiniCalcParser.InputDeclarationContext::class,
+                                                              MiniCalcParser.VarDeclarationContext::class,
+                                                              MiniCalcParser.AssignmentContext::class,
+                                                              MiniCalcParser.ExpressionContext::class,
+                                                              MiniCalcParser.StringLiteralContentContext::class,
+                                                              MiniCalcParser.TypeContext::class)
+    }
+
 	// TODO verify version of runtime is compatible
 
     override val grammarFileName: String
@@ -38,6 +41,8 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
         get() = MiniCalcParser.Companion.ruleNames
     override val atn: ATN
         get() = MiniCalcParser.Companion.ATN
+    override val vocabulary: Vocabulary
+        get() = MiniCalcParser.Companion.VOCABULARY
 
     enum class Tokens(val id: Int) {
         EOF(-1),
@@ -85,6 +90,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
         RULE_type(9)
     }
 
+	@ThreadLocal
 	companion object {
 	    protected val decisionToDFA : Array<DFA>
     	protected val sharedContextCache = PredictionContextCache()
@@ -93,38 +99,38 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
                                 "inputDeclaration", "varDeclaration", "assignment", 
                                 "expression", "stringLiteralContent", "type")
 
-        private val LITERAL_NAMES = Arrays.asList<String?>(null, null, null, 
-                                                           "'input'", "'var'", 
-                                                           "'print'", null, 
-                                                           null, null, null, 
-                                                           null, null, null, 
-                                                           null, null, null, 
-                                                           null, null, null, 
-                                                           null, null, null, 
-                                                           "'\\\"'", "'\\\\'", 
-                                                           "'\\n'", "'\\#'", 
-                                                           null, "'#{'", 
-                                                           null, "'}'")
-        private val SYMBOLIC_NAMES = Arrays.asList<String?>(null, "NEWLINE", 
-                                                            "WS", "INPUT", 
-                                                            "VAR", "PRINT", 
-                                                            "AS", "INT", 
-                                                            "DECIMAL", "STRING", 
-                                                            "ID", "INTLIT", 
-                                                            "DECLIT", "PLUS", 
-                                                            "MINUS", "ASTERISK", 
-                                                            "DIVISION", 
-                                                            "ASSIGN", "LPAREN", 
-                                                            "RPAREN", "STRING_OPEN", 
-                                                            "UNMATCHED", 
-                                                            "ESCAPE_STRING_DELIMITER", 
-                                                            "ESCAPE_SLASH", 
-                                                            "ESCAPE_NEWLINE", 
-                                                            "ESCAPE_SHARP", 
-                                                            "STRING_CLOSE", 
-                                                            "INTERPOLATION_OPEN", 
-                                                            "STRING_CONTENT", 
-                                                            "INTERPOLATION_CLOSE")
+        private val LITERAL_NAMES: List<String?> = listOf(null, null, null, 
+                                                          "'input'", "'var'", 
+                                                          "'print'", null, 
+                                                          null, null, null, 
+                                                          null, null, null, 
+                                                          null, null, null, 
+                                                          null, null, null, 
+                                                          null, null, null, 
+                                                          "'\\\"'", "'\\\\'", 
+                                                          "'\\n'", "'\\#'", 
+                                                          null, "'#{'", 
+                                                          null, "'}'")
+        private val SYMBOLIC_NAMES: List<String?> = listOf(null, "NEWLINE", 
+                                                           "WS", "INPUT", 
+                                                           "VAR", "PRINT", 
+                                                           "AS", "INT", 
+                                                           "DECIMAL", "STRING", 
+                                                           "ID", "INTLIT", 
+                                                           "DECLIT", "PLUS", 
+                                                           "MINUS", "ASTERISK", 
+                                                           "DIVISION", "ASSIGN", 
+                                                           "LPAREN", "RPAREN", 
+                                                           "STRING_OPEN", 
+                                                           "UNMATCHED", 
+                                                           "ESCAPE_STRING_DELIMITER", 
+                                                           "ESCAPE_SLASH", 
+                                                           "ESCAPE_NEWLINE", 
+                                                           "ESCAPE_SHARP", 
+                                                           "STRING_CLOSE", 
+                                                           "INTERPOLATION_OPEN", 
+                                                           "STRING_CONTENT", 
+                                                           "INTERPOLATION_CLOSE")
 
         val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
 
@@ -140,54 +146,9 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
             el
         }
 
-        private val serializedIntegersATN =
-        	arrayOf(3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 
-        	3, 31, 99, 4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 
-        	9, 6, 4, 7, 9, 7, 4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 
-        	9, 11, 3, 2, 6, 2, 24, 10, 2, 13, 2, 14, 2, 25, 3, 3, 3, 3, 3, 
-        	3, 3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 35, 10, 4, 3, 5, 3, 5, 3, 5, 3, 
-        	5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3, 8, 3, 8, 
-        	3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 
-        	9, 3, 9, 7, 9, 63, 10, 9, 12, 9, 14, 9, 66, 11, 9, 3, 9, 3, 9, 
-        	3, 9, 5, 9, 71, 10, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 
-        	3, 9, 3, 9, 7, 9, 82, 10, 9, 12, 9, 14, 9, 85, 11, 9, 3, 10, 3, 
-        	10, 3, 10, 3, 10, 3, 10, 5, 10, 92, 10, 10, 3, 11, 3, 11, 3, 11, 
-        	5, 11, 97, 10, 11, 3, 11, 2, 3, 16, 12, 2, 4, 6, 8, 10, 12, 14, 
-        	16, 18, 20, 2, 5, 3, 3, 3, 3, 3, 2, 17, 18, 3, 2, 15, 16, 2, 104, 
-        	2, 23, 3, 2, 2, 2, 4, 27, 3, 2, 2, 2, 6, 34, 3, 2, 2, 2, 8, 36, 
-        	3, 2, 2, 2, 10, 41, 3, 2, 2, 2, 12, 45, 3, 2, 2, 2, 14, 48, 3, 
-        	2, 2, 2, 16, 70, 3, 2, 2, 2, 18, 91, 3, 2, 2, 2, 20, 96, 3, 2, 
-        	2, 2, 22, 24, 5, 4, 3, 2, 23, 22, 3, 2, 2, 2, 24, 25, 3, 2, 2, 
-        	2, 25, 23, 3, 2, 2, 2, 25, 26, 3, 2, 2, 2, 26, 3, 3, 2, 2, 2, 27, 
-        	28, 5, 6, 4, 2, 28, 29, 9, 2, 2, 2, 29, 5, 3, 2, 2, 2, 30, 35, 
-        	5, 10, 6, 2, 31, 35, 5, 12, 7, 2, 32, 35, 5, 14, 8, 2, 33, 35, 
-        	5, 8, 5, 2, 34, 30, 3, 2, 2, 2, 34, 31, 3, 2, 2, 2, 34, 32, 3, 
-        	2, 2, 2, 34, 33, 3, 2, 2, 2, 35, 7, 3, 2, 2, 2, 36, 37, 7, 7, 2, 
-        	2, 37, 38, 7, 20, 2, 2, 38, 39, 5, 16, 9, 2, 39, 40, 7, 21, 2, 
-        	2, 40, 9, 3, 2, 2, 2, 41, 42, 7, 5, 2, 2, 42, 43, 5, 20, 11, 2, 
-        	43, 44, 7, 12, 2, 2, 44, 11, 3, 2, 2, 2, 45, 46, 7, 6, 2, 2, 46, 
-        	47, 5, 14, 8, 2, 47, 13, 3, 2, 2, 2, 48, 49, 7, 12, 2, 2, 49, 50, 
-        	7, 19, 2, 2, 50, 51, 5, 16, 9, 2, 51, 15, 3, 2, 2, 2, 52, 53, 8, 
-        	9, 1, 2, 53, 54, 7, 20, 2, 2, 54, 55, 5, 16, 9, 2, 55, 56, 7, 21, 
-        	2, 2, 56, 71, 3, 2, 2, 2, 57, 71, 7, 12, 2, 2, 58, 59, 7, 16, 2, 
-        	2, 59, 71, 5, 16, 9, 6, 60, 64, 7, 22, 2, 2, 61, 63, 5, 18, 10, 
-        	2, 62, 61, 3, 2, 2, 2, 63, 66, 3, 2, 2, 2, 64, 62, 3, 2, 2, 2, 
-        	64, 65, 3, 2, 2, 2, 65, 67, 3, 2, 2, 2, 66, 64, 3, 2, 2, 2, 67, 
-        	71, 7, 28, 2, 2, 68, 71, 7, 13, 2, 2, 69, 71, 7, 14, 2, 2, 70, 
-        	52, 3, 2, 2, 2, 70, 57, 3, 2, 2, 2, 70, 58, 3, 2, 2, 2, 70, 60, 
-        	3, 2, 2, 2, 70, 68, 3, 2, 2, 2, 70, 69, 3, 2, 2, 2, 71, 83, 3, 
-        	2, 2, 2, 72, 73, 12, 11, 2, 2, 73, 74, 9, 3, 2, 2, 74, 82, 5, 16, 
-        	9, 12, 75, 76, 12, 10, 2, 2, 76, 77, 9, 4, 2, 2, 77, 82, 5, 16, 
-        	9, 11, 78, 79, 12, 9, 2, 2, 79, 80, 7, 8, 2, 2, 80, 82, 5, 20, 
-        	11, 2, 81, 72, 3, 2, 2, 2, 81, 75, 3, 2, 2, 2, 81, 78, 3, 2, 2, 
-        	2, 82, 85, 3, 2, 2, 2, 83, 81, 3, 2, 2, 2, 83, 84, 3, 2, 2, 2, 
-        	84, 17, 3, 2, 2, 2, 85, 83, 3, 2, 2, 2, 86, 92, 7, 30, 2, 2, 87, 
-        	88, 7, 29, 2, 2, 88, 89, 5, 16, 9, 2, 89, 90, 7, 31, 2, 2, 90, 
-        	92, 3, 2, 2, 2, 91, 86, 3, 2, 2, 2, 91, 87, 3, 2, 2, 2, 92, 19, 
-        	3, 2, 2, 2, 93, 97, 7, 9, 2, 2, 94, 97, 7, 10, 2, 2, 95, 97, 7, 
-        	11, 2, 2, 96, 93, 3, 2, 2, 2, 96, 94, 3, 2, 2, 2, 96, 95, 3, 2, 
-        	2, 2, 97, 21, 3, 2, 2, 2, 10, 25, 34, 64, 70, 81, 83, 91, 96)
-        val ATN = ATNDeserializer().deserializeIntegers(serializedIntegersATN)
+        private const val serializedATN : String = "\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\u0003\u001f\u0063\u0004\u0002\u0009\u0002\u0004\u0003\u0009\u0003\u0004\u0004\u0009\u0004\u0004\u0005\u0009\u0005\u0004\u0006\u0009\u0006\u0004\u0007\u0009\u0007\u0004\u0008\u0009\u0008\u0004\u0009\u0009\u0009\u0004\u000a\u0009\u000a\u0004\u000b\u0009\u000b\u0003\u0002\u0006\u0002\u0018\u000a\u0002\u000d\u0002\u000e\u0002\u0019\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0023\u000a\u0004\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0007\u0009\u003f\u000a\u0009\u000c\u0009\u000e\u0009\u0042\u000b\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u0047\u000a\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0007\u0009\u0052\u000a\u0009\u000c\u0009\u000e\u0009\u0055\u000b\u0009\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0005\u000a\u005c\u000a\u000a\u0003\u000b\u0003\u000b\u0003\u000b\u0005\u000b\u0061\u000a\u000b\u0003\u000b\u0002\u0003\u0010\u000c\u0002\u0004\u0006\u0008\u000a\u000c\u000e\u0010\u0012\u0014\u0002\u0005\u0003\u0003\u0003\u0003\u0003\u0002\u0011\u0012\u0003\u0002\u000f\u0010\u0002\u0068\u0002\u0017\u0003\u0002\u0002\u0002\u0004\u001b\u0003\u0002\u0002\u0002\u0006\u0022\u0003\u0002\u0002\u0002\u0008\u0024\u0003\u0002\u0002\u0002\u000a\u0029\u0003\u0002\u0002\u0002\u000c\u002d\u0003\u0002\u0002\u0002\u000e\u0030\u0003\u0002\u0002\u0002\u0010\u0046\u0003\u0002\u0002\u0002\u0012\u005b\u0003\u0002\u0002\u0002\u0014\u0060\u0003\u0002\u0002\u0002\u0016\u0018\u0005\u0004\u0003\u0002\u0017\u0016\u0003\u0002\u0002\u0002\u0018\u0019\u0003\u0002\u0002\u0002\u0019\u0017\u0003\u0002\u0002\u0002\u0019\u001a\u0003\u0002\u0002\u0002\u001a\u0003\u0003\u0002\u0002\u0002\u001b\u001c\u0005\u0006\u0004\u0002\u001c\u001d\u0009\u0002\u0002\u0002\u001d\u0005\u0003\u0002\u0002\u0002\u001e\u0023\u0005\u000a\u0006\u0002\u001f\u0023\u0005\u000c\u0007\u0002\u0020\u0023\u0005\u000e\u0008\u0002\u0021\u0023\u0005\u0008\u0005\u0002\u0022\u001e\u0003\u0002\u0002\u0002\u0022\u001f\u0003\u0002\u0002\u0002\u0022\u0020\u0003\u0002\u0002\u0002\u0022\u0021\u0003\u0002\u0002\u0002\u0023\u0007\u0003\u0002\u0002\u0002\u0024\u0025\u0007\u0007\u0002\u0002\u0025\u0026\u0007\u0014\u0002\u0002\u0026\u0027\u0005\u0010\u0009\u0002\u0027\u0028\u0007\u0015\u0002\u0002\u0028\u0009\u0003\u0002\u0002\u0002\u0029\u002a\u0007\u0005\u0002\u0002\u002a\u002b\u0005\u0014\u000b\u0002\u002b\u002c\u0007\u000c\u0002\u0002\u002c\u000b\u0003\u0002\u0002\u0002\u002d\u002e\u0007\u0006\u0002\u0002\u002e\u002f\u0005\u000e\u0008\u0002\u002f\u000d\u0003\u0002\u0002\u0002\u0030\u0031\u0007\u000c\u0002\u0002\u0031\u0032\u0007\u0013\u0002\u0002\u0032\u0033\u0005\u0010\u0009\u0002\u0033\u000f\u0003\u0002\u0002\u0002\u0034\u0035\u0008\u0009\u0001\u0002\u0035\u0036\u0007\u0014\u0002\u0002\u0036\u0037\u0005\u0010\u0009\u0002\u0037\u0038\u0007\u0015\u0002\u0002\u0038\u0047\u0003\u0002\u0002\u0002\u0039\u0047\u0007\u000c\u0002\u0002\u003a\u003b\u0007\u0010\u0002\u0002\u003b\u0047\u0005\u0010\u0009\u0006\u003c\u0040\u0007\u0016\u0002\u0002\u003d\u003f\u0005\u0012\u000a\u0002\u003e\u003d\u0003\u0002\u0002\u0002\u003f\u0042\u0003\u0002\u0002\u0002\u0040\u003e\u0003\u0002\u0002\u0002\u0040\u0041\u0003\u0002\u0002\u0002\u0041\u0043\u0003\u0002\u0002\u0002\u0042\u0040\u0003\u0002\u0002\u0002\u0043\u0047\u0007\u001c\u0002\u0002\u0044\u0047\u0007\u000d\u0002\u0002\u0045\u0047\u0007\u000e\u0002\u0002\u0046\u0034\u0003\u0002\u0002\u0002\u0046\u0039\u0003\u0002\u0002\u0002\u0046\u003a\u0003\u0002\u0002\u0002\u0046\u003c\u0003\u0002\u0002\u0002\u0046\u0044\u0003\u0002\u0002\u0002\u0046\u0045\u0003\u0002\u0002\u0002\u0047\u0053\u0003\u0002\u0002\u0002\u0048\u0049\u000c\u000b\u0002\u0002\u0049\u004a\u0009\u0003\u0002\u0002\u004a\u0052\u0005\u0010\u0009\u000c\u004b\u004c\u000c\u000a\u0002\u0002\u004c\u004d\u0009\u0004\u0002\u0002\u004d\u0052\u0005\u0010\u0009\u000b\u004e\u004f\u000c\u0009\u0002\u0002\u004f\u0050\u0007\u0008\u0002\u0002\u0050\u0052\u0005\u0014\u000b\u0002\u0051\u0048\u0003\u0002\u0002\u0002\u0051\u004b\u0003\u0002\u0002\u0002\u0051\u004e\u0003\u0002\u0002\u0002\u0052\u0055\u0003\u0002\u0002\u0002\u0053\u0051\u0003\u0002\u0002\u0002\u0053\u0054\u0003\u0002\u0002\u0002\u0054\u0011\u0003\u0002\u0002\u0002\u0055\u0053\u0003\u0002\u0002\u0002\u0056\u005c\u0007\u001e\u0002\u0002\u0057\u0058\u0007\u001d\u0002\u0002\u0058\u0059\u0005\u0010\u0009\u0002\u0059\u005a\u0007\u001f\u0002\u0002\u005a\u005c\u0003\u0002\u0002\u0002\u005b\u0056\u0003\u0002\u0002\u0002\u005b\u0057\u0003\u0002\u0002\u0002\u005c\u0013\u0003\u0002\u0002\u0002\u005d\u0061\u0007\u0009\u0002\u0002\u005e\u0061\u0007\u000a\u0002\u0002\u005f\u0061\u0007\u000b\u0002\u0002\u0060\u005d\u0003\u0002\u0002\u0002\u0060\u005e\u0003\u0002\u0002\u0002\u0060\u005f\u0003\u0002\u0002\u0002\u0061\u0015\u0003\u0002\u0002\u0002\u000a\u0019\u0022\u0040\u0046\u0051\u0053\u005b\u0060"
+
+        val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
         init {
         	decisionToDFA = Array<DFA>(ATN.numberOfDecisions, {
         		DFA(ATN.getDecisionState(it)!!, it)
@@ -241,12 +202,6 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 		fun findLine(i: Int) : LineContext? = getRuleContext(solver.getType("LineContext"),i)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
 		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterMiniCalcFile(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitMiniCalcFile(this)
-		}
 	}
 
 	fun  miniCalcFile() : MiniCalcFileContext {
@@ -288,15 +243,9 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 	        get() = Rules.RULE_line.id
 	        set(value) { throw RuntimeException() }
 		fun findStatement() : StatementContext? = getRuleContext(solver.getType("StatementContext"),0)
-		fun NEWLINE() : TerminalNode = getToken(MiniCalcParser.Tokens.NEWLINE.id, 0) as TerminalNode
-		fun EOF() : TerminalNode = getToken(MiniCalcParser.Tokens.EOF.id, 0) as TerminalNode
+		fun NEWLINE() : TerminalNode? = getToken(MiniCalcParser.Tokens.NEWLINE.id, 0)
+		fun EOF() : TerminalNode? = getToken(MiniCalcParser.Tokens.EOF.id, 0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
-		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterLine(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitLine(this)
 		}
 	}
 
@@ -344,45 +293,21 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			super.copyFrom(ctx)
 		}
 	}
-	class PrintStatementContext : StatementContext {
+	open class PrintStatementContext : StatementContext {
 		fun findPrint() : PrintContext? = getRuleContext(solver.getType("PrintContext"),0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterPrintStatement(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitPrintStatement(this)
-		}
 	}
-	class AssignmentStatementContext : StatementContext {
+	open class AssignmentStatementContext : StatementContext {
 		fun findAssignment() : AssignmentContext? = getRuleContext(solver.getType("AssignmentContext"),0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterAssignmentStatement(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitAssignmentStatement(this)
-		}
 	}
-	class InputDeclarationStatementContext : StatementContext {
+	open class InputDeclarationStatementContext : StatementContext {
 		fun findInputDeclaration() : InputDeclarationContext? = getRuleContext(solver.getType("InputDeclarationContext"),0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInputDeclarationStatement(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInputDeclarationStatement(this)
-		}
 	}
-	class VarDeclarationStatementContext : StatementContext {
+	open class VarDeclarationStatementContext : StatementContext {
 		fun findVarDeclaration() : VarDeclarationContext? = getRuleContext(solver.getType("VarDeclarationContext"),0)
 		constructor(ctx: StatementContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterVarDeclarationStatement(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitVarDeclarationStatement(this)
-		}
 	}
 
 	fun  statement() : StatementContext {
@@ -392,25 +317,25 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 32
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
-			INPUT ->  /*LL1AltBlock*/{_localctx = InputDeclarationStatementContext(_localctx)
+			INPUT  ->  /*LL1AltBlock*/{_localctx = InputDeclarationStatementContext(_localctx)
 			enterOuterAlt(_localctx, 1)
 			if (true){
 			this.state = 28
 			inputDeclaration()
 			}}
-			VAR ->  /*LL1AltBlock*/{_localctx = VarDeclarationStatementContext(_localctx)
+			VAR  ->  /*LL1AltBlock*/{_localctx = VarDeclarationStatementContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
 			this.state = 29
 			varDeclaration()
 			}}
-			ID ->  /*LL1AltBlock*/{_localctx = AssignmentStatementContext(_localctx)
+			ID  ->  /*LL1AltBlock*/{_localctx = AssignmentStatementContext(_localctx)
 			enterOuterAlt(_localctx, 3)
 			if (true){
 			this.state = 30
 			assignment()
 			}}
-			PRINT ->  /*LL1AltBlock*/{_localctx = PrintStatementContext(_localctx)
+			PRINT  ->  /*LL1AltBlock*/{_localctx = PrintStatementContext(_localctx)
 			enterOuterAlt(_localctx, 4)
 			if (true){
 			this.state = 31
@@ -434,17 +359,11 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 	    override var ruleIndex: Int
 	        get() = Rules.RULE_print.id
 	        set(value) { throw RuntimeException() }
-		fun PRINT() : TerminalNode = getToken(MiniCalcParser.Tokens.PRINT.id, 0) as TerminalNode
-		fun LPAREN() : TerminalNode = getToken(MiniCalcParser.Tokens.LPAREN.id, 0) as TerminalNode
+		fun PRINT() : TerminalNode? = getToken(MiniCalcParser.Tokens.PRINT.id, 0)
+		fun LPAREN() : TerminalNode? = getToken(MiniCalcParser.Tokens.LPAREN.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
-		fun RPAREN() : TerminalNode = getToken(MiniCalcParser.Tokens.RPAREN.id, 0) as TerminalNode
+		fun RPAREN() : TerminalNode? = getToken(MiniCalcParser.Tokens.RPAREN.id, 0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
-		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterPrint(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitPrint(this)
 		}
 	}
 
@@ -480,16 +399,10 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 	        get() = Rules.RULE_inputDeclaration.id
 	        set(value) { throw RuntimeException() }
 		var name: Token? = null
-		fun INPUT() : TerminalNode = getToken(MiniCalcParser.Tokens.INPUT.id, 0) as TerminalNode
+		fun INPUT() : TerminalNode? = getToken(MiniCalcParser.Tokens.INPUT.id, 0)
 		fun findType() : TypeContext? = getRuleContext(solver.getType("TypeContext"),0)
-		fun ID() : TerminalNode = getToken(MiniCalcParser.Tokens.ID.id, 0) as TerminalNode
+		fun ID() : TerminalNode? = getToken(MiniCalcParser.Tokens.ID.id, 0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
-		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInputDeclaration(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInputDeclaration(this)
 		}
 	}
 
@@ -522,15 +435,9 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 	    override var ruleIndex: Int
 	        get() = Rules.RULE_varDeclaration.id
 	        set(value) { throw RuntimeException() }
-		fun VAR() : TerminalNode = getToken(MiniCalcParser.Tokens.VAR.id, 0) as TerminalNode
+		fun VAR() : TerminalNode? = getToken(MiniCalcParser.Tokens.VAR.id, 0)
 		fun findAssignment() : AssignmentContext? = getRuleContext(solver.getType("AssignmentContext"),0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
-		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterVarDeclaration(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitVarDeclaration(this)
 		}
 	}
 
@@ -561,16 +468,10 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 	    override var ruleIndex: Int
 	        get() = Rules.RULE_assignment.id
 	        set(value) { throw RuntimeException() }
-		fun ID() : TerminalNode = getToken(MiniCalcParser.Tokens.ID.id, 0) as TerminalNode
-		fun ASSIGN() : TerminalNode = getToken(MiniCalcParser.Tokens.ASSIGN.id, 0) as TerminalNode
+		fun ID() : TerminalNode? = getToken(MiniCalcParser.Tokens.ID.id, 0)
+		fun ASSIGN() : TerminalNode? = getToken(MiniCalcParser.Tokens.ASSIGN.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
-		}
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterAssignment(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitAssignment(this)
 		}
 	}
 
@@ -611,105 +512,57 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			super.copyFrom(ctx)
 		}
 	}
-	class DecimalLiteralContext : ExpressionContext {
-		fun DECLIT() : TerminalNode = getToken(MiniCalcParser.Tokens.DECLIT.id, 0) as TerminalNode
+	open class DecimalLiteralContext : ExpressionContext {
+		fun DECLIT() : TerminalNode? = getToken(MiniCalcParser.Tokens.DECLIT.id, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterDecimalLiteral(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitDecimalLiteral(this)
-		}
 	}
-	class MinusExpressionContext : ExpressionContext {
-		fun MINUS() : TerminalNode = getToken(MiniCalcParser.Tokens.MINUS.id, 0) as TerminalNode
+	open class MinusExpressionContext : ExpressionContext {
+		fun MINUS() : TerminalNode? = getToken(MiniCalcParser.Tokens.MINUS.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterMinusExpression(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitMinusExpression(this)
-		}
 	}
-	class ValueReferenceContext : ExpressionContext {
-		fun ID() : TerminalNode = getToken(MiniCalcParser.Tokens.ID.id, 0) as TerminalNode
+	open class ValueReferenceContext : ExpressionContext {
+		fun ID() : TerminalNode? = getToken(MiniCalcParser.Tokens.ID.id, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterValueReference(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitValueReference(this)
-		}
 	}
-	class StringLiteralContext : ExpressionContext {
+	open class StringLiteralContext : ExpressionContext {
 		public var stringLiteralContent: StringLiteralContentContext? = null
 		public var parts : MutableList<StringLiteralContentContext> = ArrayList<StringLiteralContentContext>()
-		fun STRING_OPEN() : TerminalNode = getToken(MiniCalcParser.Tokens.STRING_OPEN.id, 0) as TerminalNode
-		fun STRING_CLOSE() : TerminalNode = getToken(MiniCalcParser.Tokens.STRING_CLOSE.id, 0) as TerminalNode
+		fun STRING_OPEN() : TerminalNode? = getToken(MiniCalcParser.Tokens.STRING_OPEN.id, 0)
+		fun STRING_CLOSE() : TerminalNode? = getToken(MiniCalcParser.Tokens.STRING_CLOSE.id, 0)
 		fun findStringLiteralContent() : List<StringLiteralContentContext> = getRuleContexts(solver.getType("StringLiteralContentContext"))
 		fun findStringLiteralContent(i: Int) : StringLiteralContentContext? = getRuleContext(solver.getType("StringLiteralContentContext"),i)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterStringLiteral(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitStringLiteral(this)
-		}
 	}
-	class IntLiteralContext : ExpressionContext {
-		fun INTLIT() : TerminalNode = getToken(MiniCalcParser.Tokens.INTLIT.id, 0) as TerminalNode
+	open class IntLiteralContext : ExpressionContext {
+		fun INTLIT() : TerminalNode? = getToken(MiniCalcParser.Tokens.INTLIT.id, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterIntLiteral(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitIntLiteral(this)
-		}
 	}
-	class ParenExpressionContext : ExpressionContext {
-		fun LPAREN() : TerminalNode = getToken(MiniCalcParser.Tokens.LPAREN.id, 0) as TerminalNode
+	open class ParenExpressionContext : ExpressionContext {
+		fun LPAREN() : TerminalNode? = getToken(MiniCalcParser.Tokens.LPAREN.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
-		fun RPAREN() : TerminalNode = getToken(MiniCalcParser.Tokens.RPAREN.id, 0) as TerminalNode
+		fun RPAREN() : TerminalNode? = getToken(MiniCalcParser.Tokens.RPAREN.id, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterParenExpression(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitParenExpression(this)
-		}
 	}
-	class BinaryOperationContext : ExpressionContext {
+	open class BinaryOperationContext : ExpressionContext {
 		public var left: ExpressionContext? = null
 		public var operator: Token? = null
 		public var right: ExpressionContext? = null
 		fun findExpression() : List<ExpressionContext> = getRuleContexts(solver.getType("ExpressionContext"))
 		fun findExpression(i: Int) : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),i)
-		fun DIVISION() : TerminalNode = getToken(MiniCalcParser.Tokens.DIVISION.id, 0) as TerminalNode
-		fun ASTERISK() : TerminalNode = getToken(MiniCalcParser.Tokens.ASTERISK.id, 0) as TerminalNode
-		fun PLUS() : TerminalNode = getToken(MiniCalcParser.Tokens.PLUS.id, 0) as TerminalNode
-		fun MINUS() : TerminalNode = getToken(MiniCalcParser.Tokens.MINUS.id, 0) as TerminalNode
+		fun DIVISION() : TerminalNode? = getToken(MiniCalcParser.Tokens.DIVISION.id, 0)
+		fun ASTERISK() : TerminalNode? = getToken(MiniCalcParser.Tokens.ASTERISK.id, 0)
+		fun PLUS() : TerminalNode? = getToken(MiniCalcParser.Tokens.PLUS.id, 0)
+		fun MINUS() : TerminalNode? = getToken(MiniCalcParser.Tokens.MINUS.id, 0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterBinaryOperation(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitBinaryOperation(this)
-		}
 	}
-	class TypeConversionContext : ExpressionContext {
+	open class TypeConversionContext : ExpressionContext {
 		public var value: ExpressionContext? = null
 		public var targetType: TypeContext? = null
-		fun AS() : TerminalNode = getToken(MiniCalcParser.Tokens.AS.id, 0) as TerminalNode
+		fun AS() : TerminalNode? = getToken(MiniCalcParser.Tokens.AS.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
 		fun findType() : TypeContext? = getRuleContext(solver.getType("TypeContext"),0)
 		constructor(ctx: ExpressionContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterTypeConversion(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitTypeConversion(this)
-		}
 	}
 
 	 fun expression() : ExpressionContext {
@@ -731,7 +584,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 68
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
-			LPAREN ->  /*LL1AltBlock*/{if (true){
+			LPAREN  ->  /*LL1AltBlock*/{if (true){
 			_localctx = ParenExpressionContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
@@ -743,14 +596,14 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 53
 			match(RPAREN) as Token
 			}}
-			ID ->  /*LL1AltBlock*/{if (true){
+			ID  ->  /*LL1AltBlock*/{if (true){
 			_localctx = ValueReferenceContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
 			this.state = 55
 			match(ID) as Token
 			}}
-			MINUS ->  /*LL1AltBlock*/{if (true){
+			MINUS  ->  /*LL1AltBlock*/{if (true){
 			_localctx = MinusExpressionContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
@@ -759,7 +612,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 57
 			expression(4)
 			}}
-			STRING_OPEN ->  /*LL1AltBlock*/{if (true){
+			STRING_OPEN  ->  /*LL1AltBlock*/{if (true){
 			_localctx = StringLiteralContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
@@ -783,14 +636,14 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 65
 			match(STRING_CLOSE) as Token
 			}}
-			INTLIT ->  /*LL1AltBlock*/{if (true){
+			INTLIT  ->  /*LL1AltBlock*/{if (true){
 			_localctx = IntLiteralContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
 			this.state = 66
 			match(INTLIT) as Token
 			}}
-			DECLIT ->  /*LL1AltBlock*/{if (true){
+			DECLIT  ->  /*LL1AltBlock*/{if (true){
 			_localctx = DecimalLiteralContext(_localctx)
 			context = _localctx
 			_prevctx = _localctx
@@ -811,7 +664,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 					this.state = 79
 					errorHandler.sync(this)
 					when ( interpreter!!.adaptivePredict(_input!!,4,context) ) {
-					1 -> if (true){
+					1 -> {if (true){
 					_localctx = BinaryOperationContext(ExpressionContext(_parentctx, _parentState))
 					(_localctx as BinaryOperationContext).left = _prevctx
 					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
@@ -830,8 +683,8 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 					}
 					this.state = 72
 					(_localctx as BinaryOperationContext).right = expression(10)
-					}
-					2 -> if (true){
+					}}
+					2 -> {if (true){
 					_localctx = BinaryOperationContext(ExpressionContext(_parentctx, _parentState))
 					(_localctx as BinaryOperationContext).left = _prevctx
 					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
@@ -850,8 +703,8 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 					}
 					this.state = 75
 					(_localctx as BinaryOperationContext).right = expression(9)
-					}
-					3 -> if (true){
+					}}
+					3 -> {if (true){
 					_localctx = TypeConversionContext(ExpressionContext(_parentctx, _parentState))
 					(_localctx as TypeConversionContext).value = _prevctx
 					pushNewRecursionContext(_localctx, _startState, Rules.RULE_expression.id)
@@ -861,7 +714,7 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 					match(AS) as Token
 					this.state = 78
 					(_localctx as TypeConversionContext).targetType = type()
-					}
+					}}
 					}
 					} 
 				}
@@ -894,27 +747,15 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			super.copyFrom(ctx)
 		}
 	}
-	class InterpolatedValueContext : StringLiteralContentContext {
-		fun INTERPOLATION_OPEN() : TerminalNode = getToken(MiniCalcParser.Tokens.INTERPOLATION_OPEN.id, 0) as TerminalNode
+	open class InterpolatedValueContext : StringLiteralContentContext {
+		fun INTERPOLATION_OPEN() : TerminalNode? = getToken(MiniCalcParser.Tokens.INTERPOLATION_OPEN.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
-		fun INTERPOLATION_CLOSE() : TerminalNode = getToken(MiniCalcParser.Tokens.INTERPOLATION_CLOSE.id, 0) as TerminalNode
+		fun INTERPOLATION_CLOSE() : TerminalNode? = getToken(MiniCalcParser.Tokens.INTERPOLATION_CLOSE.id, 0)
 		constructor(ctx: StringLiteralContentContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInterpolatedValue(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInterpolatedValue(this)
-		}
 	}
-	class ConstantStringContext : StringLiteralContentContext {
-		fun STRING_CONTENT() : TerminalNode = getToken(MiniCalcParser.Tokens.STRING_CONTENT.id, 0) as TerminalNode
+	open class ConstantStringContext : StringLiteralContentContext {
+		fun STRING_CONTENT() : TerminalNode? = getToken(MiniCalcParser.Tokens.STRING_CONTENT.id, 0)
 		constructor(ctx: StringLiteralContentContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterConstantString(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitConstantString(this)
-		}
 	}
 
 	fun  stringLiteralContent() : StringLiteralContentContext {
@@ -924,13 +765,13 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 89
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
-			STRING_CONTENT ->  /*LL1AltBlock*/{_localctx = ConstantStringContext(_localctx)
+			STRING_CONTENT  ->  /*LL1AltBlock*/{_localctx = ConstantStringContext(_localctx)
 			enterOuterAlt(_localctx, 1)
 			if (true){
 			this.state = 84
 			match(STRING_CONTENT) as Token
 			}}
-			INTERPOLATION_OPEN ->  /*LL1AltBlock*/{_localctx = InterpolatedValueContext(_localctx)
+			INTERPOLATION_OPEN  ->  /*LL1AltBlock*/{_localctx = InterpolatedValueContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
 			this.state = 85
@@ -966,35 +807,17 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			super.copyFrom(ctx)
 		}
 	}
-	class StringContext : TypeContext {
-		fun STRING() : TerminalNode = getToken(MiniCalcParser.Tokens.STRING.id, 0) as TerminalNode
+	open class StringContext : TypeContext {
+		fun STRING() : TerminalNode? = getToken(MiniCalcParser.Tokens.STRING.id, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterString(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitString(this)
-		}
 	}
-	class IntegerContext : TypeContext {
-		fun INT() : TerminalNode = getToken(MiniCalcParser.Tokens.INT.id, 0) as TerminalNode
+	open class IntegerContext : TypeContext {
+		fun INT() : TerminalNode? = getToken(MiniCalcParser.Tokens.INT.id, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterInteger(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitInteger(this)
-		}
 	}
-	class DecimalContext : TypeContext {
-		fun DECIMAL() : TerminalNode = getToken(MiniCalcParser.Tokens.DECIMAL.id, 0) as TerminalNode
+	open class DecimalContext : TypeContext {
+		fun DECIMAL() : TerminalNode? = getToken(MiniCalcParser.Tokens.DECIMAL.id, 0)
 		constructor(ctx: TypeContext) { copyFrom(ctx) }
-		override fun enterRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).enterDecimal(this)
-		}
-		override fun exitRule(listener: ParseTreeListener) {
-			if ( listener is MiniCalcParserListener ) (listener as MiniCalcParserListener).exitDecimal(this)
-		}
 	}
 
 	fun  type() : TypeContext {
@@ -1004,19 +827,19 @@ class MiniCalcParser(input: TokenStream) : Parser(input) {
 			this.state = 94
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
-			INT ->  /*LL1AltBlock*/{_localctx = IntegerContext(_localctx)
+			INT  ->  /*LL1AltBlock*/{_localctx = IntegerContext(_localctx)
 			enterOuterAlt(_localctx, 1)
 			if (true){
 			this.state = 91
 			match(INT) as Token
 			}}
-			DECIMAL ->  /*LL1AltBlock*/{_localctx = DecimalContext(_localctx)
+			DECIMAL  ->  /*LL1AltBlock*/{_localctx = DecimalContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
 			this.state = 92
 			match(DECIMAL) as Token
 			}}
-			STRING ->  /*LL1AltBlock*/{_localctx = StringContext(_localctx)
+			STRING  ->  /*LL1AltBlock*/{_localctx = StringContext(_localctx)
 			enterOuterAlt(_localctx, 3)
 			if (true){
 			this.state = 93
