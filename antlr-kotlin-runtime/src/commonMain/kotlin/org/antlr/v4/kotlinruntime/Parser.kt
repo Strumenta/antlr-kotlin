@@ -719,7 +719,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 
         while (context !== _parentctx) {
             triggerExitRuleEvent()
-            context = context!!.readParent() as ParserRuleContext
+            context = context!!.readParent() as ParserRuleContext?
         }
 
         // hook into tree
