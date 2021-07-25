@@ -43,7 +43,7 @@ actual class BitSet {
 
     actual fun nextSetBit(i: Int): Int {
         val nextSetBits = setBits.filter { it >= i }
-        return nextSetBits.min() ?: -1
+        return nextSetBits.minOrNull() ?: -1
     }
 
     actual fun or(alts: BitSet) {
