@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    compile("org.antlr:antlr4:${Versions.antlr}")
+    api("org.antlr:antlr4:${Versions.antlr}")
 }
 
 publishing {

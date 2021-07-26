@@ -1,3 +1,4 @@
+// Generated from java-escape by ANTLR 4.7.1
 package com.strumenta.antlrkotlin.examples
 
 import com.strumenta.kotlinmultiplatform.asCharArray

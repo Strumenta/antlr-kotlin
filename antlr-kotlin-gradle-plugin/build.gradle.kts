@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    compile("org.antlr:antlr4:${Versions.antlr}")
-    compile(gradleApi())
-    compile(project(":antlr-kotlin-target"))
+    implementation("org.antlr:antlr4:${Versions.antlr}")
+    implementation(gradleApi())
+    implementation(project(":antlr-kotlin-target"))
 }
 
 publishing {
