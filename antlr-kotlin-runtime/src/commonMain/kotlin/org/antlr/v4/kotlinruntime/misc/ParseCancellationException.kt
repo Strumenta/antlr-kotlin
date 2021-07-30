@@ -18,19 +18,8 @@ import org.antlr.v4.kotlinruntime.RecognitionException
  * @author Sam Harwell
  */
 class ParseCancellationException : RuntimeException {
-
-    constructor() {}
-
-    constructor(message: String) {}
-
-    constructor(cause: Throwable) {
-        TODO()
-        //initCause(cause)
-    }
-
-    constructor(message: String, cause: Throwable) {
-        TODO()
-        //initCause(cause)
-    }
-
+    constructor()
+    constructor(message: String) : super(message)
+    constructor(cause: Throwable) : super(cause)
+    constructor(message: String, cause: Throwable) : super(message, cause)
 }
