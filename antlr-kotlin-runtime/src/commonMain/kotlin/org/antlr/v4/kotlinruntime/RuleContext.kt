@@ -5,6 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
+import kotlin.native.concurrent.SharedImmutable
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.ParseTree
@@ -63,6 +64,7 @@ import org.antlr.v4.kotlinruntime.tree.Trees
  * @see ParserRuleContext
  */
 
+@SharedImmutable
 val EMPTY_RULECTX = ParserRuleContext()
 
 
