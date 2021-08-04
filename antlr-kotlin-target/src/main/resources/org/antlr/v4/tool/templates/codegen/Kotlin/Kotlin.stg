@@ -789,7 +789,7 @@ override fun \<T> accept(visitor : ParseTreeVisitor\<out T>) : T {
 }
 >>
 
-AttributeDecl(d) ::= "val <d.name> <if(d.type)>: <d.type><endif><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "var <d.name> <if(d.type)>: <d.type><endif><if(d.initValue)> = <d.initValue><endif>"
 
 /** If we don't know location of label def x, use this template */
 labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.name>"
