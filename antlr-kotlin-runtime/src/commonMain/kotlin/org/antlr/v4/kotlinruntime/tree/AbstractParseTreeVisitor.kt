@@ -109,7 +109,7 @@ abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
      *
      * @return The updated aggregate result.
      */
-    protected fun aggregateResult(aggregate: T?, nextResult: T): T {
+    protected open fun aggregateResult(aggregate: T?, nextResult: T): T {
         return nextResult
     }
 
@@ -138,7 +138,7 @@ abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
      * `false` to stop visiting children and immediately return the
      * current aggregate result from [.visitChildren].
      */
-    protected fun shouldVisitNextChild(node: RuleNode, currentResult: T?): Boolean {
+    protected open fun shouldVisitNextChild(node: RuleNode, currentResult: T?): Boolean {
         return true
     }
 
