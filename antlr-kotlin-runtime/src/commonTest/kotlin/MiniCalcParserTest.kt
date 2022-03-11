@@ -1,11 +1,13 @@
 import com.strumenta.antlrkotlin.examples.MiniCalcLexer
 import com.strumenta.antlrkotlin.examples.MiniCalcParser
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
+import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
 import org.antlr.v4.kotlinruntime.ast.pos
 import org.antlr.v4.kotlinruntime.tree.ParseTreeWalker
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
+import kotlin.test.assertNotNull
 import kotlin.test.Test as test
 
 
@@ -51,6 +53,40 @@ class MiniCalcParserTest : BaseTest() {
         val newline = line.children!![1]
         assertTrue(newline is TerminalNode)
         assertEquals("\n", newline.text)
+    }
+
+    @test
+    fun testOperatorPrecedence() {
+        val input = CharStreams.fromString("1 - 2 + 3\n")
+
+        /*
+         * Test that the input is parsed like ((a - b) + c).
+         * The parse tree should look like:
+         *
+         *         plus
+         *        /   \
+         *     minus   \
+         *    /   \     \
+         *   1     2     3
+         */
+
+        val lexer = MiniCalcLexer(input)
+        val parser = MiniCalcParser(CommonTokenStream(lexer))
+
+        val plus = parser.expression() as MiniCalcParser.BinaryOperationContext
+        assertNotNull(plus.PLUS())
+
+        val minus = plus.left as MiniCalcParser.BinaryOperationContext
+        assertNotNull(minus.MINUS())
+
+        val one = minus.left as MiniCalcParser.IntLiteralContext
+        assertEquals(one.text, "1")
+
+        val two = minus.right as MiniCalcParser.IntLiteralContext
+        assertEquals(two.text, "2")
+
+        val three = plus.right as MiniCalcParser.IntLiteralContext
+        assertEquals(three.text, "3")
     }
 
     @test
