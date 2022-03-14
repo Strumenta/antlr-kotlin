@@ -45,15 +45,15 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //     * @see .setInputStream
 //     */
     protected var _input: TokenStream? = input
-    //
+
     protected val _precedenceStack: IntegerStack = IntegerStack()
-    //
+
 //    /**
 //     * The [ParserRuleContext] object for the currently executing rule.
 //     * This is always non-null during the parsing process.
 //     */
     var context: ParserRuleContext? = null
-    //
+
 //    /**
 //     * Specifies whether or not the parser should construct a parse tree during
 //     * the parsing process. The default value is `true`.
@@ -87,16 +87,15 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //     * for garbage collection.
 //     */
     var buildParseTree = true
-    //
 
-    /**
-     * When [.setTrace]`(true)` is called, a reference to the
-     * [TraceListener] is stored here so it can be easily removed in a
-     * later call to [.setTrace]`(false)`. The listener itself is
-     * implemented as a parser listener so this field is not directly used by
-     * other parser methods.
-     */
-    private var _tracer: TraceListener? = null
+//    /**
+//     * When [.setTrace]`(true)` is called, a reference to the
+//     * [TraceListener] is stored here so it can be easily removed in a
+//     * later call to [.setTrace]`(false)`. The listener itself is
+//     * implemented as a parser listener so this field is not directly used by
+//     * other parser methods.
+//     */
+//    private var _tracer: TraceListener? = null
 
     /**
      * The list of [ParseTreeListener] listeners registered to receive
@@ -122,7 +121,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
     /** Indicates parser has match()ed EOF token. See [.exitRule].  */
     var isMatchedEOF: Boolean = false
         protected set
-    //
+
 //    /**
 //     * @return `true` if the [ParserRuleContext.children] list is trimmed
 //     * using the default [Parser.TrimToSizeListener] during the parse process.
@@ -144,8 +143,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //                removeParseListener(TrimToSizeListener.INSTANCE)
 //            }
 //        }
-//
-//
+
     val parseListeners: List<ParseTreeListener>
         get() = _parseListeners
 
@@ -155,7 +153,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         set(factory) {
             _input!!.tokenSource!!.tokenFactory = factory
         }
-//
+
 //    /**
 //     * The ATN with bypass alternatives is expensive to create so we create it
 //     * lazily.
@@ -219,12 +217,12 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         get() = atn.getExpectedTokens(state, context)
 
 
-    val expectedTokensWithinCurrentRule: IntervalSet?
-        get() {
-            val atn = interpreter!!.atn
-            val s = atn.states.get(state)!!
-            return atn!!.nextTokens(s)
-        }
+//    val expectedTokensWithinCurrentRule: IntervalSet?
+//        get() {
+//            val atn = interpreter!!.atn
+//            val s = atn.states.get(state)!!
+//            return atn!!.nextTokens(s)
+//        }
 
     /** Return List&lt;String&gt; of the rule names in your parser instance
      * leading up to a call to the current rule.  You could override if
@@ -258,48 +256,47 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
             } else null
         }
 
-
-    /**
-     * Gets whether a [TraceListener] is registered as a parse listener
-     * for the parser.
-     *
-     * @see .setTrace
-     */
-    /** During a parse is sometimes useful to listen in on the rule entry and exit
-     * events as well as token matches. This is for quick and dirty debugging.
-     */
-    var isTrace: Boolean
-        get() = _tracer != null
-        set(trace) = if (!trace) {
-            removeParseListener(_tracer!!)
-            _tracer = null
-        } else {
-            if (_tracer != null)
-                removeParseListener(_tracer!!)
-            else
-                _tracer = TraceListener()
-            addParseListener(_tracer!!)
-        }
-
-    inner class TraceListener : ParseTreeListener {
-        override fun enterEveryRule(ctx: ParserRuleContext) {
-            println("enter   " + ruleNames!![ctx.ruleIndex] +
-                    ", LT(1)=" + _input!!.LT(1)!!.text)
-        }
-
-        override fun visitTerminal(node: TerminalNode) {
-            println("consume " + node.symbol + " rule " +
-                    ruleNames!![context!!.ruleIndex])
-        }
-
-        override fun visitErrorNode(node: ErrorNode) {}
-
-        override fun exitEveryRule(ctx: ParserRuleContext) {
-            println("exit    " + ruleNames!![ctx.ruleIndex] +
-                    ", LT(1)=" + _input!!.LT(1)!!.text)
-        }
-    }
-
+//    /**
+//     * Gets whether a [TraceListener] is registered as a parse listener
+//     * for the parser.
+//     *
+//     * @see .setTrace
+//     */
+//    /** During a parse is sometimes useful to listen in on the rule entry and exit
+//     * events as well as token matches. This is for quick and dirty debugging.
+//     */
+//    var isTrace: Boolean
+//        get() = _tracer != null
+//        set(trace) = if (!trace) {
+//            removeParseListener(_tracer!!)
+//            _tracer = null
+//        } else {
+//            if (_tracer != null)
+//                removeParseListener(_tracer!!)
+//            else
+//                _tracer = TraceListener()
+//            addParseListener(_tracer!!)
+//        }
+//
+//    inner class TraceListener : ParseTreeListener {
+//        override fun enterEveryRule(ctx: ParserRuleContext) {
+//            println("enter   " + ruleNames!![ctx.ruleIndex] +
+//                    ", LT(1)=" + _input!!.LT(1)!!.text)
+//        }
+//
+//        override fun visitTerminal(node: TerminalNode) {
+//            println("consume " + node.symbol + " rule " +
+//                    ruleNames!![context!!.ruleIndex])
+//        }
+//
+//        override fun visitErrorNode(node: ErrorNode) {}
+//
+//        override fun exitEveryRule(ctx: ParserRuleContext) {
+//            println("exit    " + ruleNames!![ctx.ruleIndex] +
+//                    ", LT(1)=" + _input!!.LT(1)!!.text)
+//        }
+//    }
+//
 //    class TrimToSizeListener : ParseTreeListener {
 //
 //        override fun enterEveryRule(ctx: ParserRuleContext) {}
@@ -331,7 +328,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         context = null
         numberOfSyntaxErrors = 0
         isMatchedEOF = false
-        isTrace = false
+//        isTrace = false
         _precedenceStack.clear()
         _precedenceStack.push(0)
         val interpreter = interpreter
