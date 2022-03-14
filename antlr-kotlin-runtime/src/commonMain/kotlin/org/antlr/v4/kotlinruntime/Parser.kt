@@ -6,6 +6,7 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.synchronized
+import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ParseInfo
 import org.antlr.v4.kotlinruntime.atn.ParserATNSimulator
 import org.antlr.v4.kotlinruntime.atn.ProfilingATNSimulator
@@ -87,37 +88,37 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //     */
     var buildParseTree = true
     //
-//
-//    /**
-//     * When [.setTrace]`(true)` is called, a reference to the
-//     * [TraceListener] is stored here so it can be easily removed in a
-//     * later call to [.setTrace]`(false)`. The listener itself is
-//     * implemented as a parser listener so this field is not directly used by
-//     * other parser methods.
-//     */
-//    private var _tracer: TraceListener? = null
-//
-//    /**
-//     * The list of [ParseTreeListener] listeners registered to receive
-//     * events during the parse.
-//     *
-//     * @see .addParseListener
-//     */
+
+    /**
+     * When [.setTrace]`(true)` is called, a reference to the
+     * [TraceListener] is stored here so it can be easily removed in a
+     * later call to [.setTrace]`(false)`. The listener itself is
+     * implemented as a parser listener so this field is not directly used by
+     * other parser methods.
+     */
+    private var _tracer: TraceListener? = null
+
+    /**
+     * The list of [ParseTreeListener] listeners registered to receive
+     * events during the parse.
+     *
+     * @see .addParseListener
+     */
     protected var _parseListeners: MutableList<ParseTreeListener> = ArrayList()
     //
-//    /**
-//     * The number of syntax errors reported during parsing. This value is
-//     * incremented each time [.notifyErrorListeners] is called.
-//     */
-//    /**
-//     * Gets the number of syntax errors reported during parsing. This value is
-//     * incremented each time [.notifyErrorListeners] is called.
-//     *
-//     * @see .notifyErrorListeners
-//     */
+    /**
+     * The number of syntax errors reported during parsing. This value is
+     * incremented each time [.notifyErrorListeners] is called.
+     */
+    /**
+     * Gets the number of syntax errors reported during parsing. This value is
+     * incremented each time [.notifyErrorListeners] is called.
+     *
+     * @see .notifyErrorListeners
+     */
     var numberOfSyntaxErrors: Int = 0
         protected set
-//
+
     /** Indicates parser has match()ed EOF token. See [.exitRule].  */
     var isMatchedEOF: Boolean = false
         protected set
@@ -171,18 +172,14 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //                var result: ATN? = bypassAltsAtnCache[serializedAtn]
 //                if (result == null) {
 //                    val deserializationOptions = ATNDeserializationOptions()
-//                    deserializationOptions.setGenerateRuleBypassTransitions(true)
-//                    result = ATNDeserializer(deserializationOptions).deserialize(serializedAtn!!.asCharArray())
+//                    deserializationOptions.isGenerateRuleBypassTransitions = true
+//                    result = ATNDeserializer(deserializationOptions).deserialize(serializedAtn!!.toCharArray())
 //                    bypassAltsAtnCache.put(serializedAtn, result)
 //                }
 //
 //                return result
 //            }
 //        }
-//
-//    override var inputStream: TokenStream?
-//        get() = tokenStream
-//        set
 
     /** Set the token stream and reset the parser.  */
     var tokenStream: TokenStream?
@@ -192,11 +189,11 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
             reset()
             this._input = input
         }
-    //
-//    /** Match needs to return the current input symbol, which gets put
-//     * into the accessLabel for the associated token ref; e.g., x=ID.
-//     */
-//
+
+    /** Match needs to return the current input symbol, which gets put
+     * into the accessLabel for the associated token ref; e.g., x=ID.
+     */
+
     val currentToken: Token?
         get() = _input!!.LT(1)
 
@@ -210,32 +207,32 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         get() = if (_precedenceStack.isEmpty) {
             -1
         } else _precedenceStack.peek()
-    //
-//    /**
-//     * Computes the set of input symbols which could follow the current parser
-//     * state and context, as given by [.getState] and [.getContext],
-//     * respectively.
-//     *
-//     * @see ATN.getExpectedTokens
-//     */
+
+    /**
+     * Computes the set of input symbols which could follow the current parser
+     * state and context, as given by [.getState] and [.getContext],
+     * respectively.
+     *
+     * @see ATN.getExpectedTokens
+     */
     val expectedTokens: IntervalSet
         get() = atn.getExpectedTokens(state, context)
-    //
-//
-//    val expectedTokensWithinCurrentRule: IntervalSet
-//        get() {
-//            val atn = interpreter.atn
-//            val s = atn.states.get(state)
-//            return atn.nextTokens(s)
-//        }
-//
-//    /** Return List&lt;String&gt; of the rule names in your parser instance
-//     * leading up to a call to the current rule.  You could override if
-//     * you want more details such as the file/line info of where
-//     * in the ATN a rule is invoked.
-//     *
-//     * This is very useful for error messages.
-//     */
+
+
+    val expectedTokensWithinCurrentRule: IntervalSet?
+        get() {
+            val atn = interpreter!!.atn
+            val s = atn.states.get(state)!!
+            return atn!!.nextTokens(s)
+        }
+
+    /** Return List&lt;String&gt; of the rule names in your parser instance
+     * leading up to a call to the current rule.  You could override if
+     * you want more details such as the file/line info of where
+     * in the ATN a rule is invoked.
+     *
+     * This is very useful for error messages.
+     */
     val ruleInvocationStack: List<String>
         get() = getRuleInvocationStack(context)
 
@@ -261,57 +258,57 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
             } else null
         }
 
-    //
-//    /**
-//     * Gets whether a [TraceListener] is registered as a parse listener
-//     * for the parser.
-//     *
-//     * @see .setTrace
-//     */
-//    /** During a parse is sometimes useful to listen in on the rule entry and exit
-//     * events as well as token matches. This is for quick and dirty debugging.
-//     */
-//    var isTrace: Boolean
-//        get() = _tracer != null
-//        set(trace) = if (!trace) {
-//            removeParseListener(_tracer)
-//            _tracer = null
-//        } else {
-//            if (_tracer != null)
-//                removeParseListener(_tracer)
-//            else
-//                _tracer = TraceListener()
-//            addParseListener(_tracer)
-//        }
-//
-//    inner class TraceListener : ParseTreeListener {
-//        fun enterEveryRule(ctx: ParserRuleContext) {
-//            println("enter   " + ruleNames!![ctx.ruleIndex] +
-//                    ", LT(1)=" + _input!!.LT(1).text)
-//        }
-//
-//        fun visitTerminal(node: TerminalNode) {
-//            System.out.println("consume " + node.getSymbol() + " rule " +
-//                    ruleNames!![context!!.ruleIndex])
-//        }
-//
-//        fun visitErrorNode(node: ErrorNode) {}
-//
-//        fun exitEveryRule(ctx: ParserRuleContext) {
-//            println("exit    " + ruleNames!![ctx.ruleIndex] +
-//                    ", LT(1)=" + _input!!.LT(1).text)
-//        }
-//    }
-//
+
+    /**
+     * Gets whether a [TraceListener] is registered as a parse listener
+     * for the parser.
+     *
+     * @see .setTrace
+     */
+    /** During a parse is sometimes useful to listen in on the rule entry and exit
+     * events as well as token matches. This is for quick and dirty debugging.
+     */
+    var isTrace: Boolean
+        get() = _tracer != null
+        set(trace) = if (!trace) {
+            removeParseListener(_tracer!!)
+            _tracer = null
+        } else {
+            if (_tracer != null)
+                removeParseListener(_tracer!!)
+            else
+                _tracer = TraceListener()
+            addParseListener(_tracer!!)
+        }
+
+    inner class TraceListener : ParseTreeListener {
+        override fun enterEveryRule(ctx: ParserRuleContext) {
+            println("enter   " + ruleNames!![ctx.ruleIndex] +
+                    ", LT(1)=" + _input!!.LT(1)!!.text)
+        }
+
+        override fun visitTerminal(node: TerminalNode) {
+            println("consume " + node.symbol + " rule " +
+                    ruleNames!![context!!.ruleIndex])
+        }
+
+        override fun visitErrorNode(node: ErrorNode) {}
+
+        override fun exitEveryRule(ctx: ParserRuleContext) {
+            println("exit    " + ruleNames!![ctx.ruleIndex] +
+                    ", LT(1)=" + _input!!.LT(1)!!.text)
+        }
+    }
+
 //    class TrimToSizeListener : ParseTreeListener {
 //
-//        fun enterEveryRule(ctx: ParserRuleContext) {}
+//        override fun enterEveryRule(ctx: ParserRuleContext) {}
 //
-//        fun visitTerminal(node: TerminalNode) {}
+//        override fun visitTerminal(node: TerminalNode) {}
 //
-//        fun visitErrorNode(node: ErrorNode) {}
+//        override fun visitErrorNode(node: ErrorNode) {}
 //
-//        fun exitEveryRule(ctx: ParserRuleContext) {
+//        override fun exitEveryRule(ctx: ParserRuleContext) {
 //            if (ctx.children is ArrayList<*>) {
 //                (ctx.children as ArrayList<*>).trimToSize()
 //            }
@@ -321,31 +318,26 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //            val INSTANCE = TrimToSizeListener()
 //        }
 //    }
-//
-//    init {
-//        _precedenceStack = IntegerStack()
-//        _precedenceStack.push(0)
-//    }
-//
+
     init {
-        assignInputStream(input)
+        _precedenceStack.push(0)
+        inputStream = input
     }
-//
+
     /** reset the parser's state  */
     open fun reset() {
-        TODO()
-//        if (inputStream != null) inputStream!!.seek(0)
-//        errorHandler.reset(this)
-//        context = null
-//        numberOfSyntaxErrors = 0
-//        isMatchedEOF = false
-//        isTrace = false
-//        _precedenceStack.clear()
-//        _precedenceStack.push(0)
-//        val interpreter = interpreter
-//        if (interpreter != null) {
-//            interpreter!!.reset()
-//        }
+        if (inputStream != null) inputStream!!.seek(0)
+        errorHandler.reset(this)
+        context = null
+        numberOfSyntaxErrors = 0
+        isMatchedEOF = false
+        isTrace = false
+        _precedenceStack.clear()
+        _precedenceStack.push(0)
+        val interpreter = interpreter
+        if (interpreter != null) {
+            interpreter!!.reset()
+        }
     }
 
     /**
@@ -564,29 +556,29 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         listener.syntaxError(this, offendingToken, line, charPositionInLine, msg, e)
     }
 
-    //
-//    /**
-//     * Consume and return the [current symbol][.getCurrentToken].
-//     *
-//     *
-//     * E.g., given the following input with `A` being the current
-//     * lookahead symbol, this function moves the cursor to `B` and returns
-//     * `A`.
-//     *
-//     * <pre>
-//     * A B
-//     * ^
-//    </pre> *
-//     *
-//     * If the parser is not in error recovery mode, the consumed symbol is added
-//     * to the parse tree using [ParserRuleContext.addChild], and
-//     * [ParseTreeListener.visitTerminal] is called on any parse listeners.
-//     * If the parser *is* in error recovery mode, the consumed symbol is
-//     * added to the parse tree using [.createErrorNode] then
-//     * [ParserRuleContext.addErrorNode] and
-//     * [ParseTreeListener.visitErrorNode] is called on any parse
-//     * listeners.
-//     */
+
+    /**
+     * Consume and return the [current symbol][.getCurrentToken].
+     *
+     *
+     * E.g., given the following input with `A` being the current
+     * lookahead symbol, this function moves the cursor to `B` and returns
+     * `A`.
+     *
+     * <pre>
+     * A B
+     * ^
+    </pre> *
+     *
+     * If the parser is not in error recovery mode, the consumed symbol is added
+     * to the parse tree using [ParserRuleContext.addChild], and
+     * [ParseTreeListener.visitTerminal] is called on any parse listeners.
+     * If the parser *is* in error recovery mode, the consumed symbol is
+     * added to the parse tree using [.createErrorNode] then
+     * [ParserRuleContext.addErrorNode] and
+     * [ParseTreeListener.visitErrorNode] is called on any parse
+     * listeners.
+     */
     fun consume(): Token {
         val o = currentToken
         require(o != null, { "current token must not be null when consuming" })
@@ -735,15 +727,15 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //        var p = context
 //        while (p != null) {
 //            if (p!!.ruleIndex == ruleIndex) return p
-//            p = p!!.parent as ParserRuleContext
+//            p = p!!.readParent() as ParserRuleContext
 //        }
 //        return null
 //    }
-//
-//    override fun precpred(localctx: RuleContext, precedence: Int): Boolean {
-//        return precedence >= _precedenceStack.peek()
-//    }
-//
+
+    override fun precpred(localctx: RuleContext, precedence: Int): Boolean {
+        return precedence >= _precedenceStack.peek()
+    }
+
 //    fun inContext(context: String): Boolean {
 //        // TODO: useful in parser?
 //        return false
@@ -765,10 +757,10 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //     */
 //    fun isExpectedToken(symbol: Int): Boolean {
 //        //   		return getInterpreter().atn.nextTokens(_ctx);
-//        val atn = interpreter.atn
+//        val atn = interpreter!!.atn
 //        var ctx = context
-//        val s = atn.states.get(state)
-//        var following = atn.nextTokens(s)
+//        val s = atn.states.get(state)!!
+//        var following = atn.nextTokens(s)!!
 //        if (following.contains(symbol)) {
 //            return true
 //        }
@@ -777,13 +769,13 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //
 //        while (ctx != null && ctx!!.invokingState >= 0 && following.contains(Token.EPSILON)) {
 //            val invokingState = atn.states.get(ctx!!.invokingState)
-//            val rt = invokingState.transition(0) as RuleTransition
-//            following = atn.nextTokens(rt.followState)
+//            val rt = invokingState!!.transition(0) as RuleTransition
+//            following = atn.nextTokens(rt.followState)!!
 //            if (following.contains(symbol)) {
 //                return true
 //            }
 //
-//            ctx = ctx!!.parent as ParserRuleContext
+//            ctx = ctx!!.readParent() as ParserRuleContext
 //        }
 //
 //        return if (following.contains(Token.EPSILON) && symbol == Token.EOF) {
@@ -791,7 +783,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //        } else false
 //
 //    }
-//
+
     /** Get a rule's index (i.e., `RULE_ruleName` field) or -1 if not found.  */
     open fun getRuleIndex(ruleName: String): Int {
         val ruleIndex = ruleIndexMap[ruleName]
@@ -821,14 +813,14 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //
 //    /** For debugging and other purposes.  */
 //    fun dumpDFA() {
-//        synchronized(interpreter.decisionToDFA) {
+//        synchronized(interpreter!!.decisionToDFA) {
 //            var seenOne = false
-//            for (d in 0 until interpreter.decisionToDFA.length) {
-//                val dfa = interpreter.decisionToDFA[d]
+//            for (d in 0 until interpreter!!.decisionToDFA.size) {
+//                val dfa = interpreter!!.decisionToDFA[d]
 //                if (!dfa.states.isEmpty()) {
 //                    if (seenOne) println()
-//                    System.out.println("Decision " + dfa.decision + ":")
-//                    System.out.print(dfa.toString(vocabulary))
+//                    println("Decision " + dfa.decision + ":")
+//                    print(dfa.toString(vocabulary))
 //                    seenOne = true
 //                }
 //            }
@@ -839,17 +831,17 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //     * @since 4.3
 //     */
 //    fun setProfile(profile: Boolean) {
-//        val interp = interpreter
-//        val saveMode = interp.getPredictionMode()
+//        val interp = interpreter!!
+//        val saveMode = interp.predictionMode
 //        if (profile) {
 //            if (interp !is ProfilingATNSimulator) {
 //                interpreter = ProfilingATNSimulator(this)
 //            }
 //        } else if (interp is ProfilingATNSimulator) {
-//            val sim = ParserATNSimulator(this, atn, interp.decisionToDFA, interp.getSharedContextCache())
+//            val sim = ParserATNSimulator(this, atn, interp.decisionToDFA, interp.sharedContextCache!!)
 //            interpreter = sim
 //        }
-//        interpreter.setPredictionMode(saveMode)
+//        interpreter!!.predictionMode = saveMode
 //    }
 //
 //    companion object {

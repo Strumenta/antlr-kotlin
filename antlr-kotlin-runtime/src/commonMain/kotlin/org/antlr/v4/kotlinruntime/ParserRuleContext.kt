@@ -82,15 +82,15 @@ open class ParserRuleContext : RuleContext {
      * (for example, zero length or error productions) this token may precede start.
      */
     var stop: Token? = null
-    //
-//    /**
-//     * The exception that forced this rule to return. If the rule successfully
-//     * completed, this is `null`.
-//     */
+
+    /**
+     * The exception that forced this rule to return. If the rule successfully
+     * completed, this is `null`.
+     */
     var exception: RecognitionException? = null
 
-    /** Override to make type more specific  */
-//    var parent: ParserRuleContext? = null
+//    /** Override to make type more specific  */
+//    override public var parent: ParserRuleContext? = null
 //        get() = super.readParent() as ParserRuleContext?
 //        set
 
@@ -329,12 +329,8 @@ open class ParserRuleContext : RuleContext {
 //
 //    /** Used for rule context info debugging during parse-time, not so much for ATN debugging  */
 //    fun toInfoString(recognizer: Parser): String {
-//        val rules = recognizer.getRuleInvocationStack(this)
-//        Collections.reverse(rules)
-//        return "ParserRuleContext" + rules + "{" +
-//                "start=" + start +
-//                ", stop=" + stop +
-//                '}'
+//        val rules = recognizer.getRuleInvocationStack(this).reversed()
+//        return """ParserRuleContext$rules{start=$start, stop=$stop}"""
 //    }
 }
 
