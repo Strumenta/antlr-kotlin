@@ -7,3 +7,4 @@ build
 out
 **/.DS_Store
 .java-version
+/kotlin-js-store

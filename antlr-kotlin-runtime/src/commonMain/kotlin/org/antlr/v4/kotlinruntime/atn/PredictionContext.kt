@@ -458,10 +458,10 @@ abstract class PredictionContext protected constructor(
                     // same payload (stack tops are equal), must yield merged singleton
                     val payload = a.returnStates[i]
                     // $+$ = $
-                    val `both$` = payload == EMPTY_RETURN_STATE &&
+                    val both = payload == EMPTY_RETURN_STATE &&
                             a_parent == null && b_parent == null
                     val ax_ax = a_parent != null && b_parent != null && a_parent == b_parent // ax+ax -> ax
-                    if (`both$` || ax_ax) {
+                    if (both || ax_ax) {
                         mergedParents[k] = a_parent // choose left
                         mergedReturnStates[k] = payload
                     } else { // ax+ay -> a'[x,y]
