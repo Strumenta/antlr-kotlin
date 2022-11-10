@@ -1,5 +1,5 @@
 buildscript {
-    val kotlinVersion = "1.6.21"
+    val kotlinVersion = "1.7.21"
 
     repositories {
         mavenLocal()
@@ -50,6 +50,6 @@ allprojects {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "7.4.2"
+    gradleVersion = "7.5.1"
     distributionType = Wrapper.DistributionType.ALL
 }
