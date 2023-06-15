@@ -23,12 +23,22 @@ kotlin {
             staticLib()
         }
     }
-    linuxX64("linux") {
+    linuxArm64 {
         binaries {
             staticLib()
         }
     }
-    macosX64("mac") {
+    linuxX64 {
+        binaries {
+            staticLib()
+        }
+    }
+    macosArm64 {
+        binaries {
+            staticLib()
+        }
+    }
+    macosX64 {
         binaries {
             staticLib()
         }
@@ -43,7 +53,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("com.benasher44:uuid:0.6.0")
+                implementation("com.benasher44:uuid:0.7.1")
             }
         }
         commonTest {
@@ -78,11 +88,23 @@ kotlin {
         val iosMain by getting {
             dependsOn(nativeMain)
         }
-        val linuxMain by getting {
+        val linuxMain by creating {
             dependsOn(nativeMain)
         }
-        val macMain by getting {
+        val linuxArm64Main by getting {
+            dependsOn(linuxMain)
+        }
+        val linuxX64Main by getting {
+            dependsOn(linuxMain)
+        }
+        val macMain by creating {
             dependsOn(nativeMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macMain)
         }
         val windowsMain by getting {
             dependsOn(nativeMain)
