@@ -17,15 +17,16 @@
 package com.strumenta.antlrkotlin.gradleplugin;
 
 import com.strumenta.antlrkotlin.gradleplugin.internal.*;
-import org.gradle.api.Action;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.tasks.*;
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs;
-import org.gradle.api.tasks.incremental.InputFileDetails;
 import org.gradle.process.internal.worker.WorkerProcessFactory;
 import org.gradle.util.GFileUtils;
+import org.gradle.work.ChangeType;
+import org.gradle.work.Incremental;
+import org.gradle.work.InputChanges;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Generates parsers from Antlr grammars.
  */
 @CacheableTask
-public class AntlrKotlinTask extends SourceTask {
+public abstract class AntlrKotlinTask extends SourceTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AntlrKotlinTask.class);
 
@@ -192,32 +193,34 @@ public class AntlrKotlinTask extends SourceTask {
         throw new UnsupportedOperationException();
     }
 
+    @Incremental
+    @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
+    public abstract ConfigurableFileCollection getSourceItems();
+
     @TaskAction
-    public void execute(IncrementalTaskInputs inputs) {
+    public void execute(InputChanges inputs) {
         final Set<File> grammarFiles = new HashSet<File>();
         final Set<File> sourceFiles = getSource().getFiles();
         final AtomicBoolean cleanRebuild = new AtomicBoolean();
-        inputs.outOfDate(
-                new Action<InputFileDetails>() {
-                    public void execute(InputFileDetails details) {
-                        File input = details.getFile();
-                        if (sourceFiles.contains(input)) {
-                            grammarFiles.add(input);
-                        } else {
-                            // classpath change?
-                            cleanRebuild.set(true);
-                        }
+        if (inputs.isIncremental()) {
+            inputs.getFileChanges(getSourceItems()).forEach(fileChange -> {
+                if (fileChange.getChangeType() == ChangeType.MODIFIED) {
+                    File input = fileChange.getFile();
+                    if (sourceFiles.contains(input)) {
+                        grammarFiles.add(input);
+                    } else {
+                        // classpath change?
+                        cleanRebuild.set(true);
                     }
-                }
-        );
-        inputs.removed(new Action<InputFileDetails>() {
-            @Override
-            public void execute(InputFileDetails details) {
-                if (details.isRemoved()) {
+                } else if (fileChange.getChangeType() == ChangeType.REMOVED) {
                     cleanRebuild.set(true);
                 }
-            }
-        });
+            });
+        } else {
+            grammarFiles.addAll(getInputs().getSourceFiles().getFiles());
+        }
+
         if (cleanRebuild.get()) {
             GFileUtils.deleteDirectory(outputDirectory);
             grammarFiles.addAll(sourceFiles);
