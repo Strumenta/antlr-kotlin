@@ -53,7 +53,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("com.benasher44:uuid:0.7.1")
+                implementation("com.benasher44:uuid:0.8.1")
             }
         }
         commonTest {
