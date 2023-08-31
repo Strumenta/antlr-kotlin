@@ -740,9 +740,9 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //        return null
 //    }
 //
-//    override fun precpred(localctx: RuleContext, precedence: Int): Boolean {
-//        return precedence >= _precedenceStack.peek()
-//    }
+    override fun precpred(localctx: RuleContext, precedence: Int): Boolean {
+        return precedence >= _precedenceStack.peek()
+    }
 //
 //    fun inContext(context: String): Boolean {
 //        // TODO: useful in parser?
