@@ -1,10 +1,13 @@
+@file:Suppress("UnstableApiUsage")
+
+import com.strumenta.kotlinmultiplatform.gradle.targetsNative
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-  alias(libs.plugins.kotlin.multiplatform)
+  kotlin("multiplatform")
   antlr
 }
 
@@ -32,6 +35,15 @@ kotlin {
   js {
     browser()
     nodejs()
+  }
+
+  // Opting-in for native targets should be explicit,
+  // as it makes the build and test process slower.
+  //
+  // Opt in by setting 'target.is.native = true' in gradle.properties
+  if (targetsNative()) {
+    // Testing non-native targets should be enough, but in case
+    // it reveals itself as necessary, add them here
   }
 
   sourceSets {

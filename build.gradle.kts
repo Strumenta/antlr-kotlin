@@ -1,3 +1,5 @@
+import com.strumenta.kotlinmultiplatform.gradle.mavenRepositoryUrl
+
 plugins {
   `maven-publish`
 }
@@ -13,11 +15,7 @@ allprojects {
   apply(plugin = "maven-publish")
 
   // TODO: setup a real Maven repository to publish to, e.g., Maven Central
-  val repoUrl = if (project.property("repo.is.release") == "true") {
-    project.findProperty("repo.release.url")?.toString()
-  } else {
-    project.findProperty("repo.snapshot.url")?.toString()
-  }
+  val repoUrl = mavenRepositoryUrl()
 
   if (repoUrl != null) {
     publishing {

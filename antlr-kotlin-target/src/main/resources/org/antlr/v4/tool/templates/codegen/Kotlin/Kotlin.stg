@@ -985,7 +985,7 @@ private const val serializedATN: String =
 private val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
 
 init {
-    decisionToDFA = Array\<DFA>(ATN.numberOfDecisions) {
+    decisionToDFA = Array(ATN.numberOfDecisions) {
         DFA(ATN.getDecisionState(it)!!, it)
     }
 }

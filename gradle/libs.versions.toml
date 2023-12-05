@@ -7,6 +7,9 @@ uuid = "0.8.2"
 uuid = { group = "com.benasher44", name = "uuid", version.ref = "uuid" }
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
 
+# Gradle
+kotlin-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

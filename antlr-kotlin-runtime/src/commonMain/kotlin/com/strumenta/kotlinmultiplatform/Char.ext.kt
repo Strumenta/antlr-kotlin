@@ -16,28 +16,27 @@
 
 package com.strumenta.kotlinmultiplatform
 
-private const val MIN_SUPPLEMENTARY_CODE_POINT: Int = 0x10000
-private const val MAX_CODE_POINT: Int = 0x10FFFF
+// Note: Kotlin Native has constants named in the same way.
+//  The _ suffix prevents the conflicts
+private const val MIN_SUPPLEMENTARY_CODE_POINT_ = 0x10000
+private const val MAX_CODE_POINT_ = 0x10FFFF
+
 private const val MIN_HIGH_SURROGATE = 0xD800
 private const val MIN_LOW_SURROGATE = 0xDC00
 private const val HIGH_SURROGATE_ENCODE_OFFSET =
-    (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT ushr 10))
+    (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT_ ushr 10))
 
-private fun isBmpCodePoint(codePoint: Int): Boolean {
-    return codePoint ushr 16 == 0
-}
+private fun isBmpCodePoint(codePoint: Int): Boolean =
+    codePoint ushr 16 == 0
 
-private fun highSurrogate(codePoint: Int): Char {
-    return ((codePoint ushr 10) + HIGH_SURROGATE_ENCODE_OFFSET).toChar()
-}
+private fun highSurrogate(codePoint: Int): Char =
+    ((codePoint ushr 10) + HIGH_SURROGATE_ENCODE_OFFSET).toChar()
 
-private fun lowSurrogate(codePoint: Int): Char {
-    return ((codePoint and 0x3FF) + MIN_LOW_SURROGATE).toChar()
-}
+private fun lowSurrogate(codePoint: Int): Char =
+    ((codePoint and 0x3FF) + MIN_LOW_SURROGATE).toChar()
 
-private fun isValidCodePoint(codePoint: Int): Boolean {
-    return codePoint in 0..MAX_CODE_POINT
-}
+private fun isValidCodePoint(codePoint: Int): Boolean =
+    codePoint in 0..MAX_CODE_POINT_
 
 private fun CharArray.setSafe(index: Int, value: Char) {
     if (index !in this.indices) {
@@ -47,9 +46,8 @@ private fun CharArray.setSafe(index: Int, value: Char) {
     this[index] = value
 }
 
-fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean {
-    return codePoint in MIN_SUPPLEMENTARY_CODE_POINT..MAX_CODE_POINT
-}
+fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean =
+    codePoint in MIN_SUPPLEMENTARY_CODE_POINT_..MAX_CODE_POINT_
 
 @OptIn(ExperimentalStdlibApi::class)
 fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset: Int): Int {
@@ -68,6 +66,9 @@ fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset: Int):
     }
 }
 
-fun Char.Companion.charCount(codePoint: Int): Int {
-    return if (codePoint < MIN_SUPPLEMENTARY_CODE_POINT) 1 else 2
-}
+fun Char.Companion.charCount(codePoint: Int): Int =
+    if (codePoint < MIN_SUPPLEMENTARY_CODE_POINT_) {
+      1
+    } else {
+      2
+    }

@@ -1,8 +1,10 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-  alias(libs.plugins.kotlin.jvm)
+  kotlin("jvm")
   `java-library`
 }
 
