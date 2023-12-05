@@ -1,50 +1,27 @@
-@file:Suppress("UnstableApiUsage")
-
-import com.strumenta.kotlinmultiplatform.gradle.targetsNative
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-  kotlin("multiplatform")
+  id("strumenta.multiplatform")
   antlr
 }
 
-kotlin {
-  // We are ok to publish this module, but sources are unnecessary
-  withSourcesJar(publish = false)
-  explicitApiWarning()
-
-  @OptIn(ExperimentalKotlinGradlePluginApi::class)
-  compilerOptions {
-    apiVersion = KotlinVersion.KOTLIN_1_9
-    languageVersion = KotlinVersion.KOTLIN_1_9
-    freeCompilerArgs.add("-Xexpect-actual-classes")
-  }
-
-  jvm {
-    compilations.configureEach {
-      compilerOptions.configure {
-        jvmTarget.set(JvmTarget.JVM_1_8)
-        freeCompilerArgs.add("-Xjvm-default=all")
-      }
-    }
-  }
-
-  js {
-    browser()
-    nodejs()
-  }
+strumentaMultiplatform {
+  applyJvm()
+  applyJs()
 
   // Opting-in for native targets should be explicit,
   // as it makes the build and test process slower.
   //
   // Opt in by setting 'target.is.native = true' in gradle.properties
   if (targetsNative()) {
-    // Testing non-native targets should be enough, but in case
-    // it reveals itself as necessary, add them here
+    applyNative()
   }
+}
+
+kotlin {
+  // We are ok to publish this module, but sources are unnecessary
+  withSourcesJar(publish = false)
 
   sourceSets {
     commonMain {

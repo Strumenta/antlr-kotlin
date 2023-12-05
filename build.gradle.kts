@@ -1,4 +1,4 @@
-import com.strumenta.kotlinmultiplatform.gradle.mavenRepositoryUrl
+import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryUrl
 
 plugins {
   `maven-publish`
