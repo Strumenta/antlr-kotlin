@@ -4,7 +4,6 @@ import org.antlr.v4.codegen.CodeGenerator
 import org.antlr.v4.codegen.UnicodeEscapes
 import org.stringtemplate.v4.STGroup
 import org.stringtemplate.v4.StringRenderer
-import java.util.*
 
 public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerator) {
   public companion object {
@@ -46,26 +45,18 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
       "object",
     )
 
-    private val charValueEscape: Map<Char, String>
+    private val kotlinCharValueEscape: Map<Char, String>
 
     init {
-      val map = HashMap<Char, String>()
-      addEscapedChar(map, '\n', 'n')
-      addEscapedChar(map, '\r', 'r')
-      addEscapedChar(map, '\t', 't')
-      addEscapedChar(map, '\b', 'b')
+      val map = HashMap(defaultCharValueEscape)
+      addEscapedChar(map, '$')
 
-      map['\\'] = "\\\\"
-      map['\''] = "\\'"
-      map[10.toChar()] = "\\u000a"
-      map[11.toChar()] = "\\u000b"
-      map[12.toChar()] = "\\u000c"
-      map[13.toChar()] = "\\u000d"
-      map[14.toChar()] = "\\u000e"
-      map[15.toChar()] = "\\u000f"
-      map['"'] = "\\\""
+      map[11.toChar()] = "\\u000b" // Vertical tab
+      map[12.toChar()] = "\\u000c" // Form feed
+      map[14.toChar()] = "\\u000e" // Shift out
+      map[15.toChar()] = "\\u000f" // Shift in
 
-      charValueEscape = map
+      kotlinCharValueEscape = map
     }
   }
 
@@ -85,6 +76,9 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
 
   override fun getReservedWords(): Set<String> =
     badWords
+
+  override fun getTargetCharValueEscape(): Map<Char, String> =
+    kotlinCharValueEscape
 
   override fun encodeInt16AsCharEscape(v: Int): String {
     require(v >= Character.MIN_VALUE.code && v <= Character.MAX_VALUE.code) {
@@ -109,9 +103,5 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
   override fun appendUnicodeEscapedCodePoint(codePoint: Int, sb: StringBuilder): Unit =
     UnicodeEscapes.appendEscapedCodePoint(sb, codePoint, "Java")
 
-  private class KotlinStringRenderer : StringRenderer() {
-    override fun toString(value: Any, formatString: String?, locale: Locale): String {
-      return super.toString(value, formatString, locale)
-    }
-  }
+  private class KotlinStringRenderer : StringRenderer()
 }
