@@ -1,19 +1,11 @@
 package org.antlr.v4.codegen.target
 
 import org.antlr.v4.codegen.CodeGenerator
+import org.antlr.v4.codegen.Target
 import org.antlr.v4.codegen.UnicodeEscapes
-import org.stringtemplate.v4.STGroup
-import org.stringtemplate.v4.StringRenderer
 
 public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerator) {
-  public companion object {
-    public const val VERSION: String = "4.13.1"
-
-    /**
-     * The Kotlin target can cache the code generation templates.
-     */
-    private val targetTemplates = ThreadLocal<STGroup>()
-
+  private companion object {
     /**
      * Reserved Kotlin keywords.
      */
@@ -45,63 +37,50 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
       "object",
     )
 
+    /**
+     * @see Target.defaultCharValueEscape
+     * @see Target.getTargetCharValueEscape
+     */
     private val kotlinCharValueEscape: Map<Char, String>
 
     init {
-      val map = HashMap(defaultCharValueEscape)
-      addEscapedChar(map, '$')
+      kotlinCharValueEscape = HashMap(defaultCharValueEscape)
+      addEscapedChar(kotlinCharValueEscape, '$')
 
-      map[11.toChar()] = "\\u000b" // Vertical tab
-      map[12.toChar()] = "\\u000c" // Form feed
-      map[14.toChar()] = "\\u000e" // Shift out
-      map[15.toChar()] = "\\u000f" // Shift in
-
-      kotlinCharValueEscape = map
+      kotlinCharValueEscape[11.toChar()] = "\\u000b" // Vertical tab
+      kotlinCharValueEscape[12.toChar()] = "\\u000c" // Form feed
+      kotlinCharValueEscape[14.toChar()] = "\\u000e" // Shift out
+      kotlinCharValueEscape[15.toChar()] = "\\u000f" // Shift in
     }
   }
 
   /**
-   * Avoid grammar symbols in this set to prevent conflicts in generated code.
+   * @see JavaTarget.reservedWords
+   * @see Target.getReservedWords
    */
-  private val badWords: Set<String> by lazy {
-    val set = HashSet<String>(64)
-    set.addAll(kotlinKeywords)
-    set.add("rule")
-    set.add("parserRule")
-    set
+  private val kotlinReservedWords = buildSet {
+    addAll(kotlinKeywords)
+    add("rule")
+    add("parserRule")
   }
 
   override fun getVersion(): String =
-    VERSION
+    "4.13.1"
 
   override fun getReservedWords(): Set<String> =
-    badWords
+    kotlinReservedWords
 
   override fun getTargetCharValueEscape(): Map<Char, String> =
     kotlinCharValueEscape
 
   override fun encodeInt16AsCharEscape(v: Int): String {
-    require(v >= Character.MIN_VALUE.code && v <= Character.MAX_VALUE.code) {
+    require(v in Character.MIN_VALUE.code..Character.MAX_VALUE.code) {
       "Cannot encode the specified value: $v"
     }
 
     return "\\u" + Integer.toHexString(v or 0x10000).substring(1, 5)
   }
 
-  override fun loadTemplates(): STGroup {
-    var result = targetTemplates.get()
-
-    if (result == null) {
-      result = super.loadTemplates()
-      result.registerRenderer(String::class.java, KotlinStringRenderer(), true)
-      targetTemplates.set(result)
-    }
-
-    return result
-  }
-
   override fun appendUnicodeEscapedCodePoint(codePoint: Int, sb: StringBuilder): Unit =
     UnicodeEscapes.appendEscapedCodePoint(sb, codePoint, "Java")
-
-  private class KotlinStringRenderer : StringRenderer()
 }
