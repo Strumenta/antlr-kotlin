@@ -205,7 +205,7 @@ public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<
 >>
 
 fileHeader(grammarFileName, ANTLRVersion) ::= <<
-// Generated from <grammarFileName; format="java-escape"> by ANTLR <ANTLRVersion>
+// Generated from <grammarFileName> by ANTLR <ANTLRVersion>
 >>
 
 Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
@@ -237,9 +237,11 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     }
     <endif>
 
+    <if(parser.rules)>
     public enum class Rules(public val id: Int) {
         <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
     }
+    <endif>
 
     public companion object {
         private val decisionToDFA: Array\<DFA>
@@ -357,6 +359,7 @@ public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><e
     enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
     <namedActions.init>
     <locals; separator="\n">
+
     try {
 <if(currentRule.hasLookaheadBlock)>
         var _alt: Int
@@ -400,6 +403,7 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
     <namedActions.init>
     <locals; separator="\n">
+
     try {
 <if(currentRule.hasLookaheadBlock)>
         var _alt: Int
@@ -441,6 +445,7 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
 <preamble; separator="\n">
+
 when (_input!!.LA(1)) {
     <choice.altLook,alts:{look,alt| <cases(tokens=look)> /*LL1AltBlock*/{<alt>\}}; separator="\n">
     else -> <error>
@@ -450,6 +455,7 @@ when (_input!!.LA(1)) {
 LL1OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
+
 when (_input!!.LA(1)) {
     <choice.altLook,alts:{look,alt| <cases(tokens=look)><if(alt)><alt><else>Unit<endif>}; separator="\n">
     else -> Unit
@@ -460,6 +466,7 @@ LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <preamble; separator="\n">
+
 if (<expr>) {
     <alts; separator="\n">
 }
@@ -469,6 +476,7 @@ LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <preamble; separator="\n">
+
 while (<loopExpr>) {
     <alts; separator="\n">
     this.state = <choice.loopBackStateNumber>
@@ -481,6 +489,7 @@ LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
 this.state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
 <preamble; separator="\n">
+
 do {
     <alts; separator="\n">
     this.state = <choice.stateNumber> <! loopback/exit decision !>
@@ -496,6 +505,7 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
 <preamble; separator="\n">
+
 when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
     <alts:{alt|<i> -> {<alt>\}}; separator="\n">
 }
@@ -504,6 +514,7 @@ when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
 OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
+
 when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
     <alts:{alt|<i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
 }
@@ -513,6 +524,7 @@ StarBlock(choice, alts, sync, iteration) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 _alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
+
 while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER) {
     if (_alt == 1 <if(!choice.ast.greedy)> + 1<endif>) {
         <iteration>
@@ -555,7 +567,7 @@ testShiftInRange(shiftAmount) ::= <<
 ((<shiftAmount>) and 0x3f.inv()) == 0
 >>
 
-// éroduces smaller bytecode only when bits.tokens contains more than two items
+// produces smaller bytecode only when bits.tokens contains more than two items
 bitsetBitfieldComparison(s, bits) ::= <%
 (<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and <bits.calculated>L) != 0L)
 %>
@@ -595,6 +607,7 @@ CommonSetStuff(m, expr, capture, invert) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)><m.labels:{l | <labelref(l)> = }>_input!!.LT(1)<endif>
 <capture>
+
 if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
     <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
 }
@@ -698,7 +711,7 @@ public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>.id, i)!!
 >>
 
 ContextRuleGetterDecl(r) ::= <<
-public fun <r.escapedName>(): <r.ctxName>? = getRuleContext(<r.ctxName>::class,0)
+public fun <r.escapedName>(): <r.ctxName>? = getRuleContext(<r.ctxName>::class, 0)
 >>
 
 ContextRuleListGetterDecl(r) ::= <<
@@ -706,7 +719,7 @@ public fun <r.escapedName>(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>:
 >>
 
 ContextRuleListIndexedGetterDecl(r) ::= <<
-public fun <r.escapedName>(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class,i)
+public fun <r.escapedName>(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
@@ -726,7 +739,7 @@ StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, exten
 @Suppress("FunctionName")
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
-        get() = Rules.RULE_report.id
+        get() = Rules.RULE_<struct.derivedFromName>.id
         set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
 
     <attrs:{a | <a>}; separator="\n">
@@ -766,6 +779,7 @@ public open class <struct.name> : <currentRule.name; format="cap">Context {
 
     <dispatchMethods; separator="\n\n">
 }
+
 >>
 
 ListenerDispatchMethod(method) ::= <<
@@ -796,7 +810,7 @@ ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
 
 // used for left-recursive rules
 recRuleAltPredicate(ruleName, opPrec) ::= "precpred(context!!, <opPrec>)"
-recRuleSetReturnAction(src, name) ::= "$<name>=$<src>.<name>"
+recRuleSetReturnAction(src, name) ::= "$<name> = $<src>.<name>"
 recRuleSetStopToken() ::= "this.context!!.stop = _input!!.LT(-1)"
 
 recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
@@ -808,7 +822,6 @@ _localctx.<label>.add(_prevctx!!)
 _localctx.<label> = _prevctx
 <endif>
 <endif>
-<if(label)>_localctx.<label> = _prevctx;<endif>
 pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
 >>
 

@@ -1,6 +1,6 @@
 # ANTLR Kotlin
 
-Up-to-date with mainstream commit: a400163f23b29eb0b164ebc933c9201f7641a499
+Up-to-date with mainstream commit: e9df4649845e55393306603a4dd42cecc5af6bfc
 
 Files to re-verify and sync:
 

@@ -7,6 +7,7 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.IdentityHashMap
+import com.strumenta.kotlinmultiplatform.System
 import com.strumenta.kotlinmultiplatform.assert
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.Recognizer
@@ -432,9 +433,24 @@ abstract class PredictionContext protected constructor(
         ): PredictionContext {
             if (mergeCache != null) {
                 var previous = mergeCache!!.get(a, b)
-                if (previous != null) return previous
+
+                if (previous != null) {
+                    if (ParserATNSimulator.trace_atn_sim) {
+                        System.out.println("mergeArrays a="+a+",b="+b+" -> previous")
+                    }
+
+                    return previous;
+                }
+
                 previous = mergeCache!!.get(b, a)
-                if (previous != null) return previous
+
+                if (previous != null) {
+                    if (ParserATNSimulator.trace_atn_sim) {
+                        System.out.println("mergeArrays a="+a+",b="+b+" -> previous")
+                    }
+
+                    return previous;
+                }
             }
 
             // merge sorted payloads a + b => M
@@ -513,10 +529,21 @@ abstract class PredictionContext protected constructor(
             // TODO: track whether this is possible above during merge sort for speed
             if (M == a) {
                 mergeCache?.put(a, b, a)
+
+                if (ParserATNSimulator.trace_atn_sim) {
+                    System.out.println("mergeArrays a="+a+",b="+b+" -> a")
+                }
+
                 return a
             }
+
             if (M == b) {
                 mergeCache?.put(a, b, b)
+
+                if (ParserATNSimulator.trace_atn_sim) {
+                    System.out.println("mergeArrays a="+a+",b="+b+" -> b")
+                }
+
                 return b
             }
 
@@ -524,6 +551,11 @@ abstract class PredictionContext protected constructor(
             combineCommonParents(mergedParents.filterNotNull().toTypedArray())
 
             mergeCache?.put(a, b, M)
+
+            if (ParserATNSimulator.trace_atn_sim) {
+                System.out.println("mergeArrays a="+a+",b="+b+" -> "+M);
+            }
+
             return M
         }
 
