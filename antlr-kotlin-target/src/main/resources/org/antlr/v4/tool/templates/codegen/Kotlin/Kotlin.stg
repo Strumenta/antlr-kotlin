@@ -332,7 +332,10 @@ init {
 RuleActionFunction(r, actions) ::= <<
 private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
     when (actionIndex) {
-        <actions:{index|<index> -> { <actions.(index)> \}}; separator="\n">
+<actions:{index|
+        <index> -> {
+            <actions.(index)>
+        \}}; separator="\n">
     }
 }
 >>
@@ -390,16 +393,16 @@ LeftRecursiveRuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> fun <currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
+<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public<endif> fun <currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
     return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>)
 }
 
 private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType> {
-    var _parentctx: ParserRuleContext? = context
-    var _parentState: Int = state
-    var _localctx: <currentRule.ctxType>= <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
-    var _prevctx: <currentRule.ctxType>= _localctx
-    var _startState: Int = <currentRule.startState>
+    var _parentctx = context
+    var _parentState = state
+    var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
+    var _prevctx = _localctx
+    var _startState = <currentRule.startState>
     enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
     <namedActions.init>
     <locals; separator="\n">
@@ -447,7 +450,10 @@ errorHandler.sync(this)
 <preamble; separator="\n">
 
 when (_input!!.LA(1)) {
-    <choice.altLook,alts:{look,alt| <cases(tokens=look)> /*LL1AltBlock*/{<alt>\}}; separator="\n">
+<choice.altLook,alts:{look,alt|
+    <cases(tokens=look)> /*LL1AltBlock*/ {
+        <alt>
+    \}}>
     else -> <error>
 }
 >>
@@ -507,7 +513,10 @@ errorHandler.sync(this)
 <preamble; separator="\n">
 
 when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
-    <alts:{alt|<i> -> {<alt>\}}; separator="\n">
+<alts:{alt|
+    <i> -> {
+        <alt>
+    \}}>
 }
 >>
 
@@ -516,7 +525,8 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 
 when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
-    <alts:{alt|<i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
+<alts:{alt|
+    <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
 }
 >>
 
@@ -544,8 +554,9 @@ _alt = 1<if(!choice.ast.greedy)> + 1<endif>
 
 do {
     when (_alt) {
-       <alts:{alt|<i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
-       else -> <error>
+<alts:{alt|
+        <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
+        else -> <error>
     }
 
     this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
@@ -844,7 +855,8 @@ _prevctx = _localctx
 >>
 
 recRuleSetPrevCtx() ::= <<
-if (_parseListeners != null) {
+<! Listeners list should never be null !>
+if (_parseListeners.isNotEmpty()) {
     triggerExitRuleEvent()
 }
 
