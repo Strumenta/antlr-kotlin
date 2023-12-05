@@ -16,8 +16,8 @@
 
 package com.strumenta.kotlinmultiplatform
 
+import java.util.WeakHashMap as JavaWeakHashMap
 
-actual class WeakHashMap<K, V> constructor(val _wrapped: java.util.WeakHashMap<K, V> = java.util.WeakHashMap<K, V>()) : MutableMap<K, V> by _wrapped {
-
-    actual constructor() : this(java.util.WeakHashMap<K, V>())
+actual class WeakHashMap<K, V>(private val wrapped: JavaWeakHashMap<K, V> = JavaWeakHashMap()) : MutableMap<K, V> by wrapped {
+    actual constructor() : this(JavaWeakHashMap())
 }

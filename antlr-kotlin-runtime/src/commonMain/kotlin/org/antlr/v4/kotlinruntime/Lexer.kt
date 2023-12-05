@@ -5,8 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.asCharArray
-import com.strumenta.kotlinmultiplatform.outMessage
+import com.strumenta.kotlinmultiplatform.System
 import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.misc.IntegerStack
 import org.antlr.v4.kotlinruntime.misc.Interval
@@ -262,7 +261,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun popMode(): Int {
         if (_modeStack.isEmpty) throw RuntimeException()
-        if (LexerATNSimulator.debug) outMessage("popMode back to " + _modeStack.peek())
+        if (LexerATNSimulator.debug) System.out.println("popMode back to " + _modeStack.peek())
         mode(_modeStack.pop())
         return _mode
     }
@@ -317,7 +316,7 @@ abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
     fun getErrorDisplay(s: String): String {
         val buf = StringBuilder()
-        for (c in s.asCharArray()) {
+        for (c in s.toCharArray()) {
             buf.append(getErrorDisplay(c.toInt()))
         }
         return buf.toString()

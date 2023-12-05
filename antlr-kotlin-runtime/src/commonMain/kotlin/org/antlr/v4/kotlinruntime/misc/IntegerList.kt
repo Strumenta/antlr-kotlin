@@ -57,14 +57,13 @@ open class IntegerList {
 
     fun addAll(array: IntArray) {
         ensureCapacity(_size + array.size)
-        Arrays
-        arraycopy(array, 0, _data!!, _size, array.size)
+        System.arraycopy(array, 0, _data!!, _size, array.size)
         _size += array.size
     }
 
     fun addAll(list: IntegerList) {
         ensureCapacity(_size + list._size)
-        arraycopy(list._data!!, 0, _data!!, _size, list._size)
+        System.arraycopy(list._data!!, 0, _data!!, _size, list._size)
         _size += list._size
     }
 
@@ -122,7 +121,7 @@ open class IntegerList {
             throw IllegalArgumentException()
         }
 
-        arraycopy(_data!!, toIndex, _data!!, fromIndex, _size - toIndex)
+        System.arraycopy(_data!!, toIndex, _data!!, fromIndex, _size - toIndex)
         _size -= toIndex - fromIndex
     }
 

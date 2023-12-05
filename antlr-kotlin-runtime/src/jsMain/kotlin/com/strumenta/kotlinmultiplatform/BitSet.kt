@@ -16,11 +16,9 @@
 
 package com.strumenta.kotlinmultiplatform
 
-actual class BitSet {
-
+// TODO(Edoardo): revisit this implementation
+actual class BitSet actual constructor() {
     private val setBits = HashSet<Int>()
-
-    actual constructor()
 
     actual fun set(bitIndex: Int) {
         if (bitIndex < 0) throw IllegalArgumentException()
@@ -49,5 +47,4 @@ actual class BitSet {
     actual fun or(alts: BitSet) {
         this.setBits.addAll(alts.setBits)
     }
-
 }

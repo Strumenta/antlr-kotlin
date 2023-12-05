@@ -6,11 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.assert
-import com.strumenta.kotlinmultiplatform.errMessage
-import com.strumenta.kotlinmultiplatform.outMessage
-import com.strumenta.kotlinmultiplatform.synchronized
+import com.strumenta.kotlinmultiplatform.*
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
@@ -356,7 +352,7 @@ open class ParserATNSimulator(
             if (s0 == null) {
                 if (outerContext == null) outerContext = EMPTY_RULECTX
                 if (debug || debug_list_atn_decisions) {
-                    outMessage("predictATN decision " + dfa.decision +
+                    System.out.println("predictATN decision " + dfa.decision +
                             " exec LA(1)==" + getLookaheadName(input) +
                             ", outerContext=" + outerContext!!.toString(parser))
                 }
@@ -384,7 +380,7 @@ open class ParserATNSimulator(
             }
 
             val alt = execATN(dfa, s0, input, index, outerContext!!)
-            if (debug) outMessage("DFA after predictATN: " + dfa.toString(parser!!.vocabulary))
+            if (debug) System.out.println("DFA after predictATN: " + dfa.toString(parser!!.vocabulary))
             return alt
         } finally {
             mergeCache = null // wack cache after each prediction
@@ -428,7 +424,7 @@ open class ParserATNSimulator(
                           input: TokenStream, startIndex: Int,
                           outerContext: ParserRuleContext): Int {
         if (debug || debug_list_atn_decisions) {
-            outMessage("execATN decision " + dfa.decision +
+            System.out.println("execATN decision " + dfa.decision +
                     " exec LA(1)==" + getLookaheadName(input) +
                     " line " + input.LT(1)!!.line + ":" + input.LT(1)!!.charPositionInLine)
         }
@@ -1352,7 +1348,7 @@ open class ParserATNSimulator(
             }
 
             if (predicateEvaluationResult) {
-                if (debug || dfa_debug) outMessage("PREDICT " + pair.alt)
+                if (debug || dfa_debug) System.out.println("PREDICT " + pair.alt)
                 predictions.set(pair.alt)
                 if (!complete) {
                     break
@@ -1765,7 +1761,7 @@ open class ParserATNSimulator(
                     pt.precedence + ">=_p" +
                     ", ctx dependent=true")
             if (parser != null) {
-                outMessage("context surrounding pred is " + parser!!.ruleInvocationStack)
+                System.out.println("context surrounding pred is " + parser!!.ruleInvocationStack)
             }
         }
 
@@ -1806,7 +1802,7 @@ open class ParserATNSimulator(
                     pt.ruleIndex + ":" + pt.predIndex +
                     ", ctx dependent=" + pt.isCtxDependent)
             if (parser != null) {
-                outMessage("context surrounding pred is " + parser!!.ruleInvocationStack)
+                System.out.println("context surrounding pred is " + parser!!.ruleInvocationStack)
             }
         }
 
@@ -1932,7 +1928,7 @@ open class ParserATNSimulator(
      * "dead" code for a bit.
      */
     fun dumpDeadEndConfigs(nvae: NoViableAltException) {
-        errMessage("dead end configs: ")
+        System.err.println("dead end configs: ")
         for (c in nvae.deadEndConfigs!!) {
             var trans = "no edges"
             if (c.state.numberOfTransitions > 0) {
@@ -1946,7 +1942,7 @@ open class ParserATNSimulator(
                     trans = (if (not) "~" else "") + "Set " + st.set.toString()
                 }
             }
-            errMessage(c.toString(parser, true) + ":" + trans)
+            System.err.println(c.toString(parser, true) + ":" + trans)
         }
     }
 
@@ -2009,7 +2005,7 @@ open class ParserATNSimulator(
         }
 
         if (debug) {
-            outMessage("DFA=\n" + dfa.toString(if (parser != null) parser!!.vocabulary else VocabularyImpl.EMPTY_VOCABULARY))
+            System.out.println("DFA=\n" + dfa.toString(if (parser != null) parser!!.vocabulary else VocabularyImpl.EMPTY_VOCABULARY))
         }
 
         return to
@@ -2054,7 +2050,7 @@ open class ParserATNSimulator(
     protected open fun reportAttemptingFullContext(dfa: DFA, conflictingAlts: BitSet, configs: ATNConfigSet, startIndex: Int, stopIndex: Int) {
         if (debug || retry_debug) {
             val interval = Interval.of(startIndex, stopIndex)
-            outMessage("reportAttemptingFullContext decision=" + dfa.decision + ":" + configs +
+            System.out.println("reportAttemptingFullContext decision=" + dfa.decision + ":" + configs +
                     ", input=" + parser!!.tokenStream!!.getText(interval))
         }
         if (parser != null) parser!!.errorListenerDispatch.reportAttemptingFullContext(parser, dfa, startIndex, stopIndex, conflictingAlts, configs)
@@ -2063,7 +2059,7 @@ open class ParserATNSimulator(
     open fun reportContextSensitivity(dfa: DFA, prediction: Int, configs: ATNConfigSet, startIndex: Int, stopIndex: Int) {
         if (debug || retry_debug) {
             val interval = Interval.of(startIndex, stopIndex)
-            outMessage("reportContextSensitivity decision=" + dfa.decision + ":" + configs +
+            System.out.println("reportContextSensitivity decision=" + dfa.decision + ":" + configs +
                     ", input=" + parser!!.tokenStream!!.getText(interval))
         }
         if (parser != null) parser!!.errorListenerDispatch.reportContextSensitivity(parser, dfa, startIndex, stopIndex, prediction, configs)

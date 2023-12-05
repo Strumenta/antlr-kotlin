@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.errMessage
+import com.strumenta.kotlinmultiplatform.System
 
 /**
  *
@@ -32,7 +32,7 @@ class ConsoleErrorListener : BaseErrorListener() {
                              charPositionInLine: Int,
                              msg: String,
                              e: RecognitionException?) {
-        errMessage("line $line:$charPositionInLine $msg")
+        System.err.println("line $line:$charPositionInLine $msg")
     }
 
     companion object {

@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.maxValue
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
@@ -105,7 +104,7 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
             }
 
             var ruleIndex = data[p++]
-            if (ruleIndex == Char.maxValue().toInt()) {
+            if (ruleIndex == Char.MAX_VALUE.toInt()) {
                 ruleIndex = -1
             }
 

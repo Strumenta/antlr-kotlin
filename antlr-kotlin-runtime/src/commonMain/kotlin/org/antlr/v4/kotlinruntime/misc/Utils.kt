@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.misc
 
 import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.asCharArray
 
 object Utils {
 
@@ -27,7 +26,7 @@ object Utils {
 
     fun escapeWhitespace(s: String, escapeSpaces: Boolean): String {
         val buf = StringBuilder()
-        for (c in s.asCharArray()) {
+        for (c in s.toCharArray()) {
             if (c == ' ' && escapeSpaces)
                 buf.append('\u00B7')
             else if (c == '\t')
@@ -43,7 +42,7 @@ object Utils {
     }
 
     suspend fun readFile(fileName: String): CharArray {
-        return Platform.readFile(fileName).asCharArray()
+        return Platform.readFile(fileName).toCharArray()
     }
 
     /** Convert array of strings to stringindex map. Useful for

@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.errMessage
+import com.strumenta.kotlinmultiplatform.System
 import org.antlr.v4.kotlinruntime.atn.ATNState
 import org.antlr.v4.kotlinruntime.atn.RuleTransition
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
@@ -136,7 +136,7 @@ open class DefaultErrorStrategy : ANTLRErrorStrategy {
         } else if (e is FailedPredicateException) {
             reportFailedPredicate(recognizer, e as FailedPredicateException)
         } else {
-            errMessage("unknown recognition error type: " + e)
+            System.err.println("unknown recognition error type: " + e)
             recognizer.notifyErrorListeners(e.offendingToken!!, e.message!!, e)
         }
     }
