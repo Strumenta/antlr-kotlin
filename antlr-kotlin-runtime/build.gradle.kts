@@ -18,7 +18,13 @@ kotlin {
     compilations.configureEach {
       compilerOptions.configure {
         jvmTarget.set(JvmTarget.JVM_1_8)
-        freeCompilerArgs.add("-Xjvm-default=all")
+        freeCompilerArgs.addAll(
+          "-Xjvm-default=all",
+          // TODO: verify the performance impact of null assertions
+          // "-Xno-call-assertions",
+          // "-Xno-receiver-assertions",
+          // "-Xno-param-assertions",
+        )
       }
     }
 

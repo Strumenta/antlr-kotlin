@@ -29,16 +29,28 @@
  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-javaTypeInitMap ::= [
-    "int":"0",
-    "long":"0",
-    "float":"0.0f",
-    "double":"0.0",
-    "boolean":"false",
-    "byte":"0",
-    "short":"0",
-    "char":"0",
-    default:"null" // anything other than a primitive type is an object
+KotlinTypeInitMap ::= [
+    "Int":"0",
+    "Long":"0L",
+    "Float":"0.0F",
+    "Double":"0.0",
+    "Boolean":"false",
+    "Byte":"0",
+    "Short":"0",
+    "Char":"0.toChar()",
+    default:"null" // Anything other than a primitive type is an object
+]
+
+KotlinTypeMap ::= [
+	"int":"Int",
+	"long":"Long",
+	"float":"Float",
+	"double":"Double",
+	"boolean":"Boolean",
+	"byte":"Byte",
+	"short":"Short",
+	"char":"Char",
+	default:key
 ]
 
 ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
@@ -357,7 +369,7 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.name>(<args; separator=",">): <currentRule.ctxType> {
+public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
     var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.name>}>)
     enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
     <namedActions.init>
@@ -670,7 +682,7 @@ LexerPushModeCommand(arg, grammar) ::= "pushMode(<arg>)"
 
 ActionText(t) ::= "<t.text>"
 ActionTemplate(t) ::= "<t.st>"
-ArgRef(a) ::= "_localctx.<a.name>"
+ArgRef(a) ::= "_localctx!!.<a.name>"
 LocalRef(a) ::= "_localctx.<a.name>"
 RetValueRef(a) ::= "_localctx.<a.name>"
 QRetValueRef(a) ::= "<ctx(a)>.<a.dict>.<a.name>"
@@ -709,11 +721,11 @@ SetNonLocalAttr(s, rhsChunks) ::= "((<s.ruleName; format=\"cap\">Context)getInvo
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>? = null"
+TokenDecl(t) ::= "<t.name>: <KotlinTypeMap.(TokenLabelType())>? = null"
 TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "var <t.name>: Mutable\<Token> = ArrayList\<Token>()"
-RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "var <rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList\<Token>()"
+RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
 ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode? = getToken(Tokens.<t.name>.id, 0)"
 ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>.id)"
 
@@ -753,15 +765,11 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
         get() = Rules.RULE_<struct.derivedFromName>.id
         set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
 
-    <attrs:{a | public <a>}; separator="\n">
+    <attrs:{a | public var <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
-<if(ctorAttrs)>
-    public constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState)
-
-<endif>
     public constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState) {
-        <struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
+        <struct.ctorAttrs:{a | this.<a.name> = <a.name>}; separator="\n">
     }
 
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
@@ -781,7 +789,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
 
 AltLabelStructDecl(struct, attrs, getters, dispatchMethods) ::= <<
 public open class <struct.name> : <currentRule.name; format="cap">Context {
-    <attrs:{a | public <a>}; separator="\n">
+    <attrs:{a | public var <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
     public constructor(ctx: <currentRule.name; format="cap">Context) {
@@ -811,7 +819,7 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
 }
 >>
 
-AttributeDecl(d) ::= "var <d.escapedName><if(d.type)>: <d.type><endif><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "<d.escapedName><if(d.type)>: <KotlinTypeMap.(d.type)><endif><if(d.initValue)> = <d.initValue><endif>"
 
 // If we don't know location of label def x, use this template
 labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.escapedName>"
@@ -985,7 +993,7 @@ init {
 
 // Using a type to init value map, try to init a type; if not in table must be an object, default value is "null".
 initValue(typeName) ::= <<
-<javaTypeInitMap.(typeName)>
+<KotlinTypeInitMap.(typeName)>
 >>
 
 codeFileExtension() ::= ".kt"
