@@ -18,33 +18,33 @@ package com.strumenta.kotlinmultiplatform
 
 // TODO(Edoardo): revisit this implementation
 actual class BitSet actual constructor() {
-    private val setBits = HashSet<Int>()
+  private val setBits = HashSet<Int>()
 
-    actual fun set(bitIndex: Int) {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        setBits.add(bitIndex)
-    }
+  actual fun set(bitIndex: Int) {
+    require(bitIndex >= 0)
+    setBits.add(bitIndex)
+  }
 
-    actual fun clear(bitIndex: Int) {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        setBits.remove(bitIndex)
-    }
+  actual fun clear(bitIndex: Int) {
+    require(bitIndex >= 0)
+    setBits.remove(bitIndex)
+  }
 
-    actual fun get(bitIndex: Int): Boolean {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        return setBits.contains(bitIndex)
-    }
+  actual fun get(bitIndex: Int): Boolean {
+    require(bitIndex >= 0)
+    return setBits.contains(bitIndex)
+  }
 
-    actual fun cardinality(): Int {
-        return setBits.size
-    }
+  actual fun cardinality(): Int {
+    return setBits.size
+  }
 
-    actual fun nextSetBit(i: Int): Int {
-        val nextSetBits = setBits.filter { it >= i }
-        return nextSetBits.minOrNull() ?: -1
-    }
+  actual fun nextSetBit(i: Int): Int {
+    val nextSetBits = setBits.filter { it >= i }
+    return nextSetBits.minOrNull() ?: -1
+  }
 
-    actual fun or(alts: BitSet) {
-        this.setBits.addAll(alts.setBits)
-    }
+  actual fun or(alts: BitSet) {
+    this.setBits.addAll(alts.setBits)
+  }
 }

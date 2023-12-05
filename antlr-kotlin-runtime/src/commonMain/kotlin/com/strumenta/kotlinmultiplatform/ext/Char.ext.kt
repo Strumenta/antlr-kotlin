@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.strumenta.kotlinmultiplatform
+package com.strumenta.kotlinmultiplatform.ext
 
 // Note: Kotlin Native has constants named in the same way.
 //  The _ suffix prevents the conflicts
@@ -24,51 +24,51 @@ private const val MAX_CODE_POINT_ = 0x10FFFF
 private const val MIN_HIGH_SURROGATE = 0xD800
 private const val MIN_LOW_SURROGATE = 0xDC00
 private const val HIGH_SURROGATE_ENCODE_OFFSET =
-    (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT_ ushr 10))
+  (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT_ ushr 10))
 
 private fun isBmpCodePoint(codePoint: Int): Boolean =
-    codePoint ushr 16 == 0
+  codePoint ushr 16 == 0
 
 private fun highSurrogate(codePoint: Int): Char =
-    ((codePoint ushr 10) + HIGH_SURROGATE_ENCODE_OFFSET).toChar()
+  ((codePoint ushr 10) + HIGH_SURROGATE_ENCODE_OFFSET).toChar()
 
 private fun lowSurrogate(codePoint: Int): Char =
-    ((codePoint and 0x3FF) + MIN_LOW_SURROGATE).toChar()
+  ((codePoint and 0x3FF) + MIN_LOW_SURROGATE).toChar()
 
 private fun isValidCodePoint(codePoint: Int): Boolean =
-    codePoint in 0..MAX_CODE_POINT_
+  codePoint in 0..MAX_CODE_POINT_
 
 private fun CharArray.setSafe(index: Int, value: Char) {
-    if (index !in this.indices) {
-        throw IndexOutOfBoundsException("Size: $size, offset: $index")
-    }
+  if (index !in this.indices) {
+    throw IndexOutOfBoundsException("Size: $size, offset: $index")
+  }
 
-    this[index] = value
+  this[index] = value
 }
 
 fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean =
-    codePoint in MIN_SUPPLEMENTARY_CODE_POINT_..MAX_CODE_POINT_
+  codePoint in MIN_SUPPLEMENTARY_CODE_POINT_..MAX_CODE_POINT_
 
 @OptIn(ExperimentalStdlibApi::class)
 fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset: Int): Int {
-    if (isBmpCodePoint(codePoint)) {
-        destination.setSafe(offset, codePoint.toChar())
-        return 1
-    } else if (isValidCodePoint(codePoint)) {
-        // When writing the low surrogate succeeds but writing the high surrogate fails (offset = -1), the
-        // destination will be modified even though the method throws. This feels wrong, but matches the behavior
-        // of the Java stdlib implementation.
-        destination.setSafe(offset + 1, lowSurrogate(codePoint))
-        destination.setSafe(offset, highSurrogate(codePoint))
-        return 2
-    } else {
-        throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHexString()}")
-    }
+  if (isBmpCodePoint(codePoint)) {
+    destination.setSafe(offset, codePoint.toChar())
+    return 1
+  } else if (isValidCodePoint(codePoint)) {
+    // When writing the low surrogate succeeds but writing the high surrogate fails (offset = -1), the
+    // destination will be modified even though the method throws. This feels wrong, but matches the behavior
+    // of the Java stdlib implementation.
+    destination.setSafe(offset + 1, lowSurrogate(codePoint))
+    destination.setSafe(offset, highSurrogate(codePoint))
+    return 2
+  } else {
+    throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHexString()}")
+  }
 }
 
 fun Char.Companion.charCount(codePoint: Int): Int =
-    if (codePoint < MIN_SUPPLEMENTARY_CODE_POINT_) {
-      1
-    } else {
-      2
-    }
+  if (codePoint < MIN_SUPPLEMENTARY_CODE_POINT_) {
+    1
+  } else {
+    2
+  }

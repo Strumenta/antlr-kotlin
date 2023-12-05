@@ -6,9 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.isSupplementaryCodePoint
-import org.antlr.v4.kotlinruntime.misc.IntervalSet
-
 /**
  * Utility class to create [AtomTransition], [RangeTransition],
  * and [SetTransition] appropriately based on the range of the input.

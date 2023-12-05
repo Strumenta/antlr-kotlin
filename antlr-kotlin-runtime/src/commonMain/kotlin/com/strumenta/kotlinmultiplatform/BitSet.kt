@@ -6,10 +6,10 @@ package com.strumenta.kotlinmultiplatform
 //  In our case it would be a good choice anyway, so we could simply
 //  take that bit of code from the Kotlin repository and be done with it.
 expect class BitSet() {
-    fun set(bitIndex: Int)
-    fun clear(bitIndex: Int)
-    fun get(bitIndex: Int): Boolean
-    fun cardinality(): Int
-    fun nextSetBit(i: Int): Int
-    fun or(alts: BitSet)
+  fun set(bitIndex: Int)
+  fun clear(bitIndex: Int)
+  fun get(bitIndex: Int): Boolean
+  fun cardinality(): Int
+  fun nextSetBit(i: Int): Int
+  fun or(alts: BitSet)
 }

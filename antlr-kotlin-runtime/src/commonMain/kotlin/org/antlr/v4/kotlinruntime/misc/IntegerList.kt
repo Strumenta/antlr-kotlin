@@ -6,6 +6,9 @@
 package org.antlr.v4.kotlinruntime.misc
 
 import com.strumenta.kotlinmultiplatform.*
+import com.strumenta.kotlinmultiplatform.ext.charCount
+import com.strumenta.kotlinmultiplatform.ext.isSupplementaryCodePoint
+import com.strumenta.kotlinmultiplatform.ext.toChars
 
 /**
  *

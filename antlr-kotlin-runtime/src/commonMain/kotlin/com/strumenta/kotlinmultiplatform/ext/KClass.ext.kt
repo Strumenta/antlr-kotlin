@@ -1,4 +1,4 @@
-package com.strumenta.kotlinmultiplatform
+package com.strumenta.kotlinmultiplatform.ext
 
 import kotlin.reflect.KClass
 

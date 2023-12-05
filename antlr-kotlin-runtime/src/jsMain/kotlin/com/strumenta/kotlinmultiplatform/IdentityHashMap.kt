@@ -17,5 +17,5 @@
 package com.strumenta.kotlinmultiplatform
 
 actual class IdentityHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
-    actual constructor() : this(LinkedHashMap())
+  actual constructor() : this(LinkedHashMap())
 }
