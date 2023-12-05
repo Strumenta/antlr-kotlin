@@ -12,13 +12,24 @@ allprojects {
 
   apply(plugin = "maven-publish")
 
-  publishing {
-    repositories {
-      maven {
-        val repoUrl = project.property("repository.snapshot.url") as String
-        name = "AntlrKotlin"
-        url = project.uri(repoUrl)
-        isAllowInsecureProtocol = true
+  // TODO: setup a real Maven repository to publish to, e.g., Maven Central
+  val repoUrl = if (project.property("repo.is.release") == "true") {
+    project.findProperty("repo.release.url")?.toString()
+  } else {
+    project.findProperty("repo.snapshot.url")?.toString()
+  }
+
+  if (repoUrl != null) {
+    publishing {
+      repositories {
+        maven {
+          name = "StrumentaAntlrKotlin"
+          url = project.uri(repoUrl)
+
+          // TODO: this should be removed once the publication targets
+          //  a real public repository
+          isAllowInsecureProtocol = true
+        }
       }
     }
   }
