@@ -6,7 +6,17 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
+import kotlin.jvm.JvmStatic
+
 class EmptyPredictionContext : SingletonPredictionContext(null, PredictionContext.EMPTY_RETURN_STATE) {
+    companion object {
+        /**
+         * Represents `$` in local context prediction, which means wildcard.
+         * `*+x = *`.
+         */
+        @JvmStatic
+        val Instance: EmptyPredictionContext = EmptyPredictionContext()
+    }
 
     override val isEmpty: Boolean
         get() = true

@@ -350,7 +350,7 @@ open class ParserATNSimulator(
             }
 
             if (s0 == null) {
-                if (outerContext == null) outerContext = EMPTY_RULECTX
+                if (outerContext == null) outerContext = ParserRuleContext.EMPTY
                 if (debug || debug_list_atn_decisions) {
                     System.out.println("predictATN decision " + dfa.decision +
                             " exec LA(1)==" + getLookaheadName(input) +
@@ -359,7 +359,7 @@ open class ParserATNSimulator(
 
                 val fullCtx = false
                 var s0_closure = computeStartState(dfa.atnStartState,
-                        EMPTY_RULECTX,
+                        ParserRuleContext.EMPTY,
                         fullCtx)
 
                 if (dfa.isPrecedenceDfa) {
@@ -1176,8 +1176,8 @@ open class ParserATNSimulator(
         var nPredAlts = 0
         for (i in 1..nalts) {
             if (altToPred!![i] == null) {
-                altToPred[i] = SemanticContext.NONE
-            } else if (altToPred[i] !== SemanticContext.NONE) {
+                altToPred[i] = SemanticContext.Empty.Instance
+            } else if (altToPred[i] !== SemanticContext.Empty.Instance) {
                 nPredAlts++
             }
         }
@@ -1206,7 +1206,7 @@ open class ParserATNSimulator(
             if (ambigAlts != null && ambigAlts.get(i)) {
                 pairs.add(DFAState.PredPrediction(pred!!, i))
             }
-            if (pred !== SemanticContext.NONE) containsPredicate = true
+            if (pred !== SemanticContext.Empty.Instance) containsPredicate = true
         }
 
         return if (!containsPredicate) {
@@ -1308,7 +1308,7 @@ open class ParserATNSimulator(
         val succeeded = ATNConfigSet(configs.fullCtx)
         val failed = ATNConfigSet(configs.fullCtx)
         for (c in configs) {
-            if (c.semanticContext !== SemanticContext.NONE) {
+            if (c.semanticContext !== SemanticContext.Empty.Instance) {
                 val predicateEvaluationResult = evalSemanticContext(c.semanticContext, outerContext, c.alt, configs.fullCtx)
                 if (predicateEvaluationResult) {
                     succeeded.add(c)
@@ -1333,7 +1333,7 @@ open class ParserATNSimulator(
                             complete: Boolean): BitSet {
         val predictions = BitSet()
         for (pair in predPredictions) {
-            if (pair!!.pred === SemanticContext.NONE) {
+            if (pair!!.pred === SemanticContext.Empty.Instance) {
                 predictions.set(pair!!.alt)
                 if (!complete) {
                     break
@@ -1430,7 +1430,7 @@ open class ParserATNSimulator(
                 for (i in 0 until config.context!!.size()) {
                     if (config.context!!.getReturnState(i) == PredictionContext.EMPTY_RETURN_STATE) {
                         if (fullCtx) {
-                            configs.add(ATNConfig(config, config.state, PredictionContext.EMPTY), mergeCache)
+                            configs.add(ATNConfig(config, config.state, EmptyPredictionContext.Instance), mergeCache)
                             continue
                         } else {
                             // we have no context info, just chase follow links (if greedy)

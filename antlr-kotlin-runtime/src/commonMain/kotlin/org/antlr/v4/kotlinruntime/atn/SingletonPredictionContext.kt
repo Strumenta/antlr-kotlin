@@ -58,7 +58,7 @@ open class SingletonPredictionContext internal constructor(val parent: Predictio
         fun create(parent: PredictionContext?, returnState: Int): SingletonPredictionContext {
             return if (returnState == PredictionContext.EMPTY_RETURN_STATE && parent == null) {
                 // someone can pass in the bits of an array ctx that mean $
-                PredictionContext.EMPTY
+                EmptyPredictionContext.Instance
             } else SingletonPredictionContext(parent, returnState)
         }
     }

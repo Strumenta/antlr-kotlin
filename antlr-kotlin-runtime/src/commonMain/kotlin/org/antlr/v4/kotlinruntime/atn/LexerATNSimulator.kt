@@ -350,7 +350,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
 
     protected fun computeStartState(input: CharStream,
                                     p: ATNState): ATNConfigSet {
-        val initialContext = PredictionContext.EMPTY
+        val initialContext = EmptyPredictionContext.Instance
         val configs = OrderedATNConfigSet()
         for (i in 0 until p.numberOfTransitions) {
             val target = p.transition(i).target
@@ -390,7 +390,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
                     configs.add(config)
                     return true
                 } else {
-                    configs.add(LexerATNConfig(config, config.state, PredictionContext.EMPTY))
+                    configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext.Instance))
                     currentAltReachedAcceptState = true
                 }
             }

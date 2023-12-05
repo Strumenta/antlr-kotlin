@@ -8,6 +8,7 @@ package org.antlr.v4.kotlinruntime
 import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.*
+import kotlin.jvm.JvmStatic
 import kotlin.reflect.KClass
 
 //
@@ -34,6 +35,11 @@ import kotlin.reflect.KClass
 // * satisfy the superclass interface.
 // */
 open class ParserRuleContext : RuleContext {
+    companion object {
+        @JvmStatic
+        val EMPTY: ParserRuleContext = ParserRuleContext()
+    }
+
 //    override fun setParent(parent: RuleContext) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
