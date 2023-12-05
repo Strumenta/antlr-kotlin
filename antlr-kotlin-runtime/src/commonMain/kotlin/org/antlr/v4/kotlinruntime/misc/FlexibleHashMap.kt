@@ -6,6 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
+import com.strumenta.kotlinmultiplatform.Math
+
 /** A limited map (many unsupported operations) that lets me use
  * varying hashCode/equals.
  */
@@ -36,10 +38,12 @@ open class FlexibleHashMap<K, V> constructor(
 
     override val size: Int = n
 
-    protected var threshold = (INITAL_CAPACITY * LOAD_FACTOR).toInt() // when to expand
-
     protected var currentPrime = 1 // jump by 4 primes each expand or whatever
-    protected var initialBucketCapacity = INITAL_BUCKET_CAPACITY
+
+    /** when to expand  */
+    protected var threshold: Int = 0
+    protected val initialCapacity: Int
+    protected val initialBucketCapacity: Int
 
     class Entry<K, V>(val key: K, var value: V) {
 
@@ -55,8 +59,10 @@ open class FlexibleHashMap<K, V> constructor(
         }
 
         this.comparator = comparator
-        this.buckets = createEntryListArray(initialBucketCapacity)
+        this.initialCapacity = initialCapacity
         this.initialBucketCapacity = initialBucketCapacity
+        this.threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
+        this.buckets = createEntryListArray(initialBucketCapacity)
     }
 
     protected fun getBucket(key: K): Int {
@@ -185,8 +191,9 @@ open class FlexibleHashMap<K, V> constructor(
     }
 
     override fun clear() {
-        buckets = createEntryListArray(INITAL_CAPACITY)
+        buckets = createEntryListArray(initialCapacity)
         n = 0
+        threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
     }
 
     override fun toString(): String {

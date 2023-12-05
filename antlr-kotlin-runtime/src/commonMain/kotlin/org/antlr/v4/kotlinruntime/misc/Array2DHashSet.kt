@@ -31,10 +31,12 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
     /** How many elements in set  */
     protected var n = 0
 
-    protected var threshold = Math.floor(INITAL_CAPACITY * LOAD_FACTOR).toInt() // when to expand
-
     protected var currentPrime = 1 // jump by 4 primes each expand or whatever
-    protected var initialBucketCapacity = INITAL_BUCKET_CAPACITY
+
+    /** when to expand  */
+    protected var threshold: Int = 0
+    protected val initialCapacity: Int
+    protected val initialBucketCapacity: Int
 
     init {
         var comparator = comparator
@@ -43,8 +45,10 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
         }
 
         this.comparator = comparator
-        this.buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        this.initialCapacity = initialCapacity
         this.initialBucketCapacity = initialBucketCapacity
+        this.buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        this.threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
     }
 
     /**
@@ -366,9 +370,9 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
 
     override fun clear() {
-        buckets = createBuckets(INITAL_CAPACITY) as Array<Array<T>>
         n = 0
-        threshold = Math.floor(INITAL_CAPACITY * LOAD_FACTOR).toInt()
+        buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
     }
 
     override fun toString(): String {

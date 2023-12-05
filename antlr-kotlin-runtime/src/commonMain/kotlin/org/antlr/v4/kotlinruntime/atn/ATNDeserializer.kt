@@ -75,7 +75,8 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         } else data
     }
 
-    fun deserialize(data: CharArray): ATN = deserialize(decodeIntsEncodedAs16BitWords(data))
+    fun deserialize(data: CharArray): ATN =
+        deserialize(decodeIntsEncodedAs16BitWords(data))
 
     fun deserialize(data: IntArray): ATN {
         var p = 0

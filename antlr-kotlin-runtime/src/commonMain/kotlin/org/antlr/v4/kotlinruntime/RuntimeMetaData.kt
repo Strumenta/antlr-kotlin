@@ -164,10 +164,10 @@ object RuntimeMetaData {
         runtimeConflictsWithCompileTimeTool = runtimeVersion != compileTimeVersion && getMajorMinorVersion(runtimeVersion) != getMajorMinorVersion(compileTimeVersion)
 
         if (runtimeConflictsWithGeneratingTool) {
-            System.err.println("ANTLR Tool version $generatingToolVersion used for code generation does not match the current runtime version $runtimeVersion")
+            System.err.println("ANTLR Tool version $generatingToolVersion used for code generation does not match the current runtime version $runtimeVersion\n")
         }
         if (runtimeConflictsWithCompileTimeTool) {
-            System.err.println("ANTLR Runtime version $compileTimeVersion used for parser compilation does not match the current runtime version $runtimeVersion")
+            System.err.println("ANTLR Runtime version $compileTimeVersion used for parser compilation does not match the current runtime version $runtimeVersion\n")
         }
     }
 
