@@ -328,24 +328,20 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //    }
 //
     init {
-        assignInputStream(input)
+        _precedenceStack.push(0)
+        inputStream = input
     }
 //
     /** reset the parser's state  */
     open fun reset() {
-        TODO()
-//        if (inputStream != null) inputStream!!.seek(0)
-//        errorHandler.reset(this)
-//        context = null
-//        numberOfSyntaxErrors = 0
-//        isMatchedEOF = false
-//        isTrace = false
-//        _precedenceStack.clear()
-//        _precedenceStack.push(0)
-//        val interpreter = interpreter
-//        if (interpreter != null) {
-//            interpreter!!.reset()
-//        }
+        inputStream?.seek(0)
+        errorHandler.reset(this)
+        context = null
+        numberOfSyntaxErrors = 0
+        isMatchedEOF = false
+        _precedenceStack.clear()
+        _precedenceStack.push(0)
+        interpreter?.reset()
     }
 
     /**
