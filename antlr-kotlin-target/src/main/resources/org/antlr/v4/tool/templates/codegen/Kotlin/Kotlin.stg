@@ -42,15 +42,15 @@ KotlinTypeInitMap ::= [
 ]
 
 KotlinTypeMap ::= [
-	"int":"Int",
-	"long":"Long",
-	"float":"Float",
-	"double":"Double",
-	"boolean":"Boolean",
-	"byte":"Byte",
-	"short":"Short",
-	"char":"Char",
-	default:key
+    "int":"Int",
+    "long":"Long",
+    "float":"Float",
+    "double":"Double",
+    "boolean":"Boolean",
+    "byte":"Byte",
+    "short":"Short",
+    "char":"Char",
+    default:key
 ]
 
 ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
