@@ -1,0 +1,12 @@
+[versions]
+kotlin = "1.9.21"
+antlr4 = "4.13.1"
+uuid = "0.8.2"
+
+[libraries]
+uuid = { group = "com.benasher44", name = "uuid", version.ref = "uuid" }
+antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

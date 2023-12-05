@@ -35,7 +35,7 @@ class LexerInterpreter(override val grammarFileName: String, override val vocabu
 
     init {
 
-        if (atn.grammarType !== ATNType.LEXER) {
+        if (atn.grammarType != ATNType.LEXER) {
             throw IllegalArgumentException("The ATN must be a lexer ATN.")
         }
         this.tokenNames = arrayOfNulls(atn.maxTokenType)

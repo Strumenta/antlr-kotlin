@@ -1,16 +1,33 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
-    `java-library`
-    `maven-publish`
+  alias(libs.plugins.kotlin.jvm)
+  `java-library`
 }
 
 dependencies {
-    api("org.antlr:antlr4:${Versions.antlr}")
+  api(libs.antlr4)
+}
+
+kotlin {
+  explicitApiWarning()
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_1_8
+    apiVersion = KotlinVersion.KOTLIN_1_9
+    languageVersion = KotlinVersion.KOTLIN_1_9
+  }
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 publishing {
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-        }
+  publications {
+    create<MavenPublication>("mavenJava") {
+      from(components["kotlin"])
     }
+  }
 }

@@ -33,7 +33,7 @@ open class BufferedTokenStream(
      * considered a complete view of the input once [.fetchedEOF] is set
      * to `true`.
      */
-    protected var tokens: MutableList<Token> = ArrayList<Token>(100)
+    var tokens: MutableList<Token> = ArrayList<Token>(100)
 
     /**
      * The index into [.tokens] of the current token (next token to

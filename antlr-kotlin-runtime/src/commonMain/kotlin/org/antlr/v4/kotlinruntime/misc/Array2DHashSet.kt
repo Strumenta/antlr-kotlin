@@ -104,7 +104,7 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
     protected fun getBucket(o: T): Int {
         val hash = comparator.hashCode(o)
-        return hash and buckets.size - 1
+        return hash and (buckets.size - 1)
     }
 
     override fun hashCode(): Int {

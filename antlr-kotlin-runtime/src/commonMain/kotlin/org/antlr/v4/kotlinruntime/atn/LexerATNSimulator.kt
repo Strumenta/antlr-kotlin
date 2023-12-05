@@ -274,7 +274,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
             return prevAccept.dfaState!!.prediction
         } else {
             // if no accept and EOF is first char, return EOF
-            if (t == IntStream.EOF && input.index() === startIndex) {
+            if (t == IntStream.EOF && input.index() == startIndex) {
                 return Token.EOF
             }
 

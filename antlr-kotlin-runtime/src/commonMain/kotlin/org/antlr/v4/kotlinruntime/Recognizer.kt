@@ -228,7 +228,7 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
 
     // subclass needs to override these if there are sempreds or actions
     // that the ATN interp needs to execute
-    open fun sempred(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int): Boolean {
+    open fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
         return true
     }
 
@@ -236,7 +236,7 @@ abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
         return true
     }
 
-    fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {}
+    open fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {}
 
     companion object {
         val EOF = -1

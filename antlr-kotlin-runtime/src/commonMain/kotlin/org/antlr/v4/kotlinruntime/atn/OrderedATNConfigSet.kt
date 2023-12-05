@@ -17,17 +17,5 @@ class OrderedATNConfigSet : ATNConfigSet() {
         this.configLookup = LexerConfigHashSet()
     }
 
-    class LexerConfigHashSet : ATNConfigSet.AbstractConfigHashSet(ObjectEqualityComparator.INSTANCE) {
-        override fun remove(element: ATNConfig): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun containsAll(elements: Collection<ATNConfig>): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun retainAll(elements: Collection<ATNConfig>): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
+    class LexerConfigHashSet : AbstractConfigHashSet(ObjectEqualityComparator.INSTANCE)
 }

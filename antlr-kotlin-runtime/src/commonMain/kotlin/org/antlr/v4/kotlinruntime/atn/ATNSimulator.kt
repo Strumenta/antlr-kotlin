@@ -8,7 +8,6 @@ package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.IdentityHashMap
 import com.strumenta.kotlinmultiplatform.synchronized
-import com.strumenta.kotlinmultiplatform.UUID
 import org.antlr.v4.kotlinruntime.dfa.DFAState
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
@@ -67,23 +66,6 @@ abstract class ATNSimulator(val atn: ATN,
 
     companion object {
 
-        @Deprecated("Use {@link ATNDeserializer#SERIALIZED_VERSION} instead.")
-        val SERIALIZED_VERSION: Int
-
-        init {
-            SERIALIZED_VERSION = ATNDeserializer.SERIALIZED_VERSION
-        }
-
-        /**
-         * This is the current serialized UUID.
-         */
-        @Deprecated("Use {@link ATNDeserializer#checkCondition(boolean)} instead.")
-        val SERIALIZED_UUID: UUID
-
-        init {
-            SERIALIZED_UUID = ATNDeserializer.SERIALIZED_UUID
-        }
-
         /** Must distinguish between missing edge and edge we know leads nowhere  */
 
         val ERROR: DFAState
@@ -91,72 +73,6 @@ abstract class ATNSimulator(val atn: ATN,
         init {
             ERROR = DFAState(ATNConfigSet())
             ERROR.stateNumber = Int.MAX_VALUE
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#deserialize} instead.")
-        fun deserialize(data: CharArray): ATN {
-            TODO()
-            //return ATNDeserializer().deserialize(data)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#checkCondition(boolean)} instead.")
-        fun checkCondition(condition: Boolean) {
-            TODO()
-            //ATNDeserializer().checkCondition(condition)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#checkCondition(boolean, String)} instead.")
-        fun checkCondition(condition: Boolean, message: String) {
-            TODO()
-            //ATNDeserializer().checkCondition(condition, message)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#toInt} instead.")
-        fun toInt(c: Char): Int {
-            TODO()
-            //return ATNDeserializer.toInt(c)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#toInt32} instead.")
-        fun toInt32(data: CharArray, offset: Int): Int {
-            TODO()
-            //return ATNDeserializer.toInt32(data, offset)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#toLong} instead.")
-        fun toLong(data: CharArray, offset: Int): Long {
-            TODO()
-            //return ATNDeserializer.toLong(data, offset)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#toUUID} instead.")
-        fun toUUID(data: CharArray, offset: Int): UUID {
-            TODO()
-            //return ATNDeserializer.toUUID(data, offset)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#edgeFactory} instead.")
-        fun edgeFactory(atn: ATN,
-                        type: Int, src: Int, trg: Int,
-                        arg1: Int, arg2: Int, arg3: Int,
-                        sets: List<IntervalSet>): Transition {
-            TODO()
-            //return ATNDeserializer().edgeFactory(atn, type, src, trg, arg1, arg2, arg3, sets)
-        }
-
-
-        @Deprecated("Use {@link ATNDeserializer#stateFactory} instead.")
-        fun stateFactory(type: Int, ruleIndex: Int): ATNState? {
-            TODO()
-            //return ATNDeserializer().stateFactory(type, ruleIndex)
         }
     }
 

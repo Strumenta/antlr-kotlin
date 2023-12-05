@@ -5,11 +5,10 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Type
-import com.strumenta.kotlinmultiplatform.isInstance
 import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.*
+import kotlin.reflect.KClass
 
 //
 ///** A rule invocation record for parsing.
@@ -130,7 +129,7 @@ open class ParserRuleContext : RuleContext {
      * to the generic XContext so this function must copy those nodes to
      * the YContext as well else they are lost!
      */
-    fun copyFrom(ctx: ParserRuleContext) {
+    open fun copyFrom(ctx: ParserRuleContext) {
         this.parent = ctx.parent
         this.invokingState = ctx.invokingState
 
@@ -237,7 +236,7 @@ open class ParserRuleContext : RuleContext {
         return if (children != null && i >= 0 && i < children!!.size) children!![i] else null
     }
 
-    fun <T : ParseTree> getChild(ctxType: Type, i: Int): T? {
+    fun <T : ParseTree> getChild(ctxType: KClass<T>, i: Int): T? {
         if (children == null || i < 0 || i >= children!!.size) {
             return null
         }
@@ -301,11 +300,11 @@ open class ParserRuleContext : RuleContext {
 
     }
 
-    fun <T : ParserRuleContext> getRuleContext(ctxType: Type, i: Int): T? {
-        return getChild(ctxType, i) as T?
+    fun <T : ParserRuleContext> getRuleContext(ctxType: KClass<T>, i: Int): T? {
+        return getChild(ctxType, i)
     }
 
-    fun <T : ParserRuleContext> getRuleContexts(ctxType: Type): List<T> {
+    fun <T : ParserRuleContext> getRuleContexts(ctxType: KClass<T>): List<T> {
         if (children == null) {
             return emptyList()
         }

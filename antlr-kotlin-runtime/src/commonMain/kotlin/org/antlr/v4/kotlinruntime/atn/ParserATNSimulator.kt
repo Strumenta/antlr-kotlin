@@ -1338,7 +1338,7 @@ open class ParserATNSimulator(
         val predictions = BitSet()
         for (pair in predPredictions) {
             if (pair!!.pred === SemanticContext.NONE) {
-                predictions.set(pair!!.alt!!)
+                predictions.set(pair!!.alt)
                 if (!complete) {
                     break
                 }

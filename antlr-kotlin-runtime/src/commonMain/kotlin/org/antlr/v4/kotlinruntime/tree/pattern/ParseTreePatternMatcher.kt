@@ -466,9 +466,8 @@ class ParseTreePatternMatcher
         for (i in chunks.indices) {
             val c = chunks[i]
             if (c is TextChunk) {
-                val tc = c as TextChunk
-                val unescaped = tc.text!!.replace(escape, "")
-                if (unescaped.length < tc.text!!.length) {
+                val unescaped = c.text!!.replace(escape, "")
+                if (unescaped.length < c.text.length) {
                     chunks[i] = TextChunk(unescaped)
                 }
             }

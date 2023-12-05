@@ -12,6 +12,7 @@ import org.antlr.v4.kotlinruntime.misc.Utils
  * when you construct the object.
  */
 @Deprecated("as of 4.7 Please use {@link CharStreams} interface.")
+@Suppress("DEPRECATION")
 class ANTLRFileStream
 private constructor(override val sourceName: String)
     : ANTLRInputStream() {

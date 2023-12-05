@@ -6,7 +6,6 @@
 package org.antlr.v4.kotlinruntime.misc
 
 import com.strumenta.kotlinmultiplatform.Math
-import kotlin.native.concurrent.ThreadLocal
 
 /** An immutable inclusive interval a..b  */
 class Interval(var a: Int, var b: Int) {
@@ -103,7 +102,6 @@ class Interval(var a: Int, var b: Int) {
         return a.toString() + ".." + b
     }
 
-    @ThreadLocal
     companion object {
         val INTERVAL_POOL_MAX_VALUE = 1000
 

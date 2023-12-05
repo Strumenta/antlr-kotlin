@@ -1,1 +1,0 @@
-../../../../../../../antlr-kotlin-examples-jvm/src/main/kotlin-antlr/com/strumenta/antlrkotlin/examples/MiniCalcLexer.kt

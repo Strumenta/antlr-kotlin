@@ -667,7 +667,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         localctx.altNumber = altNum
         // if we have new localctx, make sure we replace existing ctx
         // that is previous child of parse tree
-        if (buildParseTree && context !== localctx) {
+        if (buildParseTree && context != localctx) {
             val parent = context!!.readParent() as ParserRuleContext?
             if (parent != null) {
                 parent.removeLastChild()
@@ -678,7 +678,10 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
     }
 
 
-    @Deprecated("Use {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead.")
+    @Deprecated(
+        message = "Use {@link #enterRecursionRule(ParserRuleContext, int, int, int)} instead.",
+        replaceWith = ReplaceWith("enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex]!!.stateNumber, ruleIndex, 0)")
+    )
     fun enterRecursionRule(localctx: ParserRuleContext, ruleIndex: Int) {
         enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex]!!.stateNumber, ruleIndex, 0)
     }
@@ -717,7 +720,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 
         // unroll so _ctx is as it was before call to recursive method
 
-        while (context !== _parentctx) {
+        while (context != _parentctx) {
             triggerExitRuleEvent()
             context = context!!.readParent() as ParserRuleContext?
         }

@@ -133,10 +133,10 @@ object Trees {
         // check this node (the root) first
         if (findTokens && t is TerminalNode) {
             val tnode = t as TerminalNode
-            if (tnode.symbol!!.type === index) nodes.add(t)
+            if (tnode.symbol!!.type == index) nodes.add(t)
         } else if (!findTokens && t is ParserRuleContext) {
             val ctx = t as ParserRuleContext
-            if (ctx.ruleIndex === index) nodes.add(t)
+            if (ctx.ruleIndex == index) nodes.add(t)
         }
         // check children
         for (i in 0 until t.childCount) {

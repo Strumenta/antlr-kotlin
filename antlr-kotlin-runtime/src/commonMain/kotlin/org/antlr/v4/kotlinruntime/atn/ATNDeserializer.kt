@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.UUID
 import com.strumenta.kotlinmultiplatform.maxValue
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
@@ -47,48 +46,48 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         this.deserializationOptions = deserializationOptions
     }
 
-    fun deserialize(data: CharArray): ATN {
-        var data = data
-        data = data.copyOf()
+    fun decodeIntsEncodedAs16BitWords(data16: CharArray): IntArray {
+        return decodeIntsEncodedAs16BitWords(data16, false)
+    }
 
-        // Each char value in data is shifted by +2 at the entry to this method.
-        // This is an encoding optimization targeting the serialized values 0
-        // and -1 (serialized to 0xFFFF), each of which are very common in the
-        // serialized form of the ATN. In the modified UTF-8 that Java uses for
-        // compiled string literals, these two character values have multi-byte
-        // forms. By shifting each value by +2, they become characters 2 and 1
-        // prior to writing the string, each of which have single-byte
-        // representations. Since the shift occurs in the tool during ATN
-        // serialization, each target is responsible for adjusting the values
-        // during deserialization.
-        //
-        // As a special case, note that the first element of data is not
-        // adjusted because it contains the major version number of the
-        // serialized ATN, which was fixed at 3 at the time the value shifting
-        // was implemented.
-        for (i in 1 until data.size) {
-            data[i] = (data[i].toInt() - 2).toChar()
+    /** Convert a list of chars (16 uint) that represent a serialized and compressed list of ints for an ATN.
+     * This method pairs with [.encodeIntsWith16BitWords] above. Used only for Java Target.
+     */
+    fun decodeIntsEncodedAs16BitWords(data16: CharArray, trimToSize: Boolean): IntArray {
+        // will be strictly smaller but we waste bit of space to avoid copying during initialization of parsers
+        val data = IntArray(data16.size)
+        var i = 0
+        var i2 = 0
+        while (i < data16.size) {
+            val v = data16[i++]
+            if (v.code and 0x8000 == 0) { // hi bit not set? Implies 1-word value
+                data[i2++] = v.code // 7 bit int
+            } else { // hi bit set. Implies 2-word value
+                val vnext = data16[i++]
+                if (v.code == 0xFFFF && vnext.code == 0xFFFF) { // is it -1?
+                    data[i2++] = -1
+                } else { // 31-bit int
+                    data[i2++] = v.code and 0x7FFF shl 16 or (vnext.code and 0xFFFF)
+                }
+            }
         }
+        return if (trimToSize) {
+            data.copyOf(i2)
+        } else data
+    }
 
+    fun deserialize(data: CharArray): ATN = deserialize(decodeIntsEncodedAs16BitWords(data))
+
+    fun deserialize(data: IntArray): ATN {
         var p = 0
-        val version = toInt(data[p++])
+        val version = data[p++]
         if (version != SERIALIZED_VERSION) {
             val reason = "Could not deserialize ATN with version $version (expected $SERIALIZED_VERSION)."
             throw UnsupportedOperationException(reason)
         }
 
-        val uuid = toUUID(data, p)
-        p += 8
-        if (!SUPPORTED_UUIDS.contains(uuid)) {
-            val reason = "Could not deserialize ATN with UUID $uuid (expected $SERIALIZED_UUID or a legacy UUID)."
-            throw UnsupportedOperationException(reason)
-        }
-
-        val supportsPrecedencePredicates = isFeatureSupported(ADDED_PRECEDENCE_TRANSITIONS, uuid)
-        val supportsLexerActions = isFeatureSupported(ADDED_LEXER_ACTIONS, uuid)
-
-        val grammarType = ATNType.values()[toInt(data[p++])]
-        val maxTokenType = toInt(data[p++])
+        val grammarType = ATNType.values()[data[p++]]
+        val maxTokenType = data[p++]
         val atn = ATN(grammarType, maxTokenType)
 
         //
@@ -96,26 +95,26 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         //
         val loopBackStateNumbers = ArrayList<Pair<LoopEndState, Int>>()
         val endStateNumbers = ArrayList<Pair<BlockStartState, Int>>()
-        val nstates = toInt(data[p++])
+        val nstates = data[p++]
         for (i in 0 until nstates) {
-            val stype = toInt(data[p++])
+            val stype = data[p++]
             // ignore bad type of states
             if (stype == ATNState.INVALID_TYPE) {
                 atn.addState(null)
                 continue
             }
 
-            var ruleIndex = toInt(data[p++])
+            var ruleIndex = data[p++]
             if (ruleIndex == Char.maxValue().toInt()) {
                 ruleIndex = -1
             }
 
             val s = stateFactory(stype, ruleIndex)
             if (stype == ATNState.LOOP_END) { // special case
-                val loopBackStateNumber = toInt(data[p++])
+                val loopBackStateNumber = data[p++]
                 loopBackStateNumbers.add(Pair(s as LoopEndState, loopBackStateNumber))
             } else if (s is BlockStartState) {
-                val endStateNumber = toInt(data[p++])
+                val endStateNumber = data[p++]
                 endStateNumbers.add(Pair(s, endStateNumber))
             }
             atn.addState(s)
@@ -130,46 +129,34 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
             pair.first.endState = atn.states[pair.second] as BlockEndState
         }
 
-        val numNonGreedyStates = toInt(data[p++])
+        val numNonGreedyStates = data[p++]
         for (i in 0 until numNonGreedyStates) {
-            val stateNumber = toInt(data[p++])
+            val stateNumber = data[p++]
             (atn.states.get(stateNumber) as DecisionState).nonGreedy = true
         }
 
-        if (supportsPrecedencePredicates) {
-            val numPrecedenceStates = toInt(data[p++])
-            for (i in 0 until numPrecedenceStates) {
-                val stateNumber = toInt(data[p++])
-                (atn.states.get(stateNumber) as RuleStartState).isLeftRecursiveRule = true
-            }
+        val numPrecedenceStates = data[p++]
+        for (i in 0 until numPrecedenceStates) {
+            val stateNumber = data[p++]
+            (atn.states.get(stateNumber) as RuleStartState).isLeftRecursiveRule = true
         }
 
         //
         // RULES
         //
-        val nrules = toInt(data[p++])
+        val nrules = data[p++]
         if (atn.grammarType == ATNType.LEXER) {
             atn.ruleToTokenType = IntArray(nrules)
         }
 
         atn.ruleToStartState = arrayOfNulls<RuleStartState>(nrules)
         for (i in 0 until nrules) {
-            val s = toInt(data[p++])
-            val startState = atn.states.get(s) as RuleStartState
+            val s = data[p++]
+            val startState = atn.states[s] as RuleStartState
             atn.ruleToStartState!![i] = startState
             if (atn.grammarType == ATNType.LEXER) {
-                var tokenType = toInt(data[p++])
-                if (tokenType == 0xFFFF) {
-                    tokenType = Token.EOF
-                }
-
+                val tokenType = data[p++]
                 atn.ruleToTokenType!![i] = tokenType
-
-                if (!isFeatureSupported(ADDED_LEXER_ACTIONS, uuid)) {
-                    // this piece of unused metadata was serialized prior to the
-                    // addition of LexerAction
-                    val actionIndexIgnored = toInt(data[p++])
-                }
             }
         }
 
@@ -187,9 +174,9 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         //
         // MODES
         //
-        val nmodes = toInt(data[p++])
+        val nmodes = data[p++]
         for (i in 0 until nmodes) {
-            val s = toInt(data[p++])
+            val s = data[p++]
             atn.modeToStartState.add(atn.states.get(s) as TokensStartState)
         }
 
@@ -199,25 +186,19 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         val sets = ArrayList<IntervalSet>()
 
         // First, read all sets with 16-bit Unicode code points <= U+FFFF.
-        p = deserializeSets(data, p, sets, getUnicodeDeserializer(UnicodeDeserializingMode.UNICODE_BMP))
-
-        // Next, if the ATN was serialized with the Unicode SMP feature,
-        // deserialize sets with 32-bit arguments <= U+10FFFF.
-        if (isFeatureSupported(ADDED_UNICODE_SMP, uuid)) {
-            p = deserializeSets(data, p, sets, getUnicodeDeserializer(UnicodeDeserializingMode.UNICODE_SMP))
-        }
+        p = deserializeSets(data, p, sets)
 
         //
         // EDGES
         //
-        val nedges = toInt(data[p++])
+        val nedges = data[p++]
         for (i in 0 until nedges) {
-            val src = toInt(data[p])
-            val trg = toInt(data[p + 1])
-            val ttype = toInt(data[p + 2])
-            val arg1 = toInt(data[p + 3])
-            val arg2 = toInt(data[p + 4])
-            val arg3 = toInt(data[p + 5])
+            val src = data[p]
+            val trg = data[p + 1]
+            val ttype = data[p + 2]
+            val arg1 = data[p + 3]
+            val arg2 = data[p + 4]
+            val arg3 = data[p + 5]
             val trans = edgeFactory(atn, ttype, src, trg, arg1, arg2, arg3, sets)
             //			System.out.println("EDGE "+trans.getClass().getSimpleName()+" "+
             //							   src+"->"+trg+
@@ -283,9 +264,9 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         //
         // DECISIONS
         //
-        val ndecisions = toInt(data[p++])
+        val ndecisions = data[p++]
         for (i in 1..ndecisions) {
-            val s = toInt(data[p++])
+            val s = data[p++]
             val decState = atn.states.get(s) as DecisionState
             atn.decisionToState.add(decState)
             decState.decision = i - 1
@@ -295,42 +276,22 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         // LEXER ACTIONS
         //
         if (atn.grammarType == ATNType.LEXER) {
-            if (supportsLexerActions) {
-                atn.lexerActions = arrayOfNulls<LexerAction>(toInt(data[p++]))
-                for (i in atn.lexerActions!!.indices) {
-                    val actionType = LexerActionType.values()[toInt(data[p++])]
-                    var data1 = toInt(data[p++])
-                    if (data1 == 0xFFFF) {
-                        data1 = -1
-                    }
-
-                    var data2 = toInt(data[p++])
-                    if (data2 == 0xFFFF) {
-                        data2 = -1
-                    }
-
-                    val lexerAction = lexerActionFactory(actionType, data1, data2)
-
-                    atn.lexerActions!![i] = lexerAction
-                }
-            } else {
-                // for compatibility with older serialized ATNs, convert the old
-                // serialized action index for action transitions to the new
-                // form, which is the index of a LexerCustomAction
-                val legacyLexerActions = ArrayList<LexerAction>()
-                for (state in atn.states) {
-                    for (i in 0 until state!!.numberOfTransitions) {
-                        val transition = state!!.transition(i) as? ActionTransition ?: continue
-
-                        val ruleIndex = (transition as ActionTransition).ruleIndex
-                        val actionIndex = (transition as ActionTransition).actionIndex
-                        val lexerAction = LexerCustomAction(ruleIndex, actionIndex)
-                        state.setTransition(i, ActionTransition(transition.target!!, ruleIndex, legacyLexerActions.size, false))
-                        legacyLexerActions.add(lexerAction)
-                    }
+            atn.lexerActions = arrayOfNulls<LexerAction>(data[p++])
+            for (i in atn.lexerActions!!.indices) {
+                val actionType = LexerActionType.values()[data[p++]]
+                var data1 = data[p++]
+                if (data1 == 0xFFFF) {
+                    data1 = -1
                 }
 
-                atn.lexerActions = legacyLexerActions.toTypedArray<LexerAction?>()
+                var data2 = data[p++]
+                if (data2 == 0xFFFF) {
+                    data2 = -1
+                }
+
+                val lexerAction = lexerActionFactory(actionType, data1, data2)
+
+                atn.lexerActions!![i] = lexerAction
             }
         }
 
@@ -375,7 +336,7 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
                         }
 
                         val maybeLoopEndState = state.transition(state.numberOfTransitions - 1).target as? LoopEndState
-                                ?: continue
+                            ?: continue
 
                         if (maybeLoopEndState.epsilonOnlyTransitions && maybeLoopEndState.transition(0).target is RuleStopState) {
                             endState = state
@@ -407,7 +368,8 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
 
                 // all transitions leaving the rule start state need to leave blockStart instead
                 while (atn.ruleToStartState!![i]!!.numberOfTransitions > 0) {
-                    val transition = atn.ruleToStartState!![i]!!.removeTransition(atn.ruleToStartState!![i]!!.numberOfTransitions - 1)
+                    val transition =
+                        atn.ruleToStartState!![i]!!.removeTransition(atn.ruleToStartState!![i]!!.numberOfTransitions - 1)
                     bypassStart.addTransition(transition)
                 }
 
@@ -430,25 +392,23 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
         return atn
     }
 
-    private fun deserializeSets(data: CharArray, p: Int, sets: MutableList<IntervalSet>, unicodeDeserializer: UnicodeDeserializer): Int {
+    private fun deserializeSets(data: IntArray, p: Int, sets: MutableList<IntervalSet>): Int {
         var p = p
-        val nsets = toInt(data[p++])
+        val nsets = data[p++]
         for (i in 0 until nsets) {
-            val nintervals = toInt(data[p])
+            val nintervals = data[p]
             p++
             val set = IntervalSet()
             sets.add(set)
 
-            val containsEof = toInt(data[p++]) != 0
+            val containsEof = data[p++] != 0
             if (containsEof) {
                 set.add(-1)
             }
 
             for (j in 0 until nintervals) {
-                val a = unicodeDeserializer.readUnicode(data, p)
-                p += unicodeDeserializer.size()
-                val b = unicodeDeserializer.readUnicode(data, p)
-                p += unicodeDeserializer.size()
+                val a = data[p++]
+                val b = data[p++]
                 set.add(a, b)
             }
         }
@@ -550,10 +510,12 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
     }
 
 
-    fun edgeFactory(atn: ATN,
-                    type: Int, src: Int, trg: Int,
-                    arg1: Int, arg2: Int, arg3: Int,
-                    sets: List<IntervalSet>): Transition {
+    fun edgeFactory(
+        atn: ATN,
+        type: Int, src: Int, trg: Int,
+        arg1: Int, arg2: Int, arg3: Int,
+        sets: List<IntervalSet>
+    ): Transition {
         val target = atn.states.get(trg)!!
         when (type) {
             Transition.EPSILON -> return EpsilonTransition(target)
@@ -562,21 +524,26 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
             } else {
                 RangeTransition(target, arg1, arg2)
             }
+
             Transition.RULE -> {
                 return RuleTransition(atn.states.get(arg1) as RuleStartState, arg2, arg3, target)
             }
+
             Transition.PREDICATE -> {
                 return PredicateTransition(target, arg1, arg2, arg3 != 0)
             }
+
             Transition.PRECEDENCE -> return PrecedencePredicateTransition(target, arg1)
             Transition.ATOM -> return if (arg3 != 0) {
                 AtomTransition(target, Token.EOF)
             } else {
                 AtomTransition(target, arg1)
             }
+
             Transition.ACTION -> {
                 return ActionTransition(target, arg1, arg2, arg3 != 0)
             }
+
             Transition.SET -> return SetTransition(target, sets[arg1])
             Transition.NOT_SET -> return NotSetTransition(target, sets[arg1])
             Transition.WILDCARD -> return WildcardTransition(target)
@@ -643,127 +610,7 @@ class ATNDeserializer constructor(deserializationOptions: ATNDeserializationOpti
             /* This value should never change. Updates following this version are
 		 * reflected as change in the unique ID SERIALIZED_UUID.
 		 */
-            SERIALIZED_VERSION = 3
-        }
-
-        /**
-         * This is the earliest supported serialized UUID.
-         */
-        private val BASE_SERIALIZED_UUID: UUID
-        /**
-         * This UUID indicates an extension of [BASE_SERIALIZED_UUID] for the
-         * addition of precedence predicates.
-         */
-        private val ADDED_PRECEDENCE_TRANSITIONS: UUID
-        /**
-         * This UUID indicates an extension of [.ADDED_PRECEDENCE_TRANSITIONS]
-         * for the addition of lexer actions encoded as a sequence of
-         * [LexerAction] instances.
-         */
-        private val ADDED_LEXER_ACTIONS: UUID
-        /**
-         * This UUID indicates the serialized ATN contains two sets of
-         * IntervalSets, where the second set's values are encoded as
-         * 32-bit integers to support the full Unicode SMP range up to U+10FFFF.
-         */
-        private val ADDED_UNICODE_SMP: UUID
-        /**
-         * This list contains all of the currently supported UUIDs, ordered by when
-         * the feature first appeared in this branch.
-         */
-        private val SUPPORTED_UUIDS: MutableList<UUID>
-//
-        /**
-         * This is the current serialized UUID.
-         */
-        val SERIALIZED_UUID: UUID
-
-        init {
-            /* WARNING: DO NOT MERGE THESE LINES. If UUIDs differ during a merge,
-		 * resolve the conflict by generating a new ID!
-		 */
-            BASE_SERIALIZED_UUID = UUID.fromString("33761B2D-78BB-4A43-8B0B-4F5BEE8AACF3")
-            ADDED_PRECEDENCE_TRANSITIONS = UUID.fromString("1DA0C57D-6C06-438A-9B27-10BCB3CE0F61")
-            ADDED_LEXER_ACTIONS = UUID.fromString("AADB8D7E-AEEF-4415-AD2B-8204D6CF042E")
-            ADDED_UNICODE_SMP = UUID.fromString("59627784-3BE5-417A-B9EB-8131A7286089")
-
-            SUPPORTED_UUIDS = ArrayList()
-            SUPPORTED_UUIDS.add(BASE_SERIALIZED_UUID)
-            SUPPORTED_UUIDS.add(ADDED_PRECEDENCE_TRANSITIONS)
-            SUPPORTED_UUIDS.add(ADDED_LEXER_ACTIONS)
-            SUPPORTED_UUIDS.add(ADDED_UNICODE_SMP)
-
-            SERIALIZED_UUID = ADDED_UNICODE_SMP
-        }
-
-        internal fun getUnicodeDeserializer(mode: UnicodeDeserializingMode): UnicodeDeserializer {
-            return if (mode == UnicodeDeserializingMode.UNICODE_BMP) {
-                object : UnicodeDeserializer {
-                    override fun readUnicode(data: CharArray, p: Int): Int {
-                        return data[p].toInt()
-                    }
-
-                    override fun size(): Int {
-                        return 1
-                    }
-                }
-            } else {
-                object : UnicodeDeserializer {
-                    override fun readUnicode(data: CharArray, p: Int): Int {
-                        return toInt32(data, p)
-                    }
-
-                    override fun size(): Int {
-                        return 2
-                    }
-                }
-            }
-        }
-
-        /**
-         * Determines if a particular serialized representation of an ATN supports
-         * a particular feature, identified by the [UUID] used for serializing
-         * the ATN at the time the feature was first introduced.
-         *
-         * @param feature The [UUID] marking the first time the feature was
-         * supported in the serialized ATN.
-         * @param actualUuid The [UUID] of the actual serialized ATN which is
-         * currently being deserialized.
-         * @return `true` if the `actualUuid` value represents a
-         * serialized ATN at or after the feature identified by `feature` was
-         * introduced; otherwise, `false`.
-         */
-        protected fun isFeatureSupported(feature: UUID, actualUuid: UUID): Boolean {
-            val featureIndex = SUPPORTED_UUIDS.indexOf(feature)
-            return if (featureIndex < 0) {
-                false
-            } else SUPPORTED_UUIDS.indexOf(actualUuid) >= featureIndex
-
-        }
-
-        fun toInt(c: Char): Int {
-            return c.toInt()
-        }
-
-        fun toInt32(data: CharArray, offset: Int): Int {
-            return data[offset].toInt() or (data[offset + 1].toInt() shl 16)
-        }
-
-        fun toLong(data: CharArray, offset: Int): Long {
-            val lowOrder = toInt32(data, offset).toLong() and 0x00000000FFFFFFFFL
-            return lowOrder or (toInt32(data, offset + 2).toLong() shl 32)
-        }
-
-        fun toUUID(data: CharArray, offset: Int): UUID {
-            val leastSigBits = toLong(data, offset)
-            val mostSigBits = toLong(data, offset + 4)
-            return UUID(mostSigBits, leastSigBits)
+            SERIALIZED_VERSION = 4
         }
     }
-
-    fun deserializeIntegers(serializedIntegersATN: Array<Int>): ATN {
-        val chars = serializedIntegersATN.map { it.toChar() }.toCharArray()
-        return deserialize(chars)
-    }
-
 }

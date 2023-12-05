@@ -116,9 +116,11 @@ expect fun Type.isInstance(any: Any?): Boolean
 
 interface TypeDeclarator {
     val classesByName: List<KClass<*>>
-}
 
-expect fun TypeDeclarator.getType(name: String): Type
+    fun getType(name: String): KClass<*> {
+        return classesByName.first { it.simpleName == name }
+    }
+}
 
 //expect fun toInt32(c: Char) : Int
 

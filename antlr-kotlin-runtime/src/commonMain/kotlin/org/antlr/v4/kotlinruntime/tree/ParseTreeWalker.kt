@@ -10,13 +10,12 @@ import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.RuleContext
 
 open class ParseTreeWalker {
-
     open fun walk(listener: ParseTreeListener, t: ParseTree) {
         if (t is ErrorNode) {
-            listener.visitErrorNode(t as ErrorNode)
+            listener.visitErrorNode(t)
             return
         } else if (t is TerminalNode) {
-            listener.visitTerminal(t as TerminalNode)
+            listener.visitTerminal(t)
             return
         }
         val r = t as RuleNode

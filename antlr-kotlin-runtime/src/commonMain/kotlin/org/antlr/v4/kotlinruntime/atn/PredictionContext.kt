@@ -145,9 +145,9 @@ abstract class PredictionContext protected constructor(
          * doesn't mean wildcard: `$ + x = [$,x]`. Here,
          * `$` = [.EMPTY_RETURN_STATE].
          */
-        val EMPTY_RETURN_STATE = Int.MAX_VALUE
+        const val EMPTY_RETURN_STATE = Int.MAX_VALUE
 
-        private val INITIAL_HASH = 1
+        private const val INITIAL_HASH = 1
 
         /** Convert a [RuleContext] tree to a [PredictionContext] graph.
          * Return [.EMPTY] if `outerContext` is empty or null.
@@ -209,7 +209,7 @@ abstract class PredictionContext protected constructor(
             assert(a1 != null && b1 != null) // must be empty context, never null
 
             // share same graph if both same
-            if (a1 === b1 || a1 == b1) return a1!!
+            if (a1 == b1) return a1!!
 
             if (a1 is SingletonPredictionContext && b1 is SingletonPredictionContext) {
                 return mergeSingletons(
@@ -304,7 +304,7 @@ abstract class PredictionContext protected constructor(
             } else { // a != b payloads differ
                 // see if we can collapse parents due to $+x parents if local ctx
                 var singleParent: PredictionContext? = null
-                if (a === b || a.parent != null && a.parent == b.parent) { // ax + bx = [a,b]x
+                if (a.parent != null && a.parent == b.parent) { // ax + bx = [a,b]x
                     singleParent = a.parent
                 }
                 if (singleParent != null) {    // parents are same
