@@ -11,4 +11,4 @@ rootProject.name = "antlr-kotlin"
 
 include("antlr-kotlin-runtime")
 include("antlr-kotlin-target")
-include("antlr-kotlin-gradle-plugin")
+include("antlr-kotlin-tests")

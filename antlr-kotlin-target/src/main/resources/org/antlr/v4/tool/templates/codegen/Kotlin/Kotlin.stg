@@ -722,15 +722,15 @@ public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>.id, i)!!
 >>
 
 ContextRuleGetterDecl(r) ::= <<
-public fun <r.escapedName>(): <r.ctxName>? = getRuleContext(<r.ctxName>::class, 0)
+public fun find<r.escapedName; format="cap">(): <r.ctxName>? = getRuleContext(<r.ctxName>::class, 0)
 >>
 
 ContextRuleListGetterDecl(r) ::= <<
-public fun <r.escapedName>(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
+public fun find<r.escapedName; format="cap">(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
 >>
 
 ContextRuleListIndexedGetterDecl(r) ::= <<
-public fun <r.escapedName>(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
+public fun find<r.escapedName; format="cap">(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
@@ -753,7 +753,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
         get() = Rules.RULE_<struct.derivedFromName>.id
         set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
 
-    <attrs:{a | <a>}; separator="\n">
+    <attrs:{a | public <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
 <if(ctorAttrs)>
