@@ -1,18 +1,6 @@
 # ANTLR Kotlin
 
-Up-to-date with mainstream commit: e9df4649845e55393306603a4dd42cecc5af6bfc
-
-Files to re-verify and sync:
-
-- Parser
-- ATNDeserializer
-- ATNSerializer
-- IntegerList
-- InterpreterDataReader
-- tree/xpath/**
-
----
-
+[![Build Status](https://travis-ci.org/Strumenta/antlr-kotlin.svg?branch=master)](https://travis-ci.org/Strumenta/antlr-kotlin) [![Release](https://jitpack.io/v/com.strumenta/antlr-kotlin.svg)](https://jitpack.io/#com.strumenta/antlr-kotlin)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 This project contains everything is needed to support Kotlin as a target for ANTLR. 
@@ -26,6 +14,16 @@ Because we produce multi-platform code and a multi-platform runtime, the code wr
 ## Status
 
 The project should be considered experimental. Several parsers have been implemented and work so far using this target but not all the features are complete and well tested.
+
+The runtime and target's template are up-to-date with mainstream commit: `master/e9df464`  
+The following are files that need further verification:
+
+- Parser
+- ATNDeserializer
+- ATNSerializer
+- IntegerList
+- InterpreterDataReader
+- tree/xpath/**
 
 ## Using ANTLR-Kotlin with Gradle
 
