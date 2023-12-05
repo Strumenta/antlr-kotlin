@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -19,7 +20,15 @@ kotlin {
     freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 
-  jvm()
+  jvm {
+    compilations.configureEach {
+      compilerOptions.configure {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+        freeCompilerArgs.add("-Xjvm-default=all")
+      }
+    }
+  }
+
   js {
     browser()
     nodejs()
