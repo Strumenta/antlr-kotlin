@@ -29,6 +29,7 @@ internal class Antlr4Tool : AntlrTool() {
   @Suppress("SameParameterValue")
   private fun setField(obj: Any, fieldName: String, value: File) {
     val field = obj.javaClass.getField(fieldName)
+    field.isAccessible = true
     field[obj] = value
   }
 }

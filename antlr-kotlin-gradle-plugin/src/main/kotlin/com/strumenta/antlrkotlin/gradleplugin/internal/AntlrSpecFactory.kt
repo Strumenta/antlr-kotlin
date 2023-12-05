@@ -27,13 +27,11 @@ internal class AntlrSpecFactory {
     sourceSetDirectories: FileCollection?,
   ): AntlrSpec {
     val arguments = LinkedList(antlrTask.arguments)
-    var outputDirectory = antlrTask.outputDirectory
     val packageName = antlrTask.packageName
 
     if (packageName != null) {
       arguments.add("-package")
       arguments.add(packageName)
-      outputDirectory = File(outputDirectory, packageName.replace(".", "/"))
     }
 
     if (antlrTask.isTrace) {
@@ -54,12 +52,7 @@ internal class AntlrSpecFactory {
 
     // See https://github.com/Strumenta/antlr-kotlin/issues/85
     arguments.add("-encoding")
-
-    if (antlrTask.encoding == null) {
-      arguments.add("UTF-8")
-    } else {
-      arguments.add(antlrTask.encoding)
-    }
+    arguments.add(antlrTask.encoding)
 
     val sourceSetDirectoriesFiles = if (sourceSetDirectories == null) {
       emptySet()
@@ -71,7 +64,7 @@ internal class AntlrSpecFactory {
       arguments,
       grammarFiles,
       sourceSetDirectoriesFiles,
-      outputDirectory!!,
+      antlrTask.outputDirectory!!,
       antlrTask.maxHeapSize,
     )
   }

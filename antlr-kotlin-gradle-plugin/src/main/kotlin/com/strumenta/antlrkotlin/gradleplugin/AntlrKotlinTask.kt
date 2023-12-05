@@ -19,6 +19,7 @@ import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrResult
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSourceGenerationException
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrSpecFactory
 import com.strumenta.antlrkotlin.gradleplugin.internal.AntlrWorkerManager
+import org.gradle.api.NonNullApi
 import org.gradle.api.file.*
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.Optional
@@ -28,12 +29,12 @@ import org.gradle.work.ChangeType
 import org.gradle.work.InputChanges
 import java.io.File
 import java.util.*
-import java.util.concurrent.Callable
 import javax.inject.Inject
 
 /**
- * Generates parsers from Antlr grammars.
+ * Generates parsers from ANTLR grammars.
  */
+@NonNullApi
 @CacheableTask
 public abstract class AntlrKotlinTask @Inject constructor(
   private val deleter: Deleter,
@@ -86,13 +87,6 @@ public abstract class AntlrKotlinTask @Inject constructor(
   public var outputDirectory: File? = null
 
   /**
-   * The maximum heap size for the forked antlr process (ex: '1g').
-   */
-  @get:Input
-  @get:Optional
-  public var maxHeapSize: String? = null
-
-  /**
    * The package name of the generated files.
    */
   @get:Input
@@ -102,16 +96,22 @@ public abstract class AntlrKotlinTask @Inject constructor(
    * The generated parsers file encoding (ex: 'UTF-8').
    */
   @get:Input
-  public var encoding: String? = "UTF-8"
+  public var encoding: String = "UTF-8"
+
+  /**
+   * The maximum heap size for the forked antlr process (ex: '512m', '1g').
+   */
+  @get:Internal
+  public var maxHeapSize: String = "512m"
 
   /**
    * The sources for incremental change detection.
    */
-  @get:InputFiles
-  @get:PathSensitive(PathSensitivity.RELATIVE)
-  @get:IgnoreEmptyDirectories
   @get:SkipWhenEmpty
-  protected val stableSources: FileCollection = project.files(Callable<Any> { this.source })
+  @get:IgnoreEmptyDirectories
+  @get:PathSensitive(PathSensitivity.RELATIVE)
+  @get:InputFiles
+  protected val stableSources: FileCollection = project.files({ this.source })
 
   /**
    * Generate the parsers.
@@ -136,8 +136,7 @@ public abstract class AntlrKotlinTask @Inject constructor(
       }
 
       if (rebuildRequired) {
-        val directory = checkNotNull(outputDirectory)
-        deleter.ensureEmptyDirectory(directory)
+        deleter.ensureEmptyDirectory(outputDirectory!!)
         grammarFiles.addAll(stableSources.files)
       }
     } else {
@@ -186,7 +185,7 @@ public abstract class AntlrKotlinTask @Inject constructor(
    *
    * Ignores source files which do not exist.
    */
-  @PathSensitive(PathSensitivity.RELATIVE)
+  @Internal("Tracked via stableSources")
   override fun getSource(): FileTree =
     super.getSource()
 
