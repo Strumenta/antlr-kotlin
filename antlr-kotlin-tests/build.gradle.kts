@@ -8,6 +8,8 @@ plugins {
 }
 
 kotlin {
+  // We are ok to publish this module, but sources are unnecessary
+  withSourcesJar(publish = false)
   explicitApiWarning()
 
   @OptIn(ExperimentalKotlinGradlePluginApi::class)
