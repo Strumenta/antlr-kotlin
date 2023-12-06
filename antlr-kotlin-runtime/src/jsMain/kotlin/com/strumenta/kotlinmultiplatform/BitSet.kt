@@ -16,35 +16,73 @@
 
 package com.strumenta.kotlinmultiplatform
 
-// TODO(Edoardo): revisit this implementation
+import js.core.delete
+
 actual class BitSet actual constructor() {
-  private val setBits = HashSet<Int>()
+  private val wrapped = js("[]").unsafeCast<Array<Boolean>>()
 
   actual fun set(bitIndex: Int) {
-    require(bitIndex >= 0)
-    setBits.add(bitIndex)
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
+    }
+
+    wrapped[bitIndex] = true
   }
 
   actual fun clear(bitIndex: Int) {
-    require(bitIndex >= 0)
-    setBits.remove(bitIndex)
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
+    }
+
+    delete(wrapped[bitIndex])
   }
 
   actual fun get(bitIndex: Int): Boolean {
-    require(bitIndex >= 0)
-    return setBits.contains(bitIndex)
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
+    }
+
+    if (bitIndex >= wrapped.size) {
+      return false
+    }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    return wrapped[bitIndex] == true
   }
 
-  actual fun cardinality(): Int {
-    return setBits.size
+  actual fun cardinality(): Int =
+    @Suppress("SimplifyBooleanWithConstants")
+    wrapped.count { it == true }
+
+  actual fun nextSetBit(fromIndex: Int): Int {
+    if (fromIndex < 0) {
+      throw IndexOutOfBoundsException("fromIndex < 0: $fromIndex")
+    }
+
+    if (fromIndex >= wrapped.size) {
+      return -1
+    }
+
+    for (n in fromIndex..<wrapped.size) {
+      @Suppress("SimplifyBooleanWithConstants")
+      if (wrapped[n] == true) {
+        return n
+      }
+    }
+
+    return -1
   }
 
-  actual fun nextSetBit(i: Int): Int {
-    val nextSetBits = setBits.filter { it >= i }
-    return nextSetBits.minOrNull() ?: -1
-  }
+  actual fun or(otherBitSet: BitSet) {
+    for (i in 0..<otherBitSet.wrapped.size) {
+      @Suppress("SimplifyBooleanWithConstants")
+      val result = wrapped[i] == true || otherBitSet.wrapped[i] == true
 
-  actual fun or(alts: BitSet) {
-    this.setBits.addAll(alts.setBits)
+      // This check avoids setting a "false" boolean value,
+      // as we want to keep the "undefined" slots
+      if (result) {
+        wrapped[i] = result
+      }
+    }
   }
 }

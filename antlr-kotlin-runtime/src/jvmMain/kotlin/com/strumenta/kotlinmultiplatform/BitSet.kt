@@ -33,9 +33,9 @@ actual class BitSet actual constructor() {
   actual fun cardinality(): Int =
     wrapped.cardinality()
 
-  actual fun nextSetBit(i: Int): Int =
-    wrapped.nextSetBit(i)
+  actual fun nextSetBit(fromIndex: Int): Int =
+    wrapped.nextSetBit(fromIndex)
 
-  actual fun or(alts: BitSet) =
-    wrapped.or(alts.wrapped)
+  actual fun or(otherBitSet: BitSet) =
+    wrapped.or(otherBitSet.wrapped)
 }

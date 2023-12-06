@@ -34,5 +34,12 @@ kotlin {
         implementation(kotlin("test"))
       }
     }
+
+    jsMain {
+      dependencies {
+        implementation(project.dependencies.platform(libs.kotlin.wrappers.get()))
+        implementation(libs.wrapper.kotlin.js)
+      }
+    }
   }
 }
