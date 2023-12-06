@@ -1,6 +1,7 @@
 package org.antlr.v4.kotlinruntime
 
 import BaseTest
+import com.strumenta.kotlinmultiplatform.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.test.Test
 
