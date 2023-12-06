@@ -39,3 +39,14 @@ tasks {
     distributionType = Wrapper.DistributionType.ALL
   }
 }
+
+tasks {
+  create("ciCheck") {
+    dependsOn(":antlr-kotlin-runtime:compileKotlinJvm")
+    dependsOn(":antlr-kotlin-tests:compileKotlinJvm")
+    dependsOn(":antlr-kotlin-target:compileKotlin")
+    dependsOn(":antlr-kotlin-runtime:jvmTest")
+    dependsOn(":antlr-kotlin-tests:jvmTest")
+    dependsOn(":antlr-kotlin-target:test")
+  }
+}
