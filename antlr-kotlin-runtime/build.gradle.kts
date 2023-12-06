@@ -1,113 +1,45 @@
+import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
+  id("strumenta.multiplatform")
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
+strumentaMultiplatform {
+  applyJvm()
+  applyJs()
 
-apply(plugin = "maven-publish")
+  // Opting-in for native targets should be explicit,
+  // as it makes the build and test process slower.
+  //
+  // Opt in by setting 'target.is.native = true' in gradle.properties
+  if (targetsNative()) {
+    applyNative()
+  }
+}
 
 kotlin {
-    jvm()
-    js(BOTH) {
-        browser {
-        }
-        nodejs {
-        }
+  // TODO(Edoardo): remove this line once all the runtime sources are properly formatted
+  explicitApi = ExplicitApiMode.Disabled
+
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation(kotlin("reflect"))
+      }
     }
 
-    ios("ios") {
-        binaries {
-            staticLib()
-        }
+    commonTest {
+      dependencies {
+        implementation(kotlin("test"))
+      }
     }
-    linuxArm64 {
-        binaries {
-            staticLib()
-        }
+
+    jsMain {
+      dependencies {
+        implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
+        implementation(libs.kotlin.wrappers.kotlin.js)
+      }
     }
-    linuxX64 {
-        binaries {
-            staticLib()
-        }
-    }
-    macosArm64 {
-        binaries {
-            staticLib()
-        }
-    }
-    macosX64 {
-        binaries {
-            staticLib()
-        }
-    }
-    mingwX64("windows") {
-        binaries {
-            staticLib()
-        }
-    }
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-                implementation(kotlin("reflect"))
-                implementation("com.benasher44:uuid:0.7.1")
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-js"))
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
-        }
-        val nativeMain by creating {
-        }
-        val iosMain by getting {
-            dependsOn(nativeMain)
-        }
-        val linuxMain by creating {
-            dependsOn(nativeMain)
-        }
-        val linuxArm64Main by getting {
-            dependsOn(linuxMain)
-        }
-        val linuxX64Main by getting {
-            dependsOn(linuxMain)
-        }
-        val macMain by creating {
-            dependsOn(nativeMain)
-        }
-        val macosArm64Main by getting {
-            dependsOn(macMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(macMain)
-        }
-        val windowsMain by getting {
-            dependsOn(nativeMain)
-        }
-    }
+  }
 }

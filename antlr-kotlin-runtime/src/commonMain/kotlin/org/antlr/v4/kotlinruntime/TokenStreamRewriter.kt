@@ -543,7 +543,7 @@ class TokenStreamRewriter(
     }
 
     /** Get all operations before an index of a particular kind  */
-    protected fun <T : TokenStreamRewriter.RewriteOperation> getKindOfOps(rewrites: List<RewriteOperation?>, kind: Type, before: Int): List<T> {
+    protected fun <T : TokenStreamRewriter.RewriteOperation> getKindOfOps(rewrites: List<RewriteOperation?>, kind: KClass<*>, before: Int): List<T> {
         val ops = ArrayList<T>()
         var i = 0
         while (i < before && i < rewrites.size) {

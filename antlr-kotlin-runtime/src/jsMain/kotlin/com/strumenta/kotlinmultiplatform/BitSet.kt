@@ -16,38 +16,73 @@
 
 package com.strumenta.kotlinmultiplatform
 
-actual class BitSet {
+import js.core.delete
 
-    private val setBits = HashSet<Int>()
+actual class BitSet actual constructor() {
+  private val wrapped = js("[]").unsafeCast<Array<Boolean>>()
 
-    actual constructor()
-
-    actual fun set(bitIndex: Int) {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        setBits.add(bitIndex)
+  actual fun set(bitIndex: Int) {
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
 
-    actual fun clear(bitIndex: Int) {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        setBits.remove(bitIndex)
+    wrapped[bitIndex] = true
+  }
+
+  actual fun clear(bitIndex: Int) {
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
 
-    actual fun get(bitIndex: Int): Boolean {
-        if (bitIndex < 0) throw IllegalArgumentException()
-        return setBits.contains(bitIndex)
+    delete(wrapped[bitIndex])
+  }
+
+  actual fun get(bitIndex: Int): Boolean {
+    if (bitIndex < 0) {
+      throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
 
-    actual fun cardinality(): Int {
-        return setBits.size
+    if (bitIndex >= wrapped.size) {
+      return false
     }
 
-    actual fun nextSetBit(i: Int): Int {
-        val nextSetBits = setBits.filter { it >= i }
-        return nextSetBits.minOrNull() ?: -1
+    @Suppress("SimplifyBooleanWithConstants")
+    return wrapped[bitIndex] == true
+  }
+
+  actual fun cardinality(): Int =
+    @Suppress("SimplifyBooleanWithConstants")
+    wrapped.count { it == true }
+
+  actual fun nextSetBit(fromIndex: Int): Int {
+    if (fromIndex < 0) {
+      throw IndexOutOfBoundsException("fromIndex < 0: $fromIndex")
     }
 
-    actual fun or(alts: BitSet) {
-        this.setBits.addAll(alts.setBits)
+    if (fromIndex >= wrapped.size) {
+      return -1
     }
 
+    for (n in fromIndex..<wrapped.size) {
+      @Suppress("SimplifyBooleanWithConstants")
+      if (wrapped[n] == true) {
+        return n
+      }
+    }
+
+    return -1
+  }
+
+  actual fun or(otherBitSet: BitSet) {
+    for (i in 0..<otherBitSet.wrapped.size) {
+      @Suppress("SimplifyBooleanWithConstants")
+      val result = wrapped[i] == true || otherBitSet.wrapped[i] == true
+
+      // This check avoids setting a "false" boolean value,
+      // as we want to keep the "undefined" slots
+      if (result) {
+        wrapped[i] = result
+      }
+    }
+  }
 }

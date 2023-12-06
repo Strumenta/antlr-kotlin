@@ -6,43 +6,29 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.isSupplementaryCodePoint
-import org.antlr.v4.kotlinruntime.misc.IntervalSet
-
 /**
  * Utility class to create [AtomTransition], [RangeTransition],
  * and [SetTransition] appropriately based on the range of the input.
  *
- * To keep the serialized ATN size small, we only inline atom and
- * range transitions for Unicode code points <= U+FFFF.
- *
- * Whenever we encounter a Unicode code point > U+FFFF, we represent that
- * as a set transition (even if it is logically an atom or a range).
+ * Previously, we distinguished between atom and range transitions for
+ * Unicode code points <= U+FFFF and those above. We used a set
+ * transition for a Unicode code point > U+FFFF. Now that we can serialize
+ * 32-bit int/chars in the ATN serialization, this is no longer necessary.
  */
 object CodePointTransitions {
     /**
-     * If `codePoint` is <= U+FFFF, returns a new [AtomTransition].
-     * Otherwise, returns a new [SetTransition].
+     * Return new [AtomTransition].
      */
     fun createWithCodePoint(target: ATNState, codePoint: Int): Transition {
-        return if (Char.isSupplementaryCodePoint(codePoint)) {
-            SetTransition(target, IntervalSet.of(codePoint))
-        } else {
-            AtomTransition(target, codePoint)
-        }
+        return createWithCodePointRange(target, codePoint, codePoint)
     }
 
     /**
-     * If `codePointFrom` and `codePointTo` are both
-     * <= U+FFFF, returns a new [RangeTransition].
-     * Otherwise, returns a new [SetTransition].
+     * Return new [AtomTransition] if range represents one atom, else [SetTransition].
      */
-    fun createWithCodePointRange(
-            target: ATNState,
-            codePointFrom: Int,
-            codePointTo: Int): Transition {
-        return if (Char.isSupplementaryCodePoint(codePointFrom) || Char.isSupplementaryCodePoint(codePointTo)) {
-            SetTransition(target, IntervalSet.of(codePointFrom, codePointTo))
+    fun createWithCodePointRange(target: ATNState, codePointFrom: Int, codePointTo: Int): Transition {
+        return if (codePointFrom == codePointTo) {
+            AtomTransition(target, codePointFrom)
         } else {
             RangeTransition(target, codePointFrom, codePointTo)
         }

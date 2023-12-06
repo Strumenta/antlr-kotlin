@@ -29,40 +29,44 @@
  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-javaTypeInitMap ::= [
-	"int":"0",
-	"long":"0",
-	"float":"0.0f",
-	"double":"0.0",
-	"boolean":"false",
-	"byte":"0",
-	"short":"0",
-	"char":"0",
-	default:"null" // anything other than a primitive type is an object
+KotlinTypeInitMap ::= [
+    "Int":"0",
+    "Long":"0L",
+    "Float":"0.0F",
+    "Double":"0.0",
+    "Boolean":"false",
+    "Byte":"0",
+    "Short":"0",
+    "Char":"0.toChar()",
+    default:"null" // Anything other than a primitive type is an object
 ]
 
-// args must be <object-model-object>, <fields-resulting-in-STs>
+KotlinTypeMap ::= [
+    "int":"Int",
+    "long":"Long",
+    "float":"Float",
+    "double":"Double",
+    "boolean":"Boolean",
+    "byte":"Byte",
+    "short":"Short",
+    "char":"Char",
+    default:key
+]
 
 ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
 <fileHeader(file.grammarFileName, file.ANTLRVersion)>
 <if(file.genPackage)>
-package <file.genPackage>;
+package <file.genPackage>
 <endif>
 <namedActions.header>
-import com.strumenta.kotlinmultiplatform.asCharArray
-import com.strumenta.kotlinmultiplatform.getType
-import com.strumenta.kotlinmultiplatform.TypeDeclarator
+
+import com.strumenta.kotlinmultiplatform.scoped
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
-import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
-import org.antlr.v4.kotlinruntime.atn.ParserATNSimulator
-import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
-import org.antlr.v4.kotlinruntime.dfa.*
-import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
-import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
-import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
-import kotlin.reflect.KClass
+import org.antlr.v4.kotlinruntime.dfa.*
+import org.antlr.v4.kotlinruntime.misc.*
+import org.antlr.v4.kotlinruntime.tree.*
 
 <parser>
 >>
@@ -77,31 +81,31 @@ package <file.genPackage>
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 
 /**
- * This interface defines a complete listener for a parse tree produced by
- * {@link <file.parserName>}.
+ * This interface defines a complete listener for a parse tree produced by [<file.parserName>].
  */
-interface <file.grammarName>Listener : ParseTreeListener {
-	<file.listenerNames:{lname |
-/**
-<if(file.listenerLabelRuleNames.(lname))>
- * Enter a parse tree produced by the {@code <lname>\}
- * labeled alternative in {@link <file.parserName>#<file.listenerLabelRuleNames.(lname)>\}.
-<else>
- * Enter a parse tree produced by {@link <file.parserName>#<lname>\}.
-<endif>
- * @param ctx the parse tree
- */
-fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)
-/**
-<if(file.listenerLabelRuleNames.(lname))>
- * Exit a parse tree produced by the {@code <lname>\}
- * labeled alternative in {@link <file.parserName>#<file.listenerLabelRuleNames.(lname)>\}.
-<else>
- * Exit a parse tree produced by {@link <file.parserName>#<lname>\}.
-<endif>
- * @param ctx the parse tree
- */
-fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)}; separator="\n">
+public interface <file.grammarName>Listener : ParseTreeListener {
+<file.listenerNames:{lname |
+    /**
+    <if(file.listenerLabelRuleNames.(lname))>
+     * Enter a parse tree produced by the `<lname>` labeled alternative in [<file.parserName>.<file.listenerLabelRuleNames.(lname)>].
+    <else>
+     * Enter a parse tree produced by [<file.parserName>.<lname>].
+    <endif>
+     *
+     * @param ctx The parse tree
+     */
+    public fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)
+
+    /**
+    <if(file.listenerLabelRuleNames.(lname))>
+     * Exit a parse tree produced by the `<lname>` labeled alternative in [<file.parserName>.<file.listenerLabelRuleNames.(lname)>].
+    <else>
+     * Exit a parse tree produced by [<file.parserName>.<lname>].
+    <endif>
+     *
+     * @param ctx The parse tree
+     */
+    public fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)}; separator="\n">
 }
 >>
 
@@ -117,49 +121,41 @@ import org.antlr.v4.kotlinruntime.tree.ErrorNode
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 
 /**
- * This class provides an empty implementation of {@link <file.grammarName>Listener},
+ * This class provides an empty implementation of [<file.grammarName>Listener],
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-open class <file.grammarName>BaseListener : <file.grammarName>Listener {
-	<file.listenerNames:{lname |
-/**
- * {@inheritDoc\}
- *
- * \<p>The default implementation does nothing.\</p>
- */
-override fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) { \}
-/**
- * {@inheritDoc\}
- *
- * \<p>The default implementation does nothing.\</p>
- */
-override fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) { \}}; separator="\n">
+public open class <file.grammarName>BaseListener : <file.grammarName>Listener {
+<file.listenerNames:{lname |
+    /**
+     * The default implementation does nothing.
+     */
+    override fun enter<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) {\}
 
-	/**
-	 * {@inheritDoc\}
-	 *
-	 * \<p>The default implementation does nothing.\</p>
-	 */
-	override fun enterEveryRule(ctx: ParserRuleContext) { }
-	/**
-	 * {@inheritDoc\}
-	 *
-	 * \<p>The default implementation does nothing.\</p>
-	 */
-	override fun exitEveryRule(ctx: ParserRuleContext ) { }
-	/**
-	 * {@inheritDoc\}
-	 *
-	 * \<p>The default implementation does nothing.\</p>
-	 */
-	override fun visitTerminal(node: TerminalNode ) { }
-	/**
-	 * {@inheritDoc\}
-	 *
-	 * \<p>The default implementation does nothing.\</p>
-	 */
-	override fun visitErrorNode(node: ErrorNode) { }
+    /**
+     * The default implementation does nothing.
+     */
+    override fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context) {\}
+}; separator="\n">
+    /**
+     * The default implementation does nothing.
+     */
+    override fun enterEveryRule(ctx: ParserRuleContext) {}
+
+    /**
+     * The default implementation does nothing.
+     */
+    override fun exitEveryRule(ctx: ParserRuleContext) {}
+
+    /**
+     * The default implementation does nothing.
+     */
+    override fun visitTerminal(node: TerminalNode) {}
+
+    /**
+     * The default implementation does nothing.
+     */
+    override fun visitErrorNode(node: ErrorNode) {}
 }
 >>
 
@@ -173,25 +169,23 @@ package <file.genPackage>
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 
 /**
- * This interface defines a complete generic visitor for a parse tree produced
- * by {@link <file.parserName>}.
+ * This interface defines a complete generic visitor for a parse tree produced by [<file.parserName>].
  *
- * @param \<T> The return type of the visit operation. Use {@link Void} for
- * operations with no return type.
+ * @param T The return type of the visit operation. Use [Unit] for operations with no return type.
  */
-interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
-	<file.visitorNames:{lname |
-/**
-<if(file.visitorLabelRuleNames.(lname))>
- * Visit a parse tree produced by the {@code <lname>\}
- * labeled alternative in {@link <file.parserName>#<file.visitorLabelRuleNames.(lname)>\}.
-<else>
- * Visit a parse tree produced by {@link <file.parserName>#<lname>\}.
-<endif>
- * @param ctx the parse tree
- * @return the visitor result
- */
-fun visit<lname; format="cap">(ctx : <file.parserName>.<lname; format="cap">Context) : T}; separator="\n">
+public interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
+<file.visitorNames:{lname |
+    /**
+    <if(file.visitorLabelRuleNames.(lname))>
+     * Visit a parse tree produced by the `<lname>` labeled alternative in [<file.parserName>.<file.visitorLabelRuleNames.(lname)>].
+    <else>
+     * Visit a parse tree produced by [<file.parserName>.<lname>].
+    <endif>
+     *
+     * @param ctx The parse tree
+     * @return The visitor result
+     */
+    public fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T}; separator="\n">
 }
 >>
 
@@ -205,27 +199,25 @@ package <file.genPackage>
 import org.antlr.v4.kotlinruntime.tree.AbstractParseTreeVisitor
 
 /**
- * This class provides an empty implementation of {@link <file.grammarName>Visitor},
+ * This class provides an empty implementation of [<file.grammarName>Visitor],
  * which can be extended to create a visitor which only needs to handle a subset
  * of the available methods.
  *
- * @param \<T> The return type of the visit operation. Use {@link Void} for
- * operations with no return type.
+ * @param T The return type of the visit operation. Use [Unit] for operations with no return type.
  */
-open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
-	<file.visitorNames:{lname |
-/**
- * {@inheritDoc\}
- *
- * \<p>The default implementation returns the result of calling
- * {@link #visitChildren\} on {@code ctx\}.\</p>
- */
-override fun visit<lname; format="cap">(ctx : <file.parserName>.<lname; format="cap">Context ) : T { return this!!.visitChildren(ctx)!! \}}; separator="\n">
+public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
+<file.visitorNames:{lname |
+    /**
+     * The default implementation returns the result of calling [visitChildren] on [ctx].
+     */
+    override fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T {
+        return this.visitChildren(ctx)!!
+    \}}; separator="\n">
 }
 >>
 
 fileHeader(grammarFileName, ANTLRVersion) ::= <<
-// Generated from <grammarFileName; format="java-escape"> by ANTLR <ANTLRVersion>
+// Generated from <grammarFileName> by ANTLR <ANTLRVersion>
 >>
 
 Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
@@ -233,117 +225,116 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
+@Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary")
+public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
+    override val grammarFileName: String =
+        "<parser.grammarFileName>"
 
-class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
+    override val tokenNames: Array\<String?> =
+        <parser.name>.tokenNames
 
-    object solver : TypeDeclarator {
-        override val classesByName : List\<KClass\<*>\> = listOf(<parser.funcs:{f | <parser.name>.<f.name; format="cap">Context::class}; separator=",\n", wrap, anchor>)
-    }
+    override val ruleNames: Array\<String> =
+        <parser.name>.ruleNames
 
-	// TODO verify version of runtime is compatible
+    override val atn: ATN =
+        ATN
 
-    override val grammarFileName: String
-        get() = "<parser.grammarFileName>"
-
-    override val tokenNames: Array\<String?>?
-        get() = <parser.name>.Companion.tokenNames
-    override val ruleNames: Array\<String>?
-        get() = <parser.name>.Companion.ruleNames
-    override val atn: ATN
-        get() = <parser.name>.Companion.ATN
-    override val vocabulary: Vocabulary
-        get() = <parser.name>.Companion.VOCABULARY
+    override val vocabulary: Vocabulary =
+        VOCABULARY
 
     <if(parser.tokens)>
-    enum class Tokens(val id: Int) {
+    public enum class Tokens(public val id: Int) {
         EOF(-1),
         <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
-    enum class Rules(val id: Int) {
+    <if(parser.rules)>
+    public enum class Rules(public val id: Int) {
         <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
     }
+    <endif>
 
-	@ThreadLocal
-	companion object {
-	    protected val decisionToDFA : Array\<DFA>
-    	protected val sharedContextCache = PredictionContextCache()
-
-        val ruleNames = arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
+    public companion object {
+        private val decisionToDFA: Array\<DFA>
+        private val sharedContextCache = PredictionContextCache()
+        private val ruleNames =
+            arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
 
-        val tokenNames: Array\<String?> = Array\<String?>(SYMBOLIC_NAMES.size) {
-            var el = VOCABULARY.getLiteralName(it)
-            if (el == null) {
-                el = VOCABULARY.getSymbolicName(it)
-            }
-
-            if (el == null) {
-                el = "\<INVALID>"
-            }
-            el
+        private val tokenNames: Array\<String?> = Array(SYMBOLIC_NAMES.size) {
+            VOCABULARY.getLiteralName(it)
+                ?: VOCABULARY.getSymbolicName(it)
+                ?: "\<INVALID>"
         }
 
         <atn>
-	}
+    }
 
-	<if(parser.tokens)>
+    <if(parser.tokens)>
     <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
     <endif>
 
     /* Named actions */
-	<namedActions.members>
-	<parser:(ctor)()>
-	/* Funcs */
-	<funcs; separator="\n">
+    <namedActions.members>
+
+    <parser:(ctor)()>
+
+    /* Funcs */
+    <funcs; separator="\n\n">
 
 <if(sempredFuncs)>
-	override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int) : Boolean {
-		when (ruleIndex) {
-		<parser.sempredFuncs.values:{f| <f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
-		}
-		return true
-	}
-	<sempredFuncs.values; separator="\n">
-<endif>
+    override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
+        when (ruleIndex) {
+            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>?, predIndex)}; separator="\n">
+        }
 
+        return true
+    }
+
+    <sempredFuncs.values; separator="\n\n">
+<endif>
 }
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
-private val LITERAL_NAMES: List\<String?> = listOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
-private val SYMBOLIC_NAMES: List\<String?> = listOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val LITERAL_NAMES: Array\<String?> =
+    arrayOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
-val VOCABULARY = VocabularyImpl(LITERAL_NAMES.toTypedArray(), SYMBOLIC_NAMES.toTypedArray())
+private val SYMBOLIC_NAMES: Array\<String?> =
+    arrayOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+
+private val VOCABULARY: Vocabulary = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
 >>
 
 dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
 <if(actionFuncs)>
-fun action(RuleContext _localctx, int ruleIndex, int actionIndex) {
-	when (ruleIndex) {
-	<recog.actionFuncs.values:{f|
-    <f.ruleIndex> -> <f.name>_action((<f.ctxType>)_localctx, actionIndex);}; separator="\n">
-	}
+override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
+    when (ruleIndex) {
+        <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx, actionIndex)}; separator="\n">
+    }
 }
-<actionFuncs.values; separator="\n">
+
+<actionFuncs.values; separator="\n\n">
 <endif>
+
 <if(sempredFuncs)>
-override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int) : Boolean {
-	when (ruleIndex) {
-	<recog.sempredFuncs.values:{f|
-<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
-	}
-	return true
+override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
+    when (ruleIndex) {
+        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx, predIndex)}; separator="\n">
+    }
+
+    return true
 }
-<sempredFuncs.values; separator="\n">
+
+<sempredFuncs.values; separator="\n\n">
 <endif>
 >>
 
 parser_ctor(p) ::= <<
 init {
-	interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
+    interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
 }
 >>
 
@@ -351,11 +342,13 @@ init {
  * overriding implementation impossible to maintain.
  */
 RuleActionFunction(r, actions) ::= <<
-private fun <r.name>_action(<r.ctxType> _localctx, int actionIndex) {
-	switch (actionIndex) {
-	<actions:{index|
-    <index> -> <actions.(index)>}; separator="\n">
-	}
+private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
+    when (actionIndex) {
+<actions:{index|
+        <index> -> {
+            <actions.(index)>
+        \}}; separator="\n">
+    }
 }
 >>
 
@@ -363,101 +356,102 @@ private fun <r.name>_action(<r.ctxType> _localctx, int actionIndex) {
  * overriding implementation impossible to maintain.
  */
 RuleSempredFunction(r, actions) ::= <<
-private fun <r.name>_sempred( _localctx : <r.ctxType>, predIndex: Int) : Boolean {
-	when (predIndex) {
-	<actions:{index|
-    <index> -> return <actions.(index)>}; separator="\n">
-	}
-	return true
+private fun <r.name>_sempred(_localctx: <r.ctxType>?, predIndex: Int): Boolean {
+    when (predIndex) {
+        <actions:{index|<index> -> return (<actions.(index)>)}; separator="\n">
+    }
+
+    return true
 }
 >>
 
 RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,finallyAction,postamble,exceptions) ::= <<
-
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> <currentRule.name>(<args; separator=",">) : <currentRule.ctxType> {
-	var _localctx : <currentRule.ctxType> = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.name>}>)
-	enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
-	<namedActions.init>
-	<locals; separator="\n">
-	try {
+public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
+    var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.name>}>)
+    enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
+    <namedActions.init>
+    <locals; separator="\n">
+
+    try {
 <if(currentRule.hasLookaheadBlock)>
-		var _alt: Int
+        var _alt: Int
 <endif>
-		<code>
-		<postamble; separator="\n">
-		<namedActions.after>
-	}
-	<if(exceptions)>
-	<exceptions; separator="\n">
-	<else>
-	catch (re: RecognitionException) {
-		_localctx.exception = re
-		errorHandler.reportError(this, re)
-		errorHandler.recover(this, re)
-	}
-	<endif>
-	finally {
-		<finallyAction>
-		exitRule()
-	}
-	return _localctx
+        <code>
+        <postamble; separator="\n">
+        <namedActions.after>
+    }
+    <if(exceptions)>
+    <exceptions; separator="\n">
+    <else>
+    catch (re: RecognitionException) {
+        _localctx.exception = re
+        errorHandler.reportError(this, re)
+        errorHandler.recover(this, re)
+    }
+    <endif>
+    finally {
+        <finallyAction>
+        exitRule()
+    }
+
+    return _localctx
 }
 >>
 
-LeftRecursiveRuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,
-	namedActions,finallyAction,postamble) ::=
-<<
-
+LeftRecursiveRuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble) ::= <<
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif> fun <currentRule.name>(<args; separator=", ">) : <currentRule.ctxType> {
-	return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>);
+<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public<endif> fun <currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
+    return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>)
 }
 
-private fun <currentRule.name>(_p: Int<args:{a | , <a>}>) : <currentRule.ctxType> {
-	var _parentctx : ParserRuleContext? = context
-	var _parentState : Int = state
-	var _localctx : <currentRule.ctxType>= <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
-	var _prevctx : <currentRule.ctxType>= _localctx
-	var _startState : Int = <currentRule.startState>
-	enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
-	<namedActions.init>
-	<locals; separator="\n">
-	try {
+private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType> {
+    var _parentctx = context
+    var _parentState = state
+    var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
+    var _prevctx = _localctx
+    var _startState = <currentRule.startState>
+    enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
+    <namedActions.init>
+    <locals; separator="\n">
+
+    try {
 <if(currentRule.hasLookaheadBlock)>
-		var _alt: Int
+        var _alt: Int
 <endif>
-		<code>
-		<postamble; separator="\n">
-		<namedActions.after>
-	}
-	catch (re: RecognitionException) {
-		_localctx.exception = re
-		errorHandler.reportError(this, re)
-		errorHandler.recover(this, re)
-	}
-	finally {
-		<finallyAction>
-		unrollRecursionContexts(_parentctx)
-	}
-	return _localctx
+        <code>
+        <postamble; separator="\n">
+        <namedActions.after>
+    }
+    catch (re: RecognitionException) {
+        _localctx.exception = re
+        errorHandler.reportError(this, re)
+        errorHandler.recover(this, re)
+    }
+    finally {
+        <finallyAction>
+        unrollRecursionContexts(_parentctx)
+    }
+
+    return _localctx
 }
 >>
 
-CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= << <if(currentOuterMostAltCodeBlock.altLabel)>_localctx = <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx)<endif>
+CodeBlockForOuterMostAlt(currentOuterMostAltCodeBlock, locals, preamble, ops) ::= <<
+<if(currentOuterMostAltCodeBlock.altLabel)>_localctx = <currentOuterMostAltCodeBlock.altLabel; format="cap">Context(_localctx)<endif>
 enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 <CodeBlockForAlt(currentAltCodeBlock=currentOuterMostAltCodeBlock, ...)>
 >>
 
 CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
-if (true){
-<locals; separator="\n">
-<preamble; separator="\n">
-<ops; separator="\n">
+scoped {
+    <locals; separator="\n">
+    <preamble; separator="\n">
+    <ops; separator="\n">
 }
 >>
 
@@ -466,19 +460,23 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
 <preamble; separator="\n">
+
 when (_input!!.LA(1)) {
-<choice.altLook,alts:{look,alt| <cases(ttypes=look)> /*LL1AltBlock*/{<alt>\}}; separator="\n">
-else -> <error>
+<choice.altLook,alts:{look,alt|
+    <cases(tokens=look)> /*LL1AltBlock*/ {
+        <alt>
+    \}}>
+    else -> <error>
 }
 >>
 
 LL1OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
+
 when (_input!!.LA(1)) {
-<choice.altLook,alts:{look,alt| <cases(ttypes=look)>
-	<if(alt)><alt><else>Unit<endif>}; separator="\n">
-else -> Unit
+    <choice.altLook,alts:{look,alt| <cases(tokens=look)><if(alt)><alt><else>Unit<endif>}; separator="\n">
+    else -> Unit
 }
 >>
 
@@ -486,21 +484,22 @@ LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <preamble; separator="\n">
+
 if (<expr>) {
-	<alts; separator="\n">
+    <alts; separator="\n">
 }
-<!else if ( !(<followExpr>) ) <error>!>
 >>
 
 LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
 this.state = <choice.stateNumber>
-errorHandler.sync(this);
+errorHandler.sync(this)
 <preamble; separator="\n">
+
 while (<loopExpr>) {
-	<alts; separator="\n">
-	this.state = <choice.loopBackStateNumber>
-	errorHandler.sync(this)
-	<iteration>
+    <alts; separator="\n">
+    this.state = <choice.loopBackStateNumber>
+    errorHandler.sync(this)
+    <iteration>
 }
 >>
 
@@ -508,12 +507,13 @@ LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
 this.state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
 <preamble; separator="\n">
+
 do {
-	<alts; separator="\n">
-	this.state = <choice.stateNumber> <! loopback/exit decision !>
-	errorHandler.sync(this)
-	<iteration>
-} while ( <loopExpr> )
+    <alts; separator="\n">
+    this.state = <choice.stateNumber> <! loopback/exit decision !>
+    errorHandler.sync(this)
+    <iteration>
+} while (<loopExpr>)
 >>
 
 // LL(*) stuff
@@ -523,17 +523,22 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
 <preamble; separator="\n">
-when ( interpreter!!.adaptivePredict(_input!!,<choice.decision>,context) ) {
-<alts:{alt |<i> -> {<alt>\}}; separator="\n">
+
+when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
+<alts:{alt|
+    <i> -> {
+        <alt>
+    \}}>
 }
 >>
 
 OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
-when ( interpreter!!.adaptivePredict(_input!!,<choice.decision>,context) ) {
-<alts:{alt |
-<i>  <if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
+
+when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
+<alts:{alt|
+    <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
 }
 >>
 
@@ -541,31 +546,35 @@ StarBlock(choice, alts, sync, iteration) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 _alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
-while ( _alt!=<choice.exitAlt> && _alt!=INVALID_ALT_NUMBER ) {
-	if ( _alt==1<if(!choice.ast.greedy)>+1<endif> ) {
-		<iteration>
-		<alts> <! should only be one !>
-	}
-	this.state = <choice.loopBackStateNumber>
-	errorHandler.sync(this)
-	_alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
+
+while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER) {
+    if (_alt == 1 <if(!choice.ast.greedy)> + 1<endif>) {
+        <iteration>
+        <alts> <! should only be one !>
+    }
+
+    this.state = <choice.loopBackStateNumber>
+    errorHandler.sync(this)
+    _alt = interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)
 }
 >>
 
 PlusBlock(choice, alts, error) ::= <<
 this.state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
-_alt = 1<if(!choice.ast.greedy)>+1<endif>
+_alt = 1<if(!choice.ast.greedy)> + 1<endif>
+
 do {
-	when (_alt) {
-	<alts:{alt|
-    <i><if(!choice.ast.greedy)>+1<endif> -> <alt>}; separator="\n">
-	else -> <error>
-	}
-	this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
-	errorHandler.sync(this)
-	_alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
-} while ( _alt!=<choice.exitAlt> && _alt!=INVALID_ALT_NUMBER )
+    when (_alt) {
+<alts:{alt|
+        <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
+        else -> <error>
+    }
+
+    this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
+    errorHandler.sync(this)
+    _alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
+} while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER)
 >>
 
 Sync(s) ::= "sync(<s.expecting.name>)"
@@ -573,7 +582,7 @@ Sync(s) ::= "sync(<s.expecting.name>)"
 ThrowNoViableAlt(t) ::= "throw NoViableAltException(this)"
 
 TestSetInline(s) ::= <<
-<s.bitsets:{bits | <if(rest(rest(bits.ttypes)))><bitsetBitfieldComparison(s, bits)><else><bitsetInlineComparison(s, bits)><endif>}; separator=" || ">
+<s.bitsets:{bits | <if(rest(rest(bits.tokens)))><bitsetBitfieldComparison(s, bits)><else><bitsetInlineComparison(s, bits)><endif>}; separator=" || ">
 >>
 
 // Java language spec 15.19 - shift operators mask operands rather than overflow to 0... need range test
@@ -581,9 +590,9 @@ testShiftInRange(shiftAmount) ::= <<
 ((<shiftAmount>) and 0x3f.inv()) == 0
 >>
 
-// produces smaller bytecode only when bits.ttypes contains more than two items
+// produces smaller bytecode only when bits.tokens contains more than two items
 bitsetBitfieldComparison(s, bits) ::= <%
-(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and (<bits.ttypes:{ttype | (1L shl <offsetShift(ttype, bits.shift)>)}; separator=" or ">)) != 0L)
+(<testShiftInRange({<offsetShift(s.varName, bits.shift)>})> && ((1L shl <offsetShift(s.varName, bits.shift)>) and <bits.calculated>L) != 0L)
 %>
 
 isZero ::= [
@@ -595,13 +604,13 @@ offsetShift(shiftAmount, offset) ::= <%
 <if(!isZero.(offset))>(<shiftAmount> - <offset>)<else><shiftAmount><endif>
 %>
 
-// produces more efficient bytecode when bits.ttypes contains at most two items
+// produces more efficient bytecode when bits.tokens contains at most two items
 bitsetInlineComparison(s, bits) ::= <%
-<bits.ttypes:{ttype | <s.varName>==<ttype>}; separator=" || ">
+<bits.tokens:{t | <s.varName> == <t.name>}; separator=" || ">
 %>
 
-cases(ttypes) ::= <<
-<ttypes:{t | <t> }; separator=", "> -> >>
+cases(tokens) ::= <<
+<tokens:{t | <t.name> }; separator=", "> -> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
@@ -610,7 +619,7 @@ this.state = <r.stateNumber>
 
 MatchToken(m) ::= <<
 this.state = <m.stateNumber>
-<if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>) as Token
+<if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>)
 >>
 
 MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
@@ -621,13 +630,17 @@ CommonSetStuff(m, expr, capture, invert) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)><m.labels:{l | <labelref(l)> = }>_input!!.LT(1)<endif>
 <capture>
-if ( <if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>) ) {
-	<if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
+
+if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
+    <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
 }
 else {
-	if ( _input!!.LA(1)==Tokens.EOF.id ) isMatchedEOF = true
-	errorHandler.reportMatch(this)
-	consume()
+    if (_input!!.LA(1) == Tokens.EOF.id) {
+        isMatchedEOF = true
+    }
+
+    errorHandler.reportMatch(this)
+    consume()
 }
 >>
 
@@ -636,7 +649,7 @@ this.state = <w.stateNumber>
 <if(w.labels)><w.labels:{l | <labelref(l)> = }><endif>matchWildcard()
 >>
 
-// ACTION STUFF
+// Action stuff
 
 Action(a, foo, chunks) ::= "<chunks>"
 
@@ -644,37 +657,41 @@ ArgAction(a, chunks) ::= "<chunks>"
 
 SemPred(p, chunks, failChunks) ::= <<
 this.state = <p.stateNumber>
-if (!(<chunks>)) throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>)
+
+if (!(<chunks>)) {
+    throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>)
+}
 >>
 
 ExceptionClause(e, catchArg, catchAction) ::= <<
 catch (<catchArg>) {
-	<catchAction>
+    <catchAction>
 }
 >>
 
 // lexer actions are not associated with model objects
 
-LexerSkipCommand()  ::= "skip()"
-LexerMoreCommand()  ::= "more()"
+LexerSkipCommand() ::= "skip()"
+LexerMoreCommand() ::= "more()"
 LexerPopModeCommand() ::= "popMode()"
 
-LexerTypeCommand(arg, grammar)      ::= "_type = <arg>"
-LexerChannelCommand(arg, grammar)   ::= "_channel = <arg>"
-LexerModeCommand(arg, grammar)      ::= "_mode = <arg>"
-LexerPushModeCommand(arg, grammar)  ::= "pushMode(<arg>)"
+LexerTypeCommand(arg, grammar) ::= "_type = <arg>"
+LexerChannelCommand(arg, grammar) ::= "_channel = <arg>"
+LexerModeCommand(arg, grammar) ::= "_mode = <arg>"
+LexerPushModeCommand(arg, grammar) ::= "pushMode(<arg>)"
 
 ActionText(t) ::= "<t.text>"
 ActionTemplate(t) ::= "<t.st>"
-ArgRef(a) ::= "_localctx.<a.name>"
+ArgRef(a) ::= "_localctx!!.<a.name>"
 LocalRef(a) ::= "_localctx.<a.name>"
 RetValueRef(a) ::= "_localctx.<a.name>"
 QRetValueRef(a) ::= "<ctx(a)>.<a.dict>.<a.name>"
+
 /** How to translate $tokenLabel */
 TokenRef(t) ::= "<ctx(t)>.<t.name>"
 LabelRef(t) ::= "<ctx(t)>.<t.name>"
 ListLabelRef(t) ::= "<ctx(t)>.<ListLabelName(t.name)>"
-SetAttr(s,rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>;"
+SetAttr(s, rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>;"
 
 TokenLabelType() ::= "<file.TokenLabelType; null={Token}>"
 InputSymbolType() ::= "<file.InputSymbolType; null={Token}>"
@@ -688,121 +705,135 @@ TokenPropertyRef_index(t) ::= "(<ctx(t)>.<t.label>!?.tokenIndex()?:0)"
 TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.label.asInt()?:0)"
 
 RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>?.start)"
-RulePropertyRef_stop(r)	 ::= "(<ctx(r)>.<r.label>?.stop)"
-RulePropertyRef_text(r)	 ::= "(<ctx(r)>.<r.label>?.let { _input!!.getText(it.start, it.stop)})"
-RulePropertyRef_ctx(r)	 ::= "<ctx(r)>.<r.label>"
-RulePropertyRef_parser(r)	 ::= "this"
+RulePropertyRef_stop(r)	::= "(<ctx(r)>.<r.label>?.stop)"
+RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input!!.getText(it.start, it.stop)})"
+RulePropertyRef_ctx(r) ::= "<ctx(r)>.<r.label>"
+RulePropertyRef_parser(r) ::= "this"
 
 ThisRulePropertyRef_start(r) ::= "_localctx.start"
-ThisRulePropertyRef_stop(r)	 ::= "_localctx.stop"
-ThisRulePropertyRef_text(r)	 ::= "_input!!.getText(_localctx.start, _input!!.LT(-1))"
-ThisRulePropertyRef_ctx(r)	 ::= "_localctx"
-ThisRulePropertyRef_parser(r)	 ::= "this"
+ThisRulePropertyRef_stop(r) ::= "_localctx.stop"
+ThisRulePropertyRef_text(r) ::= "_input!!.getText(_localctx.start, _input!!.LT(-1))"
+ThisRulePropertyRef_ctx(r) ::= "_localctx"
+ThisRulePropertyRef_parser(r) ::= "this"
 
-NonLocalAttrRef(s)		 ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name>"
-SetNonLocalAttr(s, rhsChunks)	  ::=
-	"((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>"
+NonLocalAttrRef(s) ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name>"
+SetNonLocalAttr(s, rhsChunks) ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>"
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "var <t.name>: <TokenLabelType()>? = null"
+TokenDecl(t) ::= "<t.name>: <KotlinTypeMap.(TokenLabelType())>? = null"
 TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "var <t.name> :Mutable\<Token> = ArrayList\<Token>()"
-RuleContextDecl(r) ::= "var <r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "var <rdecl.name> : MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList\<Token>()"
+RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode? = getToken(Tokens.<t.name>.id, 0)"
+ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>.id)"
 
-ContextTokenGetterDecl(t)      ::=
-    "fun <t.name>() : TerminalNode? = getToken(<parser.name>.Tokens.<t.name>.id, 0)"
-ContextTokenListGetterDecl(t)  ::=
-    "fun <t.name>() : List\<TerminalNode> = getTokens(<parser.name>.Tokens.<t.name>.id)"
-ContextTokenListIndexedGetterDecl(t)  ::= <<
-fun <t.name>(i: Int) : TerminalNode = getToken(<parser.name>.Tokens.<t.name>.id, i) as TerminalNode
+ContextTokenListIndexedGetterDecl(t) ::= <<
+public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>.id, i)!!
 >>
-ContextRuleGetterDecl(r)       ::= <<
-fun find<r.name; format="cap">() : <r.ctxName>? = getRuleContext(solver.getType("<r.ctxName>"),0)
+
+ContextRuleGetterDecl(r) ::= <<
+public fun find<r.escapedName; format="cap">(): <r.ctxName>? = getRuleContext(<r.ctxName>::class, 0)
 >>
-ContextRuleListGetterDecl(r)   ::= <<
-fun find<r.name; format="cap">() : List\<<r.ctxName>\> = getRuleContexts(solver.getType("<r.ctxName>"))
+
+ContextRuleListGetterDecl(r) ::= <<
+public fun find<r.escapedName; format="cap">(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
 >>
-ContextRuleListIndexedGetterDecl(r)   ::= <<
-fun find<r.name; format="cap">(i: Int) : <r.ctxName>? = getRuleContext(solver.getType("<r.ctxName>"),i)
+
+ContextRuleListIndexedGetterDecl(r) ::= <<
+public fun find<r.escapedName; format="cap">(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
 
-/** The rule context name is the rule followed by a suffix; e.g.,
- *	r becomes rContext.
- */
+// The rule context name is the rule followed by a suffix, e.g., r becomes rContext.
 RuleContextNameSuffix() ::= "Context"
 
 ImplicitTokenLabel(tokenName) ::= "<tokenName>"
-ImplicitRuleLabel(ruleName)	  ::= "<ruleName>"
-ImplicitSetLabel(id)		  ::= "_tset<id>"
-ListLabelName(label)		  ::= "<label>"
+ImplicitRuleLabel(ruleName) ::= "<ruleName>"
+ImplicitSetLabel(id) ::= "_tset<id>"
+ListLabelName(label) ::= "<label>"
 
 CaptureNextToken(d) ::= "<d.varName> = _input!!.LT(1)"
 CaptureNextTokenType(d) ::= "<d.varName> = _input!!.LA(1)"
 
-StructDecl(struct,ctorAttrs,attrs,getters,dispatchMethods,interfaces,extensionMembers)
-	::= <<
-open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
+StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers, signatures) ::= <<
+@Suppress("FunctionName")
+public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
         get() = Rules.RULE_<struct.derivedFromName>.id
-        set(value) { throw RuntimeException() }
-	<attrs:{a | <a>}; separator="\n">
-	<getters:{g | <g>}; separator="\n">
-	<if(ctorAttrs)>constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){ ; }<endif>
-	constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState){
-		<struct.ctorAttrs:{a | this.<a.name> = <a.name>;}; separator="\n">
-	}
+        set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
+
+    <attrs:{a | public var <a>}; separator="\n">
+    <getters:{g | <g>}; separator="\n">
+
+    public constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState) {
+        <struct.ctorAttrs:{a | this.<a.name> = <a.name>}; separator="\n">
+    }
+
 <if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
-	constructor() : super() { }
-	fun copyFrom(ctx: <struct.name>) {
-		super.copyFrom(ctx)
-		<struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
-	}
+    public constructor() : super()
+
+    public fun copyFrom(ctx: <struct.name>) {
+        super.copyFrom(ctx)
+        <struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
+    }
+
 <endif>
-	<dispatchMethods; separator="\n">
-	<extensionMembers; separator="\n">
+    <dispatchMethods; separator="\n\n">
+    <extensionMembers; separator="\n\n">
 }
+
 >>
 
-AltLabelStructDecl(struct,attrs,getters,dispatchMethods) ::= <<
-open class <struct.name> : <currentRule.name; format="cap">Context {
-	<attrs:{a | public <a>}; separator="\n">
-	<getters:{g | <g>}; separator="\n">
-	constructor(ctx: <currentRule.name; format="cap">Context) { copyFrom(ctx) }
-	<dispatchMethods; separator="\n">
+AltLabelStructDecl(struct, attrs, getters, dispatchMethods) ::= <<
+public open class <struct.name> : <currentRule.name; format="cap">Context {
+    <attrs:{a | public var <a>}; separator="\n">
+    <getters:{g | <g>}; separator="\n">
+
+    public constructor(ctx: <currentRule.name; format="cap">Context) {
+        copyFrom(ctx)
+    }
+
+    <dispatchMethods; separator="\n\n">
 }
+
 >>
 
 ListenerDispatchMethod(method) ::= <<
 override fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeListener) {
-	if ( listener is <parser.grammarName>Listener ) (listener as <parser.grammarName>Listener).<if(method.isEnter)>enter<else>exit<endif><struct.derivedFromName; format="cap">(this)
+    if (listener is <parser.grammarName>Listener) {
+        listener.<if(method.isEnter)>enter<else>exit<endif><struct.derivedFromName; format="cap">(this)
+    }
 }
 >>
 
 VisitorDispatchMethod(method) ::= <<
-override fun \<T> accept(visitor : ParseTreeVisitor\<out T>) : T {
-	if ( visitor is <parser.grammarName>Visitor ) return (visitor as <parser.grammarName>Visitor\<out T>).visit<struct.derivedFromName; format="cap">(this)
-	else return visitor.visitChildren(this)!!
+override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
+    if (visitor is <parser.grammarName>Visitor) {
+        return visitor.visit<struct.derivedFromName; format="cap">(this)
+    } else {
+        return visitor.visitChildren(this)!!
+    }
 }
 >>
 
-AttributeDecl(d) ::= "var <d.name> <if(d.type)>: <d.type><endif><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "<d.escapedName><if(d.type)>: <KotlinTypeMap.(d.type)><endif><if(d.initValue)> = <d.initValue><endif>"
 
-/** If we don't know location of label def x, use this template */
-labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.name>"
+// If we don't know location of label def x, use this template
+labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.escapedName>"
 
-/** For any action chunk, what is correctly-typed context struct ptr? */
+// For any action chunk, what is correctly-typed context struct ptr?
 ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
 
 // used for left-recursive rules
-recRuleAltPredicate(ruleName,opPrec)  ::= "precpred(context!!, <opPrec>)"
-recRuleSetReturnAction(src,name)	  ::= "$<name>=$<src>.<name>"
-recRuleSetStopToken()                 ::= "this.context!!.stop = _input!!.LT(-1)"
+recRuleAltPredicate(ruleName, opPrec) ::= "precpred(context!!, <opPrec>)"
+recRuleSetReturnAction(src, name) ::= "$<name> = $<src>.<name>"
+recRuleSetStopToken() ::= "this.context!!.stop = _input!!.LT(-1)"
 
-recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<_localctx = <ctxName>Context(_parentctx, _parentState)
+recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
+_localctx = <ctxName>Context(_parentctx, _parentState)
 <if(label)>
 <if(isListLabel)>
 _localctx.<label>.add(_prevctx!!)
@@ -810,11 +841,11 @@ _localctx.<label>.add(_prevctx!!)
 _localctx.<label> = _prevctx
 <endif>
 <endif>
-<if(label)>_localctx.<label> = _prevctx;<endif>
 pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
 >>
 
-recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
+recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
+_localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
 (_localctx as <currentAltLabel; format="cap">Context).<label>.add(_prevctx!!)
@@ -825,16 +856,20 @@ recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= 
 pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
 >>
 
-recRuleReplaceContext(ctxName) ::= <<_localctx = <ctxName>Context(_localctx)
+recRuleReplaceContext(ctxName) ::= <<
+_localctx = <ctxName>Context(_localctx)
 context = _localctx
 _prevctx = _localctx
 >>
 
 recRuleSetPrevCtx() ::= <<
-if ( _parseListeners!=null ) triggerExitRuleEvent()
-    _prevctx = _localctx
->>
+<! Listeners list should never be null !>
+if (_parseListeners.isNotEmpty()) {
+    triggerExitRuleEvent()
+}
 
+_prevctx = _localctx
+>>
 
 LexerFile(lexerFile, lexer, namedActions) ::= <<
 <fileHeader(lexerFile.grammarFileName, lexerFile.ANTLRVersion)>
@@ -843,149 +878,122 @@ package <lexerFile.genPackage>
 <endif>
 <namedActions.header>
 
-import com.strumenta.kotlinmultiplatform.asCharArray
-import org.antlr.v4.kotlinruntime.CharStream
-import org.antlr.v4.kotlinruntime.Lexer
-import org.antlr.v4.kotlinruntime.ThreadLocal
-import org.antlr.v4.kotlinruntime.Vocabulary
-import org.antlr.v4.kotlinruntime.VocabularyImpl
-import org.antlr.v4.kotlinruntime.atn.ATN
-import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
-import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
-import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
-import org.antlr.v4.kotlinruntime.dfa.DFA
+import org.antlr.v4.kotlinruntime.*
+import org.antlr.v4.kotlinruntime.atn.*
+import org.antlr.v4.kotlinruntime.dfa.*
+import org.antlr.v4.kotlinruntime.misc.*
 
 <lexer>
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-class <lexer.name>(val input: CharStream) : <superClass; null="Lexer">(input) {
-	// TODO Verify the runtime version is correct
+@Suppress("FunctionName", "LocalVariableName")
+public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
+    override val ruleNames: Array\<String> =
+        Rules.entries.map(Rules::name).toTypedArray()
 
-    override val ruleNames: Array\<String>?
-        get() = Rules.values().map { it.name }.toTypedArray()
+    override val grammarFileName: String =
+        "<lexer.grammarFileName>"
 
-    override val grammarFileName: String
-        get() = "<lexer.grammarFileName>"
+    override val atn: ATN =
+        ATN
 
-    override val atn: ATN
-		get() = <lexer.name>.Companion.ATN
+    override val vocabulary: Vocabulary =
+        VOCABULARY
 
-    override val vocabulary: Vocabulary
-        get() = <lexer.name>.Companion.VOCABULARY
+    public companion object {
+        private val decisionToDFA: Array\<DFA>
+        private val sharedContextCache = PredictionContextCache()
 
-	@ThreadLocal
-	companion object {
-		val decisionToDFA : Array\<DFA>
-		val sharedContextCache = PredictionContextCache()
-
-		<vocabulary(lexer.literalNames, lexer.symbolicNames)>
-
-        val tokenNames: Array\<String?> = Array\<String?>(SYMBOLIC_NAMES.size) {
-            var el = VOCABULARY.getLiteralName(it)
-            if (el == null) {
-                el = VOCABULARY.getSymbolicName(it)
-            }
-
-            if (el == null) {
-                el = "\<INVALID>"
-            }
-            el
-        }
-
-		<atn>
-	}
-
-	<if(lexer.tokens)>
-    enum class Tokens(val id: Int) {
-	    <lexer.tokens:{k | <k>(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
+        <vocabulary(lexer.literalNames, lexer.symbolicNames)>
+        <atn>
     }
-	<endif>
 
-	enum class Channels(val id: Int) {
-		DEFAULT_TOKEN_CHANNEL(0),
-		HIDDEN(1),
-		<if(lexer.channels)>
-		<lexer.channels:{c | <c>(<lexer.channels.(c)>)}; separator=",\n", wrap, anchor>
-		<endif>
-	}
+    <if(lexer.tokens)>
+    public enum class Tokens(public val id: Int) {
+        <lexer.tokens:{k | <k>(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
+    }
+    <endif>
 
-	override val channelNames = Channels.values().map(Channels::name).toTypedArray()
+    public enum class Channels(public val id: Int) {
+        DEFAULT_TOKEN_CHANNEL(0),
+        HIDDEN(1),
+        <if(lexer.escapedChannels)>
+        <lexer.escapedChannels:{c | <c>(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
+        <endif>
+    }
 
-	enum class Modes(val id: Int) {
-		DEFAULT_MODE(0),
-		<if(rest(lexer.modes))>
-		<rest(lexer.modes):{m | <m>(<i>)}; separator=",\n", wrap, anchor>
-		<endif>
-	}
+    override val channelNames: Array\<String> =
+        Channels.entries.map(Channels::name).toTypedArray()
 
-	enum class Rules {
-	    <lexer.ruleNames:{r | <r>}; separator=",\n", wrap, anchor>
-	}
+    public enum class Modes(public val id: Int) {
+        DEFAULT_MODE(0),
+        <if(rest(lexer.modes))>
+        <rest(lexer.modes):{m | <m>(<i>)}; separator=",\n", wrap, anchor>
+        <endif>
+    }
 
-	<namedActions.members>
+    public enum class Rules {
+        <lexer.ruleNames:{r | <r>}; separator=",\n", wrap, anchor>
+    }
 
-	init {
-		this.interpreter = LexerATNSimulator(this, ATN, decisionToDFA as Array\<DFA?>, sharedContextCache)
-	}
+    <namedActions.members>
 
-	<dumpActions(lexer, "", actionFuncs, sempredFuncs)>
+    init {
+        @Suppress("UNCHECKED_CAST")
+        interpreter = LexerATNSimulator(this, ATN, decisionToDFA as Array\<DFA?>, sharedContextCache)
+    }
+
+    <dumpActions(lexer, "", actionFuncs, sempredFuncs)>
 }
 >>
 
-SerializedATN(model) ::= <<
+SerializedJavaATN(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-<model.segments:{segment|private const val serializedATNSegment<i0> : String =
-	"<segment>";}; separator="\n">
-private val serializedATN : String =
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
+<model.segments:{segment|private const val serializedATNSegment<i0>: String =
+    "<segment>";}; separator="\n">
+private val serializedATN: String =
+    listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
-private const val serializedATN : String = "<model.serialized>"
-
+private const val serializedATN: String =
+    "<model.serialized>"
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
+
+private val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+
 init {
-	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
-		DFA(ATN.getDecisionState(it)!!, it)
-	})
-
-
-<!	org.antlr.v4.tool.DOTGenerator dot = new org.antlr.v4.tool.DOTGenerator(null);!>
-<!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
-<!	System.out.println(dot.getDOT(_ATN.ruleToStartState[2], ruleNames, false));!>
+    decisionToDFA = Array(ATN.numberOfDecisions) {
+        DFA(ATN.getDecisionState(it)!!, it)
+    }
 }
 >>
 
 SerializedATNEnriched(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-<model.segments:{segment|private const val serializedATNSegment<i0> : String  =
-	"<segment>";}; separator="\n">
-private val serializedATN : String =
-	listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
+<model.segments:{segment|private const val serializedATNSegment<i0>: String  =
+    "<segment>";}; separator="\n">
+private val serializedATN: String =
+    listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
-private const val serializedATN : String = "<model.serialized>"
-
+private const val serializedATN: String =
+    "<model.serialized>"
 <endif>
-val ATN = ATNDeserializer().deserialize(serializedATN.asCharArray())
+private val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
+
 init {
-	decisionToDFA = Array\<DFA>(ATN.numberOfDecisions, {
-		DFA(ATN.getDecisionState(it)!!, it)
-	})
-<!	org.antlr.v4.tool.DOTGenerator dot = new org.antlr.v4.tool.DOTGenerator(null);!>
-<!	System.out.println(dot.getDOT(_ATN.decisionToState.get(0), ruleNames, false));!>
-<!	System.out.println(dot.getDOT(_ATN.ruleToStartState[2], ruleNames, false));!>
+    decisionToDFA = Array(ATN.numberOfDecisions) {
+        DFA(ATN.getDecisionState(it)!!, it)
+    }
 }
 >>
 
-/** Using a type to init value map, try to init a type; if not in table
- *	must be an object, default value is "null".
- */
+// Using a type to init value map, try to init a type; if not in table must be an object, default value is "null".
 initValue(typeName) ::= <<
-<javaTypeInitMap.(typeName)>
+<KotlinTypeInitMap.(typeName)>
 >>
 
 codeFileExtension() ::= ".kt"

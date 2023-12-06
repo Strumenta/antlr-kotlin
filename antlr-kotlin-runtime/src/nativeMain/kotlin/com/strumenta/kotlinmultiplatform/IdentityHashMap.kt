@@ -16,5 +16,6 @@
 
 package com.strumenta.kotlinmultiplatform
 
-// TODO what is an identityhashmap?
-actual class IdentityHashMap<K, V> : MutableMap<K, V> by emptyMap<K, V>().toMutableMap()
+actual class IdentityHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
+  actual constructor() : this(LinkedHashMap())
+}

@@ -33,20 +33,20 @@ object MurmurHash {
      */
     fun update(hash: Int, value: Int): Int {
         var hash = hash
-        val c1 = -0x3361d2af
+        val c1 = (0xCC9E2D51).toInt()
         val c2 = 0x1B873593
         val r1 = 15
         val r2 = 13
         val m = 5
-        val n = -0x19ab949c
+        val n = 0xE6546B64.toInt()
 
         var k = value
-        k = k * c1
-        k = k shl r1 or k.ushr(32 - r1)
-        k = k * c2
+        k *= c1
+        k = (k shl r1) or (k ushr (32 - r1))
+        k *= c2
 
         hash = hash xor k
-        hash = hash shl r2 or hash.ushr(32 - r2)
+        hash = (hash shl r2) or (hash ushr (32 - r2))
         hash = hash * m + n
 
         return hash
@@ -74,11 +74,11 @@ object MurmurHash {
     fun finish(hash: Int, numberOfWords: Int): Int {
         var hash = hash
         hash = hash xor numberOfWords * 4
-        hash = hash xor hash.ushr(16)
-        hash = hash * -0x7a143595
-        hash = hash xor hash.ushr(13)
-        hash = hash * -0x3d4d51cb
-        hash = hash xor hash.ushr(16)
+        hash = hash xor (hash ushr 16)
+        hash *= 0x85EBCA6B.toInt()
+        hash = hash xor (hash ushr 13)
+        hash *= 0xC2B2AE35.toInt()
+        hash = hash xor (hash ushr 16)
         return hash
     }
 

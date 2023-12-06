@@ -57,7 +57,7 @@ open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
     }
 
     override fun toString(): String {
-        return if (symbol!!.type === Token.EOF) "<EOF>" else symbol!!.text!!
+        return if (symbol!!.type == Token.EOF) "<EOF>" else symbol!!.text!!
     }
 
     override fun toStringTree(): String {

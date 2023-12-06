@@ -34,11 +34,11 @@ class LL1Analyzer(val atn: ATN) {
             look[alt] = IntervalSet()
             val lookBusy = HashSet<ATNConfig>()
             val seeThruPreds = false // fail to get lookahead upon pred
-            _LOOK(s!!.transition(alt).target!!, null, PredictionContext.EMPTY,
+            _LOOK(s!!.transition(alt).target!!, null, EmptyPredictionContext.Instance,
                     look[alt]!!, lookBusy, BitSet(), seeThruPreds, false)
             // Wipe out lookahead for this alternative if we found nothing
             // or we had a predicate when we !seeThruPreds
-            if (look[alt]!!.size() === 0 || look[alt]!!.contains(HIT_PRED)) {
+            if (look[alt]!!.size() == 0 || look[alt]!!.contains(HIT_PRED)) {
                 look[alt] = null
             }
         }
@@ -156,7 +156,7 @@ class LL1Analyzer(val atn: ATN) {
                 return
             }
 
-            if (ctx !== PredictionContext.EMPTY) {
+            if (ctx !== EmptyPredictionContext.Instance) {
                 // run thru all possible stack tops in ctx
                 val removed = calledRuleStack.get(s.ruleIndex)
                 try {

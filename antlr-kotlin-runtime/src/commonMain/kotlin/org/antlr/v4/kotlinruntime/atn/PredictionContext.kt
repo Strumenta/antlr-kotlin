@@ -7,8 +7,9 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.IdentityHashMap
+import com.strumenta.kotlinmultiplatform.System
 import com.strumenta.kotlinmultiplatform.assert
-import org.antlr.v4.kotlinruntime.EMPTY_RULECTX
+import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
@@ -38,9 +39,9 @@ abstract class PredictionContext protected constructor(
          */
         val cachedHashCode: Int
 ) {
-    /** This means only the [.EMPTY] (wildcard? not sure) context is in set.  */
+    /** This means only the [EmptyPredictionContext.Instance] (wildcard? not sure) context is in set.  */
     open val isEmpty: Boolean
-        get() = this === EMPTY
+        get() = this === EmptyPredictionContext.Instance
 
     abstract fun size(): Int
 
@@ -65,7 +66,7 @@ abstract class PredictionContext protected constructor(
     }
 
     fun toStrings(recognizer: Recognizer<*, *>, currentState: Int): Array<String> {
-        return toStrings(recognizer, EMPTY, currentState)
+        return toStrings(recognizer, EmptyPredictionContext.Instance, currentState)
     }
 
     // FROM SAM
@@ -135,30 +136,24 @@ abstract class PredictionContext protected constructor(
 
     companion object {
         /**
-         * Represents `$` in local context prediction, which means wildcard.
-         * `*+x = *`.
-         */
-        val EMPTY = EmptyPredictionContext()
-
-        /**
          * Represents `$` in an array in full context mode, when `$`
          * doesn't mean wildcard: `$ + x = [$,x]`. Here,
          * `$` = [.EMPTY_RETURN_STATE].
          */
-        val EMPTY_RETURN_STATE = Int.MAX_VALUE
+        const val EMPTY_RETURN_STATE = Int.MAX_VALUE
 
-        private val INITIAL_HASH = 1
+        private const val INITIAL_HASH = 1
 
         /** Convert a [RuleContext] tree to a [PredictionContext] graph.
-         * Return [.EMPTY] if `outerContext` is empty or null.
+         * Return [EmptyPredictionContext.Instance] if `outerContext` is empty or null.
          */
         fun fromRuleContext(atn: ATN, outerContext: RuleContext?): PredictionContext {
-            val outerContext1 = outerContext ?: EMPTY_RULECTX
+            val outerContext1 = outerContext ?: ParserRuleContext.EMPTY
 
             // if we are in RuleContext of start rule, s, then PredictionContext
             // is EMPTY. Nobody called us. (if we are empty, return empty)
-            if (outerContext1.readParent() == null || outerContext1 === EMPTY_RULECTX) {
-                return EMPTY
+            if (outerContext1.readParent() == null || outerContext1 === ParserRuleContext.EMPTY) {
+                return EmptyPredictionContext.Instance
             }
 
             // If we have a parent, convert it to a PredictionContext graph
@@ -209,7 +204,7 @@ abstract class PredictionContext protected constructor(
             assert(a1 != null && b1 != null) // must be empty context, never null
 
             // share same graph if both same
-            if (a1 === b1 || a1 == b1) return a1!!
+            if (a1 == b1) return a1!!
 
             if (a1 is SingletonPredictionContext && b1 is SingletonPredictionContext) {
                 return mergeSingletons(
@@ -304,7 +299,7 @@ abstract class PredictionContext protected constructor(
             } else { // a != b payloads differ
                 // see if we can collapse parents due to $+x parents if local ctx
                 var singleParent: PredictionContext? = null
-                if (a === b || a.parent != null && a.parent == b.parent) { // ax + bx = [a,b]x
+                if (a.parent != null && a.parent == b.parent) { // ax + bx = [a,b]x
                     singleParent = a.parent
                 }
                 if (singleParent != null) {    // parents are same
@@ -337,8 +332,8 @@ abstract class PredictionContext protected constructor(
 
         /**
          * Handle case where at least one of `a` or `b` is
-         * [.EMPTY]. In the following diagrams, the symbol `$` is used
-         * to represent [.EMPTY].
+         * [EmptyPredictionContext.Instance]. In the following diagrams, the symbol `$` is used
+         * to represent [EmptyPredictionContext.Instance].
          *
          * <h2>Local-Context Merges</h2>
          *
@@ -347,11 +342,11 @@ abstract class PredictionContext protected constructor(
          * is true.
          *
          *
-         * [.EMPTY] is superset of any graph; return [.EMPTY].<br></br>
+         * [EmptyPredictionContext.Instance] is superset of any graph; return [EmptyPredictionContext.Instance].<br></br>
          * <embed src="images/LocalMerge_EmptyRoot.svg" type="image/svg+xml"></embed>
          *
          *
-         * [.EMPTY] and anything is `#EMPTY`, so merged parent is
+         * [EmptyPredictionContext.Instance] and anything is `#EMPTY`, so merged parent is
          * `#EMPTY`; return left graph.<br></br>
          * <embed src="images/LocalMerge_EmptyParent.svg" type="image/svg+xml"></embed>
          *
@@ -369,7 +364,7 @@ abstract class PredictionContext protected constructor(
          * <embed src="images/FullMerge_EmptyRoots.svg" type="image/svg+xml"></embed>
          *
          *
-         * Must keep all contexts; [.EMPTY] in array is a special value (and
+         * Must keep all contexts; [EmptyPredictionContext.Instance] in array is a special value (and
          * null parent).<br></br>
          * <embed src="images/FullMerge_EmptyRoot.svg" type="image/svg+xml"></embed>
          *
@@ -387,17 +382,17 @@ abstract class PredictionContext protected constructor(
                 rootIsWildcard: Boolean
         ): PredictionContext? {
             if (rootIsWildcard) {
-                if (a === EMPTY) return EMPTY  // * + b = *
-                if (b === EMPTY) return EMPTY  // a + * = *
+                if (a === EmptyPredictionContext.Instance) return EmptyPredictionContext.Instance  // * + b = *
+                if (b === EmptyPredictionContext.Instance) return EmptyPredictionContext.Instance  // a + * = *
             } else {
-                if (a === EMPTY && b === EMPTY) return EMPTY // $ + $ = $
+                if (a === EmptyPredictionContext.Instance && b === EmptyPredictionContext.Instance) return EmptyPredictionContext.Instance // $ + $ = $
 
-                if (a === EMPTY) { // $ + x = [x,$]
+                if (a === EmptyPredictionContext.Instance) { // $ + x = [x,$]
                     val payloads = intArrayOf(b.returnState, EMPTY_RETURN_STATE)
                     val parents = arrayOf(b.parent, null)
                     return ArrayPredictionContext(parents, payloads)
                 }
-                if (b === EMPTY) { // x + $ = [x,$] ($ is always last if present)
+                if (b === EmptyPredictionContext.Instance) { // x + $ = [x,$] ($ is always last if present)
                     val payloads = intArrayOf(a.returnState, EMPTY_RETURN_STATE)
                     val parents = arrayOf(a.parent, null)
                     return ArrayPredictionContext(parents, payloads)
@@ -438,9 +433,24 @@ abstract class PredictionContext protected constructor(
         ): PredictionContext {
             if (mergeCache != null) {
                 var previous = mergeCache!!.get(a, b)
-                if (previous != null) return previous
+
+                if (previous != null) {
+                    if (ParserATNSimulator.trace_atn_sim) {
+                        System.out.println("mergeArrays a="+a+",b="+b+" -> previous")
+                    }
+
+                    return previous;
+                }
+
                 previous = mergeCache!!.get(b, a)
-                if (previous != null) return previous
+
+                if (previous != null) {
+                    if (ParserATNSimulator.trace_atn_sim) {
+                        System.out.println("mergeArrays a="+a+",b="+b+" -> previous")
+                    }
+
+                    return previous;
+                }
             }
 
             // merge sorted payloads a + b => M
@@ -519,10 +529,21 @@ abstract class PredictionContext protected constructor(
             // TODO: track whether this is possible above during merge sort for speed
             if (M == a) {
                 mergeCache?.put(a, b, a)
+
+                if (ParserATNSimulator.trace_atn_sim) {
+                    System.out.println("mergeArrays a="+a+",b="+b+" -> a")
+                }
+
                 return a
             }
+
             if (M == b) {
                 mergeCache?.put(a, b, b)
+
+                if (ParserATNSimulator.trace_atn_sim) {
+                    System.out.println("mergeArrays a="+a+",b="+b+" -> b")
+                }
+
                 return b
             }
 
@@ -530,6 +551,11 @@ abstract class PredictionContext protected constructor(
             combineCommonParents(mergedParents.filterNotNull().toTypedArray())
 
             mergeCache?.put(a, b, M)
+
+            if (ParserATNSimulator.trace_atn_sim) {
+                System.out.println("mergeArrays a="+a+",b="+b+" -> "+M);
+            }
+
             return M
         }
 
@@ -599,7 +625,7 @@ abstract class PredictionContext protected constructor(
 
             val updated: PredictionContext
             if (parents.size == 0) {
-                updated = EMPTY
+                updated = EmptyPredictionContext.Instance
             } else if (parents.size == 1) {
                 updated = SingletonPredictionContext.create(parents[0], context.getReturnState(0))
             } else {

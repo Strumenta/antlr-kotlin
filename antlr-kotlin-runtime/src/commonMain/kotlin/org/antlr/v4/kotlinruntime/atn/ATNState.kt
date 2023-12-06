@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.errMessage
+import com.strumenta.kotlinmultiplatform.System
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
 /**
@@ -120,7 +120,7 @@ abstract class ATNState {
         if (transitions.isEmpty()) {
             epsilonOnlyTransitions = e.isEpsilon
         } else if (epsilonOnlyTransitions != e.isEpsilon) {
-            errMessage("ATN state ${stateNumber} has both epsilon and non-epsilon transitions.\n")
+            System.err.println("ATN state ${stateNumber} has both epsilon and non-epsilon transitions.\n")
             epsilonOnlyTransitions = false
         }
 

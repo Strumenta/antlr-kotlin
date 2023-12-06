@@ -23,7 +23,7 @@ class LexerATNConfig : ATNConfig {
 
     constructor(state: ATNState,
                 alt: Int,
-                context: PredictionContext) : super(state, alt, context, SemanticContext.NONE) {
+                context: PredictionContext) : super(state, alt, context, SemanticContext.Empty.Instance) {
         this.passedThroughNonGreedyDecision = false
         this.lexerActionExecutor = null
     }
@@ -31,7 +31,7 @@ class LexerATNConfig : ATNConfig {
     constructor(state: ATNState,
                 alt: Int,
                 context: PredictionContext,
-                lexerActionExecutor: LexerActionExecutor) : super(state, alt, context, SemanticContext.NONE) {
+                lexerActionExecutor: LexerActionExecutor) : super(state, alt, context, SemanticContext.Empty.Instance) {
         this.lexerActionExecutor = lexerActionExecutor
         this.passedThroughNonGreedyDecision = false
     }

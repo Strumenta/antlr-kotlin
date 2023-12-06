@@ -6,8 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.tree.pattern
 
-import com.strumenta.kotlinmultiplatform.isCharLowerCase
-import com.strumenta.kotlinmultiplatform.isCharUppercase
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.MultiMap
@@ -349,14 +347,14 @@ class ParseTreePatternMatcher
             if (chunk is TagChunk) {
                 val tagChunk = chunk as TagChunk
                 // add special rule token or conjure up new token from name
-                if (isCharUppercase(tagChunk.tag!!.get(0))) {
+                if (tagChunk.tag!!.get(0).isUpperCase()) {
                     val ttype = parser.getTokenType(tagChunk.tag)
                     if (ttype === Token.INVALID_TYPE) {
                         throw IllegalArgumentException("Unknown token " + tagChunk.tag + " in pattern: " + pattern)
                     }
                     val t = TokenTagToken(tagChunk.tag, ttype!!, tagChunk.label)
                     tokens.add(t)
-                } else if (isCharLowerCase(tagChunk.tag.get(0))) {
+                } else if (tagChunk.tag.get(0).isLowerCase()) {
                     TODO()
 //                    val ruleIndex = parser.getRuleIndex(tagChunk.tag)
 //                    if (ruleIndex == -1) {
@@ -466,9 +464,8 @@ class ParseTreePatternMatcher
         for (i in chunks.indices) {
             val c = chunks[i]
             if (c is TextChunk) {
-                val tc = c as TextChunk
-                val unescaped = tc.text!!.replace(escape, "")
-                if (unescaped.length < tc.text!!.length) {
+                val unescaped = c.text!!.replace(escape, "")
+                if (unescaped.length < c.text.length) {
                     chunks[i] = TextChunk(unescaped)
                 }
             }

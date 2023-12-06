@@ -1,2 +1,0 @@
-100 DIM Y$(10)
-120 PRINT LEN(Y$)

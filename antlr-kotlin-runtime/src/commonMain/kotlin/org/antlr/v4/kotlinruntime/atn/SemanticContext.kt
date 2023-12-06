@@ -8,10 +8,13 @@ package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Collections
+import com.strumenta.kotlinmultiplatform.ext.hashCodeCustom
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.atn.SemanticContext.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
+import kotlin.jvm.JvmStatic
+
 
 /** A tree structure used to record the semantic context in which
  * an ATN configuration is valid.  It's either a single predicate,
@@ -47,7 +50,7 @@ abstract class SemanticContext {
      * @return The simplified semantic context after precedence predicates are
      * evaluated, which will be one of the following values.
      *
-     *  * [.NONE]: if the predicate simplifies to `true` after
+     *  * [Empty.Instance]: if the predicate simplifies to `true` after
      * precedence predicates are evaluated.
      *  * `null`: if the predicate simplifies to `false` after
      * precedence predicates are evaluated.
@@ -59,6 +62,21 @@ abstract class SemanticContext {
      */
     open fun evalPrecedence(parser: Recognizer<*, *>, parserCallStack: RuleContext): SemanticContext? {
         return this
+    }
+
+    class Empty : SemanticContext() {
+        companion object {
+            /**
+             * The default [SemanticContext], which is semantically equivalent to
+             * a predicate of the form `{true}?`.
+             */
+            @JvmStatic
+            val Instance: Empty = Empty()
+        }
+
+        override fun eval(parser: Recognizer<*, *>, parserCallStack: RuleContext): Boolean {
+            return false
+        }
     }
 
     class Predicate : SemanticContext {
@@ -114,7 +132,7 @@ abstract class SemanticContext {
 
         override fun evalPrecedence(parser: Recognizer<*, *>, parserCallStack: RuleContext): SemanticContext? {
             return if (parser.precpred(parserCallStack, precedence)) {
-                NONE
+                Empty.Instance
             } else {
                 null
             }
@@ -204,8 +222,10 @@ abstract class SemanticContext {
         }
 
         override fun hashCode(): Int {
-            TODO()
-            //return MurmurHash.hashCode(opnds, AND::class.java!!.hashCode())
+            // TODO(Edoardo): K/JS KClass.hashCode uses only the class simple name
+            //   On the JVM, the fqn param is ignored
+            val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.AND"
+            return MurmurHash.hashCode(opnds, AND::class.hashCodeCustom(fqn))
         }
 
         /**
@@ -232,7 +252,7 @@ abstract class SemanticContext {
                 if (evaluated == null) {
                     // The AND context is false if any element is false
                     return null
-                } else if (evaluated !== NONE) {
+                } else if (evaluated !== Empty.Instance) {
                     // Reduce the result by skipping true elements
                     operands.add(evaluated)
                 }
@@ -244,7 +264,7 @@ abstract class SemanticContext {
 
             if (operands.isEmpty()) {
                 // all elements were true, so the AND context is true
-                return NONE
+                return Empty.Instance
             }
 
             var result: SemanticContext? = operands[0]
@@ -298,8 +318,10 @@ abstract class SemanticContext {
         }
 
         override fun hashCode(): Int {
-            TODO()
-            //return MurmurHash.hashCode(opnds, OR::class.java!!.hashCode())
+            // TODO(Edoardo): K/JS KClass.hashCode uses only the class simple name
+            //   On the JVM, the fqn param is ignored
+            val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.OR"
+            return MurmurHash.hashCode(opnds, OR::class.hashCodeCustom(fqn))
         }
 
         /**
@@ -323,9 +345,9 @@ abstract class SemanticContext {
             for (context in opnds) {
                 val evaluated = context.evalPrecedence(parser, parserCallStack)
                 differs = differs or (evaluated !== context)
-                if (evaluated === NONE) {
+                if (evaluated === Empty.Instance) {
                     // The OR context is true if any element is true
-                    return NONE
+                    return Empty.Instance
                 } else if (evaluated != null) {
                     // Reduce the result by skipping false elements
                     operands.add(evaluated)
@@ -355,15 +377,9 @@ abstract class SemanticContext {
     }
 
     companion object {
-        /**
-         * The default [SemanticContext], which is semantically equivalent to
-         * a predicate of the form `{true}?`.
-         */
-        val NONE: SemanticContext = Predicate()
-
         fun and(a: SemanticContext?, b: SemanticContext?): SemanticContext? {
-            if (a == null || a === NONE) return b
-            if (b == null || b === NONE) return a
+            if (a == null || a === Empty.Instance) return b
+            if (b == null || b === Empty.Instance) return a
             val result = AND(a, b)
             return if (result.opnds.size == 1) {
                 result.opnds[0]
@@ -378,7 +394,7 @@ abstract class SemanticContext {
         fun or(a: SemanticContext?, b: SemanticContext?): SemanticContext? {
             if (a == null) return b
             if (b == null) return a
-            if (a === NONE || b === NONE) return NONE
+            if (a === Empty.Instance || b === Empty.Instance) return Empty.Instance
             val result = OR(a, b)
             return if (result.opnds.size == 1) {
                 result.opnds[0]

@@ -7,7 +7,7 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.kotlinmultiplatform.Math
-import com.strumenta.kotlinmultiplatform.arraycopy
+import com.strumenta.kotlinmultiplatform.System
 import com.strumenta.kotlinmultiplatform.assert
 import org.antlr.v4.kotlinruntime.misc.Interval
 
@@ -218,7 +218,7 @@ class UnbufferedTokenStream<T : Token> constructor(tokenSource: TokenSource, buf
             if (p > 0) {
                 // Copy tokens[p]..tokens[n-1] to tokens[0]..tokens[(n-1)-p], reset ptrs
                 // p is last valid token; move nothing if p==n as we have no valid char
-                arraycopy(tokens, p, tokens, 0, n - p) // shift n-p tokens from p to 0
+                System.arraycopy(tokens, p, tokens, 0, n - p) // shift n-p tokens from p to 0
                 n = n - p
                 p = 0
             }

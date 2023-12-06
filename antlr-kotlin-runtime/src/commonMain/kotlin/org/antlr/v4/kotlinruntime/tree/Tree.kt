@@ -24,10 +24,11 @@ interface Tree {
 //        this.parent = value
 //    }
 
+    // TODO(Edoardo): rename it back to getParent
     fun readParent(): Tree?
 
     /**
-     * This method returns whatever object represents the data at this note. For
+     * This method returns whatever object represents the data at this node. For
      * example, for parse trees, the payload can be a [Token] representing
      * a leaf node or a [RuleContext] object representing a rule
      * invocation. For abstract syntax trees (ASTs), this is a [Token]

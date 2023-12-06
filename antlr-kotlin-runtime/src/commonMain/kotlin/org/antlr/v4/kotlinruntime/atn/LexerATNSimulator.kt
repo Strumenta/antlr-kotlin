@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
+import com.strumenta.kotlinmultiplatform.System
 import com.strumenta.kotlinmultiplatform.assert
-import com.strumenta.kotlinmultiplatform.outMessage
 import com.strumenta.kotlinmultiplatform.synchronized
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
@@ -113,7 +113,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
         val startState = atn.modeToStartState[mode]
 
         if (debug) {
-            outMessage("matchATN mode $mode start: $startState\n")
+            System.out.println("matchATN mode $mode start: $startState\n")
         }
 
         val old_mode = mode
@@ -130,7 +130,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
         val predict = execATN(input, next)
 
         if (debug) {
-            outMessage("DFA after matchATN: ${decisionToDFA[old_mode]!!.toLexerString()}\n")
+            System.out.println("DFA after matchATN: ${decisionToDFA[old_mode]!!.toLexerString()}\n")
         }
 
         return predict
@@ -139,7 +139,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
     protected fun execATN(input: CharStream, ds0: DFAState): Int {
         //System.out.println("enter exec index "+input.index()+" from "+ds0.configs);
         if (debug) {
-            outMessage("start state closure=${ds0.configs}\n")
+            System.out.println("start state closure=${ds0.configs}\n")
         }
 
         if (ds0.isAcceptState) {
@@ -153,7 +153,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
 
         while (true) { // while more work
             if (debug) {
-                outMessage("execATN loop starting closure: ${s!!.configs}\n")
+                System.out.println("execATN loop starting closure: ${s!!.configs}\n")
             }
 
             // As we move src->trg, src->trg, we keep track of the previous trg to
@@ -223,7 +223,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
 
         val target = s!!.edges!![t - MIN_DFA_EDGE]
         if (debug && target != null) {
-            outMessage("reuse state " + s!!.stateNumber +
+            System.out.println("reuse state " + s!!.stateNumber +
                     " edge to " + target!!.stateNumber)
         }
 
@@ -274,7 +274,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
             return prevAccept.dfaState!!.prediction
         } else {
             // if no accept and EOF is first char, return EOF
-            if (t == IntStream.EOF && input.index() === startIndex) {
+            if (t == IntStream.EOF && input.index() == startIndex) {
                 return Token.EOF
             }
 
@@ -298,7 +298,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
             }
 
             if (debug) {
-                outMessage("testing ${getTokenName(t)} at ${c.toString(recog, true)}\n")
+                System.out.println("testing ${getTokenName(t)} at ${c.toString(recog, true)}\n")
             }
 
             val n = c.state.numberOfTransitions
@@ -326,7 +326,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
     protected fun accept(input: CharStream, lexerActionExecutor: LexerActionExecutor?,
                          startIndex: Int, index: Int, line: Int, charPos: Int) {
         if (debug) {
-            outMessage("ACTION ${lexerActionExecutor}\n")
+            System.out.println("ACTION ${lexerActionExecutor}\n")
         }
 
         // seek to after last char in token
@@ -350,7 +350,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
 
     protected fun computeStartState(input: CharStream,
                                     p: ATNState): ATNConfigSet {
-        val initialContext = PredictionContext.EMPTY
+        val initialContext = EmptyPredictionContext.Instance
         val configs = OrderedATNConfigSet()
         for (i in 0 until p.numberOfTransitions) {
             val target = p.transition(i).target
@@ -379,9 +379,9 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
         if (config.state is RuleStopState) {
             if (debug) {
                 if (recog != null) {
-                    outMessage("closure at ${recog!!.ruleNames!![config.state.ruleIndex]} rule stop $config\n")
+                    System.out.println("closure at ${recog!!.ruleNames!![config.state.ruleIndex]} rule stop $config\n")
                 } else {
-                    outMessage("closure at rule stop $config\n")
+                    System.out.println("closure at rule stop $config\n")
                 }
             }
 
@@ -390,7 +390,7 @@ class LexerATNSimulator(protected val recog: Lexer?, atn: ATN,
                     configs.add(config)
                     return true
                 } else {
-                    configs.add(LexerATNConfig(config, config.state, PredictionContext.EMPTY))
+                    configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext.Instance))
                     currentAltReachedAcceptState = true
                 }
             }

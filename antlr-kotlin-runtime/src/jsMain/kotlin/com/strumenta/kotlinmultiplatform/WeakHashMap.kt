@@ -16,7 +16,6 @@
 
 package com.strumenta.kotlinmultiplatform
 
-actual class WeakHashMap<K, V> constructor(val _wrapped: LinkedHashMap<K, V> = LinkedHashMap<K, V>()) : MutableMap<K, V> by _wrapped {
-
-    actual constructor() : this(LinkedHashMap<K, V>())
+actual class WeakHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
+  actual constructor() : this(LinkedHashMap())
 }

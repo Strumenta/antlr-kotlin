@@ -6,7 +6,6 @@
 package org.antlr.v4.kotlinruntime.misc
 
 import com.strumenta.kotlinmultiplatform.Math
-import kotlin.native.concurrent.ThreadLocal
 
 /** An immutable inclusive interval a..b  */
 class Interval(var a: Int, var b: Int) {
@@ -103,18 +102,12 @@ class Interval(var a: Int, var b: Int) {
         return a.toString() + ".." + b
     }
 
-    @ThreadLocal
     companion object {
         val INTERVAL_POOL_MAX_VALUE = 1000
 
         val INVALID = Interval(-1, -2)
 
-        internal var cache = arrayOfNulls<Interval>(INTERVAL_POOL_MAX_VALUE + 1)
-
-        var creates = 0
-        var misses = 0
-        var hits = 0
-        var outOfRange = 0
+        internal val cache = arrayOfNulls<Interval>(INTERVAL_POOL_MAX_VALUE + 1)
 
         /** Interval objects are used readonly so share all with the
          * same single value a==b up to some max size.  Use an array as a perfect hash.

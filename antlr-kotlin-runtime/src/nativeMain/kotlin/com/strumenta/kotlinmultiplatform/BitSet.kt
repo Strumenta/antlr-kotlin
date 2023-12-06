@@ -13,36 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.kotlinmultiplatform
 
+import kotlin.native.BitSet as NativeBitSet
+
+@OptIn(ObsoleteNativeApi::class)
 actual class BitSet actual constructor() {
-    private val _wrapped = kotlin.native.BitSet()
+  private val wrapped = NativeBitSet()
 
-    actual fun set(bitIndex: Int) {
-        _wrapped.set(bitIndex)
+  actual fun set(bitIndex: Int) =
+    wrapped.set(bitIndex)
+
+  actual fun clear(bitIndex: Int) =
+    wrapped.clear(bitIndex)
+
+  actual fun get(bitIndex: Int): Boolean =
+    wrapped[bitIndex]
+
+  actual fun cardinality(): Int {
+    var count = 0
+
+    for (i in 0..<wrapped.size) {
+      if (wrapped[i]) {
+        count++
+      }
     }
 
-    actual fun clear(bitIndex: Int) {
-        _wrapped.clear(bitIndex)
-    }
+    return count
+  }
 
-    actual fun get(bitIndex: Int): Boolean {
-        return _wrapped.get(bitIndex)
-    }
+  actual fun nextSetBit(fromIndex: Int): Int =
+    wrapped.nextSetBit(fromIndex)
 
-    actual fun cardinality(): Int {
-        return (0.._wrapped.size).count { bitIndex ->
-            _wrapped.get(bitIndex)
-        }
-    }
-
-    actual fun nextSetBit(i: Int): Int {
-        return _wrapped.nextSetBit(i)
-    }
-
-    actual fun or(alts: BitSet) {
-        return _wrapped.or(alts._wrapped)
-    }
-
+  actual fun or(otherBitSet: BitSet) =
+    wrapped.or(otherBitSet.wrapped)
 }

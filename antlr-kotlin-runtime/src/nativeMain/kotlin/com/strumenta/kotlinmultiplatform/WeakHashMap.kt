@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.kotlinmultiplatform
 
-
-actual class WeakHashMap<K, V> constructor(_wrapped: MutableMap<K, V>) : MutableMap<K, V> by _wrapped {
-
-    // TODO: Implement a weak hash map
-    actual constructor() : this(mutableMapOf())
+actual class WeakHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
+  actual constructor() : this(LinkedHashMap())
 }

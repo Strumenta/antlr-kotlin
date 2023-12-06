@@ -5,7 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import kotlin.native.concurrent.SharedImmutable
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.ParseTree
@@ -63,11 +62,6 @@ import org.antlr.v4.kotlinruntime.tree.Trees
  *
  * @see ParserRuleContext
  */
-
-@SharedImmutable
-val EMPTY_RULECTX = ParserRuleContext()
-
-
 open class RuleContext : RuleNode {
     //    override fun setParent(parent: RuleContext) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -79,7 +73,7 @@ open class RuleContext : RuleNode {
     /** What context invoked this rule?  */
     /** @since 4.7. {@see ParseTree#setParent} comment
      */
-    protected var parent: RuleContext?
+    var parent: RuleContext?
 
     fun assignParent(value: RuleContext?) {
         this.parent = value
@@ -214,7 +208,7 @@ open class RuleContext : RuleNode {
     }
 
     // recog null unless ParserRuleContext, in which case we use subclass toString(...)
-    fun toString(recog: Recognizer<*, *>?, stop: RuleContext = EMPTY_RULECTX): String {
+    fun toString(recog: Recognizer<*, *>?, stop: RuleContext = ParserRuleContext.EMPTY): String {
         val ruleNames = recog?.ruleNames
         val ruleNamesList = if (ruleNames != null) listOf(*ruleNames) else null
         return toString(ruleNamesList, stop)

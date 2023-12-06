@@ -16,33 +16,26 @@
 
 package com.strumenta.kotlinmultiplatform
 
-actual class BitSet {
-    private val _wrapped = java.util.BitSet()
+import java.util.BitSet as JavaBitSet
 
-    actual constructor()
+actual class BitSet actual constructor() {
+  private val wrapped = JavaBitSet()
 
-    actual fun set(bitIndex: Int) {
-        _wrapped.set(bitIndex)
-    }
+  actual fun set(bitIndex: Int) =
+    wrapped.set(bitIndex)
 
-    actual fun clear(bitIndex: Int) {
-        _wrapped.clear(bitIndex)
-    }
+  actual fun clear(bitIndex: Int) =
+    wrapped.clear(bitIndex)
 
-    actual fun get(bitIndex: Int): Boolean {
-        return _wrapped.get(bitIndex)
-    }
+  actual fun get(bitIndex: Int): Boolean =
+    wrapped.get(bitIndex)
 
-    actual fun cardinality(): Int {
-        return _wrapped.cardinality()
-    }
+  actual fun cardinality(): Int =
+    wrapped.cardinality()
 
-    actual fun nextSetBit(i: Int): Int {
-        return _wrapped.nextSetBit(i)
-    }
+  actual fun nextSetBit(fromIndex: Int): Int =
+    wrapped.nextSetBit(fromIndex)
 
-    actual fun or(alts: BitSet) {
-        return _wrapped.or(alts._wrapped)
-    }
-
+  actual fun or(otherBitSet: BitSet) =
+    wrapped.or(otherBitSet.wrapped)
 }

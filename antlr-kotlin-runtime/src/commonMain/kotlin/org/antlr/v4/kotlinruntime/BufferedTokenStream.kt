@@ -33,7 +33,7 @@ open class BufferedTokenStream(
      * considered a complete view of the input once [.fetchedEOF] is set
      * to `true`.
      */
-    protected var tokens: MutableList<Token> = ArrayList<Token>(100)
+    var tokens: MutableList<Token> = ArrayList<Token>(100)
 
     /**
      * The index into [.tokens] of the current token (next token to
@@ -71,12 +71,6 @@ open class BufferedTokenStream(
 
     override val text: String
         get() = getText(Interval.of(0, size() - 1))
-
-    init {
-        if (tokenSource == null) {
-            throw NullPointerException("tokenSource cannot be null")
-        }
-    }
 
 //    override fun getTokenSource(): TokenSource {
 //        return tokenSource
@@ -421,7 +415,7 @@ open class BufferedTokenStream(
         val start = interval.a
         var stop = interval.b
         if (start < 0 || stop < 0) return ""
-        fill()
+        sync(stop)
         if (stop >= tokens.size) stop = tokens.size - 1
 
         val buf = StringBuilder()

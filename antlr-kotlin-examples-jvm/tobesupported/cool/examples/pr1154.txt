@@ -1,2 +1,0 @@
-class A {}; -- this is last comment
-

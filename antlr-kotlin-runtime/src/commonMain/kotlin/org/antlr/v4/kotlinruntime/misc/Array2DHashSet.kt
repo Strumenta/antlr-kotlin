@@ -13,11 +13,11 @@ import com.strumenta.kotlinmultiplatform.assert
 open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<in T>? = null, initialCapacity: Int = INITAL_CAPACITY, initialBucketCapacity: Int = INITAL_BUCKET_CAPACITY) : MutableSet<T> {
 
     override fun remove(element: T): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return removeAsAny(element as Any)
     }
 
     override fun containsAll(elements: Collection<T>): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return containsAllAsAny(elements)
     }
 
     override fun retainAll(elements: Collection<T>): Boolean {
@@ -31,10 +31,12 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
     /** How many elements in set  */
     protected var n = 0
 
-    protected var threshold = Math.floor(INITAL_CAPACITY * LOAD_FACTOR).toInt() // when to expand
-
     protected var currentPrime = 1 // jump by 4 primes each expand or whatever
-    protected var initialBucketCapacity = INITAL_BUCKET_CAPACITY
+
+    /** when to expand  */
+    protected var threshold: Int = 0
+    protected val initialCapacity: Int
+    protected val initialBucketCapacity: Int
 
     init {
         var comparator = comparator
@@ -43,8 +45,10 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
         }
 
         this.comparator = comparator
-        this.buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        this.initialCapacity = initialCapacity
         this.initialBucketCapacity = initialBucketCapacity
+        this.buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        this.threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
     }
 
     /**
@@ -104,7 +108,7 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
     protected fun getBucket(o: T): Int {
         val hash = comparator.hashCode(o)
-        return hash and buckets.size - 1
+        return hash and (buckets.size - 1)
     }
 
     override fun hashCode(): Int {
@@ -249,9 +253,9 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
         return a
     }
 
-//    fun remove(o: Any): Boolean {
-//        return removeFast(asElementType(o))
-//    }
+    fun removeAsAny(o: Any): Boolean {
+        return removeFast(asElementType(o))
+    }
 
     fun removeFast(obj: T?): Boolean {
         if (obj == null) {
@@ -267,36 +271,37 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
             return false
 
             if (comparator.equals(e, obj)) {          // found it
-                TODO()
                 // shift all elements to the right down one
-//                System.arraycopy(bucket, i + 1, bucket, i, bucket.size - i - 1)
-//                bucket[bucket.size - 1] = null
-//                n--
-//                return true
+                //System.arraycopy(bucket, i + 1, bucket, i, bucket.size - i - 1)
+                bucket.copyInto(bucket, i, i + 1, bucket.size)
+                //bucket[bucket.size - 1] = null
+                @Suppress("UNCHECKED_CAST")
+                bucket[bucket.size - 1] = null as T
+                n--
+                return true
             }
         }
 
         return false
     }
 
-//    fun containsAll(collection: Collection<*>): Boolean {
-//        TODO()
-////        if (collection is Array2DHashSet<*>) {
-////            val s = collection as Array2DHashSet<*>
-////            for (bucket in s.buckets) {
-////                if (bucket == null) continue
-////                for (o in bucket) {
-////                    if (o == null) break
-////                    if (!this.containsFast(asElementType(o))) return false
-////                }
-////            }
-////        } else {
-////            for (o in collection) {
-////                if (!this.containsFast(asElementType(o))) return false
-////            }
-////        }
-////        return true
-//    }
+    fun containsAllAsAny(collection: Collection<*>): Boolean {
+        if (collection is Array2DHashSet<*>) {
+            val s = collection as Array2DHashSet<*>
+            for (bucket in s.buckets) {
+                if (bucket == null) continue
+                for (o in bucket) {
+                    if (o == null) break
+                    if (!this.containsFast(asElementType(o))) return false
+                }
+            }
+        } else {
+            for (o in collection) {
+                if (o != null && !this.containsFast(asElementType(o!!))) return false
+            }
+        }
+        return true
+    }
 
     override fun addAll(elements: Collection<T>): Boolean {
         var changed = false
@@ -365,9 +370,9 @@ open class Array2DHashSet<T> constructor(comparator: AbstractEqualityComparator<
 
 
     override fun clear() {
-        buckets = createBuckets(INITAL_CAPACITY) as Array<Array<T>>
         n = 0
-        threshold = Math.floor(INITAL_CAPACITY * LOAD_FACTOR).toInt()
+        buckets = createBuckets(initialCapacity) as Array<Array<T>>
+        threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
     }
 
     override fun toString(): String {

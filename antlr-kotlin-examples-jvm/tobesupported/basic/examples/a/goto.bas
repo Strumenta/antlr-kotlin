@@ -1,3 +1,0 @@
-10 GOTO 30
-20 PRINT "bad"
-30 PRINT "good"

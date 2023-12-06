@@ -1,16 +1,15 @@
 plugins {
-    `java-library`
-    `maven-publish`
+  id("strumenta.jvm.library")
 }
 
 dependencies {
-    api("org.antlr:antlr4:${Versions.antlr}")
+  api(libs.antlr4)
 }
 
 publishing {
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-        }
+  publications {
+    create<MavenPublication>("mavenJava") {
+      from(components["java"])
     }
+  }
 }

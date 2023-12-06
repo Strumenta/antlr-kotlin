@@ -248,7 +248,7 @@ enum class PredictionMode {
                     val dup = ATNConfigSet()
                     for (c in configs) {
                         var mutableC = c
-                        mutableC = ATNConfig(mutableC, SemanticContext.NONE)
+                        mutableC = ATNConfig(mutableC, SemanticContext.Empty.Instance)
                         dup.add(mutableC)
                     }
                     configs = dup
