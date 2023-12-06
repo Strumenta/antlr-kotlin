@@ -4,11 +4,9 @@ kotlin-wrappers = "1.0.0-pre.659"
 antlr4 = "4.13.1"
 
 [libraries]
-kotlin-wrappers = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
+kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
+kotlin-wrappers-kotlin-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js" }
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
-
-# npm dependencies
-wrapper-kotlin-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js" }
 
 # Gradle
 kotlin-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

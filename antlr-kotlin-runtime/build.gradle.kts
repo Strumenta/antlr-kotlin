@@ -37,8 +37,8 @@ kotlin {
 
     jsMain {
       dependencies {
-        implementation(project.dependencies.platform(libs.kotlin.wrappers.get()))
-        implementation(libs.wrapper.kotlin.js)
+        implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
+        implementation(libs.kotlin.wrappers.kotlin.js)
       }
     }
   }

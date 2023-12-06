@@ -52,13 +52,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       compilations.configureEach {
         compilerOptions.configure {
           jvmTarget.set(JvmTarget.JVM_1_8)
-          freeCompilerArgs.addAll(
-            "-Xjvm-default=all",
-            // TODO(Edoardo): verify the performance impact of null assertions
-            // "-Xno-call-assertions",
-            // "-Xno-receiver-assertions",
-            // "-Xno-param-assertions",
-          )
+          freeCompilerArgs.add("-Xjvm-default=all")
 
           if (!isRelease) {
             freeCompilerArgs.add("-Xdebug")

@@ -16,8 +16,6 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
 import kotlin.jvm.JvmStatic
 
 
-// TODO(Edoardo): apply commit https://github.com/antlr/antlr4/commit/875911c2b2e6e50317e75ff2b5e80f4014a75954
-
 /** A tree structure used to record the semantic context in which
  * an ATN configuration is valid.  It's either a single predicate,
  * a conjunction `p1&&p2`, or a sum of products `p1||p2`.
