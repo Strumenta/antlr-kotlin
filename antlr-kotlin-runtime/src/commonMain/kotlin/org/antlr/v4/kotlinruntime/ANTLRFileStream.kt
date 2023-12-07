@@ -13,20 +13,20 @@ import org.antlr.v4.kotlinruntime.misc.Utils
  */
 @Deprecated("as of 4.7 Please use {@link CharStreams} interface.")
 @Suppress("DEPRECATION")
-class ANTLRFileStream
-private constructor(override val sourceName: String)
-    : ANTLRInputStream() {
+public class ANTLRFileStream private constructor(
+  override val sourceName: String,
+) : ANTLRInputStream() {
 
-    companion object {
-        suspend fun invoke(fileName: String): ANTLRFileStream {
-            val fs = ANTLRFileStream(fileName)
-            fs.load()
-            return fs
-        }
+  public companion object {
+    public fun invoke(fileName: String): ANTLRFileStream {
+      val fs = ANTLRFileStream(fileName)
+      fs.load()
+      return fs
     }
+  }
 
-    private suspend fun load() {
-        data = Utils.readFile(sourceName)
-        this.n = data!!.size
-    }
+  private fun load() {
+    data = Utils.readFile(sourceName)
+    this.n = data!!.size
+  }
 }

@@ -1,19 +1,19 @@
 package com.strumenta.kotlinmultiplatform
 
-object System {
-  fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int) {
+public object System {
+  public fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int) {
     src.copyInto(dest, destPos, srcPos, srcPos + length)
   }
 
-  fun arraycopy(src: IntArray, srcPos: Int, dest: IntArray, destPos: Int, length: Int) {
+  public fun arraycopy(src: IntArray, srcPos: Int, dest: IntArray, destPos: Int, length: Int) {
     src.copyInto(dest, destPos, srcPos, srcPos + length)
   }
 
-  val out: PrintStream = StdPrintStream
-  val err: PrintStream = ErrPrintStream
+  public val out: PrintStream = StdPrintStream
+  public val err: PrintStream = ErrPrintStream
 
-  interface PrintStream {
-    fun println(message: String)
+  public interface PrintStream {
+    public fun println(message: String)
   }
 
   private object StdPrintStream : PrintStream {

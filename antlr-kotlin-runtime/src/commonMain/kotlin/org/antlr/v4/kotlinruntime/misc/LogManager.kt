@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-class LogManager {
-
+// TODO(Edoardo): uncomment once kotlinx-datetime supports date formatting
+public class LogManager {
 //    protected var records: MutableList<Record>? = null
 //
 //    protected class Record {
@@ -79,5 +79,4 @@ class LogManager {
 //        }
 //        return buf.toString()
 //    }
-
 }

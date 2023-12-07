@@ -328,15 +328,15 @@ open class ATNConfigSet constructor(
 
     abstract class AbstractConfigHashSet constructor(comparator: AbstractEqualityComparator<in ATNConfig>, initialCapacity: Int = 16, initialBucketCapacity: Int = 2) : Array2DHashSet<ATNConfig>(comparator, initialCapacity, initialBucketCapacity) {
 
-        protected override fun asElementType(o: Any): ATNConfig? {
+        protected override fun asElementType(o: Any?): ATNConfig? {
             return if (o !is ATNConfig) {
                 null
             } else o as ATNConfig
 
         }
 
-        protected override fun createBuckets(capacity: Int): Array<Array<ATNConfig>?> {
-            return arrayOfNulls<Array<ATNConfig>>(capacity)
+        protected override fun createBuckets(capacity: Int): Array<Array<ATNConfig?>?> {
+            return arrayOfNulls<Array<ATNConfig?>>(capacity)
         }
 
         protected override fun createBucket(capacity: Int): Array<ATNConfig?> {

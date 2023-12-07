@@ -1,9 +1,9 @@
 package com.strumenta.kotlinmultiplatform
 
-object Arrays {
-  fun equals(a: Array<*>?, b: Array<*>?): Boolean =
+public object Arrays {
+  public fun equals(a: Array<*>?, b: Array<*>?): Boolean =
     (a == null && b == null) || ((a != null && b != null) && a.contentEquals(b))
 
-  fun equals(a: IntArray?, b: IntArray?): Boolean =
+  public fun equals(a: IntArray?, b: IntArray?): Boolean =
     (a == null && b == null) || ((a != null && b != null) && a.contentEquals(b))
 }

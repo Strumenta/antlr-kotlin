@@ -1,5 +1,5 @@
 package org.antlr.v4.kotlinruntime.misc
 
-expect object Platform {
-    suspend fun readFile(fileName: String): String
+public expect object Platform {
+  public fun readFile(fileName: String, encoding: String = "UTF8"): String
 }

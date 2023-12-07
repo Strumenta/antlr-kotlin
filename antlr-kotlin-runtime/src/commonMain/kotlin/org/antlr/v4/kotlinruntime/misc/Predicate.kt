@@ -6,6 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-interface Predicate<T> {
-    fun test(t: T): Boolean
+public interface Predicate<T> {
+    public fun test(t: T): Boolean
 }

@@ -1,7 +1,7 @@
 package org.antlr.v4.kotlinruntime.misc
 
-actual object Platform {
-    actual suspend fun readFile(fileName: String): String {
-        TODO("not implemented")
-    }
+public actual object Platform {
+  public actual fun readFile(fileName: String, encoding: String): String {
+    TODO("Not implemented")
+  }
 }
