@@ -12,6 +12,7 @@ allprojects {
 }
 
 subprojects {
+
   tasks.create<Jar>("javadocJar"){
     dependsOn(":${project.name}:dokkaJavadoc")
     archiveClassifier.set("javadoc")

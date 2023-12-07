@@ -3,11 +3,13 @@ import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
 import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
 import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
   id("strumenta.multiplatform")
   id("maven-publish")
   id("signing")
+  id("org.jetbrains.dokka")
 }
 
 strumentaMultiplatform {
@@ -56,5 +58,18 @@ publishing {
 
 if (project.releaseBuild()) {
   tasks.withType(Sign::class) {
+  }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+  dokkaSourceSets {
+    configureEach {
+      suppress.set(true)
+    }
+
+    val commonMain by getting {
+      suppress.set(false)
+      platform.set(org.jetbrains.dokka.Platform.jvm)
+    }
   }
 }
