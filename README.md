@@ -146,10 +146,6 @@ To start using ANTLR Kotlin:
    }
    ```
 
-## Publishing
-
-Publishing on Mac requires to have Xcode installed, because we support also the native targets.
-
 ## Contributors
 
 - Edoardo Luppi ([@lppedd](https://github.com/lppedd))

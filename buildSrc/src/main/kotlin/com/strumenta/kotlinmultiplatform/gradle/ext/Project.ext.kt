@@ -88,8 +88,8 @@ fun PublishingExtension.addPublication(project: Project, descriptionValue: Strin
       from(project.components.findByName("java"))
       groupId = project.group as String
       artifactId = project.name
-      //artifact(tasks.findByName("sourcesJar"))
-      //artifact(tasks.findByName("javadocJar"))
+      artifact(project.tasks.findByName("sourcesJar"))
+      artifact(project.tasks.findByName("javadocJar"))
       pom {
         name.set(project.name)
         description.set(descriptionValue)
