@@ -6,14 +6,14 @@
 
 package org.antlr.v4.kotlinruntime.dfa
 
+import com.strumenta.kotlinmultiplatform.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.VocabularyImpl
 
-class LexerDFASerializer(dfa: DFA) : DFASerializer(dfa, VocabularyImpl.EMPTY_VOCABULARY) {
-
-    protected override fun getEdgeLabel(i: Int): String {
-        return StringBuilder("'")
-                .append(i.toChar())
-                .append("'")
-                .toString()
-    }
+public class LexerDFASerializer(dfa: DFA) : DFASerializer(dfa, VocabularyImpl.EMPTY_VOCABULARY) {
+  protected override fun getEdgeLabel(i: Int): String =
+    StringBuilder()
+      .append("'")
+      .appendCodePoint(i)
+      .append("'")
+      .toString()
 }

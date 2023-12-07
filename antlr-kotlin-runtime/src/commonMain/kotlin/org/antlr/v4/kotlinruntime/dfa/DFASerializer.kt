@@ -9,61 +9,73 @@ package org.antlr.v4.kotlinruntime.dfa
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.VocabularyImpl
 
-/** A DFA walker that knows how to dump them to serialized strings.  */
-open class DFASerializer {
+/**
+ * A DFA walker that knows how to dump them to serialized strings.
+ */
+public open class DFASerializer(
+  private val dfa: DFA,
+  private val vocabulary: Vocabulary,
+) {
+  @Deprecated("Use {@link #DFASerializer(DFA, Vocabulary)} instead.")
+  @Suppress("UNCHECKED_CAST")
+  public constructor(dfa: DFA, tokenNames: Array<String>) :
+    this(
+      dfa,
+      VocabularyImpl.fromTokenNames(tokenNames as Array<String?>),
+    )
 
-    private val dfa: DFA
-
-    private val vocabulary: Vocabulary
-
-
-    @Deprecated("Use {@link #DFASerializer(DFA, Vocabulary)} instead.")
-    constructor(dfa: DFA, tokenNames: Array<String>) : this(dfa, VocabularyImpl.fromTokenNames(tokenNames as Array<String?>)) {
+  override fun toString(): String {
+    if (dfa.s0 == null) {
+      return "null"
     }
 
-    constructor(dfa: DFA, vocabulary: Vocabulary) {
-        this.dfa = dfa
-        this.vocabulary = vocabulary
-    }
+    val buf = StringBuilder()
+    val states = dfa.getStates()
 
-    override fun toString(): String {
-        if (dfa.s0 == null) return "null"
-        val buf = StringBuilder()
-        val states = dfa.getStates()
-        for (s in states) {
-            var n = 0
-            if (s.edges != null) n = s.edges!!.size
-            for (i in 0 until n) {
-                val t = s.edges!![i]
-                if (t != null && t.stateNumber != Int.MAX_VALUE) {
-                    buf.append(getStateString(s))
-                    val label = getEdgeLabel(i)
-                    buf.append("-").append(label).append("->").append(getStateString(t)).append('\n')
-                }
-            }
+    for (s in states) {
+      var n = 0
+      val edges = s.edges
+
+      if (edges != null) {
+        n = edges.size
+      }
+
+      for (i in 0..<n) {
+        // If edges is null, we won't get here at all, so asserting is fine
+        val t = edges!![i]
+
+        if (t != null && t.stateNumber != Int.MAX_VALUE) {
+          buf.append(getStateString(s))
+          buf.append("-")
+          buf.append(getEdgeLabel(i))
+          buf.append("->")
+          buf.append(getStateString(t))
+          buf.append('\n')
         }
-
-        val output = buf.toString()
-        return if (output.length == 0) "null" else output
-        //return Utils.sortLinesInString(output);
+      }
     }
 
-    protected open fun getEdgeLabel(i: Int): String {
-        return vocabulary.getDisplayName(i - 1)
-    }
+    val output = buf.toString()
+    return output.ifEmpty { "null" }
+  }
 
+  protected open fun getEdgeLabel(i: Int): String =
+    vocabulary.getDisplayName(i - 1)
 
-    protected fun getStateString(s: DFAState): String {
-        val n = s.stateNumber
-        val baseStateStr = (if (s.isAcceptState) ":" else "") + "s" + n + if (s.requiresFullContext) "^" else ""
-        return if (s.isAcceptState) {
-            if (s.predicates != null) {
-                baseStateStr + "=>" + s.predicates!!.joinToString()
-            } else {
-                baseStateStr + "=>" + s.prediction
-            }
-        } else {
-            baseStateStr
-        }
+  @Suppress("MemberVisibilityCanBePrivate")
+  protected fun getStateString(s: DFAState): String {
+    val n = s.stateNumber
+    val baseStateStr = "${if (s.isAcceptState) ":" else ""}s$n${if (s.requiresFullContext) "^" else ""}"
+    return if (s.isAcceptState) {
+      val predicates = s.predicates
+
+      if (predicates != null) {
+        baseStateStr + "=>" + predicates.joinToString()
+      } else {
+        baseStateStr + "=>" + s.prediction
+      }
+    } else {
+      baseStateStr
     }
+  }
 }
