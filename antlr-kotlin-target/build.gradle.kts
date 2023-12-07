@@ -1,5 +1,11 @@
+import com.strumenta.kotlinmultiplatform.gradle.ext.addPublication
+import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
+import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
+
 plugins {
   id("strumenta.jvm.library")
+  id("maven-publish")
+  id("signing")
 }
 
 dependencies {
@@ -7,9 +13,11 @@ dependencies {
 }
 
 publishing {
-  publications {
-    create<MavenPublication>("mavenJava") {
-      from(components["java"])
-    }
+  addSonatypeRepository(project)
+  addPublication(project, "Kotlin target for ANTLR")
+}
+
+if (project.releaseBuild()) {
+  tasks.withType(Sign::class) {
   }
 }

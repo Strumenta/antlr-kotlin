@@ -1,8 +1,13 @@
+import com.strumenta.kotlinmultiplatform.gradle.ext.addPublication
+import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
+import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
 import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 
 plugins {
   id("strumenta.multiplatform")
+  id("maven-publish")
+  id("signing")
 }
 
 strumentaMultiplatform {
@@ -41,5 +46,15 @@ kotlin {
         implementation(libs.kotlin.wrappers.kotlin.js)
       }
     }
+  }
+}
+
+publishing {
+  addSonatypeRepository(project)
+  addPublication(project, "Runtime for ANTLR Kotlin")
+}
+
+if (project.releaseBuild()) {
+  tasks.withType(Sign::class) {
   }
 }

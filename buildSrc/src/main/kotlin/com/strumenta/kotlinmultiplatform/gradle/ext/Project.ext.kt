@@ -1,10 +1,16 @@
 package com.strumenta.kotlinmultiplatform.gradle.ext
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.repositories
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import java.net.URI
 
 /**
  * Returns the Java project extension.
@@ -40,7 +46,8 @@ fun Project.booleanProperty(name: String): Boolean =
  * Returns whether we are building for a release, or not.
  */
 fun Project.releaseBuild(): Boolean =
-  booleanProperty("repo.is.release")
+  !(stringProperty("version")?.endsWith("-SNAPSHOT")
+    ?: throw IllegalStateException("Project version not specified"))
 
 /**
  * Returns the URL of the Maven repository to publish artifacts to,
@@ -61,3 +68,63 @@ fun Project.mavenRepositoryUrl(): String? {
  */
 fun Project.targetsNative(): Boolean =
   booleanProperty("target.is.native")
+
+
+fun PublishingExtension.addSonatypeRepository(project: Project) {
+  repositories {
+    maven {
+      url = URI(project.mavenRepositoryUrl())
+      credentials {
+        username = project.findProperty("ossrhUsername") as? String ?:  "Unknown user"
+        password = project.findProperty("ossrhPassword") as? String ?:  "Unknown password"
+      }
+    }
+  }
+}
+
+fun PublishingExtension.addPublication(project: Project, descriptionValue: String) {
+  publications {
+    create<MavenPublication>(project.name.replace("-", "_")) {
+      from(project.components.findByName("java"))
+      groupId = project.group as String
+      artifactId = project.name
+      //artifact(tasks.findByName("sourcesJar"))
+      //artifact(tasks.findByName("javadocJar"))
+      pom {
+        name.set(project.name)
+        description.set(descriptionValue)
+        version = project.version as String
+        packaging = "jar"
+        url.set("https://github.com/Strumenta/antlr-kotlin")
+
+        scm {
+          connection.set("scm:git:https://github.com/Strumenta/antlr-kotlin.git")
+          developerConnection.set("scm:git:git@github.com:Strumenta/antlr-kotlin.git")
+          url.set("https://github.com/Strumenta/antlr-kotlin.git")
+        }
+
+        licenses {
+          license {
+            name.set("Apache Licenve V2.0")
+            url.set("https://www.apache.org/licenses/LICENSE-2.0")
+            distribution.set("repo")
+          }
+        }
+
+        // The developers entry is strictly required by Maven Central
+        developers {
+          developer {
+            id.set("ftomassetti")
+            name.set("Federico Tomassetti")
+            email.set("federico@strumenta.com")
+          }
+          developer {
+            id.set("lppedd")
+            name.set("Edoardo Luppi")
+            email.set("lp.edoardo@gmail.com")
+          }
+        }
+      }
+    }
+  }
+}

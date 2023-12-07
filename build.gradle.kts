@@ -1,36 +1,35 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryUrl
-
 plugins {
-  `maven-publish`
+  id("net.researchgate.release") version "3.0.2"
 }
 
 allprojects {
-  version = "1.0.0-SNAPSHOT"
-  group = "com.strumenta.antlr-kotlin"
+  group = "com.strumenta"
 
   repositories {
     mavenCentral()
   }
 
-  apply(plugin = "maven-publish")
+}
 
-  // TODO: setup a real Maven repository to publish to, e.g., Maven Central
-  val repoUrl = mavenRepositoryUrl()
+subprojects {
+  tasks.create<Jar>("javadocJar"){
+    dependsOn(":${project.name}:dokkaJavadoc")
+    archiveClassifier.set("javadoc")
+    from("${layout.buildDirectory}/dokka/javadoc")
+  }
 
-  if (repoUrl != null) {
-    publishing {
-      repositories {
-        maven {
-          name = "StrumentaAntlrKotlin"
-          url = project.uri(repoUrl)
+  tasks.create<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+  }
 
-          // TODO: this should be removed once the publication targets
-          //  a real public repository
-          isAllowInsecureProtocol = true
-        }
-      }
+  tasks.withType<Test>().all {
+    testLogging {
+      showStandardStreams = true
+      showExceptions = true
+      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
   }
+
 }
 
 tasks {
@@ -40,17 +39,10 @@ tasks {
   }
 }
 
-tasks {
-  create("ciBasicBuild") {
-    dependsOn(":antlr-kotlin-runtime:compileKotlinJvm")
-    dependsOn(":antlr-kotlin-tests:compileKotlinJvm")
-    dependsOn(":antlr-kotlin-target:compileKotlin")
-  }
-
-  create("ciTest") {
-    dependsOn(":antlr-kotlin-runtime:jvmTest")
-    dependsOn(":antlr-kotlin-tests:jvmTest")
-    dependsOn(":antlr-kotlin-target:test")
+release {
+  buildTasks.set(listOf(":antlr-kotlin-runtime:publish", ":antlr-kotlin-target:publish"))
+  git {
+    requireBranch.set("master")
+    pushToRemote.set("origin")
   }
 }
-
