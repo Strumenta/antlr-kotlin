@@ -146,6 +146,20 @@ To start using ANTLR Kotlin:
    }
    ```
 
+## Maven Central Publication
+
+Publication can be performed running:
+
+```
+./gradlew publish -Ptarget.is.native=false -Ptarget.is.js=false
+```
+
+However, it is recommended to use the releases plugin and run:
+
+```
+./gradlew release -Ptarget.is.native=false -Ptarget.is.js=false
+```
+
 ## Contributors
 
 - Edoardo Luppi ([@lppedd](https://github.com/lppedd))

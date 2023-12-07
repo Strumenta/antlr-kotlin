@@ -70,6 +70,9 @@ fun Project.mavenRepositoryUrl(): String? {
 fun Project.targetsNative(): Boolean =
   booleanProperty("target.is.native")
 
+fun Project.targetsJS(): Boolean =
+  booleanProperty("target.is.js")
+
 
 fun PublishingExtension.addSonatypeRepository(project: Project) {
   repositories {
@@ -93,6 +96,7 @@ fun PublishingExtension.addPublication(project: Project, descriptionValue: Strin
       groupId = project.group as String
 //      artifactId = project.name
       artifact(project.tasks.findByName("javadocJar"))
+      //artifact(project.tasks.findByName("sourcesJar"))
       pom {
         name.set(project.name)
         description.set(descriptionValue)

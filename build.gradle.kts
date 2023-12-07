@@ -19,6 +19,10 @@ subprojects {
     from("${layout.buildDirectory}/dokka/javadoc")
   }
 
+//  val javadocJar by tasks.registering(Jar::class) {
+//    archiveClassifier.set("javadoc")
+//  }
+
   tasks.create<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
   }
