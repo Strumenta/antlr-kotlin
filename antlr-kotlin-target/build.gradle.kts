@@ -1,5 +1,6 @@
 import com.strumenta.kotlinmultiplatform.gradle.ext.addPublication
 import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
+import com.strumenta.kotlinmultiplatform.gradle.ext.publicationName
 import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
 import org.jetbrains.dokka.gradle.DokkaTask
 
@@ -19,7 +20,9 @@ publishing {
   addPublication(project, "Kotlin target for ANTLR")
 }
 
-if (project.releaseBuild()) {
-  tasks.withType(Sign::class) {
-  }
+signing {
+  setRequired({
+    project.releaseBuild()
+  })
+  sign(publishing.publications)
 }

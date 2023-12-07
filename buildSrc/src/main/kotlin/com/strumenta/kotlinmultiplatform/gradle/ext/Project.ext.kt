@@ -8,6 +8,7 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.net.URI
@@ -82,12 +83,15 @@ fun PublishingExtension.addSonatypeRepository(project: Project) {
   }
 }
 
+val Project.publicationName
+    get() = project.name.replace("-", "_")
+
 fun PublishingExtension.addPublication(project: Project, descriptionValue: String) {
   publications {
-    create<MavenPublication>(project.name.replace("-", "_")) {
-      from(project.components.findByName("java"))
+    publications.withType<MavenPublication> {
+//      from(project.components.findByName("java"))
       groupId = project.group as String
-      artifactId = project.name
+//      artifactId = project.name
       artifact(project.tasks.findByName("javadocJar"))
       pom {
         name.set(project.name)

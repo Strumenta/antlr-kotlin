@@ -1,7 +1,4 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.addPublication
-import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
-import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
-import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
+import com.strumenta.kotlinmultiplatform.gradle.ext.*
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.dokka.gradle.DokkaTask
 
@@ -56,9 +53,11 @@ publishing {
   addPublication(project, "Runtime for ANTLR Kotlin")
 }
 
-if (project.releaseBuild()) {
-  tasks.withType(Sign::class) {
-  }
+signing {
+  setRequired({
+    project.releaseBuild()
+  })
+  sign(publishing.publications)
 }
 
 tasks.withType<DokkaTask>().configureEach {
@@ -71,5 +70,14 @@ tasks.withType<DokkaTask>().configureEach {
       suppress.set(false)
       platform.set(org.jetbrains.dokka.Platform.jvm)
     }
+  }
+}
+
+tasks {
+  val allTasks = getAllTasks(true)[project]!!.toList()
+  val publishTasks = allTasks.filter{ it.name.startsWith("publish") && it.name != "publish" }
+  val signTasks = allTasks.filter { it.name.startsWith("sign") && it.name != "sign" }
+  publishTasks.forEach { pt ->
+    pt.dependsOn(signTasks)
   }
 }
