@@ -1,6 +1,7 @@
 # ANTLR Kotlin
 
-[![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/BuildAndTest/badge.svg)](https://github.com/Strumenta/kolasu/actions) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin)
+[![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 This project contains everything needed to support Kotlin as a target for ANTLR.
@@ -102,10 +103,11 @@ To start using ANTLR Kotlin:
    ```kotlin
    tasks {
      generateGrammarSource {
-     // The default task is set up considering a Java source set,
-     // which we might not have in a Kotlin project. 
-     // Using it is messier than simply registering a new task
-     enabled = false
+       // The default task is set up considering a Java source set,
+       // which we might not have in a Kotlin project. 
+       // Using it is messier than simply registering a new task
+       enabled = false
+     }
    }
    ```
 
