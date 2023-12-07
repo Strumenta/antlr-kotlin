@@ -1,4 +1,4 @@
-name: Basic Build
+name: Basic Checks
 
 on: [push]
 
@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         java: [ '11', '17' ]
-    name: Basic Build (Java ${{ matrix.Java }})
+    name: Basic Checks (Java ${{ matrix.Java }})
 
     steps:
     - uses: actions/checkout@v1
@@ -18,5 +18,5 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: ${{ matrix.java }}
-    - name: Test
-      run: ./gradlew ciBasicBuild
+    - name: Basic checks
+      run: ./gradlew check -Ptarget.is.native=false.target.is.native=false
