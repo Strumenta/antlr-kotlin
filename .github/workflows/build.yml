@@ -3,8 +3,16 @@ name: Build
 on:
   push:
     branches: [ 'master' ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/.editorconfig'
+      - '**/.gitignore'
   pull_request:
     branches: [ 'master' ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/.editorconfig'
+      - '**/.gitignore'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
