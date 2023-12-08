@@ -33,7 +33,7 @@ tasks {
 release {
   buildTasks.set(emptyList())
   git {
-    requireBranch.set("master")
+    requireBranch.set("")
     pushToRemote.set("origin")
   }
 }
