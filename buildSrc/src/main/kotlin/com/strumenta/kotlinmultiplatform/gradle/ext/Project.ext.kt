@@ -41,7 +41,7 @@ fun Project.stringProperty(name: String): String? =
  * Returns a project property as a boolean (`"true" == true`, else `false`).
  */
 fun Project.booleanProperty(name: String): Boolean =
-  findProperty(name) == "true"
+  (findProperty(name) as? String)?.trim()?.lowercase() == "true"
 
 /**
  * Returns whether we are building for a release, or not.
@@ -89,48 +89,39 @@ fun PublishingExtension.addSonatypeRepository(project: Project) {
 val Project.publicationName
     get() = project.name.replace("-", "_")
 
-fun PublishingExtension.addPublication(project: Project, descriptionValue: String) {
-  publications {
-    publications.withType<MavenPublication> {
-//      from(project.components.findByName("java"))
-      groupId = project.group as String
-//      artifactId = project.name
-      artifact(project.tasks.findByName("javadocJar"))
-      //artifact(project.tasks.findByName("sourcesJar"))
-      pom {
-        name.set(project.name)
-        description.set(descriptionValue)
-        version = project.version as String
-        packaging = "jar"
-        url.set("https://github.com/Strumenta/antlr-kotlin")
+fun MavenPublication.setupPom(project: Project, descriptionValue: String) {
+  pom {
+    name.set(project.name)
+    description.set(descriptionValue)
+    version = project.version as String
+    packaging = "jar"
+    url.set("https://github.com/Strumenta/antlr-kotlin")
 
-        scm {
-          connection.set("scm:git:https://github.com/Strumenta/antlr-kotlin.git")
-          developerConnection.set("scm:git:git@github.com:Strumenta/antlr-kotlin.git")
-          url.set("https://github.com/Strumenta/antlr-kotlin.git")
-        }
+    scm {
+      connection.set("scm:git:https://github.com/Strumenta/antlr-kotlin.git")
+      developerConnection.set("scm:git:git@github.com:Strumenta/antlr-kotlin.git")
+      url.set("https://github.com/Strumenta/antlr-kotlin.git")
+    }
 
-        licenses {
-          license {
-            name.set("Apache Licenve V2.0")
-            url.set("https://www.apache.org/licenses/LICENSE-2.0")
-            distribution.set("repo")
-          }
-        }
+    licenses {
+      license {
+        name.set("Apache Licenve V2.0")
+        url.set("https://www.apache.org/licenses/LICENSE-2.0")
+        distribution.set("repo")
+      }
+    }
 
-        // The developers entry is strictly required by Maven Central
-        developers {
-          developer {
-            id.set("ftomassetti")
-            name.set("Federico Tomassetti")
-            email.set("federico@strumenta.com")
-          }
-          developer {
-            id.set("lppedd")
-            name.set("Edoardo Luppi")
-            email.set("lp.edoardo@gmail.com")
-          }
-        }
+    // The developers entry is strictly required by Maven Central
+    developers {
+      developer {
+        id.set("ftomassetti")
+        name.set("Federico Tomassetti")
+        email.set("federico@strumenta.com")
+      }
+      developer {
+        id.set("lppedd")
+        name.set("Edoardo Luppi")
+        email.set("lp.edoardo@gmail.com")
       }
     }
   }

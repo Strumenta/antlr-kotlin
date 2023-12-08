@@ -1,8 +1,7 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.addPublication
-import com.strumenta.kotlinmultiplatform.gradle.ext.addSonatypeRepository
-import com.strumenta.kotlinmultiplatform.gradle.ext.publicationName
-import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
+import com.strumenta.kotlinmultiplatform.gradle.ext.*
 import org.jetbrains.dokka.gradle.DokkaTask
+import java.net.URI
+import java.net.URL
 
 plugins {
   id("strumenta.jvm.library")
@@ -17,12 +16,21 @@ dependencies {
 
 publishing {
   addSonatypeRepository(project)
-  addPublication(project, "Kotlin target for ANTLR")
+  publications {
+
+    create<MavenPublication>("antlrKotlinTarget") {
+      from(project.components.findByName("java"))
+      groupId = project.group as String
+      artifactId = project.name
+      artifact(project.tasks.findByName("javadocJar"))
+      setupPom(project, "Kotlin target for ANTLR")
+    }
+  }
 }
 
 signing {
-  setRequired({
+  setRequired {
     project.releaseBuild()
-  })
+  }
   sign(publishing.publications)
 }

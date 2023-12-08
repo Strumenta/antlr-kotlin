@@ -51,11 +51,6 @@ kotlin {
   }
 }
 
-publishing {
-  addSonatypeRepository(project)
-  addPublication(project, "Runtime for ANTLR Kotlin")
-}
-
 signing {
   setRequired({
     project.releaseBuild()
@@ -76,11 +71,20 @@ tasks.withType<DokkaTask>().configureEach {
   }
 }
 
-tasks {
-  val allTasks = getAllTasks(true)[project]!!.toList()
-  val publishTasks = allTasks.filter{ it.name.startsWith("publish") && it.name != "publish" }
-  val signTasks = allTasks.filter { it.name.startsWith("sign") && it.name != "sign" }
-  publishTasks.forEach { pt ->
-    pt.dependsOn(signTasks)
+tasks.withType<AbstractPublishToMaven>().configureEach {
+  val signingTasks = tasks.withType<Sign>()
+  mustRunAfter(signingTasks)
+}
+
+publishing {
+  addSonatypeRepository(project)
+  publications {
+
+    publications.withType<MavenPublication> {
+      groupId = project.group as String
+      artifactId = project.name
+      artifact(project.tasks.findByName("javadocJar"))
+      setupPom(project, "Runtime for ANTLR Kotlin")
+    }
   }
 }
