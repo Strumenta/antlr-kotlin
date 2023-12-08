@@ -1,7 +1,7 @@
 # ANTLR Kotlin
 
 [![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 This project contains everything needed to support Kotlin as a target for ANTLR.
@@ -148,4 +148,9 @@ To start using ANTLR Kotlin:
 
 ## Contributors
 
+You can see the complete list on GitHub, but here we list those who contributed ten commits or more.
+
+- Dennis Rieks ([@driekds](https://github.com/drieks))
 - Edoardo Luppi ([@lppedd](https://github.com/lppedd))
+- [@phyrian](https://github.com/phyrian)
+- Patrick Del Conte [@exaV](https://github.com/exaV)
