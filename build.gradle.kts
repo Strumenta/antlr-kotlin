@@ -31,9 +31,9 @@ tasks {
 }
 
 release {
-  buildTasks.set(emptyList())
+  buildTasks.set(listOf("publishAllPublicationsToMavenCentralRepository"))
   git {
-    requireBranch.set("publishAllPublicationsToMavenCentralRepository")
+    requireBranch.set("")
     pushToRemote.set("origin")
   }
 }
