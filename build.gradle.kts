@@ -33,9 +33,7 @@ tasks {
 release {
   buildTasks.set(emptyList())
   git {
-    requireBranch.set("")
+    requireBranch.set("publishAllPublicationsToMavenCentralRepository")
     pushToRemote.set("origin")
   }
 }
-
-tasks.findByName("release")?.mustRunAfter("publishAllPublicationsToMavenCentral")
