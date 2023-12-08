@@ -151,7 +151,7 @@ To start using ANTLR Kotlin:
 Publication can be performed running:
 
 ```
-./gradlew publish -Ptarget.is.native=false -Ptarget.is.js=false
+./gradlew :antlr-kotlin-target:publish  :antlr-runtime:publish -Ptarget.is.native=false
 ```
 
 However, it is recommended to use the releases plugin and run:

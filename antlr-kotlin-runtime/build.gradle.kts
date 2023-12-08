@@ -82,7 +82,6 @@ publishing {
 
     publications.withType<MavenPublication> {
       groupId = project.group as String
-      artifactId = project.name
       artifact(project.tasks.findByName("javadocJar"))
       setupPom(project, "Runtime for ANTLR Kotlin")
     }

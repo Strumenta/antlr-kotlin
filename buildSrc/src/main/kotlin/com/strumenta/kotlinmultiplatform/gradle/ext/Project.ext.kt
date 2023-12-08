@@ -77,6 +77,7 @@ fun Project.targetsJS(): Boolean =
 fun PublishingExtension.addSonatypeRepository(project: Project) {
   repositories {
     maven {
+      name = "oss"
       url = URI(project.mavenRepositoryUrl())
       credentials {
         username = project.findProperty("ossrhUsername") as? String ?:  "Unknown user"
