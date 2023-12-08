@@ -31,7 +31,7 @@ tasks {
 }
 
 release {
-  buildTasks.set(listOf("publishAllPublicationsToMavenCentralRepository"))
+  buildTasks.set(listOf(":antlr-kotlin-runtime:publishAllPublicationsToMavenCentralRepository", ":antlr-kotlin-target:publishAllPublicationsToMavenCentralRepository"))
   git {
     requireBranch.set("")
     pushToRemote.set("origin")
