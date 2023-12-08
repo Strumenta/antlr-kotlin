@@ -12,6 +12,7 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import java.net.URI
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 
 /**
  * Returns the Java project extension.
@@ -90,12 +91,12 @@ fun PublishingExtension.addSonatypeRepository(project: Project) {
 val Project.publicationName
     get() = project.name.replace("-", "_")
 
-fun MavenPublication.setupPom(project: Project, descriptionValue: String) {
+fun MavenPublishBaseExtension.setupPom(project: Project, descriptionValue: String) {
   pom {
     name.set(project.name)
     description.set(descriptionValue)
-    version = project.version as String
-    packaging = "jar"
+//    version = project.version as String
+//    packaging = "jar"
     url.set("https://github.com/Strumenta/antlr-kotlin")
 
     scm {

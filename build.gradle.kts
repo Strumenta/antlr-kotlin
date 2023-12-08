@@ -13,19 +13,19 @@ allprojects {
 
 subprojects {
 
-  tasks.create<Jar>("javadocJar"){
-    dependsOn(":${project.name}:dokkaJavadoc")
-    archiveClassifier.set("javadoc")
-    from("${layout.buildDirectory}/dokka/javadoc")
-  }
-
-//  val javadocJar by tasks.registering(Jar::class) {
+//  tasks.create<Jar>("javadocJar"){
+//    dependsOn(":${project.name}:dokkaJavadoc")
 //    archiveClassifier.set("javadoc")
+//    from("${layout.buildDirectory}/dokka/javadoc")
 //  }
-
-  tasks.create<Jar>("sourcesJar") {
-    archiveClassifier.set("sources")
-  }
+//
+////  val javadocJar by tasks.registering(Jar::class) {
+////    archiveClassifier.set("javadoc")
+////  }
+//
+//  tasks.create<Jar>("sourcesJar") {
+//    archiveClassifier.set("sources")
+//  }
 
   tasks.withType<Test>().all {
     testLogging {
@@ -44,10 +44,10 @@ tasks {
   }
 }
 
-release {
-  buildTasks.set(listOf(":antlr-kotlin-runtime:publish", ":antlr-kotlin-target:publish"))
-  git {
-    requireBranch.set("master")
-    pushToRemote.set("origin")
-  }
-}
+//release {
+//  buildTasks.set(listOf(":antlr-kotlin-runtime:publish", ":antlr-kotlin-target:publish"))
+//  git {
+//    requireBranch.set("master")
+//    pushToRemote.set("origin")
+//  }
+//}
