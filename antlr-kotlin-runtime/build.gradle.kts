@@ -5,8 +5,8 @@ import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
   id("strumenta.multiplatform")
-  id("com.vanniktech.maven.publish")/* version "0.25.3"*/
   id("org.jetbrains.dokka")
+  id("com.vanniktech.maven.publish")
 }
 
 strumentaMultiplatform {
@@ -51,13 +51,6 @@ kotlin {
   }
 }
 
-//signing {
-//  setRequired({
-//    project.releaseBuild()
-//  })
-//  sign(publishing.publications)
-//}
-
 tasks.withType<DokkaTask>().configureEach {
   dokkaSourceSets {
     configureEach {
@@ -71,28 +64,11 @@ tasks.withType<DokkaTask>().configureEach {
   }
 }
 
-//tasks.withType<AbstractPublishToMaven>().configureEach {
-//  val signingTasks = tasks.withType<Sign>()
-//  mustRunAfter(signingTasks)
-//}
-//
-//publishing {
-//  addSonatypeRepository(project)
-//  publications {
-//
-//    publications.withType<MavenPublication> {
-//      //groupId = project.group as String
-//      artifact(project.tasks.findByName("javadocJar"))
-//      setupPom(project, "Runtime for ANTLR Kotlin")
-//    }
-//  }
-//}
-
 mavenPublishing {
   coordinates(project.group as String, project.name, project.version as String)
   setupPom(project, "Runtime for ANTLR Kotlin")
 
-  publishToMavenCentral(SonatypeHost.DEFAULT)
+  publishToMavenCentral(SonatypeHost.DEFAULT, true)
 
   signAllPublications()
 }
