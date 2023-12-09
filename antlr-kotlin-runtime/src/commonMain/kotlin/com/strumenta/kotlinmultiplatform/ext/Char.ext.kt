@@ -31,7 +31,6 @@ public fun isValidCodePoint(codePoint: Int): Boolean =
 public fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean =
   codePoint in MIN_SUPPLEMENTARY_CODE_POINT_..MAX_CODE_POINT_
 
-@OptIn(ExperimentalStdlibApi::class)
 public fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset: Int): Int {
   if (isBmpCodePoint(codePoint)) {
     destination.setSafe(offset, codePoint.toChar())
@@ -44,7 +43,7 @@ public fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset
     destination.setSafe(offset, highSurrogate(codePoint))
     return 2
   } else {
-    throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHexString()}")
+    throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHex()}")
   }
 }
 

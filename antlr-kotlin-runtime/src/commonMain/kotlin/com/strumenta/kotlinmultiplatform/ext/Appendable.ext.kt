@@ -1,6 +1,10 @@
 package com.strumenta.kotlinmultiplatform.ext
 
-@OptIn(ExperimentalStdlibApi::class)
+/**
+ * Appends the string representation of the [codePoint] argument to this sequence.
+ *
+ * See Java's `StringBuilder.appendCodePoint`.
+ */
 public fun <T : Appendable> T.appendCodePoint(codePoint: Int): T {
   if (isBmpCodePoint(codePoint)) {
     append(codePoint.toChar())
@@ -8,7 +12,7 @@ public fun <T : Appendable> T.appendCodePoint(codePoint: Int): T {
     append(highSurrogate(codePoint))
     append(lowSurrogate(codePoint))
   } else {
-    throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHexString()}")
+    throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHex()}")
   }
 
   return this
