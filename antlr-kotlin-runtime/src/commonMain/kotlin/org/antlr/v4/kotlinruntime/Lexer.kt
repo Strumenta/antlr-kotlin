@@ -18,14 +18,16 @@ import org.antlr.v4.kotlinruntime.misc.Interval
 abstract class Lexer : Recognizer<Int, LexerATNSimulator>, TokenSource {
 
 
-//    /** Set the char stream and reset the lexer  */
-//    fun setInputStream(input: IntStream) {
-//        this.inputStream = null
-//        this._tokenFactorySourcePair = Pair<TokenSource, CharStream>(this, inputStream)
-//        reset()
-//        this.inputStream = input as CharStream
-//        this._tokenFactorySourcePair = Pair<TokenSource, CharStream>(this, readInputStream())
-//    }
+    /**
+     * Set the char stream and reset the lexer.
+     */
+    public fun setInputStream(input: IntStream) {
+        this.inputStream = null
+        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, inputStream as? CharStream)
+        reset()
+        this.inputStream = input as CharStream
+        this._tokenFactorySourcePair = Pair<TokenSource, CharStream?>(this, inputStream as? CharStream)
+    }
 
     override fun assignInputStream(newValue: IntStream?) {
         assignInputStream(newValue as CharStream?)

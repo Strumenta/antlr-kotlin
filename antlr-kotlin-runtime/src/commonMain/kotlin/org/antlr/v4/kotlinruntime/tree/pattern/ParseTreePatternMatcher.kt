@@ -336,15 +336,16 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
           throw IllegalArgumentException("invalid tag: ${chunk.tag} in pattern: $pattern")
         }
       } else {
-        // TODO(Edoardo): need Lexer.setInputStream
-        // val textChunk = chunk as TextChunk
-        // val `in` = ANTLRInputStream(textChunk.text)
-        // lexer.setInputStream(`in`)
-        // var t = lexer.nextToken()
-        // while (t!!.type !== Token.EOF) {
-        //     tokens.add(t!!)
-        //     t = lexer.nextToken()
-        // }
+        val textChunk = chunk as TextChunk
+        val stream = ANTLRInputStream(textChunk.text)
+        lexer.setInputStream(stream)
+
+        var t = lexer.nextToken()
+
+        while (t.type != Token.EOF) {
+          tokens.add(t)
+          t = lexer.nextToken()
+        }
       }
     }
 
