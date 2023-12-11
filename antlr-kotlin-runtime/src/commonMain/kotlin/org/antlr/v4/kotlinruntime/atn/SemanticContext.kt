@@ -222,8 +222,8 @@ abstract class SemanticContext {
         }
 
         override fun hashCode(): Int {
-            // TODO(Edoardo): K/JS KClass.hashCode uses only the class simple name
-            //   On the JVM, the fqn param is ignored
+            // Note(Edoardo): K/JS KClass.hashCode uses only the class simple name
+            //   On the JVM and on Native, the fqn param is ignored
             val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.AND"
             return MurmurHash.hashCode(opnds, AND::class.hashCodeCustom(fqn))
         }
@@ -318,8 +318,8 @@ abstract class SemanticContext {
         }
 
         override fun hashCode(): Int {
-            // TODO(Edoardo): K/JS KClass.hashCode uses only the class simple name
-            //   On the JVM, the fqn param is ignored
+            // Note(Edoardo): K/JS KClass.hashCode uses only the class simple name
+            //   On the JVM and on Native, the fqn param is ignored
             val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.OR"
             return MurmurHash.hashCode(opnds, OR::class.hashCodeCustom(fqn))
         }
