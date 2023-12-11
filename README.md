@@ -66,7 +66,7 @@ To start using ANTLR Kotlin:
    }
    ```
 
-3. Add ANTLR 4 and the ANTLR Kotlin target to the classpath of the Gradle ANTLR plugin.  
+3. Add ANTLR 4 and the ANTLR Kotlin target to the classpath of the Gradle ANTLR plugin.
    At the top level of your build script, add:
 
    ```kotlin
@@ -76,7 +76,7 @@ To start using ANTLR Kotlin:
      antlr("org.antlr:antlr4:4.13.1")
    
      // The ANTLR Kotlin target
-     antlr("com.strumenta.antlr-kotlin:antlr-kotlin-target:{version}")
+     antlr("com.strumenta:antlr-kotlin-target:$antlrKotlinVersion")
    }
    ```
    For more details, check out [Gradle - The ANTLR Plugin](https://docs.gradle.org/current/userguide/antlr_plugin.html).
@@ -90,7 +90,7 @@ To start using ANTLR Kotlin:
        commonMain {
          dependencies {
            ...
-           implementation("com.strumenta.antlr-kotlin:antlr-kotlin-runtime:{version}")
+           implementation("com.strumenta:antlr-kotlin-runtime:$antlrKotlinVersion")
          }
        }
      }
@@ -114,25 +114,28 @@ To start using ANTLR Kotlin:
 6. Create the ANTLR Kotlin grammar generation task.
 
    ```kotlin
-   val generateKotlinGrammarSource = register<AntlrTask>("generateKotlinGrammarSource") {
-     dependsOn("cleanGenerateKotlinGrammarSource")
-     
-     // ANTLR .g4 files are under {example-project}/antlr
-     setSource(layout.projectDirectory.dir("antlr"))
-   
-     val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
-     arguments = listOf(
-       "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
-       "-visitor",             // We want visitors alongside listeners
-       "-package", pkgName,    // We want the generated sources to have this package declared
-       "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
-     )
-   
-     // Generated files are outputted inside standard sources,
-     // but you can switch to output them under build/
-     val outDir = "src/commonMain/kotlin/${pkgName.replace(".", "/")}"
-     outputDirectory = layout.projectDirectory.dir(outDir).asFile
-   }
+    val generateKotlinGrammarSource = tasks.register<AntlrTask>("generateKotlinGrammarSource") {
+        dependsOn("cleanGenerateKotlinGrammarSource")
+    
+        // ANTLR .g4 files are under {example-project}/antlr
+        setSource(layout.projectDirectory.dir("src/main/antlr"))
+    
+        val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
+        arguments = listOf(
+            "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
+            "-visitor",             // We want visitors alongside listeners
+            "-package", pkgName,    // We want the generated sources to have this package declared
+            "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
+        )
+    
+        // Generated files are outputted inside build/
+        val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
+        outputDirectory = layout.buildDirectory.get().dir(outDir).asFile
+    
+        sourceSets.getByName("main") {
+            java.srcDir(layout.buildDirectory.get().dir("generatedAntlr"))
+        }
+    }
    ```
 
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
@@ -144,7 +147,22 @@ To start using ANTLR Kotlin:
    withType<KotlinCompile<*>> {
      dependsOn(generateKotlinGrammarSource)
    }
+
    ```
+
+## Maven Central Publication
+
+Publication can be performed running:
+
+```
+./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+```
+
+However, it is recommended to use the releases plugin and run:
+
+```
+./gradlew release 
+```
 
 ## Contributors
 
