@@ -7,42 +7,14 @@
 package org.antlr.v4.kotlinruntime.tree.pattern
 
 /**
- * Represents a span of raw text (concrete syntax) between tags in a tree
- * pattern string.
- */
-internal class TextChunk
-/**
- * Constructs a new instance of [TextChunk] with the specified text.
+ * Represents a span of raw text (concrete syntax) between tags in a tree pattern string.
  *
- * @param text The text of this chunk.
- * @exception IllegalArgumentException if `text` is `null`.
+ * @param text The raw text of this chunk
  */
-(
-        /**
-         * This is the backing field for [.getText].
-         */
-        /**
-         * Gets the raw text of this chunk.
-         *
-         * @return The text of the chunk.
-         */
-
-        val text: String?) : Chunk() {
-
-    init {
-        if (text == null) {
-            throw IllegalArgumentException("text cannot be null")
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     *
-     * The implementation for [TextChunk] returns the result of
-     * [.getText] in single quotes.
-     */
-    override fun toString(): String {
-        return "'$text'"
-    }
+internal class TextChunk(val text: String) : Chunk() {
+  /**
+   * The implementation for [TextChunk] returns the result of [text] in single quotes.
+   */
+  override fun toString(): String =
+    "'$text'"
 }
