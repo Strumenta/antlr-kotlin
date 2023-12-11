@@ -13,7 +13,7 @@ import org.antlr.v4.kotlinruntime.atn.ATNConfigSet
  * in the various paths when the error. Reported by reportNoViableAlternative()
  */
 class NoViableAltException constructor(recognizer: Parser,
-                                       input: TokenStream? = recognizer.readInputStream() as TokenStream?,
+                                       input: TokenStream? = recognizer.tokenStream,
                                        /** The token object at the start index; the input stream might
                                         * not be buffering tokens so get a reference to it. (At the
                                         * time the error occurred, of course the stream needs to keep a

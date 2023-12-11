@@ -338,7 +338,7 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
       } else {
         val textChunk = chunk as TextChunk
         val stream = ANTLRInputStream(textChunk.text)
-        lexer.setInputStream(stream)
+        lexer.inputStream = stream
 
         var t = lexer.nextToken()
 

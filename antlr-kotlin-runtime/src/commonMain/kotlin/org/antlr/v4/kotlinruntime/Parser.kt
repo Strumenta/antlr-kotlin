@@ -16,15 +16,6 @@ import org.antlr.v4.kotlinruntime.tree.*
 //
 ///** This is all the parsing support code essentially; most of it is error recovery stuff.  */
 abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator>() {
-
-    override fun assignInputStream(newValue: IntStream?) {
-        this.inputStream = newValue
-    }
-
-    override fun readInputStream(): IntStream? {
-        return this.inputStream
-    }
-
     /**
      * The error handling strategy for the parser. The default value is a new
      * instance of [DefaultErrorStrategy].
@@ -329,12 +320,12 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
 //
     init {
         _precedenceStack.push(0)
-        inputStream = input
+        tokenStream = input
     }
 //
     /** reset the parser's state  */
     open fun reset() {
-        inputStream?.seek(0)
+        tokenStream?.seek(0)
         errorHandler.reset(this)
         context = null
         numberOfSyntaxErrors = 0
@@ -587,7 +578,7 @@ abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSimulator
         val o = currentToken
         require(o != null, { "current token must not be null when consuming" })
         if (o!!.type != Recognizer.EOF) {
-            inputStream!!.consume()
+            tokenStream!!.consume()
         }
         val hasListener = _parseListeners.isNotEmpty()
         if (buildParseTree || hasListener) {
