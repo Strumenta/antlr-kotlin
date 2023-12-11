@@ -8,20 +8,21 @@ package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 
-/** This interface describes the minimal core of methods triggered
- * by [ParseTreeWalker]. E.g.,
+/**
+ * This interface describes the minimal core of methods triggered by [ParseTreeWalker].
  *
- * ParseTreeWalker walker = new ParseTreeWalker();
- * walker.walk(myParseTreeListener, myParseTree); <-- triggers events in your listener
+ * ```
+ * val walker = ParseTreeWalker()
+ * walker.walk(myParseTreeListener, myParseTree) // Triggers events in your listener
+ * ```
  *
  * If you want to trigger events in multiple listeners during a single
- * tree walk, you can use the ParseTreeDispatcher object available at
- *
- * https://github.com/antlr/antlr4/issues/841
+ * tree walk, you can use the `ParseTreeDispatcher` object available at
+ * [antlr4#841](https://github.com/antlr/antlr4/issues/841)
  */
-interface ParseTreeListener {
-    fun visitTerminal(node: TerminalNode)
-    fun visitErrorNode(node: ErrorNode)
-    fun enterEveryRule(ctx: ParserRuleContext)
-    fun exitEveryRule(ctx: ParserRuleContext)
+public interface ParseTreeListener {
+  public fun visitTerminal(node: TerminalNode)
+  public fun visitErrorNode(node: ErrorNode)
+  public fun enterEveryRule(ctx: ParserRuleContext)
+  public fun exitEveryRule(ctx: ParserRuleContext)
 }

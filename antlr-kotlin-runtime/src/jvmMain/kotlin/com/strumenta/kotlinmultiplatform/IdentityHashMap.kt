@@ -18,6 +18,6 @@ package com.strumenta.kotlinmultiplatform
 
 import java.util.IdentityHashMap as JavaIdentityHashMap
 
-actual class IdentityHashMap<K, V>(private val wrapped: JavaIdentityHashMap<K, V> = JavaIdentityHashMap()) : MutableMap<K, V> by wrapped {
-  actual constructor() : this(JavaIdentityHashMap())
+public actual class IdentityHashMap<K, V>(private val wrapped: JavaIdentityHashMap<K, V> = JavaIdentityHashMap()) : MutableMap<K, V> by wrapped {
+  public actual constructor() : this(JavaIdentityHashMap())
 }

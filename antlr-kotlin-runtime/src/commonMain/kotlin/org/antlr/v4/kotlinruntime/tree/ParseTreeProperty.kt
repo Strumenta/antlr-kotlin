@@ -14,28 +14,28 @@ import com.strumenta.kotlinmultiplatform.IdentityHashMap
  * specifying a return value for the listener event method that visited a
  * particular node. Example:
  *
- * <pre>
- * ParseTreeProperty&lt;Integer&gt; values = new ParseTreeProperty&lt;Integer&gt;();
- * values.put(tree, 36);
- * int x = values.get(tree);
- * values.removeFrom(tree);
-</pre> *
+ * ```
+ * val values = ParseTreeProperty<Int>()
+ * values.put(tree, 36)
+ *
+ * val x = values.get(tree)
+ * values.removeFrom(tree)
+ * ```
  *
  * You would make one decl (values here) in the listener and use lots of times
  * in your event methods.
  */
-class ParseTreeProperty<V> {
-    protected var annotations: MutableMap<ParseTree, V> = IdentityHashMap<ParseTree, V>()
+@Suppress("MemberVisibilityCanBePrivate")
+public open class ParseTreeProperty<V> {
+  protected var annotations: MutableMap<ParseTree, V> = IdentityHashMap()
 
-    operator fun get(node: ParseTree): V {
-        return annotations[node]!!
-    }
+  public operator fun get(node: ParseTree): V? =
+    annotations[node]
 
-    fun put(node: ParseTree, value: V) {
-        annotations.put(node, value)
-    }
+  public fun put(node: ParseTree, value: V) {
+    annotations[node] = value
+  }
 
-    fun removeFrom(node: ParseTree): V {
-        return annotations.remove(node)!!
-    }
+  public fun removeFrom(node: ParseTree): V? =
+    annotations.remove(node)
 }

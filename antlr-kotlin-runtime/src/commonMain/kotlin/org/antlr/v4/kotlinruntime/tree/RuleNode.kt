@@ -8,6 +8,6 @@ package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.RuleContext
 
-interface RuleNode : ParseTree {
-    val ruleContext: RuleContext
+public interface RuleNode : ParseTree {
+  public val ruleContext: RuleContext
 }
