@@ -5,16 +5,21 @@
  */
 package org.antlr.v4.kotlinruntime
 
-/** This signifies any kind of mismatched input exceptions such as
+/**
+ * This signifies any kind of mismatched input exceptions such as
  * when the current input does not match the expected token.
  */
-class InputMismatchException : RecognitionException {
-    constructor(recognizer: Parser) : super(recognizer, recognizer.tokenStream!!, recognizer.context!!) {
-        this.offendingToken = recognizer.currentToken
-    }
+public class InputMismatchException : RecognitionException {
+  public constructor(recognizer: Parser) : super(recognizer, recognizer.tokenStream, recognizer.context!!) {
+    offendingToken = recognizer.currentToken
+  }
 
-    constructor(recognizer: Parser, state: Int, ctx: ParserRuleContext) : super(recognizer, recognizer.tokenStream!!, ctx) {
-        this.offendingState = state
-        this.offendingToken = recognizer.currentToken
-    }
+  public constructor(
+    recognizer: Parser,
+    state: Int,
+    ctx: ParserRuleContext,
+  ) : super(recognizer, recognizer.tokenStream, ctx) {
+    offendingState = state
+    offendingToken = recognizer.currentToken
+  }
 }

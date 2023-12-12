@@ -5,7 +5,10 @@ import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
 
-class StringCharStream(private val source: String, override val sourceName: String) : CharStream {
+public class StringCharStream(
+  private val source: String,
+  override val sourceName: String = IntStream.UNKNOWN_SOURCE_NAME,
+) : CharStream {
   private val codePointIndices = source.codePointIndices()
   private val size = codePointIndices.size
   private var position = 0

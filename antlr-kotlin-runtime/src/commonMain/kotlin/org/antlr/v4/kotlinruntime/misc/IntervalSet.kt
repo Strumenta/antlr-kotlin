@@ -554,7 +554,7 @@ public open class IntervalSet : IntSet {
   )
   public fun toString(tokenNames: Array<String>): String {
     @Suppress("UNCHECKED_CAST")
-    return toString(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>?))
+    return toString(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>))
   }
 
   public fun toString(vocabulary: Vocabulary): String {
@@ -606,7 +606,7 @@ public open class IntervalSet : IntSet {
   )
   protected fun elementName(tokenNames: Array<String>, a: Int): String {
     @Suppress("UNCHECKED_CAST")
-    return elementName(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>?), a)
+    return elementName(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>), a)
   }
 
   protected fun elementName(vocabulary: Vocabulary, a: Int): String =
