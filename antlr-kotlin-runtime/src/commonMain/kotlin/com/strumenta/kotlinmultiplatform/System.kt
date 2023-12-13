@@ -1,6 +1,10 @@
 package com.strumenta.kotlinmultiplatform
 
 public object System {
+  @Suppress("SpellCheckingInspection")
+  public fun getenv(name: String, defaultValue: String? = null): String? =
+    platformGetEnv(name) ?: defaultValue
+
   public fun <T> arraycopy(src: Array<T>, srcPos: Int, dest: Array<T>, destPos: Int, length: Int) {
     src.copyInto(dest, destPos, srcPos, srcPos + length)
   }
