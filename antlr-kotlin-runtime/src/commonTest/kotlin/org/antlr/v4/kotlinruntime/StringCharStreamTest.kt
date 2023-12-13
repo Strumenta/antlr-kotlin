@@ -1,30 +1,31 @@
 package org.antlr.v4.kotlinruntime
 
-import BaseTest
 import com.strumenta.kotlinmultiplatform.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
-class StringCharStreamTest : BaseTest() {
+class StringCharStreamTest {
   @Test
   fun testCodePointIndices8() {
     val expected = intArrayOf(0, 1)
     val actual = "ab".codePointIndices()
-    assertArrayEquals(expected, actual)
+    assertContentEquals(expected, actual)
   }
 
   @Test
   fun testCodePointIndices16() {
     val expected = intArrayOf(0, 1, 2)
     val actual = "aΔb".codePointIndices()
-    assertArrayEquals(expected, actual)
+    assertContentEquals(expected, actual)
   }
 
   @Test
   fun testCodePointIndices32() {
     val expected = intArrayOf(0, 1, 3, 4, 5, 6, 8)
     val actual = "a😱bΔc😱d".codePointIndices()
-    assertArrayEquals(expected, actual)
+    assertContentEquals(expected, actual)
   }
 
   @Test

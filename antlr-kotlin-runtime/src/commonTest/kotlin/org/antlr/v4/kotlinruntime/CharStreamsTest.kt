@@ -1,14 +1,13 @@
 package org.antlr.v4.kotlinruntime
 
-import BaseTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class CharStreamsTest : BaseTest() {
+class CharStreamsTest {
   @Test
   fun testFromString8() {
     val stream = CharStreams.fromString("ab")
     assertEquals(2, stream.size())
-
     assertEquals(0, stream.index())
 
     assertEquals(-1, stream.LA(-3))
@@ -48,7 +47,6 @@ class CharStreamsTest : BaseTest() {
   fun testFromString16() {
     val stream = CharStreams.fromString("aΔ")
     assertEquals(2, stream.size())
-
     assertEquals(0, stream.index())
 
     assertEquals(-1, stream.LA(-3))
@@ -94,7 +92,6 @@ class CharStreamsTest : BaseTest() {
      */
     val stream = CharStreams.fromString("a😱b")
     assertEquals(3, stream.size())
-
     assertEquals(0, stream.index())
 
     assertEquals(-1, stream.LA(-4))

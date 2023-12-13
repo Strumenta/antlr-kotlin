@@ -1,9 +1,11 @@
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
-class StringTest : BaseTest() {
+class StringTest {
   @Test
   fun testAsCharArrayEmpty() {
-    assertArrayEquals(charArrayOf(), "".toCharArray())
+    assertContentEquals(charArrayOf(), "".toCharArray())
   }
 
   @Test
@@ -18,6 +20,6 @@ class StringTest : BaseTest() {
 
   @Test
   fun testAsCharArray() {
-    assertArrayEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
+    assertContentEquals(charArrayOf('a', 'b', 'c', ' ', 'd', 'e', 'f'), "abc def".toCharArray())
   }
 }

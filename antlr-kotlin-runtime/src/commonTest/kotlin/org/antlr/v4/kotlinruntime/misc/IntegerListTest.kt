@@ -8,6 +8,7 @@ class IntegerListTest {
   fun addToIntegerList() {
     val il = IntegerList()
     il.add(10)
+
     assertEquals(1, il.size())
     assertEquals(10, il[0])
   }
@@ -20,6 +21,7 @@ class IntegerListTest {
     il.add(14)
     il.add(16)
     il.removeAt(2)
+
     assertEquals(3, il.size())
     assertEquals(10, il[0])
     assertEquals(12, il[1])
