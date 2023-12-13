@@ -37,7 +37,7 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  */
 public class DFAState {
   public var stateNumber: Int = -1
-  public var configs: ATNConfigSet? = ATNConfigSet()
+  public var configs: ATNConfigSet = ATNConfigSet()
 
   /**
    * `edges[symbol]` points to target of symbol.
@@ -73,7 +73,7 @@ public class DFAState {
    *
    * This list is computed by [ParserATNSimulator.predicateDFAState].
    */
-  public var predicates: Array<PredPrediction?>? = null
+  public var predicates: Array<PredPrediction>? = null
 
   /**
    * Get the set of all alts mentioned by all ATN configurations in this DFA state.
@@ -83,10 +83,8 @@ public class DFAState {
       val alts = HashSet<Int>()
       val configs = configs
 
-      if (configs != null) {
-        for (c in configs) {
-          alts.add(c.alt)
-        }
+      for (c in configs) {
+        alts.add(c.alt)
       }
 
       return alts.ifEmpty { null }
@@ -116,7 +114,7 @@ public class DFAState {
 
   override fun hashCode(): Int {
     var hash = MurmurHash.initialize(7)
-    hash = MurmurHash.update(hash, configs!!.hashCode())
+    hash = MurmurHash.update(hash, configs.hashCode())
     hash = MurmurHash.finish(hash, 1)
     return hash
   }
@@ -145,7 +143,7 @@ public class DFAState {
     }
 
     // TODO(sam): what to do when configs==null?
-    return configs!! == other.configs
+    return configs == other.configs
   }
 
   override fun toString(): String {

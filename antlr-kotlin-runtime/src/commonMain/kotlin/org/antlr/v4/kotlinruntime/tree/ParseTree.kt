@@ -26,11 +26,23 @@ public interface ParseTree : SyntaxTree {
    */
   public val text: String
 
-  override fun readParent(): ParseTree?
-
-  public fun assignParent(value: ParseTree?)
-
-  override fun getChild(i: Int): ParseTree?
+  /**
+   * Set the parent for this node.
+   *
+   * This is not backward compatible as it changes
+   * the interface but no one was able to create custom
+   * nodes anyway, so I'm adding as it improves internal
+   * code quality.
+   *
+   * One could argue for a restructuring of
+   * the class/interface hierarchy so that
+   * `assignParent`, `addChild` are moved up to [Tree]
+   * but that's a major change. So I'll do the
+   * minimal change, which is to add this method.
+   *
+   * @since 4.7
+   */
+  public fun assignParent(value: RuleContext?)
 
   /**
    * The [ParseTreeVisitor] needs a double dispatch method.
@@ -42,4 +54,10 @@ public interface ParseTree : SyntaxTree {
    * based upon the parser.
    */
   public fun toStringTree(parser: Parser): String
+
+  // Narrows down the return type to ParseTree
+  override fun readParent(): ParseTree?
+
+  // Narrows down the return type to ParseTree
+  override fun getChild(i: Int): ParseTree?
 }

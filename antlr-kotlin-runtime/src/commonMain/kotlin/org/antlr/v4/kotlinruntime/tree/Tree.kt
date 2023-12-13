@@ -32,8 +32,6 @@ public interface Tree {
    * The parent of this node.
    *
    * If the return value is `null`, then this node is the root of the tree.
-   *
-   * TODO(Edoardo): rename it back to getParent/setParent?
    */
   public fun readParent(): Tree?
 

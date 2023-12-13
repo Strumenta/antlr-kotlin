@@ -222,7 +222,7 @@ public object Trees {
     return nodes
   }
 
-  @Deprecated("Use getDescendants", ReplaceWith("getDescendants(t)"))
+  @Deprecated("Use getDescendants", replaceWith = ReplaceWith("getDescendants(t)"))
   public fun descendants(t: ParseTree): List<ParseTree> =
     getDescendants(t)
 

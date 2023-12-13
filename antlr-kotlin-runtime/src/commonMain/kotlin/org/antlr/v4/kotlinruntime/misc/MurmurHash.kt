@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.misc
 
 /**
- *
  * @author Sam Harwell
  */
 public object MurmurHash {

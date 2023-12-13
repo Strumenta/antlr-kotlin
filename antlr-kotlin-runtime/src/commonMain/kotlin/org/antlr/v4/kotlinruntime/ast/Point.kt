@@ -1,7 +1,7 @@
 package org.antlr.v4.kotlinruntime.ast
 
 /**
- * The line should be in 1..n, the column in 0..n.
+ * The line should be in `1..n`, the column in `0..n`.
  */
 public data class Point(val line: Int, val column: Int) {
   private companion object {

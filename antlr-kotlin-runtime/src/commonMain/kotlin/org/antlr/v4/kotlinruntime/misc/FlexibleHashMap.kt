@@ -12,7 +12,7 @@ import com.strumenta.kotlinmultiplatform.Math
 /**
  * A limited map (many unsupported operations) that lets me use varying hashCode/equals.
  */
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 public open class FlexibleHashMap<K, V>(
   protected val comparator: AbstractEqualityComparator<K> = ObjectEqualityComparator.INSTANCE,
   public val initialCapacity: Int = INITIAL_CAPACITY,

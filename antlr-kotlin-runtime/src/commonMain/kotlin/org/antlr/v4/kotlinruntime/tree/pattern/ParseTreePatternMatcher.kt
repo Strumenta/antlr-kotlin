@@ -9,6 +9,7 @@ package org.antlr.v4.kotlinruntime.tree.pattern
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.misc.MultiMap
+import org.antlr.v4.kotlinruntime.misc.ParseCancellationException
 import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.tree.RuleNode
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
@@ -159,35 +160,33 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
     val tokenList = tokenize(pattern)
     val tokenSrc = ListTokenSource(tokenList)
     val tokens = CommonTokenStream(tokenSrc)
+    val parserInterp = ParserInterpreter(
+      parser.grammarFileName,
+      parser.vocabulary,
+      parser.ruleNames.asList(),
+      parser.atnWithBypassAlts,
+      tokens,
+    )
 
-    // TODO(Edoardo): need ParserInterpreter
-    TODO("Not yet implemented")
-    // val parserInterp = ParserInterpreter(parser.grammarFileName,
-    //         parser.vocabulary,
-    //         Arrays.asList(parser.ruleNames),
-    //         parser.atnWithBypassAlts,
-    //         tokens)
-    //
-    // var tree: ParseTree? = null
-    // try {
-    //     parserInterp.setErrorHandler(BailErrorStrategy())
-    //     tree = parserInterp.parse(patternRuleIndex)
-    //     //			System.out.println("pattern tree = "+tree.toStringTree(parserInterp));
-    // } catch (e: ParseCancellationException) {
-    //     TODO()
-    //     //throw e.getCause() as RecognitionException
-    // } catch (re: RecognitionException) {
-    //     throw re
-    // } catch (e: Exception) {
-    //     throw CannotInvokeStartRule(e)
-    // }
-    //
-    // // Make sure tree pattern compilation checks for a complete parse
-    // if (tokens.LA(1) !== Token.EOF) {
-    //     throw StartRuleDoesNotConsumeFullPattern()
-    // }
-    //
-    // return ParseTreePattern(this, pattern, patternRuleIndex, tree)
+    val tree: ParseTree?
+
+    try {
+      parserInterp.errorHandler = BailErrorStrategy()
+      tree = parserInterp.parse(patternRuleIndex)
+    } catch (e: ParseCancellationException) {
+      throw e.cause as RecognitionException
+    } catch (re: RecognitionException) {
+      throw re
+    } catch (e: Exception) {
+      throw CannotInvokeStartRule(e)
+    }
+
+    // Make sure tree pattern compilation checks for a complete parse
+    if (tokens.LA(1) != Token.EOF) {
+      throw StartRuleDoesNotConsumeFullPattern()
+    }
+
+    return ParseTreePattern(this, pattern, patternRuleIndex, tree)
   }
 
   // ---- SUPPORT CODE ----
@@ -214,7 +213,7 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
         if (patternTree.symbol is TokenTagToken) { // x and <ID>
           val tokenTagToken = patternTree.symbol as TokenTagToken
 
-          // Track accessLabel->list-of-nodes for both token name and accessLabel (if any)
+          // Track label->list-of-nodes for both token name and label (if any)
           labels.map(tokenTagToken.tokenName, tree)
 
           if (tokenTagToken.label != null) {
@@ -245,7 +244,7 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
 
       if (ruleTagToken != null) {
         if (tree.ruleContext.ruleIndex == patternTree.ruleContext.ruleIndex) {
-          // Track accessLabel->list-of-nodes for both rule name and accessLabel (if any)
+          // Track label->list-of-nodes for both rule name and label (if any)
           labels.map(ruleTagToken.ruleName, tree)
 
           if (ruleTagToken.label != null) {
@@ -325,18 +324,21 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
           val t = TokenTagToken(chunk.tag, ttype, chunk.label)
           tokens.add(t)
         } else if (chunk.tag[0].isLowerCase()) {
-          // TODO(Edoardo): need Parser.atnWithBypassAlts
-          // val ruleIndex = parser.getRuleIndex(tagChunk.tag)
-          // if (ruleIndex == -1) {
-          //     throw IllegalArgumentException("Unknown rule " + tagChunk.tag + " in pattern: " + pattern)
-          // }
-          // val ruleImaginaryTokenType = parser.atnWithBypassAlts().ruleToTokenType[ruleIndex]
-          // tokens.add(RuleTagToken(tagChunk.tag, ruleImaginaryTokenType, tagChunk.accessLabel))
+          val ruleIndex = parser.getRuleIndex(chunk.tag)
+
+          if (ruleIndex == -1) {
+            throw IllegalArgumentException("Unknown rule ${chunk.tag} in pattern: $pattern")
+          }
+
+          val ruleImaginaryTokenType = parser.atnWithBypassAlts.ruleToTokenType!![ruleIndex]
+          tokens.add(RuleTagToken(chunk.tag, ruleImaginaryTokenType, chunk.label))
         } else {
           throw IllegalArgumentException("invalid tag: ${chunk.tag} in pattern: $pattern")
         }
       } else {
         val textChunk = chunk as TextChunk
+
+        @Suppress("DEPRECATION")
         val stream = ANTLRInputStream(textChunk.text)
         lexer.inputStream = stream
 

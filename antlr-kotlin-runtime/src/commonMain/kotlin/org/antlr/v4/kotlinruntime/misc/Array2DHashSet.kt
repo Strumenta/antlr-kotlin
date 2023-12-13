@@ -216,10 +216,6 @@ public open class Array2DHashSet<T>(
   override fun isEmpty(): Boolean =
     n == 0
 
-  // TODO(Edoardo): why is this one commented out?
-  // public operator fun contains(o: Any): Boolean =
-  //   containsFast(asElementType(o))
-
   override fun contains(element: T): Boolean =
     containsFast(element)
 
