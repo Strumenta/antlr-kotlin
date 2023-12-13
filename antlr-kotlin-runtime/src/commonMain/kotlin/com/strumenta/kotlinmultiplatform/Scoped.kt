@@ -9,7 +9,7 @@ import kotlin.contracts.contract
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("unused")
-inline fun scoped(block: () -> Unit) {
+public inline fun scoped(block: () -> Unit) {
   contract {
     callsInPlace(block, InvocationKind.EXACTLY_ONCE)
   }

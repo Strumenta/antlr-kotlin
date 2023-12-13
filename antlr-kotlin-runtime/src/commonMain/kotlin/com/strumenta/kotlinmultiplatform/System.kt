@@ -17,18 +17,27 @@ public object System {
   public val err: PrintStream = ErrPrintStream
 
   public interface PrintStream {
-    public fun println(message: String)
+    public fun println(message: String = "")
+    public fun print(message: String)
   }
 
   private object StdPrintStream : PrintStream {
     override fun println(message: String) {
       kotlin.io.println(message)
     }
+
+    override fun print(message: String) {
+      kotlin.io.print(message)
+    }
   }
 
   private object ErrPrintStream : PrintStream {
     override fun println(message: String) {
-      logError(message)
+      printErrorLine(message)
+    }
+
+    override fun print(message: String) {
+      printError(message)
     }
   }
 }

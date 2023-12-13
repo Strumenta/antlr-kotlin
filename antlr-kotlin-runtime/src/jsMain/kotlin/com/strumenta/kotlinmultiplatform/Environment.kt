@@ -6,14 +6,14 @@ package com.strumenta.kotlinmultiplatform
  * @author Edoardo Luppi
  */
 @Suppress("unused")
-val isNode = js(
+internal val isNode = js(
   """
-  (typeof process !== 'undefined' 
-      && process.versions != null 
+  (typeof process !== 'undefined'
+      && process.versions != null
       && process.versions.node != null) ||
-  (typeof window !== 'undefined' 
-      && typeof window.process !== 'undefined' 
-      && window.process.versions != null 
+  (typeof window !== 'undefined'
+      && typeof window.process !== 'undefined'
+      && window.process.versions != null
       && window.process.versions.node != null)
   """
-) as Boolean
+).unsafeCast<Boolean>()

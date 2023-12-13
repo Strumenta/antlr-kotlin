@@ -18,19 +18,19 @@ package com.strumenta.kotlinmultiplatform
 import kotlin.native.BitSet as NativeBitSet
 
 @OptIn(ObsoleteNativeApi::class)
-actual class BitSet actual constructor() {
+public actual class BitSet actual constructor() {
   private val wrapped = NativeBitSet()
 
-  actual fun set(bitIndex: Int) =
+  public actual fun set(bitIndex: Int): Unit =
     wrapped.set(bitIndex)
 
-  actual fun clear(bitIndex: Int) =
+  public actual fun clear(bitIndex: Int): Unit =
     wrapped.clear(bitIndex)
 
-  actual fun get(bitIndex: Int): Boolean =
+  public actual fun get(bitIndex: Int): Boolean =
     wrapped[bitIndex]
 
-  actual fun cardinality(): Int {
+  public actual fun cardinality(): Int {
     var count = 0
 
     for (i in 0..<wrapped.size) {
@@ -42,9 +42,9 @@ actual class BitSet actual constructor() {
     return count
   }
 
-  actual fun nextSetBit(fromIndex: Int): Int =
+  public actual fun nextSetBit(fromIndex: Int): Int =
     wrapped.nextSetBit(fromIndex)
 
-  actual fun or(otherBitSet: BitSet) =
+  public actual fun or(otherBitSet: BitSet): Unit =
     wrapped.or(otherBitSet.wrapped)
 }
