@@ -13,190 +13,135 @@ import org.antlr.v4.kotlinruntime.misc.IntervalSet
  * The following images show the relation of states and
  * [ATNState.transitions] for various grammar constructs.
  *
+ * - Solid edges marked with an &#0949; indicate a required [EpsilonTransition]
+ * - Dashed edges indicate locations where any transition derived from [Transition] might appear
+ * - Dashed nodes are placeholders for either a sequence of linked
+ *   [BasicState] states or the inclusion of a block representing a nested
+ *   construct in one of the forms below
+ * - Nodes showing multiple outgoing alternatives with a `...` support
+ *   any number of alternatives (one or more). Nodes without the `...` only
+ *   support the exact number of alternatives shown in the diagram
  *
- *
- *  * Solid edges marked with an &#0949; indicate a required
- * [EpsilonTransition].
- *
- *  * Dashed edges indicate locations where any transition derived from
- * [Transition] might appear.
- *
- *  * Dashed nodes are place holders for either a sequence of linked
- * [BasicState] states or the inclusion of a block representing a nested
- * construct in one of the forms below.
- *
- *  * Nodes showing multiple outgoing alternatives with a `...` support
- * any number of alternatives (one or more). Nodes without the `...` only
- * support the exact number of alternatives shown in the diagram.
- *
- *
- *
- * <h2>Basic Blocks</h2>
- *
- * <h3>Rule</h3>
- *
- * <embed src="images/Rule.svg" type="image/svg+xml"></embed>
- *
- * <h3>Block of 1 or more alternatives</h3>
- *
- * <embed src="images/Block.svg" type="image/svg+xml"></embed>
- *
- * <h2>Greedy Loops</h2>
- *
- * <h3>Greedy Closure: `(...)*`</h3>
- *
- * <embed src="images/ClosureGreedy.svg" type="image/svg+xml"></embed>
- *
- * <h3>Greedy Positive Closure: `(...)+`</h3>
- *
- * <embed src="images/PositiveClosureGreedy.svg" type="image/svg+xml"></embed>
- *
- * <h3>Greedy Optional: `(...)?`</h3>
- *
- * <embed src="images/OptionalGreedy.svg" type="image/svg+xml"></embed>
- *
- * <h2>Non-Greedy Loops</h2>
- *
- * <h3>Non-Greedy Closure: `(...)*?`</h3>
- *
- * <embed src="images/ClosureNonGreedy.svg" type="image/svg+xml"></embed>
- *
- * <h3>Non-Greedy Positive Closure: `(...)+?`</h3>
- *
- * <embed src="images/PositiveClosureNonGreedy.svg" type="image/svg+xml"></embed>
- *
- * <h3>Non-Greedy Optional: `(...)??`</h3>
- *
- * <embed src="images/OptionalNonGreedy.svg" type="image/svg+xml"></embed>
+ * TODO(Edoardo): add missing piece of documentation linking to images
  */
+@Suppress("MemberVisibilityCanBePrivate")
+public abstract class ATNState {
+  public companion object {
+    public const val INITIAL_NUM_TRANSITIONS: Int = 4
 
-abstract class ATNState {
+    // Constants for serialization
+    public const val INVALID_TYPE: Int = 0
+    public const val BASIC: Int = 1
+    public const val RULE_START: Int = 2
+    public const val BLOCK_START: Int = 3
+    public const val PLUS_BLOCK_START: Int = 4
+    public const val STAR_BLOCK_START: Int = 5
+    public const val TOKEN_START: Int = 6
+    public const val RULE_STOP: Int = 7
+    public const val BLOCK_END: Int = 8
+    public const val STAR_LOOP_BACK: Int = 9
+    public const val STAR_LOOP_ENTRY: Int = 10
+    public const val PLUS_LOOP_BACK: Int = 11
+    public const val LOOP_END: Int = 12
 
-    /** Which ATN are we in?  */
-    var atn: ATN? = null
+    public val serializationNames: List<String> = listOf(
+      "INVALID",
+      "BASIC",
+      "RULE_START",
+      "BLOCK_START",
+      "PLUS_BLOCK_START",
+      "STAR_BLOCK_START",
+      "TOKEN_START",
+      "RULE_STOP",
+      "BLOCK_END",
+      "STAR_LOOP_BACK",
+      "STAR_LOOP_ENTRY",
+      "PLUS_LOOP_BACK",
+      "LOOP_END"
+    )
 
-    var stateNumber = INVALID_STATE_NUMBER
+    public const val INVALID_STATE_NUMBER: Int = -1
+  }
 
-    var ruleIndex: Int = 0 // at runtime, we don't have Rule objects
+  /**
+   * Which ATN are we in?
+   */
+  public var atn: ATN? = null
+  public var stateNumber: Int = INVALID_STATE_NUMBER
+  public var ruleIndex: Int = 0 // at runtime, we don't have Rule objects
+  public var epsilonOnlyTransitions: Boolean = false
 
-    var epsilonOnlyTransitions = false
+  /**
+   * Track the transitions emanating from this ATN state.
+   */
+  public val transitions: MutableList<Transition> = ArrayList(INITIAL_NUM_TRANSITIONS)
 
-    /** Track the transitions emanating from this ATN state.  */
-    val transitions: MutableList<Transition> = ArrayList<Transition>(INITIAL_NUM_TRANSITIONS)
+  /**
+   * Used to cache lookahead during parsing, not used during construction.
+   */
+  public var nextTokenWithinRule: IntervalSet? = null
 
-    /** Used to cache lookahead during parsing, not used during construction  */
-    var nextTokenWithinRule: IntervalSet? = null
+  public val isNonGreedyExitState: Boolean =
+    false
 
-    val isNonGreedyExitState: Boolean
-        get() = false
+  public val numberOfTransitions: Int
+    get() = transitions.size
 
-    val numberOfTransitions: Int
-        get() = transitions.size
+  public abstract val stateType: Int
 
-    abstract val stateType: Int
+  override fun hashCode(): Int =
+    stateNumber
 
-    override fun hashCode(): Int {
-        return stateNumber
+  override fun equals(other: Any?): Boolean =
+    // Are these states same object?
+    other is ATNState && stateNumber == other.stateNumber
+
+  override fun toString(): String =
+    stateNumber.toString()
+
+  public fun getTransitions(): Array<Transition> =
+    transitions.toTypedArray()
+
+  public fun addTransition(e: Transition): Unit =
+    addTransition(transitions.size, e)
+
+  public fun addTransition(index: Int, e: Transition) {
+    if (transitions.isEmpty()) {
+      epsilonOnlyTransitions = e.isEpsilon
+    } else if (epsilonOnlyTransitions != e.isEpsilon) {
+      System.err.println("ATN state $stateNumber has both epsilon and non-epsilon transitions.")
+      epsilonOnlyTransitions = false
     }
 
-    override fun equals(other: Any?): Boolean {
-        // are these states same object?
-        return if (other is ATNState) stateNumber == other.stateNumber else false
-    }
+    var alreadyPresent = false
 
-    override fun toString(): String {
-        return stateNumber.toString()
-    }
-
-    fun getTransitions(): Array<Transition> {
-        return transitions.toTypedArray<Transition>()
-    }
-
-    fun addTransition(e: Transition) {
-        addTransition(transitions.size, e)
-    }
-
-    fun addTransition(index: Int, e: Transition) {
-        if (transitions.isEmpty()) {
-            epsilonOnlyTransitions = e.isEpsilon
-        } else if (epsilonOnlyTransitions != e.isEpsilon) {
-            System.err.println("ATN state ${stateNumber} has both epsilon and non-epsilon transitions.\n")
-            epsilonOnlyTransitions = false
+    for (t in transitions) {
+      if (t.target.stateNumber == e.target.stateNumber) {
+        if (t.label() != null && e.label() != null && t.label()!! == e.label()) {
+          alreadyPresent = true
+          break
+        } else if (t.isEpsilon && e.isEpsilon) {
+          alreadyPresent = true
+          break
         }
-
-        var alreadyPresent = false
-        for (t in transitions) {
-            if (t.target!!.stateNumber == e.target!!.stateNumber) {
-                if (t.accessLabel() != null && e.accessLabel() != null && t.accessLabel()!!.equals(e.accessLabel())) {
-                    //					System.err.println("Repeated transition upon "+e.accessLabel()+" from "+stateNumber+"->"+t.target.stateNumber);
-                    alreadyPresent = true
-                    break
-                } else if (t.isEpsilon && e.isEpsilon) {
-                    //					System.err.println("Repeated epsilon transition from "+stateNumber+"->"+t.target.stateNumber);
-                    alreadyPresent = true
-                    break
-                }
-            }
-        }
-        if (!alreadyPresent) {
-            transitions.add(index, e)
-        }
+      }
     }
 
-    fun transition(i: Int): Transition {
-        return transitions[i]
+    if (!alreadyPresent) {
+      transitions.add(index, e)
     }
+  }
 
-    fun setTransition(i: Int, e: Transition) {
-        transitions[i] = e
-    }
+  public fun transition(i: Int): Transition =
+    transitions[i]
 
-    fun removeTransition(index: Int): Transition {
-        return transitions.removeAt(index)
-    }
+  public fun setTransition(i: Int, e: Transition) {
+    transitions[i] = e
+  }
 
-    fun onlyHasEpsilonTransitions(): Boolean {
-        return epsilonOnlyTransitions
-    }
+  public fun removeTransition(index: Int): Transition =
+    transitions.removeAt(index)
 
-//    fun setRuleIndex(ruleIndex: Int) {
-//        this.ruleIndex = ruleIndex
-//    }
-
-    companion object {
-        val INITIAL_NUM_TRANSITIONS = 4
-
-        // constants for serialization
-        val INVALID_TYPE = 0
-        val BASIC = 1
-        val RULE_START = 2
-        val BLOCK_START = 3
-        val PLUS_BLOCK_START = 4
-        val STAR_BLOCK_START = 5
-        val TOKEN_START = 6
-        val RULE_STOP = 7
-        val BLOCK_END = 8
-        val STAR_LOOP_BACK = 9
-        val STAR_LOOP_ENTRY = 10
-        val PLUS_LOOP_BACK = 11
-        val LOOP_END = 12
-
-        val serializationNames = listOf(
-                "INVALID",
-                "BASIC",
-                "RULE_START",
-                "BLOCK_START",
-                "PLUS_BLOCK_START",
-                "STAR_BLOCK_START",
-                "TOKEN_START",
-                "RULE_STOP",
-                "BLOCK_END",
-                "STAR_LOOP_BACK",
-                "STAR_LOOP_ENTRY",
-                "PLUS_LOOP_BACK",
-                "LOOP_END"
-        )
-
-        const val INVALID_STATE_NUMBER = -1
-    }
+  public fun onlyHasEpsilonTransitions(): Boolean =
+    epsilonOnlyTransitions
 }

@@ -14,8 +14,6 @@ import org.antlr.v4.kotlinruntime.TokenStream
  * Context sensitivities are decisions where a particular input resulted in an
  * SLL conflict, but LL prediction produced a single unique alternative.
  *
- *
- *
  * In some cases, the unique alternative identified by LL prediction is not
  * equal to the minimum represented alternative in the conflicting SLL
  * configuration set. Grammars and inputs which result in this scenario are
@@ -23,26 +21,23 @@ import org.antlr.v4.kotlinruntime.TokenStream
  * the two-stage parsing strategy to improve parsing performance for that
  * input.
  *
- * @see ParserATNSimulator.reportContextSensitivity
- *
- * @see ANTLRErrorListener.reportContextSensitivity
- *
- *
- * @since 4.3
- */
-class ContextSensitivityInfo
-/**
- * Constructs a new instance of the [ContextSensitivityInfo] class
- * with the specified detailed context sensitivity information.
- *
  * @param decision The decision number
  * @param configs The final configuration set containing the unique
- * alternative identified by full-context prediction
+ *   alternative identified by full-context prediction
  * @param input The input token stream
  * @param startIndex The start index for the current prediction
  * @param stopIndex The index at which the context sensitivity was
- * identified during full-context prediction
+ *   identified during full-context prediction
+ *
+ * @see ParserATNSimulator.reportContextSensitivity
+ * @see ANTLRErrorListener.reportContextSensitivity
+ *
+ * @since 4.3
  */
-(decision: Int,
- configs: ATNConfigSet,
- input: TokenStream, startIndex: Int, stopIndex: Int) : DecisionEventInfo(decision, configs, input, startIndex, stopIndex, true)
+public class ContextSensitivityInfo(
+  decision: Int,
+  configs: ATNConfigSet?,
+  input: TokenStream,
+  startIndex: Int,
+  stopIndex: Int,
+) : DecisionEventInfo(decision, configs, input, startIndex, stopIndex, true)

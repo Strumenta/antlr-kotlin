@@ -6,29 +6,29 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/**  */
-class RuleTransition(ruleStart: RuleStartState,
-                     /** Ptr to the rule definition object for this rule ref  */
-                     val ruleIndex: Int     // no Rule object at runtime
-                     ,
-                     val precedence: Int,
-                     /** What node to begin computations following ref to rule  */
-                     var followState: ATNState) : Transition(ruleStart) {
+/**
+ * @param ruleIndex Ptr to the rule definition object for this rule rer
+ * @param followState What node to begin computations following ref to rule
+ */
+public class RuleTransition(
+  ruleStart: RuleStartState,
+  public val ruleIndex: Int,
+  public val precedence: Int,
+  public var followState: ATNState,
+) : Transition(ruleStart) {
+  override val serializationType: Int =
+    RULE
 
-    override val serializationType: Int
-        get() = Transition.RULE
+  override val isEpsilon: Boolean =
+    true
 
-    override val isEpsilon: Boolean
-        get() = true
+  @Deprecated("Use RuleTransition(RuleStartState, int, int, ATNState) instead.")
+  public constructor(
+    ruleStart: RuleStartState,
+    ruleIndex: Int,
+    followState: ATNState,
+  ) : this(ruleStart, ruleIndex, 0, followState)
 
-
-    @Deprecated("Use {@link #RuleTransition(RuleStartState, int, int, ATNState)} instead.")
-    constructor(ruleStart: RuleStartState,
-                ruleIndex: Int,
-                followState: ATNState) : this(ruleStart, ruleIndex, 0, followState) {
-    }
-
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return false
-    }
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    false
 }

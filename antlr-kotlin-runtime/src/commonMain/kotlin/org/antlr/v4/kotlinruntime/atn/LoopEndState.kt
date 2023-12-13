@@ -6,10 +6,12 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** Mark the end of a * or + loop.  */
-class LoopEndState : ATNState() {
-    var loopBackState: ATNState? = null
+/**
+ * Mark the end of a * or + loop.
+ */
+public class LoopEndState : ATNState() {
+  public var loopBackState: ATNState? = null
 
-    override val stateType: Int
-        get() = ATNState.LOOP_END
+  override val stateType: Int =
+    LOOP_END
 }

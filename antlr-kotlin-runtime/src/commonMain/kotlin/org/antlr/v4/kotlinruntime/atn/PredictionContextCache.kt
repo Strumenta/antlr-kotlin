@@ -6,33 +6,42 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** Used to cache [PredictionContext] objects. Its used for the shared
- * context cash associated with contexts in DFA states. This cache
- * can be used for both lexers and parsers.
+/**
+ * Used to cache [PredictionContext] objects.
+ *
+ * It's used for the shared context cash associated with contexts in DFA states.
+ *
+ * This cache can be used for both lexers and parsers.
  */
-class PredictionContextCache {
-    protected val cache: MutableMap<PredictionContext, PredictionContext> = HashMap<PredictionContext, PredictionContext>()
+public open class PredictionContextCache {
+  protected val cache: MutableMap<PredictionContext, PredictionContext> = HashMap()
 
-    /** Add a context to the cache and return it. If the context already exists,
-     * return that one instead and do not add a new context to the cache.
-     * Protect shared cache from unsafe thread access.
-     */
-    fun add(ctx: PredictionContext): PredictionContext {
-        if (ctx === EmptyPredictionContext.Instance) return EmptyPredictionContext.Instance
-        val existing = cache[ctx]
-        if (existing != null) {
-            //			System.out.println(name+" reuses "+existing);
-            return existing
-        }
-        cache.put(ctx, ctx)
-        return ctx
+  /**
+   * Add a context to the cache and return it.
+   *
+   * If the context already exists, return that one instead and
+   * do not add a new context to the cache.
+   *
+   * Protect shared cache from unsafe thread access.
+   */
+  public open fun add(ctx: PredictionContext): PredictionContext {
+    if (ctx === EmptyPredictionContext.Instance) {
+      return EmptyPredictionContext.Instance
     }
 
-    operator fun get(ctx: PredictionContext): PredictionContext? {
-        return cache[ctx]
+    val existing = cache[ctx]
+
+    if (existing != null) {
+      return existing
     }
 
-    fun size(): Int {
-        return cache.size
-    }
+    cache[ctx] = ctx
+    return ctx
+  }
+
+  public open operator fun get(ctx: PredictionContext): PredictionContext? =
+    cache[ctx]
+
+  public open fun size(): Int =
+    cache.size
 }

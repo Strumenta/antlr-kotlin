@@ -6,14 +6,14 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** The last node in the ATN for a rule, unless that rule is the start symbol.
- * In that case, there is one transition to EOF. Later, we might encode
- * references to all calls to this rule to compute FOLLOW sets for
+/**
+ * The last node in the ATN for a rule, unless that rule is the start symbol.
+ *
+ * In that case, there is one transition to `EOF`. Later, we might encode
+ * references to all calls to this rule to compute `FOLLOW` sets for
  * error handling.
  */
-class RuleStopState : ATNState() {
-
-    override val stateType: Int
-        get() = ATNState.RULE_STOP
-
+public class RuleStopState : ATNState() {
+  override val stateType: Int =
+    RULE_STOP
 }

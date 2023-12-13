@@ -8,58 +8,65 @@ package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.assert
 
-open class SingletonPredictionContext internal constructor(val parent: PredictionContext?, val returnState: Int) :
-    PredictionContext(if (parent != null) calculateHashCode(parent, returnState) else calculateEmptyHashCode()) {
+@Suppress("EqualsOrHashCode")
+public open class SingletonPredictionContext internal constructor(
+  public val parent: PredictionContext?,
+  public val returnState: Int,
+) : PredictionContext(if (parent != null) calculateHashCode(parent, returnState) else calculateEmptyHashCode()) {
+  public companion object {
+    public fun create(parent: PredictionContext?, returnState: Int): SingletonPredictionContext =
+      if (returnState == EMPTY_RETURN_STATE && parent == null) {
+        // Someone can pass in the bits of an array ctx that mean $
+        EmptyPredictionContext.Instance
+      } else {
+        SingletonPredictionContext(parent, returnState)
+      }
+  }
 
-    init {
-        assert(returnState != ATNState.INVALID_STATE_NUMBER)
+  init {
+    assert(returnState != ATNState.INVALID_STATE_NUMBER)
+  }
+
+  override fun size(): Int =
+    1
+
+  override fun getParent(index: Int): PredictionContext? {
+    assert(index == 0)
+    return parent
+  }
+
+  override fun getReturnState(index: Int): Int {
+    assert(index == 0)
+    return returnState
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
     }
 
-    override fun size(): Int {
-        return 1
+    if (other !is SingletonPredictionContext) {
+      return false
     }
 
-    override fun getParent(index: Int): PredictionContext? {
-        assert(index == 0)
-        return parent
+    if (hashCode() != other.hashCode()) {
+      // Can't be same if hash is different
+      return false
     }
 
-    override fun getReturnState(index: Int): Int {
-        assert(index == 0)
-        return returnState
+    return returnState == other.returnState && (parent != null && parent == other.parent)
+  }
+
+  override fun toString(): String {
+    val up = parent?.toString() ?: ""
+    return if (up.isEmpty()) {
+      if (returnState == EMPTY_RETURN_STATE) {
+        "$"
+      } else {
+        returnState.toString()
+      }
+    } else {
+      "$returnState $up"
     }
-
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
-            return true
-        } else if (o !is SingletonPredictionContext) {
-            return false
-        }
-
-        if (this.hashCode() != o.hashCode()) {
-            return false // can't be same if hash is different
-        }
-
-        val s = o as SingletonPredictionContext?
-        return returnState == s!!.returnState && parent != null && parent == s.parent
-    }
-
-    override fun toString(): String {
-        val up = if (parent != null) parent!!.toString() else ""
-        return if (up.length == 0) {
-            if (returnState == PredictionContext.EMPTY_RETURN_STATE) {
-                "$"
-            } else returnState.toString()
-        } else returnState.toString() + " " + up
-    }
-
-    companion object {
-
-        fun create(parent: PredictionContext?, returnState: Int): SingletonPredictionContext {
-            return if (returnState == PredictionContext.EMPTY_RETURN_STATE && parent == null) {
-                // someone can pass in the bits of an array ctx that mean $
-                EmptyPredictionContext.Instance
-            } else SingletonPredictionContext(parent, returnState)
-        }
-    }
+  }
 }

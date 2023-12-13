@@ -8,17 +8,13 @@ package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
-class NotSetTransition(target: ATNState, set: IntervalSet) : SetTransition(target, set) {
+public class NotSetTransition(target: ATNState, set: IntervalSet) : SetTransition(target, set) {
+  override val serializationType: Int =
+    NOT_SET
 
-    override val serializationType: Int
-        get() = Transition.NOT_SET
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    symbol in minVocabSymbol..maxVocabSymbol && !super.matches(symbol, minVocabSymbol, maxVocabSymbol)
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return (symbol in minVocabSymbol..maxVocabSymbol
-                && !super.matches(symbol, minVocabSymbol, maxVocabSymbol))
-    }
-
-    override fun toString(): String {
-        return '~' + super.toString()
-    }
+  override fun toString(): String =
+    "~${super.toString()}"
 }

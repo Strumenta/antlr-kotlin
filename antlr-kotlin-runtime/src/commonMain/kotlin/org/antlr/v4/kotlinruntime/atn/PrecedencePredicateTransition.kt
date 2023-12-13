@@ -7,26 +7,25 @@
 package org.antlr.v4.kotlinruntime.atn
 
 /**
- *
  * @author Sam Harwell
  */
-class PrecedencePredicateTransition(target: ATNState, val precedence: Int) : AbstractPredicateTransition(target) {
+public class PrecedencePredicateTransition(
+  target: ATNState,
+  public val precedence: Int,
+) : AbstractPredicateTransition(target) {
 
-    override val serializationType: Int
-        get() = Transition.PRECEDENCE
+  override val serializationType: Int =
+    PRECEDENCE
 
-    override val isEpsilon: Boolean
-        get() = true
+  override val isEpsilon: Boolean =
+    true
 
-    val predicate: SemanticContext.PrecedencePredicate
-        get() = SemanticContext.PrecedencePredicate(precedence)
+  public val predicate: SemanticContext.PrecedencePredicate
+    get() = SemanticContext.PrecedencePredicate(precedence)
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return false
-    }
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    false
 
-    override fun toString(): String {
-        return "$precedence >= _p"
-    }
-
+  override fun toString(): String =
+    "$precedence >= _p"
 }

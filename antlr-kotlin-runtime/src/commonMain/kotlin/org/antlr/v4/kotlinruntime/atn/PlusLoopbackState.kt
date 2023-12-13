@@ -6,11 +6,12 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** Decision state for `A+` and `(A|B)+`.  It has two transitions:
- * one to the loop back to start of the block and one to exit.
+/**
+ * Decision state for `A+` and `(A|B)+`.
+ *
+ * It has two transitions: one to the loop back to start of the block and one to exit.
  */
-class PlusLoopbackState : DecisionState() {
-
-    override val stateType: Int
-        get() = ATNState.PLUS_LOOP_BACK
+public class PlusLoopbackState : DecisionState() {
+  override val stateType: Int =
+    PLUS_LOOP_BACK
 }

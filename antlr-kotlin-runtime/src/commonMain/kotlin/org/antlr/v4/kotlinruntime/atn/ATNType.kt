@@ -11,16 +11,14 @@ package org.antlr.v4.kotlinruntime.atn
  *
  * @author Sam Harwell
  */
-enum class ATNType {
+public enum class ATNType {
+  /**
+   * A lexer grammar.
+   */
+  LEXER,
 
-    /**
-     * A lexer grammar.
-     */
-    LEXER,
-
-    /**
-     * A parser grammar.
-     */
-    PARSER
-
+  /**
+   * A parser grammar.
+   */
+  PARSER,
 }

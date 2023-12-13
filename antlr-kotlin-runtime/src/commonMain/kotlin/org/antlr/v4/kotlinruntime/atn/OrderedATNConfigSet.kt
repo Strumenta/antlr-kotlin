@@ -12,10 +12,10 @@ import org.antlr.v4.kotlinruntime.misc.ObjectEqualityComparator
  *
  * @author Sam Harwell
  */
-class OrderedATNConfigSet : ATNConfigSet() {
-    init {
-        this.configLookup = LexerConfigHashSet()
-    }
+public class OrderedATNConfigSet : ATNConfigSet() {
+  public class LexerConfigHashSet : AbstractConfigHashSet(ObjectEqualityComparator.INSTANCE)
 
-    class LexerConfigHashSet : AbstractConfigHashSet(ObjectEqualityComparator.INSTANCE)
+  init {
+    configLookup = LexerConfigHashSet()
+  }
 }

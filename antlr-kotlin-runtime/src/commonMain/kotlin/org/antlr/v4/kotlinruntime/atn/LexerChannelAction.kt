@@ -7,72 +7,57 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.Lexer
-import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 /**
- * Implements the `channel` lexer action by calling
- * [Lexer.setChannel] with the assigned channel.
+ * Implements the `channel` lexer action by setting [Lexer.channel]
+ * with the assigned channel.
+ *
+ * @param channel The channel value to assign to [Lexer.channel]
  *
  * @author Sam Harwell
  * @since 4.2
  */
-class LexerChannelAction
-/**
- * Constructs a new `channel` action with the specified channel value.
- * @param channel The channel value to pass to [Lexer.setChannel].
- */
-(
-        /**
-         * Gets the channel to use for the [Token] created by the lexer.
-         *
-         * @return The channel to use for the [Token] created by the lexer.
-         */
-        val channel: Int) : LexerAction {
+public class LexerChannelAction(public val channel: Int) : LexerAction {
+  /**
+   * @return This method returns [LexerActionType.CHANNEL].
+   */
+  override val actionType: LexerActionType =
+    LexerActionType.CHANNEL
 
-    /**
-     * {@inheritDoc}
-     * @return This method returns [LexerActionType.CHANNEL].
-     */
-    override val actionType: LexerActionType
-        get() = LexerActionType.CHANNEL
+  /**
+   * @return This method returns `false`.
+   */
+  override val isPositionDependent: Boolean =
+    false
 
-    /**
-     * {@inheritDoc}
-     * @return This method returns `false`.
-     */
-    override val isPositionDependent: Boolean
-        get() = false
+  /**
+   * This action is implemented by assigning [Lexer.channel] with the
+   * value provided by [channel].
+   */
+  override fun execute(lexer: Lexer) {
+    lexer.channel = channel
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     *
-     * This action is implemented by calling [Lexer.setChannel] with the
-     * value provided by [.getChannel].
-     */
-    override fun execute(lexer: Lexer) {
-        lexer.channel = channel
+  override fun hashCode(): Int {
+    var hash = MurmurHash.initialize()
+    hash = MurmurHash.update(hash, actionType.ordinal)
+    hash = MurmurHash.update(hash, channel)
+    return MurmurHash.finish(hash, 2)
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other === this) {
+      return true
     }
 
-    override fun hashCode(): Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, actionType.ordinal)
-        hash = MurmurHash.update(hash, channel)
-        return MurmurHash.finish(hash, 2)
+    if (other !is LexerChannelAction) {
+      return false
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
-            return true
-        } else if (obj !is LexerChannelAction) {
-            return false
-        }
+    return channel == other.channel
+  }
 
-        return channel == obj.channel
-    }
-
-    override fun toString(): String {
-        return "channel($channel)"
-    }
+  override fun toString(): String =
+    "channel($channel)"
 }

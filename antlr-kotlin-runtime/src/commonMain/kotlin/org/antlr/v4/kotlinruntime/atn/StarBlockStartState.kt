@@ -6,9 +6,10 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** The block that begins a closure loop.  */
-class StarBlockStartState : BlockStartState() {
-
-    override val stateType: Int
-        get() = ATNState.STAR_BLOCK_START
+/**
+ * The block that begins a closure loop.
+ */
+public class StarBlockStartState : BlockStartState() {
+  override val stateType: Int =
+    STAR_BLOCK_START
 }

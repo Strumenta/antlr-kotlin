@@ -9,29 +9,23 @@ package org.antlr.v4.kotlinruntime.atn
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
-/** A transition containing a set of values.  */
-open class SetTransition// TODO (sam): should we really allow null here?
-(target: ATNState, set: IntervalSet?) : Transition(target) {
-    val set: IntervalSet
+/**
+ * A transition containing a set of values.
+ *
+ * TODO(sam): should we really allow null here?
+ */
+public open class SetTransition(target: ATNState, set: IntervalSet?) : Transition(target) {
+  public val set: IntervalSet = set ?: IntervalSet.of(Token.INVALID_TYPE)
 
-    override val serializationType: Int
-        get() = Transition.SET
+  override val serializationType: Int =
+    SET
 
-    init {
-        var set = set
-        if (set == null) set = IntervalSet.of(Token.INVALID_TYPE)
-        this.set = set
-    }
+  override fun label(): IntervalSet =
+    set
 
-    override fun accessLabel(): IntervalSet? {
-        return set
-    }
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    set.contains(symbol)
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return set.contains(symbol)
-    }
-
-    override fun toString(): String {
-        return set.toString()
-    }
+  override fun toString(): String =
+    set.toString()
 }

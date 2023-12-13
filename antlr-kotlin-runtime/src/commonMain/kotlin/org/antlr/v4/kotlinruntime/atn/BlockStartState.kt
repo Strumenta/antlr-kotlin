@@ -6,7 +6,9 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/**  The start of a regular `(...)` block.  */
-abstract class BlockStartState : DecisionState() {
-    var endState: BlockEndState? = null
+/**
+ * The start of a regular `(...)` block.
+ */
+public abstract class BlockStartState : DecisionState() {
+  public var endState: BlockEndState? = null
 }

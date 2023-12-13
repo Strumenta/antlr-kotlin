@@ -13,65 +13,49 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * Implements the `pushMode` lexer action by calling
  * [Lexer.pushMode] with the assigned mode.
  *
+ * @param mode The mode value to pass to [Lexer.pushMode]
+ *
  * @author Sam Harwell
  * @since 4.2
  */
-class LexerPushModeAction
-/**
- * Constructs a new `pushMode` action with the specified mode value.
- * @param mode The mode value to pass to [Lexer.pushMode].
- */
-(
-        /**
-         * Get the lexer mode this action should transition the lexer to.
-         *
-         * @return The lexer mode for this `pushMode` command.
-         */
-        val mode: Int) : LexerAction {
+public class LexerPushModeAction(public val mode: Int) : LexerAction {
+  /**
+   * Returns [LexerActionType.PUSH_MODE].
+   */
+  override val actionType: LexerActionType =
+    LexerActionType.PUSH_MODE
 
-    /**
-     * {@inheritDoc}
-     * @return This method returns [LexerActionType.PUSH_MODE].
-     */
-    override val actionType: LexerActionType
-        get() = LexerActionType.PUSH_MODE
+  /**
+   * Returns `false`.
+   */
+  override val isPositionDependent: Boolean =
+    false
 
-    /**
-     * {@inheritDoc}
-     * @return This method returns `false`.
-     */
-    override val isPositionDependent: Boolean
-        get() = false
+  /**
+   * This action is implemented by calling [Lexer.pushMode] with [mode].
+   */
+  override fun execute(lexer: Lexer): Unit =
+    lexer.pushMode(mode)
 
-    /**
-     * {@inheritDoc}
-     *
-     *
-     * This action is implemented by calling [Lexer.pushMode] with the
-     * value provided by [.getMode].
-     */
-    override fun execute(lexer: Lexer) {
-        lexer.pushMode(mode)
+  override fun hashCode(): Int {
+    var hash = MurmurHash.initialize()
+    hash = MurmurHash.update(hash, actionType.ordinal)
+    hash = MurmurHash.update(hash, mode)
+    return MurmurHash.finish(hash, 2)
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other === this) {
+      return true
     }
 
-    override fun hashCode(): Int {
-        var hash = MurmurHash.initialize()
-        hash = MurmurHash.update(hash, actionType.ordinal)
-        hash = MurmurHash.update(hash, mode)
-        return MurmurHash.finish(hash, 2)
+    if (other !is LexerPushModeAction) {
+      return false
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this) {
-            return true
-        } else if (obj !is LexerPushModeAction) {
-            return false
-        }
+    return mode == other.mode
+  }
 
-        return mode == obj.mode
-    }
-
-    override fun toString(): String {
-        return "pushMode($mode)"
-    }
+  override fun toString(): String =
+    "pushMode($mode)"
 }

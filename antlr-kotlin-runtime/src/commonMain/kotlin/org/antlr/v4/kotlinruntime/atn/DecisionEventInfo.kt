@@ -23,34 +23,40 @@ import org.antlr.v4.kotlinruntime.TokenStream
  *
  * @since 4.3
  */
-open class DecisionEventInfo(
-        /**
-         * The invoked decision number which this event is related to.
-         *
-         * @see ATN.decisionToState
-         */
-        val decision: Int,
-        /**
-         * The configuration set containing additional information relevant to the
-         * prediction state when the current event occurred, or `null` if no
-         * additional information is relevant or available.
-         */
-        val configs: ATNConfigSet,
-        /**
-         * The input token stream which is being parsed.
-         */
-        val input: TokenStream,
-        /**
-         * The token index in the input stream at which the current prediction was
-         * originally invoked.
-         */
-        val startIndex: Int,
-        /**
-         * The token index in the input stream at which the current event occurred.
-         */
-        val stopIndex: Int,
-        /**
-         * `true` if the current event occurred during LL prediction;
-         * otherwise, `false` if the input occurred during SLL prediction.
-         */
-        val fullCtx: Boolean)
+public open class DecisionEventInfo(
+  /**
+   * The invoked decision number which this event is related to.
+   *
+   * @see ATN.decisionToState
+   */
+  public val decision: Int,
+
+  /**
+   * The configuration set containing additional information relevant to the
+   * prediction state when the current event occurred, or `null` if no
+   * additional information is relevant or available.
+   */
+  public val configs: ATNConfigSet?,
+
+  /**
+   * The input token stream which is being parsed.
+   */
+  public val input: TokenStream,
+
+  /**
+   * The token index in the input stream at which the current prediction was
+   * originally invoked.
+   */
+  public val startIndex: Int,
+
+  /**
+   * The token index in the input stream at which the current event occurred.
+   */
+  public val stopIndex: Int,
+
+  /**
+   * `true` if the current event occurred during LL prediction,
+   * otherwise `false` if the input occurred during SLL prediction.
+   */
+  public val fullCtx: Boolean,
+)

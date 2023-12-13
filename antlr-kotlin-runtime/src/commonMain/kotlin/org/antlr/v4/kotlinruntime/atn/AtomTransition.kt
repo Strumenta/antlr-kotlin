@@ -8,23 +8,21 @@ package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
-/** TODO: make all transitions sets? no, should remove set edges  */
-class AtomTransition(target: ATNState,
-                     /** The token type or character value; or, signifies special accessLabel.  */
-                     val label: Int) : Transition(target) {
+/**
+ * TODO: make all transitions sets? No, should remove set edges.
+ *
+ * @param label The token type or character value. Or, signifies special label
+ */
+public class AtomTransition(target: ATNState, public val label: Int) : Transition(target) {
+  override val serializationType: Int =
+    ATOM
 
-    override val serializationType: Int
-        get() = Transition.ATOM
+  override fun label(): IntervalSet =
+    IntervalSet.of(label)
 
-    override fun accessLabel(): IntervalSet? {
-        return IntervalSet.of(label)
-    }
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    label == symbol
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return label == symbol
-    }
-
-    override fun toString(): String {
-        return label.toString()
-    }
+  override fun toString(): String =
+    label.toString()
 }

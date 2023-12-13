@@ -6,21 +6,21 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-class ActionTransition constructor(target: ATNState, val ruleIndex: Int, val actionIndex: Int = -1, val isCtxDependent: Boolean = false // e.g., $i ref in action
+public class ActionTransition(
+  target: ATNState,
+  public val ruleIndex: Int,
+  public val actionIndex: Int = -1,
+  public val isCtxDependent: Boolean = false, // e.g., $i ref in action
 ) : Transition(target) {
+  override val serializationType: Int =
+    ACTION
 
-    override val serializationType: Int
-        get() = Transition.ACTION
+  override val isEpsilon: Boolean =
+    true
 
-    override// we are to be ignored by analysis 'cept for predicates
-    val isEpsilon: Boolean
-        get() = true
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    false
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return false
-    }
-
-    override fun toString(): String {
-        return "action_$ruleIndex:$actionIndex"
-    }
+  override fun toString(): String =
+    "action_$ruleIndex:$actionIndex"
 }
