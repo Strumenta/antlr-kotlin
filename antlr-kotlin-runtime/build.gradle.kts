@@ -19,9 +19,6 @@ strumentaMultiplatform {
 }
 
 kotlin {
-  // TODO(Edoardo): remove this line once all the runtime sources are properly formatted
-  explicitApi = ExplicitApiMode.Disabled
-
   sourceSets {
     commonMain {
       dependencies {
