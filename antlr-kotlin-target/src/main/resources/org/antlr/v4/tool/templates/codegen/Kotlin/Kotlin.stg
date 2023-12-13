@@ -221,40 +221,12 @@ fileHeader(grammarFileName, ANTLRVersion) ::= <<
 >>
 
 Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-<Parser_(ctor="parser_ctor", ...)>
+<Parser_(parser, funcs, atn, sempredFuncs, superClass)>
 >>
 
-Parser_(parser, funcs, atn, sempredFuncs, ctor, superClass) ::= <<
+Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 @Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
-    override val grammarFileName: String =
-        "<parser.grammarFileName>"
-
-    override val tokenNames: Array\<String?> =
-        <parser.name>.tokenNames
-
-    override val ruleNames: Array\<String> =
-        <parser.name>.ruleNames
-
-    override val atn: ATN =
-        ATN
-
-    override val vocabulary: Vocabulary =
-        VOCABULARY
-
-    <if(parser.tokens)>
-    public enum class Tokens(public val id: Int) {
-        EOF(-1),
-        <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
-    }
-    <endif>
-
-    <if(parser.rules)>
-    public enum class Rules(public val id: Int) {
-        <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
-    }
-    <endif>
-
     public companion object {
         private val decisionToDFA: Array\<DFA>
         private val sharedContextCache = PredictionContextCache()
@@ -273,13 +245,43 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     }
 
     <if(parser.tokens)>
+    public enum class Tokens(public val id: Int) {
+        EOF(-1),
+        <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
+    }
+    <endif>
+
+    <if(parser.rules)>
+    public enum class Rules(public val id: Int) {
+        <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
+    }
+    <endif>
+
+    override var interpreter: ParserATNSimulator =
+        ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
+
+    override val grammarFileName: String =
+        "<parser.grammarFileName>"
+
+    @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+    override val tokenNames: Array\<String?> =
+        <parser.name>.tokenNames
+
+    override val ruleNames: Array\<String> =
+        <parser.name>.ruleNames
+
+    override val atn: ATN =
+        ATN
+
+    override val vocabulary: Vocabulary =
+        VOCABULARY
+
+    <if(parser.tokens)>
     <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
     <endif>
 
     /* Named actions */
     <namedActions.members>
-
-    <parser:(ctor)()>
 
     /* Funcs */
     <funcs; separator="\n\n">
@@ -330,12 +332,6 @@ override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): B
 
 <sempredFuncs.values; separator="\n\n">
 <endif>
->>
-
-parser_ctor(p) ::= <<
-init {
-    interpreter = ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
-}
 >>
 
 /* This generates a private method since the actionIndex is generated, making an
@@ -458,10 +454,10 @@ scoped {
 LL1AltBlock(choice, preamble, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
-<if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
+<if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
 <preamble; separator="\n">
 
-when (_input!!.LA(1)) {
+when (_input.LA(1)) {
 <choice.altLook,alts:{look,alt|
     <cases(tokens=look)> /*LL1AltBlock*/ {
         <alt>
@@ -474,7 +470,7 @@ LL1OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 
-when (_input!!.LA(1)) {
+when (_input.LA(1)) {
     <choice.altLook,alts:{look,alt| <cases(tokens=look)><if(alt)><alt><else>Unit<endif>}; separator="\n">
     else -> Unit
 }
@@ -521,10 +517,10 @@ do {
 AltBlock(choice, preamble, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
-<if(choice.label)><labelref(choice.label)> = _input!!.LT(1)<endif>
+<if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
 <preamble; separator="\n">
 
-when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
+when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
 <alts:{alt|
     <i> -> {
         <alt>
@@ -536,7 +532,7 @@ OptionalBlock(choice, alts, error) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
 
-when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
+when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
 <alts:{alt|
     <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
 }
@@ -545,7 +541,7 @@ when (interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)) {
 StarBlock(choice, alts, sync, iteration) ::= <<
 this.state = <choice.stateNumber>
 errorHandler.sync(this)
-_alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
+_alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 
 while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER) {
     if (_alt == 1 <if(!choice.ast.greedy)> + 1<endif>) {
@@ -555,7 +551,7 @@ while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER) {
 
     this.state = <choice.loopBackStateNumber>
     errorHandler.sync(this)
-    _alt = interpreter!!.adaptivePredict(_input!!, <choice.decision>, context)
+    _alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 }
 >>
 
@@ -573,7 +569,7 @@ do {
 
     this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
     errorHandler.sync(this)
-    _alt = interpreter!!.adaptivePredict(_input!!,<choice.decision>,context)
+    _alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 } while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER)
 >>
 
@@ -628,14 +624,14 @@ MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
 this.state = <m.stateNumber>
-<if(m.labels)><m.labels:{l | <labelref(l)> = }>_input!!.LT(1)<endif>
+<if(m.labels)><m.labels:{l | <labelref(l)> = }>_input.LT(1)<endif>
 <capture>
 
 if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
     <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
 }
 else {
-    if (_input!!.LA(1) == Tokens.EOF.id) {
+    if (_input.LA(1) == Tokens.EOF.id) {
         isMatchedEOF = true
     }
 
@@ -706,13 +702,13 @@ TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.label.asInt()?:0)"
 
 RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>?.start)"
 RulePropertyRef_stop(r)	::= "(<ctx(r)>.<r.label>?.stop)"
-RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input!!.getText(it.start, it.stop)})"
+RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input.getText(it.start, it.stop)})"
 RulePropertyRef_ctx(r) ::= "<ctx(r)>.<r.label>"
 RulePropertyRef_parser(r) ::= "this"
 
 ThisRulePropertyRef_start(r) ::= "_localctx.start"
 ThisRulePropertyRef_stop(r) ::= "_localctx.stop"
-ThisRulePropertyRef_text(r) ::= "_input!!.getText(_localctx.start, _input!!.LT(-1))"
+ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start, _input.LT(-1))"
 ThisRulePropertyRef_ctx(r) ::= "_localctx"
 ThisRulePropertyRef_parser(r) ::= "this"
 
@@ -755,8 +751,8 @@ ImplicitRuleLabel(ruleName) ::= "<ruleName>"
 ImplicitSetLabel(id) ::= "_tset<id>"
 ListLabelName(label) ::= "<label>"
 
-CaptureNextToken(d) ::= "<d.varName> = _input!!.LT(1)"
-CaptureNextTokenType(d) ::= "<d.varName> = _input!!.LA(1)"
+CaptureNextToken(d) ::= "<d.varName> = _input.LT(1)"
+CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1)"
 
 StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers, signatures) ::= <<
 @Suppress("FunctionName")
@@ -830,7 +826,7 @@ ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
 // used for left-recursive rules
 recRuleAltPredicate(ruleName, opPrec) ::= "precpred(context!!, <opPrec>)"
 recRuleSetReturnAction(src, name) ::= "$<name> = $<src>.<name>"
-recRuleSetStopToken() ::= "this.context!!.stop = _input!!.LT(-1)"
+recRuleSetStopToken() ::= "this.context!!.stop = _input.LT(-1)"
 
 recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
 _localctx = <ctxName>Context(_parentctx, _parentState)
@@ -889,18 +885,6 @@ import org.antlr.v4.kotlinruntime.misc.*
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
 @Suppress("FunctionName", "LocalVariableName")
 public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
-    override val ruleNames: Array\<String> =
-        Rules.entries.map(Rules::name).toTypedArray()
-
-    override val grammarFileName: String =
-        "<lexer.grammarFileName>"
-
-    override val atn: ATN =
-        ATN
-
-    override val vocabulary: Vocabulary =
-        VOCABULARY
-
     public companion object {
         private val decisionToDFA: Array\<DFA>
         private val sharedContextCache = PredictionContextCache()
@@ -923,9 +907,6 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
         <endif>
     }
 
-    override val channelNames: Array\<String> =
-        Channels.entries.map(Channels::name).toTypedArray()
-
     public enum class Modes(public val id: Int) {
         DEFAULT_MODE(0),
         <if(rest(lexer.modes))>
@@ -937,12 +918,25 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
         <lexer.ruleNames:{r | <r>}; separator=",\n", wrap, anchor>
     }
 
-    <namedActions.members>
+    override var interpreter: LexerATNSimulator =
+        LexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
 
-    init {
-        @Suppress("UNCHECKED_CAST")
-        interpreter = LexerATNSimulator(this, ATN, decisionToDFA as Array\<DFA?>, sharedContextCache)
-    }
+    override val ruleNames: Array\<String> =
+        Rules.entries.map(Rules::name).toTypedArray()
+
+    override val grammarFileName: String =
+        "<lexer.grammarFileName>"
+
+    override val atn: ATN =
+        ATN
+
+    override val vocabulary: Vocabulary =
+        VOCABULARY
+
+    override val channelNames: Array\<String> =
+        Channels.entries.map(Channels::name).toTypedArray()
+
+    <namedActions.members>
 
     <dumpActions(lexer, "", actionFuncs, sempredFuncs)>
 }
