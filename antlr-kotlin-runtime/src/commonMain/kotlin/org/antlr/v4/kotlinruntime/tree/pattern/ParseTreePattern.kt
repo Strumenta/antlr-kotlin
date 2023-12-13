@@ -7,6 +7,7 @@
 package org.antlr.v4.kotlinruntime.tree.pattern
 
 import org.antlr.v4.kotlinruntime.tree.ParseTree
+import org.antlr.v4.kotlinruntime.tree.xpath.XPath
 
 /**
  * A pattern like `<ID> = <expr>;` converted to a [ParseTree] by
@@ -58,19 +59,17 @@ public class ParseTreePattern(
    *   regardless of the reason for the failure
    */
   public fun findAll(tree: ParseTree, xpath: String): List<ParseTreeMatch> {
-    // TODO(Edoardo): need XPath
-    TODO("XPath is not implemented")
-    // val subtrees = XPath.findAll(tree, xpath, matcher.parser)
-    // val matches = ArrayList<ParseTreeMatch>()
-    //
-    // for (t in subtrees) {
-    //     val match = match(t)
-    //
-    //     if (match.succeeded()) {
-    //         matches.add(match)
-    //     }
-    // }
-    //
-    // return matches
+    val subtrees = XPath.findAll(tree, xpath, matcher.parser)
+    val matches = ArrayList<ParseTreeMatch>()
+
+    for (t in subtrees) {
+      val match = match(t)
+
+      if (match.succeeded()) {
+        matches.add(match)
+      }
+    }
+
+    return matches
   }
 }
