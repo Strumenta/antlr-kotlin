@@ -40,6 +40,11 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       if (isNodeJsEnabled) {
         nodejs {
           testTask {
+            useMocha {
+              // Override default 2s timeout
+              timeout = "30s"
+            }
+
             filter.isFailOnNoMatchingTests = true
           }
         }
@@ -48,6 +53,11 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       if (isBrowserEnabled) {
         browser {
           testTask {
+            useKarma {
+              useSourceMapSupport()
+              useChromeHeadless()
+            }
+
             filter.isFailOnNoMatchingTests = true
           }
         }
