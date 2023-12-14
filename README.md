@@ -95,10 +95,9 @@ To start using ANTLR Kotlin:
      val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
      packageName = pkgName
      
-     arguments = listOf(
-       "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
-       "-visitor",             // We want visitors alongside listeners
-     )
+     // We want visitors alongside listeners.
+     // The Kotlin target language is implicit, as is the file encoding (UTF-8)
+     arguments = listOf("-visitor")
     
      // Generated files are outputted inside build/generatedAntlr/{package-name}
      val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
