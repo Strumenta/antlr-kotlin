@@ -224,7 +224,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary")
+@Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     public companion object {
         private val decisionToDFA: Array\<DFA>
@@ -342,7 +342,7 @@ private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
 <actions:{index|
         <index> -> {
             <actions.(index)>
-        \}}; separator="\n">
+        \}}>
     }
 }
 >>
@@ -458,7 +458,7 @@ errorHandler.sync(this)
 
 when (_input.LA(1)) {
 <choice.altLook,alts:{look,alt|
-    <cases(tokens=look)> /*LL1AltBlock*/ {
+    <cases(tokens=look)>/*LL1AltBlock*/ {
         <alt>
     \}}>
     else -> <error>
@@ -470,7 +470,10 @@ this.state = <choice.stateNumber>
 errorHandler.sync(this)
 
 when (_input.LA(1)) {
-    <choice.altLook,alts:{look,alt| <cases(tokens=look)><if(alt)><alt><else>Unit<endif>}; separator="\n">
+<choice.altLook,alts:{look,alt|
+    <cases(tokens=look)>{
+        <if(alt)><alt><else>Unit<endif>
+    \}}>
     else -> Unit
 }
 >>
@@ -533,7 +536,9 @@ errorHandler.sync(this)
 
 when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
 <alts:{alt|
-    <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
+    <i><if(!choice.ast.greedy)> + 1<endif> -> {
+        <alt>
+    \}}>
 }
 >>
 
@@ -562,7 +567,9 @@ _alt = 1<if(!choice.ast.greedy)> + 1<endif>
 do {
     when (_alt) {
 <alts:{alt|
-        <i><if(!choice.ast.greedy)> + 1<endif> -> <alt>}; separator="\n">
+        <i><if(!choice.ast.greedy)> + 1<endif> -> {
+            <alt>
+        \}}>
         else -> <error>
     }
 
