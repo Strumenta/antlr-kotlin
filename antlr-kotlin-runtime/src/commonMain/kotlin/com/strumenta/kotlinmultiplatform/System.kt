@@ -22,22 +22,18 @@ public object System {
   }
 
   private object StdPrintStream : PrintStream {
-    override fun println(message: String) {
+    override fun println(message: String): Unit =
       kotlin.io.println(message)
-    }
 
-    override fun print(message: String) {
+    override fun print(message: String): Unit =
       kotlin.io.print(message)
-    }
   }
 
   private object ErrPrintStream : PrintStream {
-    override fun println(message: String) {
-      printErrorLine(message)
-    }
+    override fun println(message: String): Unit =
+      platformPrintErrLn(message)
 
-    override fun print(message: String) {
-      printError(message)
-    }
+    override fun print(message: String): Unit =
+      platformPrintErr(message)
   }
 }

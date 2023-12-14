@@ -12,11 +12,11 @@ private val lineBreak = when (Platform.osFamily) {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun printErrorLine(message: String) {
+internal actual fun platformPrintErrLn(message: String) {
   fprintf(stderr, "%s", message)
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun printError(message: String) {
+internal actual fun platformPrintErr(message: String) {
   fprintf(stderr, "%s$lineBreak", message)
 }
