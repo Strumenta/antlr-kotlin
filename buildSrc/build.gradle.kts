@@ -7,6 +7,7 @@ dependencies {
   implementation(libs.kotlin.plugin)
   implementation(libs.maven.publish.plugin)
   implementation(libs.dokka.plugin)
+  implementation(libs.gradle.plugin.publish.plugin)
 }
 
 gradlePlugin {
@@ -19,6 +20,11 @@ gradlePlugin {
     register("strumentaMultiplatform") {
       id = "strumenta.multiplatform"
       implementationClass = "com.strumenta.kotlinmultiplatform.gradle.plugins.StrumentaMultiplatformModulePlugin"
+    }
+
+    register("strumentaGradlePlugin") {
+      id = "strumenta.gradle.plugin"
+      implementationClass = "com.strumenta.kotlinmultiplatform.gradle.plugins.StrumentaGradlePluginModulePlugin"
     }
   }
 }
