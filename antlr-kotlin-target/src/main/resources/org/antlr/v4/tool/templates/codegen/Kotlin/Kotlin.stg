@@ -60,7 +60,6 @@ package <file.genPackage>
 <endif>
 <namedActions.header>
 
-import com.strumenta.kotlinmultiplatform.scoped
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
@@ -444,7 +443,7 @@ enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 >>
 
 CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
-scoped {
+if (true) {
     <locals; separator="\n">
     <preamble; separator="\n">
     <ops; separator="\n">
