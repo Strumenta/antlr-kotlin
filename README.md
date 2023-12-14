@@ -114,34 +114,44 @@ To start using ANTLR Kotlin:
 6. Create the ANTLR Kotlin grammar generation task.
 
    ```kotlin
-    val generateKotlinGrammarSource = tasks.register<AntlrTask>("generateKotlinGrammarSource") {
-        dependsOn("cleanGenerateKotlinGrammarSource")
+   val generateKotlinGrammarSource = tasks.register<AntlrTask>("generateKotlinGrammarSource") {
+     dependsOn("cleanGenerateKotlinGrammarSource")
+   
+     // ANTLR .g4 files are under {example-project}/antlr
+     setSource(layout.projectDirectory.dir("src/main/antlr"))
+   
+     val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
+     arguments = listOf(
+       "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
+       "-visitor",             // We want visitors alongside listeners
+       "-package", pkgName,    // We want the generated sources to have this package declared
+       "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
+     )
     
-        // ANTLR .g4 files are under {example-project}/antlr
-        setSource(layout.projectDirectory.dir("src/main/antlr"))
-    
-        val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
-        arguments = listOf(
-            "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
-            "-visitor",             // We want visitors alongside listeners
-            "-package", pkgName,    // We want the generated sources to have this package declared
-            "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
-        )
-    
-        // Generated files are outputted inside build/
-        val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
-        outputDirectory = layout.buildDirectory.get().dir(outDir).asFile
-    
-        sourceSets.getByName("main") {
-            java.srcDir(layout.buildDirectory.get().dir("generatedAntlr"))
-        }
-    }
+     // Generated files are outputted inside build/generatedAntlr
+     val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
+     outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
+   }
    ```
 
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-7. Optionally instruct the Kotlin compilation tasks to depend on the grammar generation.
+7. Register the `build/generatedAntlr` directory as part of the common source set.
+
+   ```kotlin
+   kotlin {
+     sourceSets {
+       commonMain {
+         kotlin {
+           srcDir(layout.buildDirectory.dir("generatedAntlr"))
+         }
+       }
+     }
+   }
+   ```
+
+8. Optionally instruct the Kotlin compilation tasks to depend on the grammar generation.
 
    ```kotlin
    withType<KotlinCompile<*>> {
