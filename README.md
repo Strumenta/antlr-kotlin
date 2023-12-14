@@ -109,7 +109,16 @@ To start using ANTLR Kotlin:
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-5. Register the `build/generatedAntlr` directory as part of the common source set.
+5. Instruct the Kotlin compilation tasks to depend on the grammar generation.
+
+   ```kotlin
+   tasks.withType<KotlinCompile<*>> {
+     dependsOn(generateKotlinGrammarSource)
+   }
+
+   ```
+
+6. Register the `build/generatedAntlr` directory as part of the common source set.
 
    ```kotlin
    kotlin {
@@ -121,15 +130,6 @@ To start using ANTLR Kotlin:
        }
      }
    }
-   ```
-
-6. Instruct the Kotlin compilation tasks to depend on the grammar generation.
-
-   ```kotlin
-   withType<KotlinCompile<*>> {
-     dependsOn(generateKotlinGrammarSource)
-   }
-
    ```
 
 ## Maven Central Publication
