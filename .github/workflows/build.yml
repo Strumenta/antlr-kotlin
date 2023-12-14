@@ -23,6 +23,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - java: '17'
+            target: Gradle Plugin
+            task: ':antlr-kotlin-gradle-plugin:check'
           - java: '11'
             target: JVM
             task: jvmTest
