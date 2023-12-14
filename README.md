@@ -57,31 +57,16 @@ To start using ANTLR Kotlin:
    }
    ```
 
-2. Add the Gradle `antlr` plugin to the list of plugins in your build script.
+2. Add the ANTLR Gradle plugin for the Kotlin target to the list of plugins in your build script.
 
    ```kotlin
    plugins {
      ...
-     antlr
+     id("com.strumenta.antlr-kotlin") version "$antlrKotlinVersion"
    }
    ```
 
-3. Add ANTLR 4 and the ANTLR Kotlin target to the classpath of the Gradle ANTLR plugin.
-   At the top level of your build script, add:
-
-   ```kotlin
-   dependencies {
-     // The ANTLR 4 dependency, which instructs the Gradle ANTLR plugin
-     // to use ANTLR 4 instead of the bundled version
-     antlr("org.antlr:antlr4:4.13.1")
-   
-     // The ANTLR Kotlin target
-     antlr("com.strumenta:antlr-kotlin-target:$antlrKotlinVersion")
-   }
-   ```
-   For more details, check out [Gradle - The ANTLR Plugin](https://docs.gradle.org/current/userguide/antlr_plugin.html).
-
-4. Add the ANTLR Kotlin Runtime to the list of dependencies.  
+3. Add the ANTLR Kotlin Runtime to the list of dependencies.  
    If you are working in a multiplatform project, add it to the common source set.
 
    ```kotlin
@@ -97,38 +82,25 @@ To start using ANTLR Kotlin:
    }
    ```
 
-5. Disable the default ANTLR grammar generation task.  
-   This is set up by the Gradle ANTLR plugin, but it does not suit our needs.
+4. Register the ANTLR Kotlin grammar generation task.
 
    ```kotlin
-   tasks {
-     generateGrammarSource {
-       // The default task is set up considering a Java source set,
-       // which we might not have in a Kotlin project. 
-       // Using it is messier than simply registering a new task
-       enabled = false
-     }
-   }
-   ```
-
-6. Create the ANTLR Kotlin grammar generation task.
-
-   ```kotlin
-   val generateKotlinGrammarSource = tasks.register<AntlrTask>("generateKotlinGrammarSource") {
+   val generateKotlinGrammarSource = tasks.register<AntlrKotlinTask>("generateKotlinGrammarSource") {
      dependsOn("cleanGenerateKotlinGrammarSource")
    
      // ANTLR .g4 files are under {example-project}/antlr
-     setSource(layout.projectDirectory.dir("src/main/antlr"))
+     setSource(layout.projectDirectory.dir("antlr"))
    
+     // We want the generated source files to have this package name
      val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
+     packageName = pkgName
+     
      arguments = listOf(
        "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
        "-visitor",             // We want visitors alongside listeners
-       "-package", pkgName,    // We want the generated sources to have this package declared
-       "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
      )
     
-     // Generated files are outputted inside build/generatedAntlr
+     // Generated files are outputted inside build/generatedAntlr/{package-name}
      val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
      outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
    }
@@ -137,7 +109,7 @@ To start using ANTLR Kotlin:
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-7. Register the `build/generatedAntlr` directory as part of the common source set.
+5. Register the `build/generatedAntlr` directory as part of the common source set.
 
    ```kotlin
    kotlin {
@@ -151,7 +123,7 @@ To start using ANTLR Kotlin:
    }
    ```
 
-8. Optionally instruct the Kotlin compilation tasks to depend on the grammar generation.
+6. Instruct the Kotlin compilation tasks to depend on the grammar generation.
 
    ```kotlin
    withType<KotlinCompile<*>> {
