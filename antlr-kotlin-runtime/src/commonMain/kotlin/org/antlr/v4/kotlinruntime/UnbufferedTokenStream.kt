@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.System
 import com.strumenta.kotlinmultiplatform.assert
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.math.min
 
 @Suppress("MemberVisibilityCanBePrivate")
 public open class UnbufferedTokenStream(override val tokenSource: TokenSource, bufferSize: Int = 256) : TokenStream {
@@ -237,7 +237,7 @@ public open class UnbufferedTokenStream(override val tokenSource: TokenSource, b
 
     if (tempIndex > currentTokenIndex) {
       sync(tempIndex - currentTokenIndex)
-      tempIndex = Math.min(tempIndex, bufferStartIndex + n - 1)
+      tempIndex = min(tempIndex, bufferStartIndex + n - 1)
     }
 
     val bufferStartIndex = bufferStartIndex

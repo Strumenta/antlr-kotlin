@@ -5,7 +5,8 @@
  */
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.Math
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * An immutable inclusive interval `a..b`.
@@ -103,13 +104,13 @@ public class Interval(public var a: Int, public var b: Int) {
    * Return the interval computed from combining `this` and [other].
    */
   public fun union(other: Interval): Interval =
-    of(Math.min(a, other.a), Math.max(b, other.b))
+    of(min(a, other.a), max(b, other.b))
 
   /**
    * Return the interval in common between `this` and [other].
    */
   public fun intersection(other: Interval): Interval =
-    of(Math.max(a, other.a), Math.min(b, other.b))
+    of(max(a, other.a), min(b, other.b))
 
   /**
    * Return the interval with elements from `this` not in [other].
@@ -123,7 +124,7 @@ public class Interval(public var a: Int, public var b: Int) {
 
     // other.a to left of this.a (or same)
     if (other.startsBeforeNonDisjoint(this)) {
-      diff = of(Math.max(a, other.b + 1), b)
+      diff = of(max(a, other.b + 1), b)
     }
     // other.a to right of this.a
     else if (other.startsAfterNonDisjoint(this)) {

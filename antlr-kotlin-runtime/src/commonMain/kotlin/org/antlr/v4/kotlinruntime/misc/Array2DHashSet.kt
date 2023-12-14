@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.assert
+import kotlin.math.floor
 
 /**
  * Set implementation with closed hashing (open addressing).
@@ -40,7 +40,7 @@ public open class Array2DHashSet<T>(
   init {
     @Suppress("LeakingThis")
     buckets = createBuckets(initialCapacity)
-    threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
+    threshold = floor(initialCapacity * LOAD_FACTOR).toInt()
   }
 
   /**
@@ -409,7 +409,7 @@ public open class Array2DHashSet<T>(
   override fun clear() {
     n = 0
     buckets = createBuckets(initialCapacity)
-    threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
+    threshold = floor(initialCapacity * LOAD_FACTOR).toInt()
   }
 
   override fun toString(): String {

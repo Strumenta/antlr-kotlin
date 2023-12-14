@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
+import kotlin.math.max
 
 /**
  * This class provides a default implementation of the [Vocabulary]
@@ -89,7 +89,7 @@ public class VocabularyImpl(
 
   // See note here on -1 part: https://github.com/antlr/antlr4/pull/1146
   override val maxTokenType: Int =
-    Math.max(this.displayNames.size, Math.max(this.literalNames.size, this.symbolicNames.size)) - 1
+    max(this.displayNames.size, max(this.literalNames.size, this.symbolicNames.size)) - 1
 
   override fun getLiteralName(tokenType: Int): String? =
     if (tokenType in literalNames.indices) {

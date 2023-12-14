@@ -5,7 +5,6 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Collections
 import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.tree.*
@@ -337,7 +336,7 @@ public open class ParserRuleContext : RuleContext {
    */
   public fun toInfoString(recognizer: Parser): String {
     val rules = recognizer.getRuleInvocationStack(this).toMutableList()
-    Collections.reverse(rules)
+    rules.reverse()
     return "ParserRuleContext$rules{start=$start, stop=$stop}"
   }
 }

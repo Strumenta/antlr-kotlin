@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.Math
+import kotlin.math.floor
 
 
 /**
@@ -52,7 +52,7 @@ public open class FlexibleHashMap<K, V>(
 
   init {
     buckets = createEntryListArray(initialBucketCapacity)
-    threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
+    threshold = floor(initialCapacity * LOAD_FACTOR).toInt()
   }
 
   override val size: Int
@@ -207,7 +207,7 @@ public open class FlexibleHashMap<K, V>(
   override fun clear() {
     n = 0
     buckets = createEntryListArray(initialCapacity)
-    threshold = Math.floor(initialCapacity * LOAD_FACTOR).toInt()
+    threshold = floor(initialCapacity * LOAD_FACTOR).toInt()
   }
 
   override fun toString(): String {

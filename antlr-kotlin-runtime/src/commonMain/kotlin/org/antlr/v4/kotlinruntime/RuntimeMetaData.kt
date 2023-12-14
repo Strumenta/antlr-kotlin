@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.System
 import org.antlr.v4.kotlinruntime.RuntimeMetaData.checkVersion
 import org.antlr.v4.kotlinruntime.RuntimeMetaData.runtimeVersion
+import kotlin.math.min
 
 /**
  * This class provides access to the current version of the ANTLR 4 runtime
@@ -165,11 +165,11 @@ public object RuntimeMetaData {
     var referenceLength = version.length
 
     if (secondDot >= 0) {
-      referenceLength = Math.min(referenceLength, secondDot)
+      referenceLength = min(referenceLength, secondDot)
     }
 
     if (firstDash >= 0) {
-      referenceLength = Math.min(referenceLength, firstDash)
+      referenceLength = min(referenceLength, firstDash)
     }
 
     return version.substring(0, referenceLength)

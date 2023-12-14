@@ -7,10 +7,10 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.Math
 import org.antlr.v4.kotlinruntime.misc.AbstractEqualityComparator
 import org.antlr.v4.kotlinruntime.misc.Array2DHashSet
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
+import kotlin.math.max
 
 /**
  * Specialized [Set]`<`[ATNConfig]`>` that can track
@@ -197,7 +197,7 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
     // No need to check for existing.context, config.context in cache
     // since only way to create new graphs is "call rule" and here. We
     // cache at both places
-    existing.reachesIntoOuterContext = Math.max(existing.reachesIntoOuterContext, config.reachesIntoOuterContext)
+    existing.reachesIntoOuterContext = max(existing.reachesIntoOuterContext, config.reachesIntoOuterContext)
 
     // Make sure to preserve the precedence filter suppression during the merge
     if (config.isPrecedenceFilterSuppressed) {

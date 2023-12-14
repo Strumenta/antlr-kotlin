@@ -5,9 +5,9 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.assert
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.math.min
 
 /**
  * Vacuum all input from a [Reader]/[InputStream] and then treat it
@@ -159,7 +159,7 @@ public open class ANTLRInputStream : CharStream {
     }
 
     // Seek forward, consume until p hits index or n (whichever comes first)
-    i = Math.min(i, n)
+    i = min(i, n)
 
     while (p < i) {
       consume()

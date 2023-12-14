@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
+import kotlin.math.max
 
 /**
  * Provides an implementation of [TokenSource] as a wrapper around a list
@@ -129,7 +129,7 @@ public open class ListTokenSource(
           }
         }
 
-        val stop = Math.max(-1, start - 1)
+        val stop = max(-1, start - 1)
         eofToken = tokenFactory.create(
           Pair<TokenSource, CharStream?>(this, inputStream),
           Token.EOF,

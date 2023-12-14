@@ -7,12 +7,12 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.Math
 import org.antlr.v4.kotlinruntime.Parser
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.TokenStream
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
+import kotlin.math.min
 import kotlin.time.measureTimedValue
 
 /**
@@ -76,7 +76,7 @@ public open class ProfilingATNSimulator(parser: Parser) : ParserATNSimulator(
       decisionInfo[decision].SLL_MinLook = if (decisionInfo[decision].SLL_MinLook == 0L) {
         SLL_k.toLong()
       } else {
-        Math.min(decisionInfo[decision].SLL_MinLook, SLL_k.toLong())
+        min(decisionInfo[decision].SLL_MinLook, SLL_k.toLong())
       }
 
       if (SLL_k > decisionInfo[decision].SLL_MaxLook) {
@@ -92,7 +92,7 @@ public open class ProfilingATNSimulator(parser: Parser) : ParserATNSimulator(
         decisionInfo[decision].LL_MinLook = if (decisionInfo[decision].LL_MinLook == 0L) {
           LL_k.toLong()
         } else {
-          Math.min(decisionInfo[decision].LL_MinLook, LL_k.toLong())
+          min(decisionInfo[decision].LL_MinLook, LL_k.toLong())
         }
 
         if (LL_k > decisionInfo[decision].LL_MaxLook) {

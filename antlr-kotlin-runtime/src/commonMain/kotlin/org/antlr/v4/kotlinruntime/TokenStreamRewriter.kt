@@ -5,9 +5,10 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.System
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KClass
 
 /**
@@ -482,8 +483,8 @@ public open class TokenStreamRewriter(public val tokenStream: TokenStream) {
         if (prevRop.text == null && rop.text == null && !disjoint) {
           // Kill first delete
           rewrites[prevRop.instructionIndex] = null
-          rop.index = Math.min(prevRop.index, rop.index)
-          rop.lastIndex = Math.max(prevRop.lastIndex, rop.lastIndex)
+          rop.index = min(prevRop.index, rop.index)
+          rop.lastIndex = max(prevRop.lastIndex, rop.lastIndex)
           System.out.println("new rop $rop")
         } else if (!disjoint) {
           throw IllegalArgumentException("replace op boundaries of $rop overlap with previous $prevRop")

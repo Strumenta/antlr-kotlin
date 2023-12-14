@@ -1,9 +1,9 @@
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.math.min
 
 public class StringCharStream(
   private val source: String,
@@ -49,8 +49,8 @@ public class StringCharStream(
     getText(Interval.of(0, size - 1))
 
   override fun getText(interval: Interval): String {
-    val startIndex = Math.min(interval.a, size)
-    val endIndex = Math.min(interval.b, size)
+    val startIndex = min(interval.a, size)
+    val endIndex = min(interval.b, size)
     return source.substring(codePointIndices[startIndex], codePointIndices[endIndex] + 1)
   }
 
