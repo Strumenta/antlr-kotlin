@@ -1,5 +1,12 @@
+@file:Suppress("UnstableApiUsage")
+
+import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryName
+import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryUrl
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
-  id("net.researchgate.release") version "3.0.2"
+  alias(libs.plugins.researchgate.release)
+  id("com.vanniktech.maven.publish") apply false
 }
 
 allprojects {
@@ -9,31 +16,49 @@ allprojects {
     mavenCentral()
   }
 
+  apply(plugin = "com.vanniktech.maven.publish")
+
+  // Allow publishing to a private Maven repository, other than to Maven Central
+  val privateRepoUrl = mavenRepositoryUrl()
+
+  if (privateRepoUrl != null) {
+    extensions.configure<PublishingExtension>("publishing") {
+      repositories {
+        maven {
+          name = mavenRepositoryName() ?: "PrivateNexus"
+          url = uri(privateRepoUrl)
+          isAllowInsecureProtocol = true
+        }
+      }
+    }
+  }
 }
 
 subprojects {
-
   tasks.withType<Test>().all {
     testLogging {
       showStandardStreams = true
       showExceptions = true
-      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+      exceptionFormat = TestExceptionFormat.FULL
     }
   }
+}
 
+release {
+  buildTasks = listOf(
+    ":antlr-kotlin-runtime:publishAllPublicationsToMavenCentralRepository",
+    ":antlr-kotlin-target:publishAllPublicationsToMavenCentralRepository",
+  )
+
+  git {
+    requireBranch = ""
+    pushToRemote = "origin"
+  }
 }
 
 tasks {
   wrapper {
     gradleVersion = "8.3"
     distributionType = Wrapper.DistributionType.ALL
-  }
-}
-
-release {
-  buildTasks.set(listOf(":antlr-kotlin-runtime:publishAllPublicationsToMavenCentralRepository", ":antlr-kotlin-target:publishAllPublicationsToMavenCentralRepository"))
-  git {
-    requireBranch.set("")
-    pushToRemote.set("origin")
   }
 }
