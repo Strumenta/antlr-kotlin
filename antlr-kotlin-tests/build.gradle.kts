@@ -8,7 +8,10 @@ plugins {
 
 strumentaMultiplatform {
   applyJvm()
-  applyJs()
+  applyJs {
+    // We can't properly run grammar tests in the browser
+    browser = false
+  }
 
   // Opting-in for native targets should be explicit,
   // as it makes the build and test process slower.

@@ -3,6 +3,7 @@ package com.strumenta.kotlinmultiplatform.gradle.plugins
 import com.strumenta.kotlinmultiplatform.gradle.ext.javaExtension
 import com.strumenta.kotlinmultiplatform.gradle.ext.kmpExtension
 import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
+import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -15,30 +16,48 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
  * @see StrumentaMultiplatformModulePlugin
  */
 abstract class StrumentaMultiplatformModuleExtension(private val project: Project) {
+  interface JsConfiguration {
+    val nodeJs: Property<Boolean>
+    val browser: Property<Boolean>
+  }
+
   interface JvmConfiguration {
     val enableJava: Property<Boolean>
   }
 
   @get:Nested
+  abstract val jsConfig: JsConfiguration
+
+  @get:Nested
   abstract val jvmConfig: JvmConfiguration
 
-  fun applyJs() {
+  fun applyJs(action: Action<JsConfiguration> = Action {}) {
+    action.execute(jsConfig)
+
+    val isNodeJsEnabled = jsConfig.nodeJs.getOrElse(true)
+    val isBrowserEnabled = jsConfig.browser.getOrElse(true)
     project.kmpExtension.js(KotlinJsCompilerType.IR) {
-      nodejs {
-        testTask {
-          filter.isFailOnNoMatchingTests = true
+      if (isNodeJsEnabled) {
+        nodejs {
+          testTask {
+            filter.isFailOnNoMatchingTests = true
+          }
         }
       }
 
-      browser {
-        testTask {
-          filter.isFailOnNoMatchingTests = true
+      if (isBrowserEnabled) {
+        browser {
+          testTask {
+            filter.isFailOnNoMatchingTests = true
+          }
         }
       }
     }
   }
 
-  fun applyJvm() {
+  fun applyJvm(action: Action<JvmConfiguration> = Action {}) {
+    action.execute(jvmConfig)
+
     val isRelease = project.releaseBuild()
     project.kmpExtension.jvm {
       if (jvmConfig.enableJava.getOrElse(false)) {
