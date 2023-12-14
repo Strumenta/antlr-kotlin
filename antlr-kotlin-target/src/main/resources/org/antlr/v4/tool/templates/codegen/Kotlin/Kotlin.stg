@@ -245,14 +245,14 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     }
 
     <if(parser.tokens)>
-    public enum class Tokens(public val id: Int) {
+    public enum class Tokens(public val id: kotlin.Int) {
         EOF(-1),
         <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
     <if(parser.rules)>
-    public enum class Rules(public val id: Int) {
+    public enum class Rules(public val id: kotlin.Int) {
         <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
     }
     <endif>
@@ -894,12 +894,12 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
     }
 
     <if(lexer.tokens)>
-    public enum class Tokens(public val id: Int) {
+    public enum class Tokens(public val id: kotlin.Int) {
         <lexer.tokens:{k | <k>(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
-    public enum class Channels(public val id: Int) {
+    public enum class Channels(public val id: kotlin.Int) {
         DEFAULT_TOKEN_CHANNEL(0),
         HIDDEN(1),
         <if(lexer.escapedChannels)>
@@ -907,7 +907,7 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
         <endif>
     }
 
-    public enum class Modes(public val id: Int) {
+    public enum class Modes(public val id: kotlin.Int) {
         DEFAULT_MODE(0),
         <if(rest(lexer.modes))>
         <rest(lexer.modes):{m | <m>(<i>)}; separator=",\n", wrap, anchor>
