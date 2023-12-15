@@ -1,8 +1,8 @@
 @file:Suppress("DEPRECATION")
 
-package com.strumenta.antlrkotlin.tests
+package com.strumenta.antlrkotlin.test
 
-import com.strumenta.antlrkotlin.tests.generated.MiniCalcLexer
+import com.strumenta.antlrkotlin.test.generated.MiniCalcLexer
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.atn.EmptyPredictionContext
 import org.antlr.v4.kotlinruntime.atn.PredictionContext

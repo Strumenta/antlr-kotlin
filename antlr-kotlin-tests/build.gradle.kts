@@ -1,8 +1,11 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
   id("strumenta.multiplatform")
+  alias(libs.plugins.kotlinx.resources)
   antlr
 }
 
@@ -40,6 +43,7 @@ kotlin {
     commonTest {
       dependencies {
         implementation(kotlin("test"))
+        implementation(libs.kotlinx.resources)
       }
     }
   }
@@ -62,7 +66,7 @@ tasks {
     dependsOn("cleanGenerateKotlinGrammarSource")
     setSource(layout.projectDirectory.dir("antlr"))
 
-    val pkgName = "com.strumenta.antlrkotlin.tests.generated"
+    val pkgName = "com.strumenta.antlrkotlin.test.generated"
     arguments = listOf(
       "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
       "-visitor",             // We want visitors alongside listeners

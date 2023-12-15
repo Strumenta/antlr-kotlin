@@ -1,9 +1,9 @@
 @file:Suppress("DEPRECATION")
 
-package com.strumenta.antlrkotlin.tests
+package com.strumenta.antlrkotlin.test
 
-import com.strumenta.antlrkotlin.tests.generated.MiniCalcLexer
-import com.strumenta.antlrkotlin.tests.generated.MiniCalcParser
+import com.strumenta.antlrkotlin.test.generated.MiniCalcLexer
+import com.strumenta.antlrkotlin.test.generated.MiniCalcParser
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
@@ -115,10 +115,14 @@ class MiniCalcParserTest {
   fun callListener() {
     val input = ANTLRInputStream("input Int width\n")
     val lexer = MiniCalcLexer(input)
+    lexer.addErrorListener(ThrowingErrorListener)
+
     val parser = MiniCalcParser(CommonTokenStream(lexer))
+    parser.addErrorListener(ThrowingErrorListener)
+
     val root = parser.miniCalcFile()
     val localListener = LocalListener()
-    ParseTreeWalker().walk(localListener, root)
+    ParseTreeWalker.DEFAULT.walk(localListener, root)
     assertEquals(Position(1, 0, 2, 0), root.position)
   }
 }
