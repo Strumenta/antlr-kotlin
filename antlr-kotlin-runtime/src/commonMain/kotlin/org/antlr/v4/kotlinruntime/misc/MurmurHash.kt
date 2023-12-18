@@ -80,7 +80,7 @@ public object MurmurHash {
   /**
    * Utility function to compute the hash code of an array using the MurmurHash algorithm.
    *
-   * @param <T> The array element type
+   * @param T The array element type
    * @param data The array data
    * @param seed The seed for the MurmurHash algorithm
    * @return The hash code of the data
