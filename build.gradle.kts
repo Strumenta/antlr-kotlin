@@ -48,6 +48,7 @@ release {
   buildTasks = listOf(
     ":antlr-kotlin-runtime:publishAllPublicationsToMavenCentralRepository",
     ":antlr-kotlin-target:publishAllPublicationsToMavenCentralRepository",
+    ":antlr-kotlin-gradle-plugin:publishPlugins"
   )
 
   git {

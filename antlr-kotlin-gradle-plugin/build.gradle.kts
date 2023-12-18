@@ -16,6 +16,7 @@ gradlePlugin {
   plugins {
     create("StrumentaAntlrKotlin") {
       id = "com.strumenta.antlr-kotlin"
+      displayName = "Support ANTLR Kotlin"
       description = "The ANTLR Gradle plugin for the Kotlin target"
       tags = listOf("antlr", "antlr4", "kotlin", "multiplatform")
       implementationClass = "com.strumenta.antlrkotlin.gradle.AntlrKotlinPlugin"
