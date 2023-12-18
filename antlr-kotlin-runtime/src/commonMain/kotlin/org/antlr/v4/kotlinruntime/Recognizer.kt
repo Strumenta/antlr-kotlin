@@ -125,7 +125,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * For interpreters, we don't know their serialized ATN despite having
    * created the interpreter from it.
    */
-  public val serializedATN: String
+  public open val serializedATN: String
     get() = throw UnsupportedOperationException("there is no serialized ATN")
 
   /**
