@@ -9,7 +9,7 @@ This project contains everything needed to support Kotlin as a target for ANTLR.
 - **Kotlin Target**: a plugin for the ANTLR code generator that produces lexers, parsers, listeners, and visitors
 - **Kotlin Runtime**: a multi-platform library needed by the generated lexers and parsers
 
-This being a 100% multi-platform project, the code written using the Kotlin target for ANTLR
+This being a fully multi-platform project, the code written using the Kotlin target for ANTLR
 will run on the JVM (including Android), in the browser, in Node.js, and natively on Mac, Windows, and Linux.
 
 Want to start experimenting immediately? See [Gradle Setup](#gradle-setup).
@@ -19,22 +19,15 @@ Want to start experimenting immediately? See [Gradle Setup](#gradle-setup).
 The project should be considered experimental. Several parsers have been implemented and work so far using this target
 but not all the features are complete and well tested.
 
-The runtime and target's template are up-to-date with mainstream commit: `master/e9df464`  
-The following are files that need further verification:
-
-- Parser
-- ATNDeserializer
-- ATNSerializer
-- IntegerList
-- InterpreterDataReader
-- tree/xpath/**
+The runtime and target's template are up-to-date with mainstream commit: `master/e9df464`
 
 ## Kotlin Target
 
-The Kotlin target is a plugin for the ANTLR generator.
+The Kotlin target is a plugin for the ANTLR generator.  
+It should be added to the classpath used to run the ANTLR Tool.
 
-It should be added to the classpath used to run the ANTLR Tool.  
-You will simply need to specify the language to be `Kotlin`.
+You will need to specify the target language to be `Kotlin` (`-Dlanguage=Kotlin`),
+or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automatically.
 
 ## Kotlin Runtime
 
@@ -52,7 +45,6 @@ To start using ANTLR Kotlin:
 
    ```kotlin
    repositories {
-     ...
      mavenCentral()
    }
    ```
@@ -61,7 +53,6 @@ To start using ANTLR Kotlin:
 
    ```kotlin
    plugins {
-     ...
      id("com.strumenta.antlr-kotlin") version "$antlrKotlinVersion"
    }
    ```
@@ -74,7 +65,6 @@ To start using ANTLR Kotlin:
      sourceSets {
        commonMain {
          dependencies {
-           ...
            implementation("com.strumenta:antlr-kotlin-runtime:$antlrKotlinVersion")
          }
        }
@@ -87,18 +77,18 @@ To start using ANTLR Kotlin:
    ```kotlin
    val generateKotlinGrammarSource = tasks.register<AntlrKotlinTask>("generateKotlinGrammarSource") {
      dependsOn("cleanGenerateKotlinGrammarSource")
-   
+
      // ANTLR .g4 files are under {example-project}/antlr
      setSource(layout.projectDirectory.dir("antlr"))
-   
+
      // We want the generated source files to have this package name
      val pkgName = "com.strumenta.antlrkotlin.parsers.generated"
      packageName = pkgName
-     
+
      // We want visitors alongside listeners.
      // The Kotlin target language is implicit, as is the file encoding (UTF-8)
      arguments = listOf("-visitor")
-    
+
      // Generated files are outputted inside build/generatedAntlr/{package-name}
      val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
      outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
@@ -142,7 +132,7 @@ Publication can be performed running:
 However, it is recommended to use the releases plugin and run:
 
 ```
-./gradlew release 
+./gradlew release
 ```
 
 ## Contributors
@@ -153,3 +143,5 @@ You can see the complete list on GitHub, but here we list those who contributed 
 - Edoardo Luppi ([@lppedd](https://github.com/lppedd))
 - [@phyrian](https://github.com/phyrian)
 - Patrick Del Conte [@exaV](https://github.com/exaV)
+
+[1]: https://plugins.gradle.org/plugin/com.strumenta.antlr-kotlin
