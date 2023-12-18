@@ -1,20 +1,20 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.*
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
-import org.jetbrains.dokka.gradle.DokkaTask
+@file:Suppress("UnstableApiUsage")
+
+import com.strumenta.kotlinmultiplatform.gradle.ext.setupPom
+import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.dokka.Platform
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 
 plugins {
   id("strumenta.multiplatform")
   id("org.jetbrains.dokka")
-  id("com.vanniktech.maven.publish")
 }
 
 strumentaMultiplatform {
   applyJvm()
-
-  if (targetsJS()) {
-    applyJs()
-  }
+  applyJs()
 
   // Opting-in for native targets should be explicit,
   // as it makes the build and test process slower.
@@ -51,24 +51,28 @@ kotlin {
   }
 }
 
+mavenPublishing {
+  @Suppress("UnstableApiUsage")
+  coordinates(
+    groupId = project.group as String,
+    artifactId = project.name,
+    version = project.version as String,
+  )
+
+  setupPom(project, projectDescription = "Runtime for ANTLR Kotlin")
+  publishToMavenCentral(SonatypeHost.DEFAULT, true)
+  signAllPublications()
+}
+
 tasks.withType<DokkaTask>().configureEach {
   dokkaSourceSets {
     configureEach {
-      suppress.set(true)
+      suppress = true
     }
 
     val commonMain by getting {
-      suppress.set(false)
-      platform.set(org.jetbrains.dokka.Platform.jvm)
+      suppress = false
+      platform = Platform.jvm
     }
   }
-}
-
-mavenPublishing {
-  coordinates(project.group as String, project.name, project.version as String)
-  setupPom(project, "Runtime for ANTLR Kotlin")
-
-  publishToMavenCentral(SonatypeHost.DEFAULT, true)
-
-  signAllPublications()
 }

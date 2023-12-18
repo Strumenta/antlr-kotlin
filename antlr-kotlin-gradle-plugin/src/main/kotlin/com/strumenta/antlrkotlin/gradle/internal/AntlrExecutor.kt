@@ -1,0 +1,23 @@
+package com.strumenta.antlrkotlin.gradle.internal
+
+import org.gradle.process.internal.worker.RequestHandler
+import org.slf4j.LoggerFactory
+
+internal class AntlrExecutor : RequestHandler<AntlrSpec, AntlrResult> {
+  private companion object {
+    @Suppress("ConstPropertyName")
+    private const val serialVersionUID = 1L
+    private val logger = LoggerFactory.getLogger(AntlrExecutor::class.java)
+  }
+
+  override fun run(spec: AntlrSpec): AntlrResult {
+    val antlrTool = Antlr4Tool()
+
+    if (antlrTool.available()) {
+      logger.info("Processing with ANTLR 4")
+      return antlrTool.process(spec)
+    }
+
+    throw IllegalStateException("No ANTLR 4 implementation available")
+  }
+}

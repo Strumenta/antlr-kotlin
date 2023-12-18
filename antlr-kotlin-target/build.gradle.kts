@@ -1,13 +1,9 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.*
-import org.jetbrains.dokka.gradle.DokkaTask
-import java.net.URI
-import java.net.URL
+import com.strumenta.kotlinmultiplatform.gradle.ext.setupPom
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
   id("strumenta.jvm.library")
   id("org.jetbrains.dokka")
-  id("com.vanniktech.maven.publish")
 }
 
 dependencies {
@@ -15,11 +11,15 @@ dependencies {
 }
 
 mavenPublishing {
-  coordinates(project.group as String, project.name, project.version as String)
-  setupPom(project, "Kotlin target for ANTLR")
+  @Suppress("UnstableApiUsage")
+  coordinates(
+    groupId = project.group as String,
+    artifactId = project.name,
+    version = project.version as String,
+  )
 
+  setupPom(project, projectDescription = "Kotlin target for ANTLR")
   publishToMavenCentral(SonatypeHost.DEFAULT, true)
-
   signAllPublications()
 }
 

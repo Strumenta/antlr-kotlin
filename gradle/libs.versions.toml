@@ -3,6 +3,9 @@ kotlin = "1.9.21"
 kotlin-wrappers = "1.0.0-pre.659"
 antlr4 = "4.13.1"
 dokka = "1.9.10"
+researchgate-release = "3.0.2"
+maven-publish = "0.25.3"
+gradle-plugin-publish = "1.2.1"
 
 [libraries]
 kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
@@ -11,8 +14,12 @@ antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
 
 # Gradle
 kotlin-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+dokka-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }
+gradle-plugin-publish-plugin = { group = "com.gradle.publish", name = "plugin-publish-plugin", version.ref = "gradle-plugin-publish" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+researchgate-release = { id = "net.researchgate.release", version.ref = "researchgate-release" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

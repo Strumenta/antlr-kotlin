@@ -25,6 +25,10 @@ kotlin {
 
   sourceSets {
     commonMain {
+      kotlin {
+        srcDir(layout.buildDirectory.dir("generatedAntlr"))
+      }
+
       dependencies {
         implementation(projects.antlrKotlinRuntime)
       }
@@ -63,8 +67,9 @@ tasks {
       "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
     )
 
-    val outDir = "src/commonMain/kotlin/${pkgName.replace(".", "/")}"
-    outputDirectory = layout.projectDirectory.dir(outDir).asFile
+    // Generated files are outputted inside build/generatedAntlr
+    val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"
+    outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
   }
 
   withType<KotlinCompile<*>> {
