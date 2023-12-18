@@ -224,7 +224,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
+@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf", "RemoveRedundantBackticks")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     public companion object {
         <atn>
@@ -249,13 +249,13 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     <if(parser.tokens)>
     public enum class Tokens(public val id: kotlin.Int) {
         EOF(-1),
-        <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
+        <parser.tokens:{k | `<k>`(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
     <if(parser.rules)>
     public enum class Rules(public val id: kotlin.Int) {
-        <parser.rules:{r | <r.name>(<r.index>)}; separator=",\n", wrap, anchor>
+        <parser.rules:{r | `<r.name>`(<r.index>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
@@ -896,7 +896,7 @@ import org.antlr.v4.kotlinruntime.misc.*
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName")
+@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "RemoveRedundantBackticks")
 public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
     public companion object {
         <atn>
@@ -912,7 +912,7 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
 
     <if(lexer.tokens)>
     public enum class Tokens(public val id: kotlin.Int) {
-        <lexer.tokens:{k | <k>(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
+        <lexer.tokens:{k | `<k>`(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
@@ -920,19 +920,19 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
         DEFAULT_TOKEN_CHANNEL(0),
         HIDDEN(1),
         <if(lexer.escapedChannels)>
-        <lexer.escapedChannels:{c | <c>(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
+        <lexer.escapedChannels:{c | `<c>`(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
         <endif>
     }
 
     public enum class Modes(public val id: kotlin.Int) {
         DEFAULT_MODE(0),
         <if(rest(lexer.modes))>
-        <rest(lexer.modes):{m | <m>(<i>)}; separator=",\n", wrap, anchor>
+        <rest(lexer.modes):{m | `<m>`(<i>)}; separator=",\n", wrap, anchor>
         <endif>
     }
 
     public enum class Rules {
-        <lexer.ruleNames:{r | <r>}; separator=",\n", wrap, anchor>
+        <lexer.ruleNames:{r | `<r>`}; separator=",\n", wrap, anchor>
     }
 
     override var interpreter: LexerATNSimulator =
