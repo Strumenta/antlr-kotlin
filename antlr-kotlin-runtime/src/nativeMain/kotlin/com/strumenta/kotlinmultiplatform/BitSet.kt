@@ -47,4 +47,32 @@ public actual class BitSet actual constructor() {
 
   public actual fun or(otherBitSet: BitSet): Unit =
     wrapped.or(otherBitSet.wrapped)
+
+  override fun equals(other: Any?): Boolean =
+    this === other || other is BitSet && wrapped == other.wrapped
+
+  override fun hashCode(): Int =
+    wrapped.hashCode()
+
+  override fun toString(): String {
+    val sb = StringBuilder()
+    var first = true
+    sb.append("{")
+
+    var index = nextSetBit(0)
+
+    while (index != -1) {
+      if (!first) {
+        sb.append(", ")
+      } else {
+        first = false
+      }
+
+      sb.append(index)
+      index = nextSetBit(index + 1)
+    }
+
+    sb.append("}")
+    return sb.toString()
+  }
 }
