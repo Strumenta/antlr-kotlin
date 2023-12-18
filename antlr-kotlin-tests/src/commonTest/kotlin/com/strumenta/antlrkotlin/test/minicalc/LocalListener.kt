@@ -4,7 +4,7 @@
  * Date: 13/06/2018
  * Time: 09:52
  */
-package com.strumenta.antlrkotlin.test
+package com.strumenta.antlrkotlin.test.minicalc
 
 import com.strumenta.antlrkotlin.test.generated.MiniCalcParser
 import com.strumenta.antlrkotlin.test.generated.MiniCalcParserBaseListener

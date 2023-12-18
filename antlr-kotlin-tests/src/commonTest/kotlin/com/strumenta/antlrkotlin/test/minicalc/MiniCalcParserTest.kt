@@ -1,7 +1,8 @@
 @file:Suppress("DEPRECATION")
 
-package com.strumenta.antlrkotlin.test
+package com.strumenta.antlrkotlin.test.minicalc
 
+import com.strumenta.antlrkotlin.test.ThrowingErrorListener
 import com.strumenta.antlrkotlin.test.generated.MiniCalcLexer
 import com.strumenta.antlrkotlin.test.generated.MiniCalcParser
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
