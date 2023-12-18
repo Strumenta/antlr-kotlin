@@ -224,56 +224,63 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
+@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf", "RemoveRedundantBackticks")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     public companion object {
-        private val decisionToDFA: Array\<DFA>
-        private val sharedContextCache = PredictionContextCache()
-        private val ruleNames =
+        <atn>
+
+        private val DECISION_TO_DFA = Array(ATN.numberOfDecisions) {
+            DFA(ATN.getDecisionState(it)!!, it)
+        }
+
+        private val SHARED_CONTEXT_CACHE = PredictionContextCache()
+        private val RULE_NAMES: Array\<String> =
             arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
 
-        private val tokenNames: Array\<String?> = Array(SYMBOLIC_NAMES.size) {
+        private val TOKEN_NAMES: Array\<String?> = Array(SYMBOLIC_NAMES.size) {
             VOCABULARY.getLiteralName(it)
                 ?: VOCABULARY.getSymbolicName(it)
                 ?: "\<INVALID>"
         }
-
-        <atn>
     }
 
     <if(parser.tokens)>
     public enum class Tokens(public val id: kotlin.Int) {
         EOF(-1),
-        <parser.tokens:{k | <k>(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
+        <parser.tokens:{k | `<k>`(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
     <if(parser.rules)>
     public enum class Rules(public val id: kotlin.Int) {
-        <parser.rules:{r | RULE_<r.name>(<r.index>)}; separator=",\n", wrap, anchor>
+        <parser.rules:{r | `<r.name>`(<r.index>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
     override var interpreter: ParserATNSimulator =
-        ParserATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
+        @Suppress("LeakingThis")
+        ParserATNSimulator(this, ATN, DECISION_TO_DFA, SHARED_CONTEXT_CACHE)
 
     override val grammarFileName: String =
         "<parser.grammarFileName>"
 
     @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
     override val tokenNames: Array\<String?> =
-        <parser.name>.tokenNames
+        TOKEN_NAMES
 
     override val ruleNames: Array\<String> =
-        <parser.name>.ruleNames
+        RULE_NAMES
 
     override val atn: ATN =
         ATN
 
     override val vocabulary: Vocabulary =
         VOCABULARY
+
+    override val serializedATN: String =
+        SERIALIZED_ATN
 
     <if(parser.tokens)>
     <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
@@ -306,7 +313,7 @@ private val LITERAL_NAMES: Array\<String?> =
 private val SYMBOLIC_NAMES: Array\<String?> =
     arrayOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
 
-private val VOCABULARY: Vocabulary = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
+private val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
 >>
 
 dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
@@ -366,7 +373,7 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 
 public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
     var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.name>}>)
-    enterRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id)
+    enterRule(_localctx, <currentRule.startState>, Rules.<currentRule.name>.id)
     <namedActions.init>
     <locals; separator="\n">
 
@@ -410,7 +417,7 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
     var _prevctx = _localctx
     var _startState = <currentRule.startState>
-    enterRecursionRule(_localctx, <currentRule.startState>, Rules.RULE_<currentRule.name>.id, _p)
+    enterRecursionRule(_localctx, <currentRule.startState>, Rules.<currentRule.name>.id, _p)
     <namedActions.init>
     <locals; separator="\n">
 
@@ -764,7 +771,7 @@ StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, exten
 @Suppress("FunctionName")
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
-        get() = Rules.RULE_<struct.derivedFromName>.id
+        get() = Rules.<struct.derivedFromName>.id
         set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
 
     <attrs:{a | public var <a>}; separator="\n">
@@ -843,7 +850,7 @@ _localctx.<label>.add(_prevctx!!)
 _localctx.<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
+pushNewRecursionContext(_localctx, _startState, Rules.<ruleName>.id)
 >>
 
 recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
@@ -855,7 +862,7 @@ _localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Conte
 (_localctx as <currentAltLabel; format="cap">Context).<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, Rules.RULE_<ruleName>.id)
+pushNewRecursionContext(_localctx, _startState, Rules.<ruleName>.id)
 >>
 
 recRuleReplaceContext(ctxName) ::= <<
@@ -889,19 +896,23 @@ import org.antlr.v4.kotlinruntime.misc.*
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName")
+@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "RemoveRedundantBackticks")
 public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
     public companion object {
-        private val decisionToDFA: Array\<DFA>
-        private val sharedContextCache = PredictionContextCache()
+        <atn>
+
+        private val DECISION_TO_DFA = Array(ATN.numberOfDecisions) {
+            DFA(ATN.getDecisionState(it)!!, it)
+        }
+
+        private val SHARED_CONTEXT_CACHE = PredictionContextCache()
 
         <vocabulary(lexer.literalNames, lexer.symbolicNames)>
-        <atn>
     }
 
     <if(lexer.tokens)>
     public enum class Tokens(public val id: kotlin.Int) {
-        <lexer.tokens:{k | <k>(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
+        <lexer.tokens:{k | `<k>`(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
     }
     <endif>
 
@@ -909,26 +920,24 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
         DEFAULT_TOKEN_CHANNEL(0),
         HIDDEN(1),
         <if(lexer.escapedChannels)>
-        <lexer.escapedChannels:{c | <c>(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
+        <lexer.escapedChannels:{c | `<c>`(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
         <endif>
     }
 
     public enum class Modes(public val id: kotlin.Int) {
         DEFAULT_MODE(0),
         <if(rest(lexer.modes))>
-        <rest(lexer.modes):{m | <m>(<i>)}; separator=",\n", wrap, anchor>
+        <rest(lexer.modes):{m | `<m>`(<i>)}; separator=",\n", wrap, anchor>
         <endif>
     }
 
     public enum class Rules {
-        <lexer.ruleNames:{r | <r>}; separator=",\n", wrap, anchor>
+        <lexer.ruleNames:{r | `<r>`}; separator=",\n", wrap, anchor>
     }
 
     override var interpreter: LexerATNSimulator =
-        LexerATNSimulator(this, ATN, decisionToDFA, sharedContextCache)
-
-    override val ruleNames: Array\<String> =
-        Rules.entries.map(Rules::name).toTypedArray()
+        @Suppress("LeakingThis")
+        LexerATNSimulator(this, ATN, DECISION_TO_DFA, SHARED_CONTEXT_CACHE)
 
     override val grammarFileName: String =
         "<lexer.grammarFileName>"
@@ -939,8 +948,17 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
     override val vocabulary: Vocabulary =
         VOCABULARY
 
+    override val serializedATN: String =
+        SERIALIZED_ATN
+
+    override val ruleNames: Array\<String> =
+        Rules.entries.map(Rules::name).toTypedArray()
+
     override val channelNames: Array\<String> =
         Channels.entries.map(Channels::name).toTypedArray()
+
+    override val modeNames: Array\<String> =
+        Modes.entries.map(Modes::name).toTypedArray()
 
     <namedActions.members>
 
@@ -951,44 +969,32 @@ public open class <lexer.name>(public val input: CharStream) : <superClass; null
 SerializedJavaATN(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-<model.segments:{segment|private const val serializedATNSegment<i0>: String =
+<model.segments:{segment|private const val SERIALIZED_ATN_SEGMENT<i0>: String =
     "<segment>";}; separator="\n">
-private val serializedATN: String =
-    listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
+private val SERIALIZED_ATN: String =
+    listOf(<model.segments:{segment | SERIALIZED_ATN_SEGMENT<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
-private const val serializedATN: String =
+private const val SERIALIZED_ATN: String =
     "<model.serialized>"
 <endif>
 
-private val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
-
-init {
-    decisionToDFA = Array(ATN.numberOfDecisions) {
-        DFA(ATN.getDecisionState(it)!!, it)
-    }
-}
+private val ATN = ATNDeserializer().deserialize(SERIALIZED_ATN.toCharArray())
 >>
 
 SerializedATNEnriched(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-<model.segments:{segment|private const val serializedATNSegment<i0>: String  =
+<model.segments:{segment|private const val SERIALIZED_ATN_SEGMENT<i0>: String  =
     "<segment>";}; separator="\n">
-private val serializedATN: String =
-    listOf(<model.segments:{segment | serializedATNSegment<i0>}; separator=",\n">).joinToString("")
+private val SERIALIZED_ATN: String =
+    listOf(<model.segments:{segment | SERIALIZED_ATN_SEGMENT<i0>}; separator=",\n">).joinToString("")
 <else>
 <! only one segment, can be inlined !>
-private const val serializedATN: String =
+private const val SERIALIZED_ATN: String =
     "<model.serialized>"
 <endif>
-private val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
-
-init {
-    decisionToDFA = Array(ATN.numberOfDecisions) {
-        DFA(ATN.getDecisionState(it)!!, it)
-    }
-}
+private val ATN = ATNDeserializer().deserialize(SERIALIZED_ATN.toCharArray())
 >>
 
 // Using a type to init value map, try to init a type; if not in table must be an object, default value is "null".

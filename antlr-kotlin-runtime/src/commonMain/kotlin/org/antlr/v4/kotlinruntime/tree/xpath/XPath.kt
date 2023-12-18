@@ -8,6 +8,7 @@ package org.antlr.v4.kotlinruntime.tree.xpath
 
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.tree.ParseTree
+import org.antlr.v4.kotlinruntime.tree.xpath.XPathLexer.Tokens
 
 /**
  * Represent a subset of XPath XML path syntax for use in identifying nodes in
@@ -22,7 +23,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTree
  * But that is just shorthand for:
  *
  * ```
- * val p: XPath = XPath(parser, pathString)
+ * val p = XPath(parser, pathString)
  * return p.evaluate(tree)
  * ```
  *
@@ -68,6 +69,7 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
 
     lexer.removeErrorListeners()
     lexer.addErrorListener(XPathLexerErrorListener())
+
     val tokenStream = CommonTokenStream(lexer)
 
     try {
@@ -88,13 +90,13 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
       var next: Token?
 
       when (el.type) {
-        XPathLexer.ROOT,
-        XPathLexer.ANYWHERE -> {
-          val anywhere = el.type == XPathLexer.ANYWHERE
+        Tokens.Root.id,
+        Tokens.Anywhere.id -> {
+          val anywhere = el.type == Tokens.Anywhere.id
           i++
           next = tokens[i]
 
-          val invert = next.type == XPathLexer.BANG
+          val invert = next.type == Tokens.Bang.id
 
           if (invert) {
             i++
@@ -106,9 +108,9 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
           elements.add(pathElement)
           i++
         }
-        XPathLexer.TOKEN_REF,
-        XPathLexer.RULE_REF,
-        XPathLexer.WILDCARD -> {
+        Tokens.TokenRef.id,
+        Tokens.RuleRef.id,
+        Tokens.Wildcard.id -> {
           elements.add(getXPathElement(el, false))
           i++
         }
@@ -130,20 +132,20 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
       throw IllegalArgumentException("Missing path element at end of path")
     }
 
-    val word = wordToken.text!!
+    val word = wordToken.text ?: throw IllegalStateException("Expected wordToken to have text content")
     val ttype = parser.getTokenType(word)
     val ruleIndex = parser.getRuleIndex(word)
 
     return when (wordToken.type) {
-      XPathLexer.WILDCARD -> {
+      Tokens.Wildcard.id -> {
         if (anywhere) {
           XPathWildcardAnywhereElement()
         } else {
           XPathWildcardElement()
         }
       }
-      XPathLexer.TOKEN_REF,
-      XPathLexer.STRING -> {
+      Tokens.TokenRef.id,
+      Tokens.String.id -> {
         if (ttype == Token.INVALID_TYPE) {
           throw IllegalArgumentException("$word at index ${wordToken.startIndex} isn't a valid token name")
         }
@@ -175,7 +177,7 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
    */
   public open fun evaluate(t: ParseTree): Collection<ParseTree> {
     val dummyRoot = ParserRuleContext()
-    dummyRoot.children = mutableListOf(t) // Don't set t's parent.
+    dummyRoot.addChild(t as ParserRuleContext)
 
     var work = setOf<ParseTree>(dummyRoot)
     var i = 0
