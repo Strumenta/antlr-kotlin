@@ -4,10 +4,10 @@
  * Date: 13/06/2018
  * Time: 09:52
  */
-package com.strumenta.antlrkotlin.tests
+package com.strumenta.antlrkotlin.test.minicalc
 
-import com.strumenta.antlrkotlin.tests.generated.MiniCalcParser
-import com.strumenta.antlrkotlin.tests.generated.MiniCalcParserBaseListener
+import com.strumenta.antlrkotlin.test.generated.MiniCalcParser
+import com.strumenta.antlrkotlin.test.generated.MiniCalcParserBaseListener
 import org.antlr.v4.kotlinruntime.tree.ParseTree
 
 @Suppress("UNUSED_PARAMETER")
