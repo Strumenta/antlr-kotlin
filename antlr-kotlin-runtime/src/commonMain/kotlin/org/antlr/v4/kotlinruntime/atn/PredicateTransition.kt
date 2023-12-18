@@ -6,30 +6,33 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** TODO: this is old comment:
- * A tree of semantic predicates from the grammar AST if accessLabel==SEMPRED.
+/**
+ * TODO: this is old comment
+ *
+ * A tree of semantic predicates from the grammar AST if `label == SEMPRED`.
+ *
  * In the ATN, labels will always be exactly one predicate, but the DFA
  * may have to combine a bunch of them as it collects predicates from
  * multiple ATN configurations into a single DFA state.
  */
-class PredicateTransition(target: ATNState, val ruleIndex: Int, val predIndex: Int, val isCtxDependent: Boolean  // e.g., $i ref in pred
+public class PredicateTransition(
+  target: ATNState,
+  public val ruleIndex: Int,
+  public val predIndex: Int,
+  public val isCtxDependent: Boolean,  // e.g., $i ref in pred
 ) : AbstractPredicateTransition(target) {
+  override val serializationType: Int =
+    PREDICATE
 
-    override val serializationType: Int
-        get() = Transition.PREDICATE
+  override val isEpsilon: Boolean =
+    true
 
-    override val isEpsilon: Boolean
-        get() = true
+  public val predicate: SemanticContext.Predicate
+    get() = SemanticContext.Predicate(ruleIndex, predIndex, isCtxDependent)
 
-    val predicate: SemanticContext.Predicate
-        get() = SemanticContext.Predicate(ruleIndex, predIndex, isCtxDependent)
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    false
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return false
-    }
-
-    override fun toString(): String {
-        return "pred_$ruleIndex:$predIndex"
-    }
-
+  override fun toString(): String =
+    "pred_$ruleIndex:$predIndex"
 }

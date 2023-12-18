@@ -7,34 +7,27 @@ package org.antlr.v4.kotlinruntime.misc
 
 /**
  * This default implementation of [EqualityComparator] uses object equality
- * for comparisons by calling [Object.hashCode] and [Object.equals].
+ * for comparisons by calling [Any.hashCode] and [Any.equals].
  *
  * @author Sam Harwell
  */
-class ObjectEqualityComparator<in T> : AbstractEqualityComparator<T>() {
-    override fun hashCode(obj: T): Int {
-        return obj?.hashCode() ?: 0
-    }
+public class ObjectEqualityComparator<in T> : AbstractEqualityComparator<T>() {
+  public companion object {
+    public val INSTANCE: ObjectEqualityComparator<Any?> = ObjectEqualityComparator()
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     *
-     * This implementation relies on object equality. If both objects are
-     * `null`, this method returns `true`. Otherwise if only
-     * `a` is `null`, this method returns `false`. Otherwise,
-     * this method returns the result of
-     * `a.`[equals][Object.equals]`(b)`.
-     */
-    override fun equals(a: T?, b: T?): Boolean {
-        return if (a == null) {
-            b == null
-        } else a == b
-    }
+  override fun hashCode(obj: T): Int =
+    obj?.hashCode() ?: 0
 
-
-    companion object {
-        val INSTANCE = ObjectEqualityComparator<Any?>()
-    }
-
+  /**
+   * This implementation relies on object equality.
+   *
+   * If both objects are `null`, this method returns `true`.
+   *
+   * Otherwise, if only [a] is `null` this method returns `false`.
+   *
+   * Otherwise, this method returns the result of `a == b`.
+   */
+  override fun equals(a: T?, b: T?): Boolean =
+    (a == null && b == null) || a == b
 }

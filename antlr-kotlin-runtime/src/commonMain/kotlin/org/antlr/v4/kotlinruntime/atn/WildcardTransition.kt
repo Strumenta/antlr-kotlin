@@ -6,16 +6,13 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-class WildcardTransition(target: ATNState) : Transition(target) {
+public class WildcardTransition(target: ATNState) : Transition(target) {
+  override val serializationType: Int =
+    WILDCARD
 
-    override val serializationType: Int
-        get() = Transition.WILDCARD
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    symbol in minVocabSymbol..maxVocabSymbol
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return symbol >= minVocabSymbol && symbol <= maxVocabSymbol
-    }
-
-    override fun toString(): String {
-        return "."
-    }
+  override fun toString(): String =
+    "."
 }

@@ -7,60 +7,51 @@
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.Parser
+import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.Interval
 
-open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
+public open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
+  private var parent: ParseTree? = null
 
-    private var parent: ParseTree? = null
+  override val childCount: Int = 0
 
-    override fun assignParent(value: ParseTree?) {
-        this.parent = value
+  override val text: String
+    get() = symbol!!.text!!
+
+  override val payload: Token?
+    get() = symbol
+
+  override val sourceInterval: Interval
+    get() {
+      val tempSymbol = symbol ?: return Interval.INVALID
+      val tokenIndex = tempSymbol.tokenIndex
+      return Interval(tokenIndex, tokenIndex)
     }
 
-    override fun readParent(): ParseTree? {
-        return this.parent
-    }
-    //override var parent: ParseTree? = null
+  override fun readParent(): ParseTree? =
+    parent
 
-    override val sourceInterval: Interval
-        get() {
-            if (symbol == null) return Interval.INVALID
+  override fun assignParent(value: RuleContext?) {
+    parent = value
+  }
 
-            val tokenIndex = symbol!!.tokenIndex
-            return Interval(tokenIndex, tokenIndex)
-        }
+  override fun getChild(i: Int): ParseTree? =
+    null
 
-    override val childCount: Int
-        get() = 0
+  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T? =
+    visitor.visitTerminal(this)
 
-    override val text: String
-        get() = symbol!!.text!!
+  override fun toStringTree(parser: Parser): String =
+    toString()
 
-    override fun getChild(i: Int): ParseTree? {
-        return null
-    }
-
-//    override fun setParent(parent: RuleContext) {
-//        this.parent = parent
-//    }
-
-    override val payload: Token?
-        get() = symbol
-
-    override fun <T> accept(visitor: ParseTreeVisitor<out T>): T? {
-        return visitor.visitTerminal(this)
+  override fun toString(): String =
+    if (symbol!!.type == Token.EOF) {
+      "<EOF>"
+    } else {
+      symbol!!.text!!
     }
 
-    override fun toStringTree(parser: Parser): String {
-        return toString()
-    }
-
-    override fun toString(): String {
-        return if (symbol!!.type == Token.EOF) "<EOF>" else symbol!!.text!!
-    }
-
-    override fun toStringTree(): String {
-        return toString()
-    }
+  override fun toStringTree(): String =
+    toString()
 }

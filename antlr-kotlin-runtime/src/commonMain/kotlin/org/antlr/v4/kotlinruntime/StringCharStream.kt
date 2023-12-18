@@ -1,11 +1,14 @@
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.Math
 import com.strumenta.kotlinmultiplatform.assert
 import com.strumenta.kotlinmultiplatform.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.math.min
 
-class StringCharStream(private val source: String, override val sourceName: String) : CharStream {
+public class StringCharStream(
+  private val source: String,
+  override val sourceName: String = IntStream.UNKNOWN_SOURCE_NAME,
+) : CharStream {
   private val codePointIndices = source.codePointIndices()
   private val size = codePointIndices.size
   private var position = 0
@@ -46,8 +49,8 @@ class StringCharStream(private val source: String, override val sourceName: Stri
     getText(Interval.of(0, size - 1))
 
   override fun getText(interval: Interval): String {
-    val startIndex = Math.min(interval.a, size)
-    val endIndex = Math.min(interval.b, size)
+    val startIndex = min(interval.a, size)
+    val endIndex = min(interval.b, size)
     return source.substring(codePointIndices[startIndex], codePointIndices[endIndex] + 1)
   }
 

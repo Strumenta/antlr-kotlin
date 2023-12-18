@@ -12,50 +12,114 @@ import org.antlr.v4.kotlinruntime.atn.LexerATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
 
-class LexerInterpreter(override val grammarFileName: String, override val vocabulary: Vocabulary, ruleNames: Collection<String>, channelNames: Collection<String>, modeNames: Collection<String>, override val atn: ATN, input: CharStream) : Lexer(input) {
+public open class LexerInterpreter : Lexer {
+  private val _decisionToDFA: Array<DFA>
+  private val _sharedContextCache = PredictionContextCache()
+  private val _grammarFileName: String
+  private val _vocabulary: Vocabulary
+  private val _atn: ATN
+  private val _tokenNames: Array<String?>
+  private val _ruleNames: Array<String>
+  private val _channelNames: Array<String>
+  private val _modeNames: Array<String>
+  private var _interpreter: LexerATNSimulator
 
-
-    @Deprecated("")
-    @get:Deprecated("")
-    override val tokenNames: Array<String?>?
-    override val ruleNames: Array<String>?
-    override val channelNames: Array<String>?
-    override val modeNames: Array<String>?
-
-    protected val _decisionToDFA: Array<DFA?>
-    protected val _sharedContextCache = PredictionContextCache()
-
-    @Deprecated("")
-    constructor(grammarFileName: String, tokenNames: Collection<String>, ruleNames: Collection<String>, modeNames: Collection<String>, atn: ATN, input: CharStream) : this(grammarFileName, VocabularyImpl.fromTokenNames(tokenNames.toTypedArray<String?>()), ruleNames, ArrayList<String>(), modeNames, atn, input) {
+  override var interpreter: LexerATNSimulator
+    get() = _interpreter
+    set(value) {
+      _interpreter = value
     }
 
-    @Deprecated("")
-    constructor(grammarFileName: String, vocabulary: Vocabulary, ruleNames: Collection<String>, modeNames: Collection<String>, atn: ATN, input: CharStream) : this(grammarFileName, vocabulary, ruleNames, ArrayList<String>(), modeNames, atn, input) {
+  override val grammarFileName: String
+    get() = _grammarFileName
+
+  override val vocabulary: Vocabulary
+    get() = _vocabulary
+
+  override val atn: ATN
+    get() = _atn
+
+  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+  override val tokenNames: Array<String?>
+    get() = _tokenNames
+
+  override val ruleNames: Array<String>
+    get() = _ruleNames
+
+  override val channelNames: Array<String>
+    get() = _channelNames
+
+  override val modeNames: Array<String>
+    get() = _modeNames
+
+  public constructor(
+    grammarFileName: String,
+    vocabulary: Vocabulary,
+    ruleNames: Collection<String>,
+    channelNames: Collection<String>,
+    modeNames: Collection<String>,
+    atn: ATN,
+    input: CharStream,
+  ) : super(input) {
+    if (atn.grammarType != ATNType.LEXER) {
+      throw IllegalArgumentException("The ATN must be a lexer ATN.")
     }
 
-    init {
+    this._grammarFileName = grammarFileName
+    this._atn = atn
 
-        if (atn.grammarType != ATNType.LEXER) {
-            throw IllegalArgumentException("The ATN must be a lexer ATN.")
-        }
-        this.tokenNames = arrayOfNulls(atn.maxTokenType)
-        for (i in tokenNames!!.indices) {
-            tokenNames!![i] = vocabulary!!.getDisplayName(i)
-        }
+    _tokenNames = arrayOfNulls(atn.maxTokenType)
 
-        this.ruleNames = ruleNames.toTypedArray()
-        this.channelNames = channelNames.toTypedArray()
-        this.modeNames = modeNames.toTypedArray()
-
-        this._decisionToDFA = arrayOfNulls<DFA>(atn.numberOfDecisions)
-        for (i in _decisionToDFA.indices) {
-            _decisionToDFA[i] = DFA(atn.getDecisionState(i)!!, i)
-        }
-        this.interpreter = LexerATNSimulator(this, atn, _decisionToDFA, _sharedContextCache)
+    for (i in _tokenNames.indices) {
+      _tokenNames[i] = vocabulary.getDisplayName(i)
     }
 
-//    fun getVocabulary(): Vocabulary {
-//        return vocabulary ?: super.vocabulary
-//
-//    }
+    this._ruleNames = ruleNames.toTypedArray()
+    this._channelNames = channelNames.toTypedArray()
+    this._modeNames = modeNames.toTypedArray()
+    this._vocabulary = vocabulary
+
+    _decisionToDFA = Array(atn.numberOfDecisions) {
+      DFA(atn.getDecisionState(it)!!, it)
+    }
+
+    @Suppress("LeakingThis")
+    _interpreter = LexerATNSimulator(this, atn, _decisionToDFA, _sharedContextCache)
+  }
+
+  @Deprecated("Use another constructor")
+  public constructor(
+    grammarFileName: String,
+    tokenNames: Collection<String>,
+    ruleNames: Collection<String>,
+    modeNames: Collection<String>,
+    atn: ATN,
+    input: CharStream,
+  ) : this(
+    grammarFileName,
+    VocabularyImpl.fromTokenNames(tokenNames.toTypedArray()),
+    ruleNames,
+    ArrayList<String>(),
+    modeNames,
+    atn,
+    input,
+  )
+
+  @Deprecated("Use another constructor")
+  public constructor(
+    grammarFileName: String,
+    vocabulary: Vocabulary,
+    ruleNames: Collection<String>,
+    modeNames: Collection<String>,
+    atn: ATN,
+    input: CharStream,
+  ) : this(
+    grammarFileName,
+    vocabulary,
+    ruleNames,
+    ArrayList<String>(),
+    modeNames,
+    atn,
+    input,
+  )
 }

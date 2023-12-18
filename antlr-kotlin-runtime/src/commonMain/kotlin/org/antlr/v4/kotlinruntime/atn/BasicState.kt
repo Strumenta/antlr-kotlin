@@ -7,12 +7,9 @@
 package org.antlr.v4.kotlinruntime.atn
 
 /**
- *
  * @author Sam Harwell
  */
-class BasicState : ATNState() {
-
-    override val stateType: Int
-        get() = ATNState.BASIC
-
+public class BasicState : ATNState() {
+  override val stateType: Int =
+    BASIC
 }

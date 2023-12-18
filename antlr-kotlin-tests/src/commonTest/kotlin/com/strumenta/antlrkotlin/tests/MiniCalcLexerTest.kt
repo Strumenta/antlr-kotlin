@@ -15,7 +15,7 @@ class MiniCalcLexerTest {
     val input = ANTLRInputStream("1 + 2")
     val lexer = MiniCalcLexer(input)
     val interpreter = lexer.interpreter
-    val result = interpreter!!.match(input, 0)
+    val result = interpreter.match(input, 0)
     assertEquals(11, result)
   }
 
@@ -35,10 +35,10 @@ class MiniCalcLexerTest {
     val input = ANTLRInputStream("1 + 2")
     val lexer = MiniCalcLexer(input)
     val interpreter = lexer.interpreter
-    val decisionToDFA = interpreter!!.decisionToDFA
+    val decisionToDFA = interpreter.decisionToDFA
     val mode = 0
     val dfa = decisionToDFA[mode]
-    assertEquals(true, dfa!!.s0 != null)
+    assertEquals(true, dfa.s0 != null)
     assertEquals(0, dfa.s0!!.stateNumber)
   }
 

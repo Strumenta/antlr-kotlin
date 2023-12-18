@@ -7,95 +7,84 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
+import kotlin.js.JsName
+import kotlin.reflect.KClass
 
-/** An ATN transition between any two ATN states.  Subclasses define
- * atom, set, epsilon, action, predicate, rule transitions.
+/**
+ * An ATN transition between any two ATN states.
  *
+ * Subclasses define atom, set, epsilon, action, predicate, rule transitions.
  *
- * This is a one way link.  It emanates from a state (usually via a list of
+ * This is a one way link. It emanates from a state (usually via a list of
  * transitions) and has a target state.
- *
  *
  * Since we never have to change the ATN transitions once we construct it,
  * we can fix these transitions as specific classes. The DFA transitions
  * on the other hand need to update the labels as it adds transitions to
  * the states. We'll use the term Edge for the DFA to distinguish them from
  * ATN transitions.
+ *
+ * @param target The target of this transition
  */
-abstract class Transition protected constructor(
-        /** The target of this transition.  */
+public abstract class Transition protected constructor(public var target: ATNState) {
+  public companion object {
+    // Constants for serialization
+    public const val EPSILON: Int = 1
+    public const val RANGE: Int = 2
+    public const val RULE: Int = 3
+    public const val PREDICATE: Int = 4 // e.g., {isType(input.LT(1))}?
+    public const val ATOM: Int = 5
+    public const val ACTION: Int = 6
+    public const val SET: Int = 7 // ~(A|B) or ~atom, wildcard, which convert to next 2
+    public const val NOT_SET: Int = 8
+    public const val WILDCARD: Int = 9
+    public const val PRECEDENCE: Int = 10
 
-        var target: ATNState?) {
+    public val serializationNames: List<String> = listOf(
+      "INVALID",
+      "EPSILON",
+      "RANGE",
+      "RULE",
+      "PREDICATE",
+      "ATOM",
+      "ACTION",
+      "SET",
+      "NOT_SET",
+      "WILDCARD",
+      "PRECEDENCE"
+    )
 
-    abstract val serializationType: Int
-
-    /**
-     * Determines if the transition is an "epsilon" transition.
-     *
-     *
-     * The default implementation returns `false`.
-     *
-     * @return `true` if traversing this transition in the ATN does not
-     * consume an input symbol; otherwise, `false` if traversing this
-     * transition consumes (matches) an input symbol.
-     */
-    open val isEpsilon: Boolean
-        get() = false
-
-    init {
-        if (target == null) {
-            throw NullPointerException("target cannot be null.")
-        }
+    public val serializationTypes: Map<KClass<out Transition>, Int> = buildMap {
+      put(EpsilonTransition::class, EPSILON)
+      put(RangeTransition::class, RANGE)
+      put(RuleTransition::class, RULE)
+      put(PredicateTransition::class, PREDICATE)
+      put(AtomTransition::class, ATOM)
+      put(ActionTransition::class, ACTION)
+      put(SetTransition::class, SET)
+      put(NotSetTransition::class, NOT_SET)
+      put(WildcardTransition::class, WILDCARD)
+      put(PrecedencePredicateTransition::class, PRECEDENCE)
     }
+  }
 
+  public abstract val serializationType: Int
 
-    open fun accessLabel(): IntervalSet? {
-        return null
-    }
+  /**
+   * Determines if the transition is an "epsilon" transition.
+   *
+   * The default implementation returns `false`.
+   *
+   * @return `true` if traversing this transition in the ATN does not
+   *   consume an input symbol, otherwise `false` if traversing this
+   *   transition consumes (matches) an input symbol
+   */
+  public open val isEpsilon: Boolean =
+    false
 
-    abstract fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean
+  @JsName("getLabel")
+  public open fun label(): IntervalSet? =
+    null
 
-    companion object {
-        // constants for serialization
-        val EPSILON = 1
-        val RANGE = 2
-        val RULE = 3
-        val PREDICATE = 4 // e.g., {isType(input.LT(1))}?
-        val ATOM = 5
-        val ACTION = 6
-        val SET = 7 // ~(A|B) or ~atom, wildcard, which convert to next 2
-        val NOT_SET = 8
-        val WILDCARD = 9
-        val PRECEDENCE = 10
-
-
-        val serializationNames = listOf(
-                "INVALID",
-                "EPSILON",
-                "RANGE",
-                "RULE",
-                "PREDICATE",
-                "ATOM",
-                "ACTION",
-                "SET",
-                "NOT_SET",
-                "WILDCARD",
-                "PRECEDENCE"
-        )
-
-//        val serializationTypes = Collections.unmodifiableMap<Class<out Transition>, Int>(object : HashMap<Class<out Transition>, Int>() {
-//            init {
-//                put(EpsilonTransition::class.java, EPSILON)
-//                put(RangeTransition::class.java, RANGE)
-//                put(RuleTransition::class.java, RULE)
-//                put(PredicateTransition::class.java, PREDICATE)
-//                put(AtomTransition::class.java, ATOM)
-//                put(ActionTransition::class.java, ACTION)
-//                put(SetTransition::class.java, SET)
-//                put(NotSetTransition::class.java, NOT_SET)
-//                put(WildcardTransition::class.java, WILDCARD)
-//                put(PrecedencePredicateTransition::class.java, PRECEDENCE)
-//            }
-//        })
-    }
+  public abstract fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean
 }

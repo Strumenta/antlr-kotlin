@@ -10,53 +10,53 @@ package org.antlr.v4.kotlinruntime.atn
  *
  * @author Sam Harwell
  */
-class ATNDeserializationOptions {
+@Suppress("MemberVisibilityCanBePrivate")
+public open class ATNDeserializationOptions {
+  public companion object {
+    public val defaultOptions: ATNDeserializationOptions = ATNDeserializationOptions()
 
-    var isReadOnly: Boolean = false
-        private set
-    private var verifyATN: Boolean = false
-    private var generateRuleBypassTransitions: Boolean = false
+    init {
+      defaultOptions.makeReadOnly()
+    }
+  }
 
-    var isVerifyATN: Boolean
-        get() = verifyATN
-        set(verifyATN) {
-            throwIfReadOnly()
-            this.verifyATN = verifyATN
-        }
+  private var verifyATN = false
+  private var generateRuleBypassTransitions = false
 
-    var isGenerateRuleBypassTransitions: Boolean
-        get() = generateRuleBypassTransitions
-        set(generateRuleBypassTransitions) {
-            throwIfReadOnly()
-            this.generateRuleBypassTransitions = generateRuleBypassTransitions
-        }
+  public var isReadOnly: Boolean = false
+    private set
 
-    constructor() {
-        this.verifyATN = true
-        this.generateRuleBypassTransitions = false
+  public var isVerifyATN: Boolean
+    get() = verifyATN
+    set(verifyATN) {
+      throwIfReadOnly()
+      this.verifyATN = verifyATN
     }
 
-    constructor(options: ATNDeserializationOptions) {
-        this.verifyATN = options.verifyATN
-        this.generateRuleBypassTransitions = options.generateRuleBypassTransitions
+  public var isGenerateRuleBypassTransitions: Boolean
+    get() = generateRuleBypassTransitions
+    set(value) {
+      throwIfReadOnly()
+      generateRuleBypassTransitions = value
     }
 
-    fun makeReadOnly() {
-        isReadOnly = true
-    }
+  public constructor() {
+    verifyATN = true
+    generateRuleBypassTransitions = false
+  }
 
-    protected fun throwIfReadOnly() {
-        if (isReadOnly) {
-            throw IllegalStateException("The object is read only.")
-        }
-    }
+  public constructor(options: ATNDeserializationOptions) {
+    verifyATN = options.verifyATN
+    generateRuleBypassTransitions = options.generateRuleBypassTransitions
+  }
 
-    companion object {
-        val defaultOptions: ATNDeserializationOptions
+  public open fun makeReadOnly() {
+    isReadOnly = true
+  }
 
-        init {
-            defaultOptions = ATNDeserializationOptions()
-            defaultOptions.makeReadOnly()
-        }
+  protected open fun throwIfReadOnly() {
+    if (isReadOnly) {
+      throw IllegalStateException("The object is read only.")
     }
+  }
 }

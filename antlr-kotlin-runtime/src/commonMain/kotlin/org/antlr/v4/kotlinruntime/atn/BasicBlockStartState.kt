@@ -7,10 +7,9 @@
 package org.antlr.v4.kotlinruntime.atn
 
 /**
- *
  * @author Sam Harwell
  */
-class BasicBlockStartState : BlockStartState() {
-    override val stateType: Int
-        get() = ATNState.BLOCK_START
+public class BasicBlockStartState : BlockStartState() {
+  override val stateType: Int =
+    BLOCK_START
 }

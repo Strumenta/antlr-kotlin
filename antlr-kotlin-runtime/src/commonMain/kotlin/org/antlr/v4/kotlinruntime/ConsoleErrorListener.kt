@@ -8,38 +8,32 @@ package org.antlr.v4.kotlinruntime
 import com.strumenta.kotlinmultiplatform.System
 
 /**
- *
  * @author Sam Harwell
  */
-class ConsoleErrorListener : BaseErrorListener() {
-
+public open class ConsoleErrorListener : BaseErrorListener() {
+  public companion object {
     /**
-     * {@inheritDoc}
-     *
-     *
-     *
-     * This implementation prints messages to [System.err] containing the
-     * values of `line`, `charPositionInLine`, and `msg` using
-     * the following format.
-     *
-     * <pre>
-     * line *line*:*charPositionInLine* *msg*
-    </pre> *
+     * Provides a default instance of [ConsoleErrorListener].
      */
-    override fun syntaxError(recognizer: Recognizer<*, *>,
-                             offendingSymbol: Any?,
-                             line: Int,
-                             charPositionInLine: Int,
-                             msg: String,
-                             e: RecognitionException?) {
-        System.err.println("line $line:$charPositionInLine $msg")
-    }
+    public val INSTANCE: ConsoleErrorListener = ConsoleErrorListener()
+  }
 
-    companion object {
-        /**
-         * Provides a default instance of [ConsoleErrorListener].
-         */
-        val INSTANCE = ConsoleErrorListener()
-    }
-
+  /**
+   * This implementation prints messages to [System.err] containing the
+   * values of [line], [charPositionInLine], and [msg] using the following format:
+   *
+   * ```
+   * line *line*:*charPositionInLine* *msg*
+   * ```
+   */
+  override fun syntaxError(
+    recognizer: Recognizer<*, *>,
+    offendingSymbol: Any?,
+    line: Int,
+    charPositionInLine: Int,
+    msg: String,
+    e: RecognitionException?,
+  ) {
+    System.err.println("line $line:$charPositionInLine $msg")
+  }
 }

@@ -6,25 +6,28 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-class MultiMap<K, V> : MutableMap<K, MutableList<V>> by mutableMapOf() {
+public class MultiMap<K, V> : MutableMap<K, MutableList<V>> by LinkedHashMap() {
+  public val pairs: List<Pair<K, V>>
+    get() {
+      val pairs = ArrayList<Pair<K, V>>()
 
-    val pairs: List<Pair<K, V>>
-        get() {
-            val pairs = ArrayList<Pair<K, V>>()
-            for (key in keys) {
-                for (value in get(key)!!) {
-                    pairs.add(Pair(key, value))
-                }
-            }
-            return pairs
+      for (key in keys) {
+        for (value in getValue(key)) {
+          pairs.add(Pair(key, value))
         }
+      }
 
-    fun map(key: K, value: V) {
-        var elementsForKey: MutableList<V>? = get(key)
-        if (elementsForKey == null) {
-            elementsForKey = ArrayList()
-            put(key, elementsForKey)
-        }
-        elementsForKey.add(value)
+      return pairs
     }
+
+  public fun map(key: K, value: V) {
+    var elementsForKey = get(key)
+
+    if (elementsForKey == null) {
+      elementsForKey = ArrayList()
+      put(key, elementsForKey)
+    }
+
+    elementsForKey.add(value)
+  }
 }

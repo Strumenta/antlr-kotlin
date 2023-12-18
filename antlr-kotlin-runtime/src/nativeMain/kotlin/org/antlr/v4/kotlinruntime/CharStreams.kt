@@ -1,3 +1,3 @@
 package org.antlr.v4.kotlinruntime
 
-actual object CharStreams : AbstractCharStreams()
+public actual object CharStreams : AbstractCharStreams()

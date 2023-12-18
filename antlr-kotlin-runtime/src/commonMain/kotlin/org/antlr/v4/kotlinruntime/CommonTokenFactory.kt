@@ -9,77 +9,59 @@ package org.antlr.v4.kotlinruntime
 import org.antlr.v4.kotlinruntime.misc.Interval
 
 /**
- * This default implementation of [TokenFactory] creates
- * [CommonToken] objects.
+ * This default implementation of [TokenFactory] creates [CommonToken] objects.
  */
-class CommonTokenFactory
-/**
- * Constructs a [CommonTokenFactory] with the specified value for
- * [.copyText].
- *
- *
- *
- * When `copyText` is `false`, the [.DEFAULT] instance
- * should be used instead of constructing a new instance.
- *
- * @param copyText The value for [.copyText].
- */
-constructor(
-        /**
-         * Indicates whether [CommonToken.setText] should be called after
-         * constructing tokens to explicitly set the text. This is useful for cases
-         * where the input stream might not be able to provide arbitrary substrings
-         * of text from the input after the lexer creates a token (e.g. the
-         * implementation of [CharStream.getText] in
-         * [UnbufferedCharStream] throws an
-         * [UnsupportedOperationException]). Explicitly setting the token text
-         * allows [Token.getText] to be called at any time regardless of the
-         * input stream implementation.
-         *
-         *
-         *
-         * The default value is `false` to avoid the performance and memory
-         * overhead of copying text for every token unless explicitly requested.
-         */
-        protected val copyText: Boolean = false) : TokenFactory<CommonToken> {
+@Suppress("MemberVisibilityCanBePrivate")
+public open class CommonTokenFactory(
+  /**
+   * Indicates whether [CommonToken.text] should be called after
+   * constructing tokens to explicitly set the text.
+   *
+   * This is useful for cases where the input stream might not be able
+   * to provide arbitrary substrings of text from the input after
+   * the lexer creates a token (e.g., the implementation of [CharStream.getText] in
+   * [UnbufferedCharStream] throws an [UnsupportedOperationException]).
+   *
+   * Explicitly setting the token text allows [Token.text] to be called
+   * at any time regardless of the input stream implementation.
+   *
+   * The default value is `false` to avoid the performance and memory
+   * overhead of copying text for every token unless explicitly requested.
+   */
+  protected val copyText: Boolean = false,
+) : TokenFactory<CommonToken> {
+  public companion object {
+    /**
+     * The default [CommonTokenFactory] instance.
+     *
+     * This token factory does not explicitly copy token text when constructing tokens.
+     */
+    public val DEFAULT: TokenFactory<CommonToken> = CommonTokenFactory()
+  }
 
-    override fun create(source: Pair<TokenSource?, CharStream?>, type: Int, text: String?,
-                        channel: Int, start: Int, stop: Int,
-                        line: Int, charPositionInLine: Int): CommonToken {
-        val t = CommonToken(source, type, channel, start, stop)
-        t.line = line
-        t.charPositionInLine = charPositionInLine
-        if (text != null) {
-            t.text = text
-        } else if (copyText && source.second != null) {
-            t.text = source.second!!.getText(Interval.of(start, stop))
-        }
+  override fun create(
+    source: Pair<TokenSource?, CharStream?>,
+    type: Int,
+    text: String?,
+    channel: Int,
+    start: Int,
+    stop: Int,
+    line: Int,
+    charPositionInLine: Int,
+  ): CommonToken {
+    val t = CommonToken(source, type, channel, start, stop)
+    t.line = line
+    t.charPositionInLine = charPositionInLine
 
-        return t
+    if (text != null) {
+      t.text = text
+    } else if (copyText && source.second != null) {
+      t.text = source.second!!.getText(Interval.of(start, stop))
     }
 
-    override fun create(type: Int, text: String): CommonToken {
-        return CommonToken(type, text)
-    }
+    return t
+  }
 
-    companion object {
-        /**
-         * The default [CommonTokenFactory] instance.
-         *
-         *
-         *
-         * This token factory does not explicitly copy token text when constructing
-         * tokens.
-         */
-        val DEFAULT: TokenFactory<CommonToken> = CommonTokenFactory()
-    }
+  override fun create(type: Int, text: String): CommonToken =
+    CommonToken(type, text)
 }
-/**
- * Constructs a [CommonTokenFactory] with [.copyText] set to
- * `false`.
- *
- *
- *
- * The [.DEFAULT] instance should be used instead of calling this
- * directly.
- */

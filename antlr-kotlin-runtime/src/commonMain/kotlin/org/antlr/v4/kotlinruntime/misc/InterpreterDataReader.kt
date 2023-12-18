@@ -9,17 +9,16 @@ package org.antlr.v4.kotlinruntime.misc
 import org.antlr.v4.kotlinruntime.Vocabulary
 import org.antlr.v4.kotlinruntime.atn.ATN
 
-
+// TODO(Edoardo): this one requires reading files
 // A class to read plain text interpreter data produced by ANTLR.
-object InterpreterDataReader {
-
-    class InterpreterData {
-        internal var atn: ATN? = null
-        internal var vocabulary: Vocabulary? = null
-        internal var ruleNames: MutableList<String>? = null
-        internal var channels: MutableList<String>? = null // Only valid for lexer grammars.
-        internal var modes: MutableList<String>? = null // ditto
-    }
+public object InterpreterDataReader {
+  public class InterpreterData {
+    internal var atn: ATN? = null
+    internal var vocabulary: Vocabulary? = null
+    internal var ruleNames: MutableList<String>? = null
+    internal var channels: MutableList<String>? = null // Only valid for lexer grammars.
+    internal var modes: MutableList<String>? = null // ditto
+  }
 
 //    /**
 //     * The structure of the data file is very simple. Everything is line based with empty lines
@@ -130,5 +129,4 @@ object InterpreterDataReader {
 //
 //        return result
 //    }
-
 }

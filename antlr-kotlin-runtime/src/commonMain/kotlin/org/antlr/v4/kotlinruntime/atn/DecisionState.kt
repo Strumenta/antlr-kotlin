@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-abstract class DecisionState : ATNState() {
-    var decision = -1
-    var nonGreedy: Boolean = false
+public abstract class DecisionState : ATNState() {
+  public var decision: Int = -1
+  public var nonGreedy: Boolean = false
 }

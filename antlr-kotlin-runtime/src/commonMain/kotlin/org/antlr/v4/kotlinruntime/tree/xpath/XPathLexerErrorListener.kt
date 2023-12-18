@@ -6,13 +6,19 @@
 
 package org.antlr.v4.kotlinruntime.tree.xpath
 
-//import org.antlr.v4.runtime.BaseErrorListener
-//import org.antlr.v4.runtime.RecognitionException
-//import org.antlr.v4.runtime.Recognizer
-//
-//class XPathLexerErrorListener : BaseErrorListener() {
-//    fun syntaxError(recognizer: Recognizer<*, *>, offendingSymbol: Any,
-//                    line: Int, charPositionInLine: Int, msg: String,
-//                    e: RecognitionException) {
-//    }
-//}
+import org.antlr.v4.kotlinruntime.BaseErrorListener
+import org.antlr.v4.kotlinruntime.RecognitionException
+import org.antlr.v4.kotlinruntime.Recognizer
+
+public open class XPathLexerErrorListener : BaseErrorListener() {
+  override fun syntaxError(
+    recognizer: Recognizer<*, *>,
+    offendingSymbol: Any?,
+    line: Int,
+    charPositionInLine: Int,
+    msg: String,
+    e: RecognitionException?,
+  ) {
+    // Noop
+  }
+}

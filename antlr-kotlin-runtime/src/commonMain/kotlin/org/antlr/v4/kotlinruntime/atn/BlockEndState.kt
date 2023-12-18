@@ -6,10 +6,12 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-/** Terminal node of a simple `(a|b|c)` block.  */
-class BlockEndState : ATNState() {
-    var startState: BlockStartState? = null
+/**
+ * Terminal node of a simple `(a|b|c)` block.
+ */
+public class BlockEndState : ATNState() {
+  public var startState: BlockStartState? = null
 
-    override val stateType: Int
-        get() = ATNState.BLOCK_END
+  override val stateType: Int =
+    BLOCK_END
 }

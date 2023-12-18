@@ -20,13 +20,13 @@ import java.nio.file.Paths
 /**
  * This class represents the primary interface for creating [CharStream]s
  * from a variety of sources as of 4.7. The motivation was to support
- * Unicode code points > U+FFFF.
+ * Unicode code points > `U+FFFF`.
  *
  * [ANTLRInputStream] and [ANTLRFileStream] are now deprecated in favor
  * of the streams created by this interface.
  *
- * DEPRECATED: `new ANTLRFileStream("myinputfile")`
- * NEW:        `CharStreams.fromFileName("myinputfile")`
+ * - DEPRECATED: `ANTLRFileStream("myinputfile")`
+ * - NEW:        `CharStreams.fromFileName("myinputfile")`
  *
  * WARNING: if you use both the deprecated and the new streams, you will see
  * a nontrivial performance degradation. This speed hit is because the
@@ -53,11 +53,11 @@ import java.nio.file.Paths
  * as the old [ANTLRFileStream], which assumed 16-bit characters.
  *
  * A big shout-out to Ben Hamilton (github bhamiltoncx) for his superhuman
- * efforts across all targets to get true Unicode 3.1 support for U+10FFFF.
+ * efforts across all targets to get true Unicode 3.1 support for `U+10FFFF`.
  *
  * @since 4.7
  */
-actual object CharStreams : AbstractCharStreams() {
+public actual object CharStreams : AbstractCharStreams() {
   private const val DEFAULT_BUFFER_SIZE = 8 * 1024
 
   /**
@@ -69,7 +69,7 @@ actual object CharStreams : AbstractCharStreams() {
    */
   @JvmOverloads
   @Suppress("unused")
-  fun fromFileName(fileName: String, charset: Charset = Charsets.UTF_8): CharStream =
+  public fun fromFileName(fileName: String, charset: Charset = Charsets.UTF_8): CharStream =
     fromPath(Paths.get(fileName), charset)
 
   /**
@@ -80,7 +80,7 @@ actual object CharStreams : AbstractCharStreams() {
    */
   @JvmOverloads
   @Suppress("MemberVisibilityCanBePrivate")
-  fun fromPath(path: Path, charset: Charset = Charsets.UTF_8): CharStream {
+  public fun fromPath(path: Path, charset: Charset = Charsets.UTF_8): CharStream {
     val pathStr = path.toString()
     val channel = Files.newByteChannel(path)
     return fromChannel(channel, charset, pathStr)
@@ -88,7 +88,7 @@ actual object CharStreams : AbstractCharStreams() {
 
   @JvmOverloads
   @Suppress("unused")
-  fun fromStream(
+  public fun fromStream(
     inputStream: InputStream,
     charset: Charset = StandardCharsets.UTF_8,
     sourceName: String = IntStream.UNKNOWN_SOURCE_NAME,
@@ -106,7 +106,7 @@ actual object CharStreams : AbstractCharStreams() {
    */
   @JvmOverloads
   @Suppress("MemberVisibilityCanBePrivate")
-  fun fromChannel(
+  public fun fromChannel(
     channel: ReadableByteChannel,
     charset: Charset = Charsets.UTF_8,
     sourceName: String = IntStream.UNKNOWN_SOURCE_NAME,

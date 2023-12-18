@@ -10,43 +10,56 @@ import org.antlr.v4.kotlinruntime.atn.ATNConfigSet
 import org.antlr.v4.kotlinruntime.dfa.DFA
 
 /**
- * Provides an empty default implementation of [ANTLRErrorListener]. The
- * default implementation of each method does nothing, but can be overridden as
- * necessary.
+ * Provides an empty default implementation of [ANTLRErrorListener].
+ *
+ * The default implementation of each method does nothing,
+ * but can be overridden as necessary.
  *
  * @author Sam Harwell
  */
-open class BaseErrorListener : ANTLRErrorListener {
-    override fun syntaxError(recognizer: Recognizer<*, *>,
-                             offendingSymbol: Any?,
-                             line: Int,
-                             charPositionInLine: Int,
-                             msg: String,
-                             e: RecognitionException?) {
-    }
+public open class BaseErrorListener : ANTLRErrorListener {
+  override fun syntaxError(
+    recognizer: Recognizer<*, *>,
+    offendingSymbol: Any?,
+    line: Int,
+    charPositionInLine: Int,
+    msg: String,
+    e: RecognitionException?,
+  ) {
+    // Noop
+  }
 
-    override fun reportAmbiguity(recognizer: Parser,
-                                 dfa: DFA,
-                                 startIndex: Int,
-                                 stopIndex: Int,
-                                 exact: Boolean,
-                                 ambigAlts: BitSet,
-                                 configs: ATNConfigSet) {
-    }
+  override fun reportAmbiguity(
+    recognizer: Parser,
+    dfa: DFA,
+    startIndex: Int,
+    stopIndex: Int,
+    exact: Boolean,
+    ambigAlts: BitSet,
+    configs: ATNConfigSet,
+  ) {
+    // Noop
+  }
 
-    override fun reportAttemptingFullContext(recognizer: Parser,
-                                             dfa: DFA,
-                                             startIndex: Int,
-                                             stopIndex: Int,
-                                             conflictingAlts: BitSet,
-                                             configs: ATNConfigSet) {
-    }
+  override fun reportAttemptingFullContext(
+    recognizer: Parser,
+    dfa: DFA,
+    startIndex: Int,
+    stopIndex: Int,
+    conflictingAlts: BitSet,
+    configs: ATNConfigSet,
+  ) {
+    // Noop
+  }
 
-    override fun reportContextSensitivity(recognizer: Parser,
-                                          dfa: DFA,
-                                          startIndex: Int,
-                                          stopIndex: Int,
-                                          prediction: Int,
-                                          configs: ATNConfigSet) {
-    }
+  override fun reportContextSensitivity(
+    recognizer: Parser,
+    dfa: DFA,
+    startIndex: Int,
+    stopIndex: Int,
+    prediction: Int,
+    configs: ATNConfigSet,
+  ) {
+    // Noop
+  }
 }

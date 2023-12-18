@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.atn
 
 /**
- *
  * @author Sam Harwell
  */
-abstract class AbstractPredicateTransition(target: ATNState) : Transition(target)
+public abstract class AbstractPredicateTransition(target: ATNState) : Transition(target)

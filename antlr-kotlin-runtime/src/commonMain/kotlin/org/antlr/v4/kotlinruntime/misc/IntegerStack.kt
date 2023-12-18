@@ -6,27 +6,19 @@
 package org.antlr.v4.kotlinruntime.misc
 
 /**
- *
  * @author Sam Harwell
  */
-class IntegerStack : IntegerList {
+public class IntegerStack : IntegerList {
+  public constructor()
+  public constructor(capacity: Int) : super(capacity)
+  public constructor(list: IntegerStack) : super(list)
 
-    constructor() {}
+  public fun push(value: Int): Unit =
+    add(value)
 
-    constructor(capacity: Int) : super(capacity) {}
+  public fun pop(): Int =
+    removeAt(size() - 1)
 
-    constructor(list: IntegerStack) : super(list) {}
-
-    fun push(value: Int) {
-        add(value)
-    }
-
-    fun pop(): Int {
-        return removeAt(size() - 1)
-    }
-
-    fun peek(): Int {
-        return get(size() - 1)
-    }
-
+  public fun peek(): Int =
+    get(size() - 1)
 }

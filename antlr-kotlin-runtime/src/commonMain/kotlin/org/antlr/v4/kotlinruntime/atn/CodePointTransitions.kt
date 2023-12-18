@@ -11,26 +11,25 @@ package org.antlr.v4.kotlinruntime.atn
  * and [SetTransition] appropriately based on the range of the input.
  *
  * Previously, we distinguished between atom and range transitions for
- * Unicode code points <= U+FFFF and those above. We used a set
- * transition for a Unicode code point > U+FFFF. Now that we can serialize
+ * Unicode code points <= `U+FFFF` and those above. We used a set
+ * transition for a Unicode code point > `U+FFFF`. Now that we can serialize
  * 32-bit int/chars in the ATN serialization, this is no longer necessary.
  */
-object CodePointTransitions {
-    /**
-     * Return new [AtomTransition].
-     */
-    fun createWithCodePoint(target: ATNState, codePoint: Int): Transition {
-        return createWithCodePointRange(target, codePoint, codePoint)
-    }
+@Suppress("MemberVisibilityCanBePrivate")
+public object CodePointTransitions {
+  /**
+   * Return new [AtomTransition].
+   */
+  public fun createWithCodePoint(target: ATNState, codePoint: Int): Transition =
+    createWithCodePointRange(target, codePoint, codePoint)
 
-    /**
-     * Return new [AtomTransition] if range represents one atom, else [SetTransition].
-     */
-    fun createWithCodePointRange(target: ATNState, codePointFrom: Int, codePointTo: Int): Transition {
-        return if (codePointFrom == codePointTo) {
-            AtomTransition(target, codePointFrom)
-        } else {
-            RangeTransition(target, codePointFrom, codePointTo)
-        }
+  /**
+   * Return new [AtomTransition] if range represents one atom, else [SetTransition].
+   */
+  public fun createWithCodePointRange(target: ATNState, codePointFrom: Int, codePointTo: Int): Transition =
+    if (codePointFrom == codePointTo) {
+      AtomTransition(target, codePointFrom)
+    } else {
+      RangeTransition(target, codePointFrom, codePointTo)
     }
 }

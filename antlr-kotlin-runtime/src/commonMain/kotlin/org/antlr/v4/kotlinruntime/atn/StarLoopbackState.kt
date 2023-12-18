@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-class StarLoopbackState : ATNState() {
-    val loopEntryState: StarLoopEntryState
-        get() = transition(0).target as StarLoopEntryState
+public class StarLoopbackState : ATNState() {
+  public val loopEntryState: StarLoopEntryState
+    get() = transition(0).target as StarLoopEntryState
 
-    override val stateType: Int
-        get() = ATNState.STAR_LOOP_BACK
+  override val stateType: Int =
+    STAR_LOOP_BACK
 }

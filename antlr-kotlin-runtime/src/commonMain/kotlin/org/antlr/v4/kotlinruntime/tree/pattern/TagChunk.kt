@@ -7,82 +7,42 @@
 package org.antlr.v4.kotlinruntime.tree.pattern
 
 /**
- * Represents a placeholder tag in a tree pattern. A tag can have any of the
- * following forms.
+ * Represents a placeholder tag in a tree pattern.
+ * A tag can have any of the following forms.
  *
+ * - `expr`: An unlabeled placeholder for a parser rule `expr`
+ * - `ID`: An unlabeled placeholder for a token of type `ID`
+ * - `e:expr`: A labeled placeholder for a parser rule `expr`
+ * - `id:ID`: A labeled placeholder for a token of type `ID`
  *
- *  * `expr`: An unlabeled placeholder for a parser rule `expr`.
- *  * `ID`: An unlabeled placeholder for a token of type `ID`.
- *  * `e:expr`: A labeled placeholder for a parser rule `expr`.
- *  * `id:ID`: A labeled placeholder for a token of type `ID`.
- *
- *
- * This class does not perform any validation on the tag or accessLabel names aside
+ * This class does not perform any validation on the tag or label names aside
  * from ensuring that the tag is a non-null, non-empty string.
- */
-internal class TagChunk
-/**
- * Construct a new instance of [TagChunk] using the specified accessLabel
- * and tag.
  *
- * @param label The accessLabel for the tag. If this is `null`, the
- * [TagChunk] represents an unlabeled tag.
- * @param tag The tag, which should be the name of a parser rule or token
- * type.
+ * @param label The label, if any, assigned to this chunk
+ *   If this is `null`, the [TagChunk] represents an unlabeled tag
+ * @param tag The tag for this chunk, which should be the name of a parser rule or token type
  *
- * @exception IllegalArgumentException if `tag` is `null` or
- * empty.
+ * @exception IllegalArgumentException If [tag] is empty
  */
-(
-        /**
-         * This is the backing field for [.getLabel].
-         */
-        /**
-         * Get the accessLabel, if any, assigned to this chunk.
-         *
-         * @return The accessLabel assigned to this chunk, or `null` if no accessLabel is
-         * assigned to the chunk.
-         */
+internal class TagChunk(val label: String?, val tag: String) : Chunk() {
+  @Suppress("unused")
+  constructor(tag: String) : this(null, tag)
 
-        val label: String?,
-        /**
-         * This is the backing field for [.getTag].
-         */
-        /**
-         * Get the tag for this chunk.
-         *
-         * @return The tag for the chunk.
-         */
-
-        val tag: String?) : Chunk() {
-
-    /**
-     * Construct a new instance of [TagChunk] using the specified tag and
-     * no accessLabel.
-     *
-     * @param tag The tag, which should be the name of a parser rule or token
-     * type.
-     *
-     * @exception IllegalArgumentException if `tag` is `null` or
-     * empty.
-     */
-    constructor(tag: String) : this(null, tag) {}
-
-    init {
-        if (tag == null || tag.isEmpty()) {
-            throw IllegalArgumentException("tag cannot be null or empty")
-        }
+  init {
+    if (tag.isEmpty()) {
+      throw IllegalArgumentException("tag cannot be null or empty")
     }
+  }
 
-    /**
-     * This method returns a text representation of the tag chunk. Labeled tags
-     * are returned in the form `accessLabel:tag`, and unlabeled tags are
-     * returned as just the tag name.
-     */
-    override fun toString(): String {
-        return if (label != null) {
-            label + ":" + tag
-        } else tag!!
-
+  /**
+   * This method returns a text representation of the tag chunk. Labeled tags
+   * are returned in the form `label:tag`, and unlabeled tags are
+   * returned as just the tag name.
+   */
+  override fun toString(): String =
+    if (label != null) {
+      "$label:$tag"
+    } else {
+      tag
     }
 }

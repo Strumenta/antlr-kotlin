@@ -18,10 +18,10 @@ package com.strumenta.kotlinmultiplatform
 
 import js.core.delete
 
-actual class BitSet actual constructor() {
+public actual class BitSet actual constructor() {
   private val wrapped = js("[]").unsafeCast<Array<Boolean>>()
 
-  actual fun set(bitIndex: Int) {
+  public actual fun set(bitIndex: Int) {
     if (bitIndex < 0) {
       throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
@@ -29,7 +29,7 @@ actual class BitSet actual constructor() {
     wrapped[bitIndex] = true
   }
 
-  actual fun clear(bitIndex: Int) {
+  public actual fun clear(bitIndex: Int) {
     if (bitIndex < 0) {
       throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
@@ -37,7 +37,7 @@ actual class BitSet actual constructor() {
     delete(wrapped[bitIndex])
   }
 
-  actual fun get(bitIndex: Int): Boolean {
+  public actual fun get(bitIndex: Int): Boolean {
     if (bitIndex < 0) {
       throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
@@ -50,11 +50,11 @@ actual class BitSet actual constructor() {
     return wrapped[bitIndex] == true
   }
 
-  actual fun cardinality(): Int =
+  public actual fun cardinality(): Int =
     @Suppress("SimplifyBooleanWithConstants")
     wrapped.count { it == true }
 
-  actual fun nextSetBit(fromIndex: Int): Int {
+  public actual fun nextSetBit(fromIndex: Int): Int {
     if (fromIndex < 0) {
       throw IndexOutOfBoundsException("fromIndex < 0: $fromIndex")
     }
@@ -73,7 +73,7 @@ actual class BitSet actual constructor() {
     return -1
   }
 
-  actual fun or(otherBitSet: BitSet) {
+  public actual fun or(otherBitSet: BitSet) {
     for (i in 0..<otherBitSet.wrapped.size) {
       @Suppress("SimplifyBooleanWithConstants")
       val result = wrapped[i] == true || otherBitSet.wrapped[i] == true

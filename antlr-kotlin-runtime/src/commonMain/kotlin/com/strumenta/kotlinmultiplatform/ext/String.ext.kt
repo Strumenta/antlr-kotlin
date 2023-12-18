@@ -1,6 +1,6 @@
 package com.strumenta.kotlinmultiplatform.ext
 
-fun String.codePointIndices(): IntArray {
+public fun String.codePointIndices(): IntArray {
   val intArray = IntArray(length)
   var p = 0
 

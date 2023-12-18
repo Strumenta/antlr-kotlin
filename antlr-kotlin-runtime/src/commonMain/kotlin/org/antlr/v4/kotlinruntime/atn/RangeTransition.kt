@@ -6,28 +6,25 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
+import com.strumenta.kotlinmultiplatform.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 
-class RangeTransition(target: ATNState, val from: Int, val to: Int) : Transition(target) {
+public class RangeTransition(target: ATNState, public val from: Int, public val to: Int) : Transition(target) {
+  override val serializationType: Int =
+    RANGE
 
-    override val serializationType: Int
-        get() = Transition.RANGE
+  override fun label(): IntervalSet =
+    IntervalSet.of(from, to)
 
-    override fun accessLabel(): IntervalSet? {
-        return IntervalSet.of(from, to)
-    }
+  override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
+    symbol in from..to
 
-    override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean {
-        return symbol >= from && symbol <= to
-    }
-
-    override fun toString(): String {
-        TODO()
-//        return StringBuilder("'")
-//                .appendCodePoint(from)
-//                .append("'..'")
-//                .appendCodePoint(to)
-//                .append("'")
-//                .toString()
-    }
+  override fun toString(): String {
+    val buf = StringBuilder("'")
+    buf.appendCodePoint(from)
+    buf.append("'..'")
+    buf.appendCodePoint(to)
+    buf.append("'")
+    return buf.toString()
+  }
 }

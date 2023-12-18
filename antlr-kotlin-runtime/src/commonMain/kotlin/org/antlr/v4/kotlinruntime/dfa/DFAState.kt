@@ -10,8 +10,8 @@ import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
-
-/** A DFA state represents a set of possible ATN configurations.
+/**
+ * A DFA state represents a set of possible ATN configurations.
  * As Aho, Sethi, Ullman p. 117 says "The DFA uses its state
  * to keep track of all possible states the ATN can be in after
  * reading each input symbol.  That is to say, after reading
@@ -27,142 +27,142 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * I have to add a stack to simulate the proper lookahead sequences for
  * the underlying LL grammar from which the ATN was derived.
  *
- *
- * I use a set of ATNConfig objects not simple states.  An ATNConfig
+ * I use a set of ATNConfig objects not simple states. An ATNConfig
  * is both a state (ala normal conversion) and a RuleContext describing
  * the chain of rules (if any) followed to arrive at that state.
- *
  *
  * A DFA state may have multiple references to a particular state,
  * but with different ATN contexts (with same or different alts)
  * meaning that state was reached via a different set of rule invocations.
  */
-class DFAState {
-    var stateNumber = -1
+public class DFAState {
+  public var stateNumber: Int = -1
+  public var configs: ATNConfigSet = ATNConfigSet()
 
+  /**
+   * `edges[symbol]` points to target of symbol.
+   * Shift up by 1 so (-1) [Token.EOF] maps to `edges[0]`.
+   */
+  public var edges: Array<DFAState?>? = null
+  public var isAcceptState: Boolean = false
 
-    var configs: ATNConfigSet? = ATNConfigSet()
+  /**
+   * If accept state, what ttype do we match or alt do we predict?
+   * This is set to [ATN.INVALID_ALT_NUMBER] when [predicates] `!= null` or [requiresFullContext].
+   */
+  public var prediction: Int = 0
+  public var lexerActionExecutor: LexerActionExecutor? = null
 
-    /** `edges[symbol]` points to target of symbol. Shift up by 1 so (-1)
-     * [Token.EOF] maps to `edges[0]`.
-     */
+  /**
+   * Indicates that this state was created during SLL prediction that
+   * discovered a conflict between the configurations in the state. Future
+   * [ParserATNSimulator.execATN] invocations immediately jumped doing
+   * full context prediction if this field is true.
+   */
+  public var requiresFullContext: Boolean = false
 
-    var edges: Array<DFAState?>? = null
+  /**
+   * During SLL parsing, this is a list of predicates associated with the
+   * ATN configurations of the DFA state. When we have predicates,
+   * [requiresFullContext] is `false` since full context prediction evaluates predicates
+   * on-the-fly. If this is not null, then [prediction] is [ATN.INVALID_ALT_NUMBER].
+   *
+   * We only use these for non-[requiresFullContext] but conflicting states.
+   * That means we know from the context (it's $ or we don't dip into outer context)
+   * that it's an ambiguity not a conflict.
+   *
+   * This list is computed by [ParserATNSimulator.predicateDFAState].
+   */
+  public var predicates: Array<PredPrediction>? = null
 
-    var isAcceptState = false
+  /**
+   * Get the set of all alts mentioned by all ATN configurations in this DFA state.
+   */
+  public val altSet: Set<Int>?
+    get() {
+      val alts = HashSet<Int>()
+      val configs = configs
 
-    /** if accept state, what ttype do we match or alt do we predict?
-     * This is set to [ATN.INVALID_ALT_NUMBER] when [.predicates]`!=null` or
-     * [.requiresFullContext].
-     */
-    var prediction: Int = 0
+      for (c in configs) {
+        alts.add(c.alt)
+      }
 
-    var lexerActionExecutor: LexerActionExecutor? = null
-
-    /**
-     * Indicates that this state was created during SLL prediction that
-     * discovered a conflict between the configurations in the state. Future
-     * [ParserATNSimulator.execATN] invocations immediately jumped doing
-     * full context prediction if this field is true.
-     */
-    var requiresFullContext: Boolean = false
-
-    /** During SLL parsing, this is a list of predicates associated with the
-     * ATN configurations of the DFA state. When we have predicates,
-     * [.requiresFullContext] is `false` since full context prediction evaluates predicates
-     * on-the-fly. If this is not null, then [.prediction] is
-     * [ATN.INVALID_ALT_NUMBER].
-     *
-     *
-     * We only use these for non-[.requiresFullContext] but conflicting states. That
-     * means we know from the context (it's $ or we don't dip into outer
-     * context) that it's an ambiguity not a conflict.
-     *
-     *
-     * This list is computed by [ParserATNSimulator.predicateDFAState].
-     */
-
-    var predicates: Array<PredPrediction?>? = null
-
-    /** Get the set of all alts mentioned by all ATN configurations in this
-     * DFA state.
-     */
-    val altSet: Set<Int>?
-        get() {
-            val alts = HashSet<Int>()
-            if (configs != null) {
-                for (c in configs!!) {
-                    alts.add(c.alt)
-                }
-            }
-            return if (alts.isEmpty()) null else alts
-        }
-
-    /** Map a predicate to a predicted alternative.  */
-    class PredPrediction(var pred: SemanticContext // never null; at least SemanticContext.NONE
-                         , var alt: Int) {
-        override fun toString(): String {
-            return "($pred, $alt)"
-        }
+      return alts.ifEmpty { null }
     }
 
-    constructor() {}
+  /**
+   * Map a predicate to a predicted alternative.
+   */
+  public class PredPrediction(
+    // Never null, at least SemanticContext.NONE
+    public var pred: SemanticContext,
+    public var alt: Int,
+  ) {
+    override fun toString(): String =
+      "($pred, $alt)"
+  }
 
-    constructor(stateNumber: Int) {
-        this.stateNumber = stateNumber
+  public constructor()
+
+  public constructor(stateNumber: Int) {
+    this.stateNumber = stateNumber
+  }
+
+  public constructor(configs: ATNConfigSet) {
+    this.configs = configs
+  }
+
+  override fun hashCode(): Int {
+    var hash = MurmurHash.initialize(7)
+    hash = MurmurHash.update(hash, configs.hashCode())
+    hash = MurmurHash.finish(hash, 1)
+    return hash
+  }
+
+  /**
+   * Two [DFAState] instances are equal if their ATN configuration sets
+   * are the same. This method is used to see if a state already exists.
+   *
+   * Because the number of alternatives and number of ATN configurations are
+   * finite, there is a finite number of DFA states that can be processed.
+   * This is necessary to show that the algorithm terminates.
+   *
+   * Cannot test the DFA state numbers here because in
+   * [ParserATNSimulator.addDFAState] we need to know if any other state
+   * exists that has this exact set of ATN configurations.
+   * The [stateNumber] is irrelevant.
+   */
+  override fun equals(other: Any?): Boolean {
+    // Compare set of ATN configurations in this set with other
+    if (this === other) {
+      return true
     }
 
-    constructor(configs: ATNConfigSet) {
-        this.configs = configs
+    if (other !is DFAState) {
+      return false
     }
 
-    override fun hashCode(): Int {
-        var hash = MurmurHash.initialize(7)
-        hash = MurmurHash.update(hash, configs!!.hashCode())
-        hash = MurmurHash.finish(hash, 1)
-        return hash
+    // TODO(sam): what to do when configs==null?
+    return configs == other.configs
+  }
+
+  override fun toString(): String {
+    val buf = StringBuilder()
+    buf.append(stateNumber)
+    buf.append(":")
+    buf.append(configs)
+
+    if (isAcceptState) {
+      buf.append("=>")
+      val predicates = predicates
+
+      if (predicates != null) {
+        buf.append(predicates.joinToString())
+      } else {
+        buf.append(prediction)
+      }
     }
 
-    /**
-     * Two [DFAState] instances are equal if their ATN configuration sets
-     * are the same. This method is used to see if a state already exists.
-     *
-     *
-     * Because the number of alternatives and number of ATN configurations are
-     * finite, there is a finite number of DFA states that can be processed.
-     * This is necessary to show that the algorithm terminates.
-     *
-     *
-     * Cannot test the DFA state numbers here because in
-     * [ParserATNSimulator.addDFAState] we need to know if any other state
-     * exists that has this exact set of ATN configurations. The
-     * [.stateNumber] is irrelevant.
-     */
-    override fun equals(o: Any?): Boolean {
-        // compare set of ATN configurations in this set with other
-        if (this === o) return true
-
-        if (o !is DFAState) {
-            return false
-        }
-
-        val other = o as DFAState?
-        // TODO (sam): what to do when configs==null?
-        //		System.out.println("DFAState.equals: "+configs+(sameSet?"==":"!=")+other.configs);
-        return configs!! == other!!.configs
-    }
-
-    override fun toString(): String {
-        val buf = StringBuilder()
-        buf.append(stateNumber).append(":").append(configs)
-        if (isAcceptState) {
-            buf.append("=>")
-            if (predicates != null) {
-                buf.append(predicates!!.joinToString())
-            } else {
-                buf.append(prediction)
-            }
-        }
-        return buf.toString()
-    }
+    return buf.toString()
+  }
 }

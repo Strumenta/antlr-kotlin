@@ -6,20 +6,22 @@
 
 package org.antlr.v4.kotlinruntime.tree.xpath
 
-//import org.antlr.v4.runtime.tree.ParseTree
-//import org.antlr.v4.runtime.tree.Tree
-//import org.antlr.v4.runtime.tree.Trees
-//
-//import java.util.ArrayList
-//
-//class XPathWildcardElement : XPathElement(XPath.WILDCARD) {
-//
-//    override fun evaluate(t: ParseTree): Collection<ParseTree> {
-//        if (invert) return ArrayList<ParseTree>() // !* is weird but valid (empty)
-//        val kids = ArrayList<ParseTree>()
-//        for (c in Trees.getChildren(t)) {
-//            kids.add(c as ParseTree)
-//        }
-//        return kids
-//    }
-//}
+import org.antlr.v4.kotlinruntime.tree.ParseTree
+import org.antlr.v4.kotlinruntime.tree.Trees
+
+public open class XPathWildcardElement : XPathElement(XPath.WILDCARD) {
+  override fun evaluate(t: ParseTree): Collection<ParseTree> {
+    if (invert) {
+      // !* is weird but valid (empty)
+      return ArrayList()
+    }
+
+    val kids = ArrayList<ParseTree>()
+
+    for (c in Trees.getChildren(t)) {
+      kids.add(c as ParseTree)
+    }
+
+    return kids
+  }
+}

@@ -6,4 +6,4 @@
 
 package org.antlr.v4.kotlinruntime.tree
 
-interface ErrorNode : TerminalNode
+public interface ErrorNode : TerminalNode

@@ -6,15 +6,15 @@
 
 package org.antlr.v4.kotlinruntime.tree.xpath
 
-//
-//import org.antlr.v4.runtime.tree.ParseTree
-//import org.antlr.v4.runtime.tree.Trees
-//
-//import java.util.ArrayList
-//
-//class XPathWildcardAnywhereElement : XPathElement(XPath.WILDCARD) {
-//
-//    override fun evaluate(t: ParseTree): Collection<ParseTree> {
-//        return if (invert) ArrayList<ParseTree>() else Trees.getDescendants(t) // !* is weird but valid (empty)
-//    }
-//}
+import org.antlr.v4.kotlinruntime.tree.ParseTree
+import org.antlr.v4.kotlinruntime.tree.Trees
+
+public open class XPathWildcardAnywhereElement : XPathElement(XPath.WILDCARD) {
+  override fun evaluate(t: ParseTree): Collection<ParseTree> =
+    if (invert) {
+      // !* is weird but valid (empty)
+      ArrayList()
+    } else {
+      Trees.getDescendants(t)
+    }
+}

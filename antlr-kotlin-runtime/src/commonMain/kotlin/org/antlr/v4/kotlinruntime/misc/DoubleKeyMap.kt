@@ -6,49 +6,55 @@
 
 package org.antlr.v4.kotlinruntime.misc
 
-/** Sometimes we need to map a key to a value but key is two pieces of data.
- * This nested hash table saves creating a single key each time we access
- * map; avoids mem creation.
+/**
+ * Sometimes we need to map a key to a value but key is two pieces of data.
+ * This nested hash table saves creating a single key each time we access map; avoids mem creation.
  */
-class DoubleKeyMap<Key1, Key2, Value> {
-    internal var data: MutableMap<Key1, MutableMap<Key2, Value>> = LinkedHashMap()
+public class DoubleKeyMap<Key1, Key2, Value> {
+  internal var data: MutableMap<Key1, MutableMap<Key2, Value>> = LinkedHashMap()
 
-    fun put(k1: Key1, k2: Key2, v: Value): Value? {
-        var data2: MutableMap<Key2, Value>? = data[k1]
-        var prev: Value? = null
-        if (data2 == null) {
-            data2 = LinkedHashMap()
-            data[k1] = data2
-        } else {
-            prev = data2[k2]
-        }
-        data2[k2] = v
-        return prev
+  public fun put(k1: Key1, k2: Key2, v: Value): Value? {
+    var data2 = data[k1]
+    var prev: Value? = null
+
+    if (data2 == null) {
+      data2 = LinkedHashMap()
+      data[k1] = data2
+    } else {
+      prev = data2[k2]
     }
 
-    operator fun get(k1: Key1, k2: Key2): Value? {
-        val data2 = data[k1] ?: return null
-        return data2[k2]
-    }
+    data2[k2] = v
+    return prev
+  }
 
-    operator fun get(k1: Key1): Map<Key2, Value> {
-        return data[k1]!!
-    }
+  public operator fun get(k1: Key1, k2: Key2): Value? {
+    val data2 = data[k1] ?: return null
+    return data2[k2]
+  }
 
-    /** Get all values associated with primary key  */
-    fun values(k1: Key1): Collection<Value>? {
-        val data2 = data[k1] ?: return null
-        return data2.values
-    }
+  public operator fun get(k1: Key1): Map<Key2, Value> =
+    data[k1]!!
 
-    /** get all primary keys  */
-    fun keySet(): Set<Key1> {
-        return data.keys
-    }
+  /**
+   * Get all values associated with primary key.
+   */
+  public fun values(k1: Key1): Collection<Value>? {
+    val data2 = data[k1] ?: return null
+    return data2.values
+  }
 
-    /** get all secondary keys associated with a primary key  */
-    fun keySet(k1: Key1): Set<Key2>? {
-        val data2 = data[k1] ?: return null
-        return data2.keys
-    }
+  /**
+   * Get all primary keys.
+   */
+  public fun keySet(): Set<Key1> =
+    data.keys
+
+  /**
+   * Get all secondary keys associated with a primary key.
+   */
+  public fun keySet(k1: Key1): Set<Key2>? {
+    val data2 = data[k1] ?: return null
+    return data2.keys
+  }
 }

@@ -7,8 +7,8 @@ package org.antlr.v4.kotlinruntime.misc
 
 /**
  * This abstract base class is provided so performance-critical applications can
- * use virtual- instead of interface-dispatch when calling comparator methods.
+ * use virtual-dispatch instead of interface-dispatch when calling comparator methods.
  *
  * @author Sam Harwell
  */
-abstract class AbstractEqualityComparator<in T> : EqualityComparator<T>
+public abstract class AbstractEqualityComparator<in T> : EqualityComparator<T>

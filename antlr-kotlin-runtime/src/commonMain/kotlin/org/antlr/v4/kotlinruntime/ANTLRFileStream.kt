@@ -11,22 +11,16 @@ import org.antlr.v4.kotlinruntime.misc.Utils
  * This is an [ANTLRInputStream] that is loaded from a file all at once
  * when you construct the object.
  */
-@Deprecated("as of 4.7 Please use {@link CharStreams} interface.")
+@Deprecated("as of 4.7, please use CharStreams")
 @Suppress("DEPRECATION")
-class ANTLRFileStream
-private constructor(override val sourceName: String)
-    : ANTLRInputStream() {
-
-    companion object {
-        suspend fun invoke(fileName: String): ANTLRFileStream {
-            val fs = ANTLRFileStream(fileName)
-            fs.load()
-            return fs
-        }
+public class ANTLRFileStream private constructor(
+  data: CharArray,
+  sourceName: String,
+) : ANTLRInputStream(data, data.size, sourceName) {
+  public companion object {
+    public fun invoke(fileName: String): ANTLRFileStream {
+      val data = Utils.readFile(fileName)
+      return ANTLRFileStream(data, fileName)
     }
-
-    private suspend fun load() {
-        data = Utils.readFile(sourceName)
-        this.n = data!!.size
-    }
+  }
 }

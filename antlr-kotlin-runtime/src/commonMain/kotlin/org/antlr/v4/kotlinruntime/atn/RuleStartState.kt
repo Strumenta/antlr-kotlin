@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-class RuleStartState : ATNState() {
-    var stopState: RuleStopState? = null
-    var isLeftRecursiveRule: Boolean = false
+public class RuleStartState : ATNState() {
+  public var stopState: RuleStopState? = null
+  public var isLeftRecursiveRule: Boolean = false
 
-    override val stateType: Int
-        get() = ATNState.RULE_START
+  override val stateType: Int =
+    RULE_START
 }
