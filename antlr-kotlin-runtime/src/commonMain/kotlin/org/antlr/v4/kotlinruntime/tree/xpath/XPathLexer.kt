@@ -1,3 +1,6 @@
+//
+// This lexer is generated from antlr-kotlin-tests/antlr/XPathLexer.g4 and formatted manually.
+//
 package org.antlr.v4.kotlinruntime.tree.xpath
 
 import org.antlr.v4.kotlinruntime.*
