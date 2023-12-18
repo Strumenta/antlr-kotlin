@@ -67,11 +67,11 @@ abstract class GrammarTest<L : Lexer, P : Parser> {
 
     // Get the LISP tree and match it against the expected one
     val tree = getTree(parser)
-    val listTree = Trees.toStringTree(tree, parser)
+    val lispTree = Trees.toStringTree(tree, parser)
 
     assertEquals(
       expected = expectedLispTreeText,
-      actual = listTree,
+      actual = lispTree,
       message = "Outputted LISP tree for file '${run.exampleFilePath}' does not match the expected tree",
     )
   }
