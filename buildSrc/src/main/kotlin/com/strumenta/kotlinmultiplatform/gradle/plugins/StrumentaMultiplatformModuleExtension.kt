@@ -100,46 +100,44 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
   fun applyNative() {
     val kmpExtension = project.kmpExtension
+    val isDevelopment = !project.releaseBuild()
+    val hostOs = OperatingSystem.current()
 
-    if (!project.releaseBuild()) {
-      // If were are *not* building for a release it means we are developing.
-      // So, just enable everything and let the Kotlin compiler figure out
-      // what it can and cannot build
-
+    // Development should enable all targets.
+    // Publishing should occur only from a macOS host
+    if (isDevelopment || hostOs.isMacOsX) {
       // Tier 1
-      kmpExtension.macosArm64()
+      // macOS host only
       kmpExtension.macosX64()
+      kmpExtension.macosArm64()
+      kmpExtension.iosSimulatorArm64()
+      kmpExtension.iosX64()
 
       // Tier 2
-      kmpExtension.linuxArm64()
       kmpExtension.linuxX64()
+      kmpExtension.linuxArm64()
+
+      // macOS host only
+      kmpExtension.watchosSimulatorArm64()
+      kmpExtension.watchosX64()
+      kmpExtension.watchosArm32()
+      kmpExtension.watchosArm64()
+      kmpExtension.tvosSimulatorArm64()
+      kmpExtension.tvosX64()
+      kmpExtension.tvosArm64()
+      kmpExtension.iosArm64()
 
       // Tier 3
       kmpExtension.mingwX64()
-      return
-    }
 
-    // When we build to release we also need multiple OSes.
-    // If we were to simply enable all targets always, as we do above,
-    // we would end up with duplicated publications each time
-    val hostOs = OperatingSystem.current()
+      // Commented below needs kotlinx-resources support
+      // kmpExtension.androidNativeArm32()
+      // kmpExtension.androidNativeArm64()
+      // kmpExtension.androidNativeX86()
+      // kmpExtension.androidNativeX64()
 
-    when {
-      // Note: we never release using Windows!
-      //  Windows artifacts are generated through a Linux host
-      hostOs.isLinux -> {
-        // Tier 2
-        kmpExtension.linuxArm64()
-        kmpExtension.linuxX64()
-
-        // Tier 3
-        kmpExtension.mingwX64()
-      }
-      hostOs.isMacOsX -> {
-        // Tier 1
-        kmpExtension.macosArm64()
-        kmpExtension.macosX64()
-      }
+      // macOS host only
+      // kmpExtension.watchosDeviceArm64()
     }
   }
 }
