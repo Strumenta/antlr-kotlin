@@ -564,7 +564,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
     }
 
     return recognizer.tokenFactory.create(
-      Pair(current.tokenSource, current.tokenSource!!.inputStream),
+      Pair(current.tokenSource, current.inputStream),
       expectedTokenType,
       tokenText,
       Token.DEFAULT_CHANNEL,

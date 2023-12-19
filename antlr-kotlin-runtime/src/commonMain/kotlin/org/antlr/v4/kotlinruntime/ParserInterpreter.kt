@@ -400,7 +400,7 @@ public open class ParserInterpreter(
         }
 
         val errToken = tokenFactory.create(
-          Pair(tok!!.tokenSource!!, tok.tokenSource!!.inputStream!!),
+          Pair(tok!!.tokenSource, tok.inputStream),
           expectedTokenType,
           tok.text,
           Token.DEFAULT_CHANNEL,
@@ -415,7 +415,7 @@ public open class ParserInterpreter(
         // NoViableAlt
         val tok = e.offendingToken
         val errToken = tokenFactory.create(
-          Pair(tok!!.tokenSource!!, tok.tokenSource!!.inputStream!!),
+          Pair(tok!!.tokenSource, tok.inputStream),
           Token.INVALID_TYPE,
           tok.text,
           Token.DEFAULT_CHANNEL,
