@@ -117,4 +117,51 @@ class BitSetTest {
       bitSet.nextSetBit(-1)
     }
   }
+
+  @Test
+  fun equalsToOther() {
+    val bitSet1 = BitSet()
+    bitSet1.set(0)
+    bitSet1.set(10)
+    bitSet1.set(15)
+
+    val bitSet2 = BitSet()
+    bitSet2.set(0)
+    bitSet2.set(10)
+    bitSet2.set(15)
+
+    assertEquals(bitSet1, bitSet1)
+    assertEquals(bitSet1, bitSet2)
+    assertEquals(bitSet1.hashCode(), bitSet2.hashCode())
+  }
+
+  @Test
+  fun notEqualsToOther() {
+    val bitSet1 = BitSet()
+    bitSet1.set(2)
+    bitSet1.set(5)
+
+    val bitSet2 = BitSet()
+    bitSet2.set(2)
+    bitSet2.set(5)
+
+    assertEquals(bitSet1, bitSet2)
+    assertEquals(bitSet1.hashCode(), bitSet2.hashCode())
+
+    bitSet2.clear(2)
+
+    assertNotEquals(bitSet1, bitSet2)
+    assertNotEquals(bitSet1.hashCode(), bitSet2.hashCode())
+  }
+
+  @Test
+  fun hashCodeDoesNotChange() {
+    val bitSet = BitSet()
+    bitSet.set(2)
+    bitSet.set(5)
+    bitSet.set(35)
+    bitSet.set(0)
+
+    assertEquals(bitSet.hashCode(), bitSet.hashCode())
+  }
 }

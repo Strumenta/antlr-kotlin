@@ -38,4 +38,13 @@ public actual class BitSet actual constructor() {
 
   public actual fun or(otherBitSet: BitSet): Unit =
     wrapped.or(otherBitSet.wrapped)
+
+  override fun equals(other: Any?): Boolean =
+    this === other || other is BitSet && wrapped == other.wrapped
+
+  override fun hashCode(): Int =
+    wrapped.hashCode()
+
+  override fun toString(): String =
+    wrapped.toString()
 }

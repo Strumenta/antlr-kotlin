@@ -17,6 +17,7 @@
 package com.strumenta.kotlinmultiplatform
 
 import js.core.delete
+import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 public actual class BitSet actual constructor() {
   private val wrapped = js("[]").unsafeCast<Array<Boolean>>()
@@ -84,5 +85,35 @@ public actual class BitSet actual constructor() {
         wrapped[i] = result
       }
     }
+  }
+
+  override fun equals(other: Any?): Boolean =
+    this === other || other is BitSet && wrapped.contentEquals(other.wrapped)
+
+  override fun hashCode(): Int {
+    val fqn = "com.strumenta.kotlinmultiplatform.BitSet"
+    return MurmurHash.hashCode(wrapped, fqn.hashCode())
+  }
+
+  override fun toString(): String {
+    val sb = StringBuilder()
+    var first = true
+    sb.append("{")
+
+    var index = nextSetBit(0)
+
+    while (index != -1) {
+      if (!first) {
+        sb.append(", ")
+      } else {
+        first = false
+      }
+
+      sb.append(index)
+      index = nextSetBit(index + 1)
+    }
+
+    sb.append("}")
+    return sb.toString()
   }
 }
