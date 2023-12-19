@@ -15,7 +15,6 @@ import org.antlr.v4.kotlinruntime.atn.SemanticContext.*
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 import kotlin.jvm.JvmStatic
 
-
 /**
  * A tree structure used to record the semantic context in which
  * an ATN configuration is valid.
@@ -70,23 +69,19 @@ public abstract class SemanticContext {
     }
 
     private fun filterPrecedencePredicates(collection: MutableCollection<out SemanticContext>): List<PrecedencePredicate> {
-      var result: ArrayList<PrecedencePredicate>? = null
+      val result = ArrayList<PrecedencePredicate>()
       val iterator = collection.iterator()
 
       while (iterator.hasNext()) {
         val context = iterator.next()
 
         if (context is PrecedencePredicate) {
-          if (result == null) {
-            result = ArrayList()
-          }
-
           result.add(context)
           iterator.remove()
         }
       }
 
-      return result ?: emptyList()
+      return result
     }
   }
 
@@ -223,7 +218,7 @@ public abstract class SemanticContext {
         return true
       }
 
-      return this.precedence == other.precedence
+      return precedence == other.precedence
     }
 
     override fun toString(): String =
@@ -258,7 +253,7 @@ public abstract class SemanticContext {
       get() = opnds.asList()
 
     init {
-      val operands = HashSet<SemanticContext>()
+      val operands = LinkedHashSet<SemanticContext>()
 
       if (a is AND) {
         operands.addAll(a.opnds.asList())
@@ -351,7 +346,7 @@ public abstract class SemanticContext {
     }
 
     override fun toString(): String =
-      opnds.asList().joinToString("&&")
+      opnds.joinToString("&&")
   }
 
   /**
@@ -365,7 +360,7 @@ public abstract class SemanticContext {
       get() = opnds.asList()
 
     init {
-      val operands = HashSet<SemanticContext>()
+      val operands = LinkedHashSet<SemanticContext>()
 
       if (a is OR) {
         operands.addAll(a.opnds.asList())
@@ -458,6 +453,6 @@ public abstract class SemanticContext {
     }
 
     override fun toString(): String =
-      opnds.asList().joinToString("||")
+      opnds.joinToString("||")
   }
 }

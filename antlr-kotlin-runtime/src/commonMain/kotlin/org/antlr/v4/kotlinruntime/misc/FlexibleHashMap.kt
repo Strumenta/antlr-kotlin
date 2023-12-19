@@ -217,7 +217,7 @@ public open class FlexibleHashMap<K, V>(
 
     var first = true
     val buf = StringBuilder()
-    buf.append('{')
+    buf.append("{")
 
     for (bucket in buckets) {
       if (bucket == null) {
@@ -239,10 +239,11 @@ public open class FlexibleHashMap<K, V>(
       }
     }
 
-    buf.append('}')
+    buf.append("}")
     return buf.toString()
   }
 
+  @Suppress("DuplicatedCode")
   public fun toTableString(): String {
     val buf = StringBuilder()
 
@@ -252,7 +253,7 @@ public open class FlexibleHashMap<K, V>(
         continue
       }
 
-      buf.append('[')
+      buf.append("[")
       var first = true
 
       for (e in bucket) {

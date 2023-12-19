@@ -237,6 +237,6 @@ public class DecisionInfo(public val decision: Int) {
       append(LL_TotalLook)
       append(", LL_ATNTransitions=")
       append(LL_ATNTransitions)
-      append('}')
+      append("}")
     }
 }

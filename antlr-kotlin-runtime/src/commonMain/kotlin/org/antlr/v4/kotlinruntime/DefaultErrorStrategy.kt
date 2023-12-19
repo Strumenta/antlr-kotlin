@@ -133,10 +133,12 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    * that can follow the current rule.
    */
   override fun recover(recognizer: Parser, e: RecognitionException) {
+    var lastErrorStatesTemp = lastErrorStates
+
     if (
       lastErrorIndex == recognizer.tokenStream.index() &&
-      lastErrorStates != null &&
-      lastErrorStates!!.contains(recognizer.state)
+      lastErrorStatesTemp != null &&
+      lastErrorStatesTemp.contains(recognizer.state)
     ) {
       // Uh oh, another error at same token index and previously-visited
       // state in ATN; must be a case where LT(1) is in the recovery
@@ -147,11 +149,12 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
 
     lastErrorIndex = recognizer.tokenStream.index()
 
-    if (lastErrorStates == null) {
-      lastErrorStates = IntervalSet()
+    if (lastErrorStatesTemp == null) {
+      lastErrorStatesTemp = IntervalSet()
+      lastErrorStates = lastErrorStatesTemp
     }
 
-    lastErrorStates!!.add(recognizer.state)
+    lastErrorStatesTemp.add(recognizer.state)
 
     val followSet = getErrorRecoverySet(recognizer)
     consumeUntil(recognizer, followSet)
@@ -269,7 +272,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    *
    * @see reportError
    */
-  protected fun reportNoViableAlternative(recognizer: Parser, e: NoViableAltException) {
+  protected open fun reportNoViableAlternative(recognizer: Parser, e: NoViableAltException) {
     val tokens = recognizer.tokenStream
     val input = if (e.startToken!!.type == Token.EOF) {
       "<EOF>"
@@ -289,7 +292,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    *
    * @see reportError
    */
-  protected fun reportInputMismatch(recognizer: Parser, e: InputMismatchException) {
+  protected open fun reportInputMismatch(recognizer: Parser, e: InputMismatchException) {
     val tokenErrorDisplay = getTokenErrorDisplay(e.offendingToken)
     val expectedToken = e.expectedTokens!!.toString(recognizer.vocabulary)
     val msg = "mismatched input $tokenErrorDisplay expecting $expectedToken"
@@ -304,7 +307,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    *
    * @see reportError
    */
-  protected fun reportFailedPredicate(recognizer: Parser, e: FailedPredicateException) {
+  protected open fun reportFailedPredicate(recognizer: Parser, e: FailedPredicateException) {
     val ruleName = recognizer.ruleNames[recognizer.context!!.ruleIndex]
     val msg = "rule $ruleName ${e.message}"
     recognizer.notifyErrorListeners(e.offendingToken!!, msg, e)
@@ -327,7 +330,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    *
    * @param recognizer The parser instance
    */
-  protected fun reportUnwantedToken(recognizer: Parser) {
+  protected open fun reportUnwantedToken(recognizer: Parser) {
     if (inErrorRecoveryMode(recognizer)) {
       return
     }
@@ -357,7 +360,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    *
    * @param recognizer The parser instance
    */
-  protected fun reportMissingToken(recognizer: Parser) {
+  protected open fun reportMissingToken(recognizer: Parser) {
     if (inErrorRecoveryMode(recognizer)) {
       return
     }
@@ -462,8 +465,9 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    * @return `true` if single-token insertion is a viable recovery
    *   strategy for the current mismatched input, otherwise `false`
    */
-  protected fun singleTokenInsertion(recognizer: Parser): Boolean {
+  protected open fun singleTokenInsertion(recognizer: Parser): Boolean {
     val currentSymbolType = recognizer.tokenStream.LA(1)
+
     // If current token is consistent with what could come after current
     // ATN state, then we know we're missing a token; error recovery
     // is free to conjure up and insert the missing token
@@ -499,14 +503,14 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    * @return The successfully matched [Token] instance if single-token
    *   deletion successfully recovers from the mismatched input, otherwise `null`
    */
-  protected fun singleTokenDeletion(recognizer: Parser): Token? {
+  protected open fun singleTokenDeletion(recognizer: Parser): Token? {
     val nextTokenType = recognizer.tokenStream.LA(2)
     val expecting = getExpectedTokens(recognizer)
 
     if (expecting.contains(nextTokenType)) {
       reportUnwantedToken(recognizer)
 
-      // simply delete extra token
+      // Simply delete extra token
       recognizer.consume()
 
       // We want to return the token we're actually matching
@@ -564,7 +568,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
     }
 
     return recognizer.tokenFactory.create(
-      Pair(current.tokenSource, current.tokenSource!!.inputStream),
+      Pair(current.tokenSource, current.inputStream),
       expectedTokenType,
       tokenText,
       Token.DEFAULT_CHANNEL,
@@ -596,7 +600,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
       return "<no token>"
     }
 
-    var s: String? = getSymbolText(t)
+    var s = getSymbolText(t)
 
     if (s == null) {
       s = if (getSymbolType(t) == Token.EOF) {
@@ -609,8 +613,8 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
     return escapeWSAndQuote(s)
   }
 
-  protected open fun getSymbolText(symbol: Token): String =
-    symbol.text!!
+  protected open fun getSymbolText(symbol: Token): String? =
+    symbol.text
 
   protected open fun getSymbolType(symbol: Token): Int =
     symbol.type

@@ -11,7 +11,6 @@ import org.antlr.v4.kotlinruntime.tree.*
 import kotlin.jvm.JvmStatic
 import kotlin.reflect.KClass
 
-
 /**
  * A rule invocation record for parsing.
  *
@@ -160,11 +159,14 @@ public open class ParserRuleContext : RuleContext {
    * @since 4.7
    */
   public fun <T : ParseTree> addAnyChild(t: T): T {
-    if (children == null) {
-      children = ArrayList()
+    var childrenTemp = children
+
+    if (childrenTemp == null) {
+      childrenTemp = ArrayList()
+      children = childrenTemp
     }
 
-    children!!.add(t)
+    childrenTemp.add(t)
     return t
   }
 
@@ -291,23 +293,19 @@ public open class ParserRuleContext : RuleContext {
 
   public fun getTokens(ttype: Int): List<TerminalNode> {
     val tempChildren = children ?: return emptyList()
-    var tokens: MutableList<TerminalNode>? = null
+    val tokens = ArrayList<TerminalNode>()
 
     for (o in tempChildren) {
       if (o is TerminalNode) {
         val symbol = o.symbol
 
         if (symbol!!.type == ttype) {
-          if (tokens == null) {
-            tokens = ArrayList()
-          }
-
           tokens.add(o)
         }
       }
     }
 
-    return tokens ?: emptyList()
+    return tokens
   }
 
   public fun <T : ParserRuleContext> getRuleContext(ctxType: KClass<T>, i: Int): T? =
@@ -315,20 +313,16 @@ public open class ParserRuleContext : RuleContext {
 
   public fun <T : ParserRuleContext> getRuleContexts(ctxType: KClass<T>): List<T> {
     val tempChildren = children ?: return emptyList()
-    var contexts: MutableList<T>? = null
+    val contexts = ArrayList<T>()
 
     for (o in tempChildren) {
       if (ctxType.isInstance(o)) {
-        if (contexts == null) {
-          contexts = ArrayList()
-        }
-
         @Suppress("UNCHECKED_CAST")
         contexts.add(o as T)
       }
     }
 
-    return contexts ?: emptyList()
+    return contexts
   }
 
   /**
