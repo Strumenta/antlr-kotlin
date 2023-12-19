@@ -50,7 +50,7 @@ public open class DFASerializer(
           buf.append(getEdgeLabel(i))
           buf.append("->")
           buf.append(getStateString(t))
-          buf.append('\n')
+          buf.append("\n")
         }
       }
     }

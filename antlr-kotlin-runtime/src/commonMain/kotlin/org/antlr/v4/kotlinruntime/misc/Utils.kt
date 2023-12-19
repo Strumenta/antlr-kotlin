@@ -41,7 +41,7 @@ public object Utils {
 
     for (c in s.toCharArray()) {
       when {
-        c == ' ' && escapeSpaces -> buf.append('\u00B7')
+        c == ' ' && escapeSpaces -> buf.append("\u00B7")
         c == '\t' -> buf.append("\\t")
         c == '\n' -> buf.append("\\n")
         c == '\r' -> buf.append("\\r")

@@ -418,7 +418,7 @@ public open class Array2DHashSet<T>(
     }
 
     val buf = StringBuilder()
-    buf.append('{')
+    buf.append("{")
 
     var first = true
 
@@ -440,10 +440,11 @@ public open class Array2DHashSet<T>(
       }
     }
 
-    buf.append('}')
+    buf.append("}")
     return buf.toString()
   }
 
+  @Suppress("DuplicatedCode")
   public fun toTableString(): String {
     val buf = StringBuilder()
 
@@ -453,7 +454,7 @@ public open class Array2DHashSet<T>(
         continue
       }
 
-      buf.append('[')
+      buf.append("[")
       var first = true
 
       for (o in bucket) {
