@@ -619,7 +619,7 @@ bitsetInlineComparison(s, bits) ::= <%
 %>
 
 cases(tokens) ::= <<
-<tokens:{t | <t.name> }; separator=", "> -> >>
+<tokens:{t | <t.name>}; separator=", "> -> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
