@@ -83,4 +83,14 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
 
   override fun appendUnicodeEscapedCodePoint(codePoint: Int, sb: StringBuilder): Unit =
     UnicodeEscapes.appendEscapedCodePoint(sb, codePoint, "Java")
+
+  override fun getTargetStringLiteralFromANTLRStringLiteral(
+    generator: CodeGenerator,
+    literal: String,
+    addQuotes: Boolean,
+    escapeSpecial: Boolean,
+  ): String {
+    val str = super.getTargetStringLiteralFromANTLRStringLiteral(generator, literal, addQuotes, escapeSpecial)
+    return str.replace("$", "\\$")
+  }
 }
