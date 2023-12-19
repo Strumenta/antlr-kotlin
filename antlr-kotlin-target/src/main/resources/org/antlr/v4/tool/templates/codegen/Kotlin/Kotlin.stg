@@ -897,7 +897,7 @@ import org.antlr.v4.kotlinruntime.misc.*
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
 @Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "RemoveRedundantBackticks")
-public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
+public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(input) {
     public companion object {
         <atn>
 
