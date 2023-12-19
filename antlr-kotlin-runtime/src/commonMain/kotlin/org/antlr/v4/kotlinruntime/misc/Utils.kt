@@ -11,11 +11,11 @@ import com.strumenta.kotlinmultiplatform.BitSet
 @Suppress("MemberVisibilityCanBePrivate")
 public object Utils {
   public fun numNonnull(data: Array<Any?>?): Int {
-    var n = 0
-
     if (data == null) {
-      return n
+      return 0
     }
+
+    var n = 0
 
     for (o in data) {
       if (o != null) {
@@ -56,8 +56,9 @@ public object Utils {
     Platform.readFile(fileName).toCharArray()
 
   /**
-   * Convert array of strings to string -> index map.
-   * Useful for converting rulenames to name -> ruleindex map.
+   * Convert an array of strings to a `string -> index` map.
+   *
+   * Useful for converting `rulenames` to a `name -> ruleindex` map.
    */
   public fun toMap(keys: Array<String>): Map<String, Int> {
     val m = HashMap<String, Int>()
@@ -68,9 +69,6 @@ public object Utils {
 
     return m
   }
-
-  public fun toCharArray(data: IntegerList?): CharArray? =
-    data?.toCharArray()
 
   public fun toSet(bits: BitSet): IntervalSet {
     val s = IntervalSet()
