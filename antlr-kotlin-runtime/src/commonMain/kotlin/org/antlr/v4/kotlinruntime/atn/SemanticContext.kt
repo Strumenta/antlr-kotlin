@@ -258,7 +258,7 @@ public abstract class SemanticContext {
       get() = opnds.asList()
 
     init {
-      val operands = HashSet<SemanticContext>()
+      val operands = LinkedHashSet<SemanticContext>()
 
       if (a is AND) {
         operands.addAll(a.opnds.asList())
@@ -365,7 +365,7 @@ public abstract class SemanticContext {
       get() = opnds.asList()
 
     init {
-      val operands = HashSet<SemanticContext>()
+      val operands = LinkedHashSet<SemanticContext>()
 
       if (a is OR) {
         operands.addAll(a.opnds.asList())
