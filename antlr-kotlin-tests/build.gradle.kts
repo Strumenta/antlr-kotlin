@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
+import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {

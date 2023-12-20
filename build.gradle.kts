@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryName
-import com.strumenta.kotlinmultiplatform.gradle.ext.mavenRepositoryUrl
+import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryName
+import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryUrl
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {

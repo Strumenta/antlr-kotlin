@@ -1,7 +1,8 @@
-package com.strumenta.kotlinmultiplatform.gradle.plugins
+package com.strumenta.antlrkotlin.gradle.plugins
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.javaExtension
-import com.strumenta.kotlinmultiplatform.gradle.ext.kotlinJvmExtension
+import com.gradle.publish.PublishPlugin
+import com.strumenta.antlrkotlin.gradle.ext.javaExtension
+import com.strumenta.antlrkotlin.gradle.ext.kotlinJvmExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -11,14 +12,15 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 /**
- * Applies and set up the Kotlin JVM Gradle plugin.
+ * Applies and set up the necessary dependencies to develop a Gradle Plugin.
  */
-class StrumentaJvmLibraryModulePlugin : Plugin<Project> {
+class StrumentaGradlePluginModulePlugin : Plugin<Project> {
   override fun apply(project: Project) {
     // Apply the required plugins
     project.apply<KotlinPluginWrapper>()
+    project.apply<PublishPlugin>()
     project.apply {
-      plugin("org.gradle.java-library")
+      plugin("org.gradle.java-gradle-plugin")
     }
 
     // General Kotlin configuration

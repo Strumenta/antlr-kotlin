@@ -1,6 +1,6 @@
-package com.strumenta.kotlinmultiplatform.gradle.plugins
+package com.strumenta.antlrkotlin.gradle.plugins
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.kmpExtension
+import com.strumenta.antlrkotlin.gradle.ext.kmpExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply

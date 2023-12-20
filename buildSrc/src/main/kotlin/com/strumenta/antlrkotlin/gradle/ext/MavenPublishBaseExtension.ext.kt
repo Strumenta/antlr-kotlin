@@ -1,4 +1,4 @@
-package com.strumenta.kotlinmultiplatform.gradle.ext
+package com.strumenta.antlrkotlin.gradle.ext
 
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.Project

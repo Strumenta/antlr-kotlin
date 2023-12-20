@@ -1,4 +1,4 @@
-package com.strumenta.kotlinmultiplatform.gradle.ext
+package com.strumenta.antlrkotlin.gradle.ext
 
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension

@@ -1,8 +1,8 @@
-package com.strumenta.kotlinmultiplatform.gradle.plugins
+package com.strumenta.antlrkotlin.gradle.plugins
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.javaExtension
-import com.strumenta.kotlinmultiplatform.gradle.ext.kmpExtension
-import com.strumenta.kotlinmultiplatform.gradle.ext.releaseBuild
+import com.strumenta.antlrkotlin.gradle.ext.javaExtension
+import com.strumenta.antlrkotlin.gradle.ext.kmpExtension
+import com.strumenta.antlrkotlin.gradle.ext.releaseBuild
 import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
