@@ -6,6 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
+import kotlin.time.measureTimedValue
+
 /**
  * This class contains profiling gathered for a particular decision.
  *
@@ -32,14 +34,14 @@ public class DecisionInfo(public val decision: Int) {
    * The total time spent in [ParserATNSimulator.adaptivePredict] for
    * this decision, in nanoseconds.
    *
-   * The value of this field contains the sum of differential results obtained
-   * by [System.nanoTime], and is not adjusted to compensate for JIT
-   * and/or garbage collection overhead. For best accuracy, use a modern JVM
-   * implementation that provides precise results from
-   * [System.nanoTime], and perform profiling in a separate process
-   * which is warmed up by parsing the input prior to profiling. If desired,
-   * call [ATNSimulator.clearDFA] to reset the DFA cache to its initial
-   * state before starting the profiling measurement pass.
+   * The value of this field contains the sum of results obtained
+   * by [measureTimedValue], and is not adjusted to compensate for JIT
+   * and/or garbage collection overhead.
+   *
+   * For best accuracy, perform profiling in a separate process
+   * which is warmed up by parsing the input prior to profiling.
+   * If desired, call [ATNSimulator.clearDFA] to reset the DFA cache
+   * to its initial state before starting the profiling measurement pass.
    */
   public var timeInPrediction: Long = 0
 

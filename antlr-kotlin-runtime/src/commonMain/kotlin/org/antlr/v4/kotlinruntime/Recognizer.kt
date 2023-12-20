@@ -28,7 +28,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
 
   /**
    * Indicate that the recognizer has changed internal state that is
-   * consistent with the ATN state passed in.  This way we always know
+   * consistent with the ATN state passed in. This way we always know
    * where we are in the ATN as the parser goes along. The rule
    * context objects form a stack that lets us see the stack of
    * invoking rules. Combine this and we have complete ATN

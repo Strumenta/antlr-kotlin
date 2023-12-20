@@ -84,7 +84,7 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
   public var conflictingAlts: BitSet? = null
 
   // Used in parser and lexer. In lexer, it indicates we hit a pred
-  // while computing a closure operation.  Don't make a DFA state from this.
+  // while computing a closure operation. Don't make a DFA state from this.
   public var hasSemanticContext: Boolean = false
   public var dipsIntoOuterContext: Boolean = false
 

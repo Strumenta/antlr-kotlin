@@ -767,9 +767,9 @@ public open class ParserATNSimulator(
     //
     // In this case, (17,1,[5 $]) indicates there is some next sequence that
     // would resolve this without conflict to alternative 1. Any other viable
-    // next sequence, however, is associated with a conflict.  We stop
+    // next sequence, however, is associated with a conflict. We stop
     // looking for input because no amount of further lookahead will alter
-    // the fact that we should predict alternative 1.  We just can't say for
+    // the fact that we should predict alternative 1. We just can't say for
     // sure that there is an ambiguity without looking further.
     reportAmbiguity(
       dfa = dfa,
@@ -1016,7 +1016,7 @@ public open class ParserATNSimulator(
   // an enter or exit decision, which is what concerns us here. At
   // the 1st + of input 1+2+3, the loop entry sees both predicates
   // and the loop exit also sees both predicates by falling off the
-  // edge of e.  This is because we have no stack information with
+  // edge of e. This is because we have no stack information with
   // SLL and find the follow of e, which will hit the return states
   // inside the loop after e[4] and e[3], which brings it back to
   // the enter or exit decision. In this case, we know that we

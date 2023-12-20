@@ -228,7 +228,7 @@ public abstract class PredictionContext protected constructor(
 
         // Else: ax + ay = a'[x,y]
         // merge parents x and y, giving array node with x,y then remainders
-        // of those graphs.  dup a, a' points at merged array
+        // of those graphs. dup a, a' points at merged array
         // new joined parent so create new singleton pointing to it, a'
         @Suppress("LocalVariableName")
         val a_ = SingletonPredictionContext.create(parent, a.returnState)

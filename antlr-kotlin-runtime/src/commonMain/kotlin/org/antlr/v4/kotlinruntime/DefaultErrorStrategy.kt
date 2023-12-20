@@ -662,7 +662,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    * ```
    *
    * At each rule invocation, the set of tokens that could follow
-   * that rule is pushed on a stack.  Here are the various
+   * that rule is pushed on a stack. Here are the various
    * context-sensitive follow sets:
    *
    * ```
