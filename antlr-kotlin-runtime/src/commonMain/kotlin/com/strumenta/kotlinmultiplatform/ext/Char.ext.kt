@@ -6,21 +6,21 @@ public fun Char.Companion.isSupplementaryCodePoint(codePoint: Int): Boolean =
   codePoint in MIN_SUPPLEMENTARY_CODE_POINT_..MAX_CODE_POINT_
 
 public fun Char.Companion.toChars(codePoint: Int, destination: CharArray, offset: Int): Int {
-  if (isBmpCodePoint(codePoint)) {
-    destination.setSafe(offset, codePoint.toChar())
-    return 1
+  when {
+    isBmpCodePoint(codePoint) -> {
+      destination.setSafe(offset, codePoint.toChar())
+      return 1
+    }
+    isValidCodePoint(codePoint) -> {
+      // When writing the low surrogate succeeds but writing the high surrogate fails (offset = -1), the
+      // destination will be modified even though the method throws. This feels wrong, but matches the behavior
+      // of the Java stdlib implementation.
+      destination.setSafe(offset + 1, lowSurrogate(codePoint))
+      destination.setSafe(offset, highSurrogate(codePoint))
+      return 2
+    }
+    else -> throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHex()}")
   }
-
-  if (isValidCodePoint(codePoint)) {
-    // When writing the low surrogate succeeds but writing the high surrogate fails (offset = -1), the
-    // destination will be modified even though the method throws. This feels wrong, but matches the behavior
-    // of the Java stdlib implementation.
-    destination.setSafe(offset + 1, lowSurrogate(codePoint))
-    destination.setSafe(offset, highSurrogate(codePoint))
-    return 2
-  }
-
-  throw IllegalArgumentException("Not a valid Unicode code point: ${codePoint.toHex()}")
 }
 
 public fun Char.Companion.charCount(codePoint: Int): Int =
