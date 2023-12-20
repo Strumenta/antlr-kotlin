@@ -115,32 +115,31 @@ public object RuntimeMetaData {
    * resemble the design provided for the Java target.
    *
    * @param generatingToolVersion The version of the tool used to generate a parser.
-   *   This value may be null when called from user code that was not generated
+   *   This value may be `null` when called from user code that was not generated
    *   by, and does not reference, the ANTLR 4 Tool itself
    * @param compileTimeVersion The version of the runtime the parser was
    *   compiled against. This should always be passed using a direct reference
    *   to [runtimeVersion]
    */
   public fun checkVersion(generatingToolVersion: String?, compileTimeVersion: String) {
-    val tempRuntimeVersion = runtimeVersion
     var runtimeConflictsWithGeneratingTool = false
 
     if (generatingToolVersion != null) {
       runtimeConflictsWithGeneratingTool =
-        tempRuntimeVersion != generatingToolVersion
-          && getMajorMinorVersion(tempRuntimeVersion) != getMajorMinorVersion(generatingToolVersion)
+        runtimeVersion != generatingToolVersion
+          && getMajorMinorVersion(runtimeVersion) != getMajorMinorVersion(generatingToolVersion)
     }
 
     val runtimeConflictsWithCompileTimeTool =
-      tempRuntimeVersion != compileTimeVersion
-        && getMajorMinorVersion(tempRuntimeVersion) != getMajorMinorVersion(compileTimeVersion)
+      runtimeVersion != compileTimeVersion
+        && getMajorMinorVersion(runtimeVersion) != getMajorMinorVersion(compileTimeVersion)
 
     if (runtimeConflictsWithGeneratingTool) {
-      System.err.println("ANTLR Tool version $generatingToolVersion used for code generation does not match the current runtime version $tempRuntimeVersion")
+      System.err.println("ANTLR Tool version $generatingToolVersion used for code generation does not match the current runtime version $runtimeVersion")
     }
 
     if (runtimeConflictsWithCompileTimeTool) {
-      System.err.println("ANTLR Runtime version $compileTimeVersion used for parser compilation does not match the current runtime version $tempRuntimeVersion")
+      System.err.println("ANTLR Runtime version $compileTimeVersion used for parser compilation does not match the current runtime version $runtimeVersion")
     }
   }
 

@@ -226,7 +226,11 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 @Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf", "RemoveRedundantBackticks")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
-    public companion object {
+    private companion object {
+        init {
+            RuntimeMetaData.checkVersion("<file.ANTLRVersion>", RuntimeMetaData.runtimeVersion)
+        }
+
         <atn>
 
         private val DECISION_TO_DFA = Array(ATN.numberOfDecisions) {
@@ -897,8 +901,12 @@ import org.antlr.v4.kotlinruntime.misc.*
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
 @Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "RemoveRedundantBackticks")
-public open class <lexer.name>(public val input: CharStream) : <superClass; null="Lexer">(input) {
-    public companion object {
+public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(input) {
+    private companion object {
+        init {
+            RuntimeMetaData.checkVersion("<lexerFile.ANTLRVersion>", RuntimeMetaData.runtimeVersion)
+        }
+
         <atn>
 
         private val DECISION_TO_DFA = Array(ATN.numberOfDecisions) {
