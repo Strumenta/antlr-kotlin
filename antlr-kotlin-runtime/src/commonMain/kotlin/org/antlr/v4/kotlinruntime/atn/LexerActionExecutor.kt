@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import org.antlr.v4.kotlinruntime.CharStream
 import org.antlr.v4.kotlinruntime.IntStream
 import org.antlr.v4.kotlinruntime.Lexer
@@ -178,6 +177,6 @@ public class LexerActionExecutor(public val lexerActions: Array<LexerAction>) {
       return false
     }
 
-    return hashCode == other.hashCode && Arrays.equals(lexerActions, other.lexerActions)
+    return hashCode == other.hashCode && lexerActions.contentEquals(other.lexerActions)
   }
 }

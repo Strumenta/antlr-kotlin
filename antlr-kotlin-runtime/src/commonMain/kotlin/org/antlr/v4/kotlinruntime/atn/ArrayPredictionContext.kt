@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.assert
 
 @Suppress("EqualsOrHashCode")
@@ -60,8 +59,7 @@ public class ArrayPredictionContext(
       return false
     }
 
-    return Arrays.equals(returnStates, other.returnStates)
-      && Arrays.equals(parents, other.parents)
+    return returnStates.contentEquals(other.returnStates) && parents.contentEquals(other.parents)
   }
 
   override fun toString(): String {

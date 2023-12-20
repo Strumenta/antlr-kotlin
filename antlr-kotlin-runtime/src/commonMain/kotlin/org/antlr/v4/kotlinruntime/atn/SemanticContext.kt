@@ -6,7 +6,6 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Arrays
 import com.strumenta.kotlinmultiplatform.Collections
 import com.strumenta.kotlinmultiplatform.ext.hashCodeCustom
 import org.antlr.v4.kotlinruntime.Recognizer
@@ -287,7 +286,7 @@ public abstract class SemanticContext {
         return false
       }
 
-      return Arrays.equals(opnds, other.opnds)
+      return opnds.contentEquals(other.opnds)
     }
 
     override fun hashCode(): Int {
@@ -394,7 +393,7 @@ public abstract class SemanticContext {
         return false
       }
 
-      return Arrays.equals(opnds, other.opnds)
+      return opnds.contentEquals(other.opnds)
     }
 
     override fun hashCode(): Int {
