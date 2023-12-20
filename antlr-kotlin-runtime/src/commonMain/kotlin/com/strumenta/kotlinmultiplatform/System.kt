@@ -18,8 +18,8 @@ public object System {
     public fun print(message: String)
   }
 
-  public val out: PrintStream = StdPrintStream
-  public val err: PrintStream = ErrPrintStream
+  public var out: PrintStream = StdPrintStream
+  public var err: PrintStream = ErrPrintStream
 
   @Suppress("SpellCheckingInspection")
   public fun getenv(name: String, defaultValue: String? = null): String? =
