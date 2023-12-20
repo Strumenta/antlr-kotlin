@@ -7,9 +7,9 @@
 This project contains everything needed to support Kotlin as a target for ANTLR.
 
 - **Kotlin Target**: a plugin for the ANTLR code generator that produces lexers, parsers, listeners, and visitors
-- **Kotlin Runtime**: a multi-platform library needed by the generated lexers and parsers
+- **Kotlin Runtime**: a multiplatform library needed by the generated lexers and parsers
 
-This being a fully multi-platform project, the code written using the Kotlin target for ANTLR
+This being a fully multiplatform project, the code written using the Kotlin target for ANTLR
 will run on the JVM (including Android), in the browser, in Node.js, and natively on Mac, Windows, and Linux.
 
 Want to start experimenting immediately? See [Gradle Setup](#gradle-setup).
@@ -32,9 +32,24 @@ or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automat
 ## Kotlin Runtime
 
 The Kotlin runtime for the Kotlin target is derived from the Java runtime, and is built
-as a multi-platform project running on JVM, JS, and some of the Kotlin Native platforms.
+as a multiplatform project running on JVM, JS, and Native.
 
-:warning: The Kotlin Native runtime is **not** thread safe
+> :warning: The Native runtime is **not** thread safe
+
+The supported Native platforms are:
+
+| Tier 1            | Tier 2                | Tier 3   |
+|:------------------|:----------------------|:---------|
+| macosX64          | linuxX64              | mingwX64 |
+| macosArm64        | linuxArm64            |          |
+| iosSimulatorArm64 | watchosSimulatorArm64 |          |
+| iosX64            | watchosX64            |          |
+|                   | watchosArm32          |          |
+|                   | watchosArm64          |          |
+|                   | tvosSimulatorArm64    |          |
+|                   | tvosX64               |          |
+|                   | tvosArm64             |          |
+|                   | iosArm64              |          |
 
 ## Gradle Setup
 
