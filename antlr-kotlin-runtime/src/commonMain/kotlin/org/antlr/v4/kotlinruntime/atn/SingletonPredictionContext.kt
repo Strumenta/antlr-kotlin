@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.assert
+import com.strumenta.antlrkotlin.runtime.assert
 
 @Suppress("EqualsOrHashCode")
 public open class SingletonPredictionContext internal constructor(

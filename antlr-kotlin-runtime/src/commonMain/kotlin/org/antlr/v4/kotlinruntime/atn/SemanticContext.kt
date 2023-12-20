@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.Collections
-import com.strumenta.kotlinmultiplatform.ext.hashCodeCustom
+import com.strumenta.antlrkotlin.runtime.Collections
+import com.strumenta.antlrkotlin.runtime.ext.hashCodeCustom
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.atn.SemanticContext.*

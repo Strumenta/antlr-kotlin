@@ -1,6 +1,6 @@
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.ext.codePointIndices
+import com.strumenta.antlrkotlin.runtime.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

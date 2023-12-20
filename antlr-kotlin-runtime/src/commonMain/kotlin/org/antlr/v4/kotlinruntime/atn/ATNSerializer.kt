@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.assert
+import com.strumenta.antlrkotlin.runtime.assert
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntegerList
 import org.antlr.v4.kotlinruntime.misc.IntervalSet

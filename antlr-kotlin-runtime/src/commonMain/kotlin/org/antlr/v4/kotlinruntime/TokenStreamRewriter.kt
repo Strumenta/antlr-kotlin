@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.System
+import com.strumenta.antlrkotlin.runtime.System
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.math.max
 import kotlin.math.min

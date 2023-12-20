@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.dfa
 
-import com.strumenta.kotlinmultiplatform.ext.appendCodePoint
+import com.strumenta.antlrkotlin.runtime.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.VocabularyImpl
 
 public class LexerDFASerializer(dfa: DFA) : DFASerializer(dfa, VocabularyImpl.EMPTY_VOCABULARY) {

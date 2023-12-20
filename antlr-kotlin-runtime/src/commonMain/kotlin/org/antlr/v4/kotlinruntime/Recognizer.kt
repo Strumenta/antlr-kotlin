@@ -6,8 +6,8 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.WeakHashMap
-import com.strumenta.kotlinmultiplatform.synchronized
+import com.strumenta.antlrkotlin.runtime.WeakHashMap
+import com.strumenta.antlrkotlin.runtime.synchronized
 import org.antlr.v4.kotlinruntime.atn.ATN
 import org.antlr.v4.kotlinruntime.atn.ATNSimulator
 import org.antlr.v4.kotlinruntime.atn.DecisionInfo

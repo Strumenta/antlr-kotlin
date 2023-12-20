@@ -6,10 +6,10 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.BitSet
-import com.strumenta.kotlinmultiplatform.System
-import com.strumenta.kotlinmultiplatform.assert
-import com.strumenta.kotlinmultiplatform.synchronized
+import com.strumenta.antlrkotlin.runtime.BitSet
+import com.strumenta.antlrkotlin.runtime.System
+import com.strumenta.antlrkotlin.runtime.assert
+import com.strumenta.antlrkotlin.runtime.synchronized
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
