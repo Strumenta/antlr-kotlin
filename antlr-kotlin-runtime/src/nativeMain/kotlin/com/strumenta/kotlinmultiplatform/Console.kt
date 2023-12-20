@@ -1,22 +1,23 @@
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+
 package com.strumenta.kotlinmultiplatform
 
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.posix.fprintf
-import platform.posix.stderr
 import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.internal.GCUnsafeCall
+import kotlin.native.internal.InternalForKotlinNative
 
 @OptIn(ExperimentalNativeApi::class)
-private val lineBreak = when (Platform.osFamily) {
-  OsFamily.WINDOWS -> "\r\n"
-  else -> "\n"
-}
+private val lineBreak = if (Platform.osFamily == OsFamily.WINDOWS) "\r\n" else "\n"
 
-@OptIn(ExperimentalForeignApi::class)
-internal actual fun platformPrintErrLn(message: String) {
-  fprintf(stderr, "%s", message)
-}
+@OptIn(InternalForKotlinNative::class)
+@GCUnsafeCall("Kotlin_io_Console_printToStdErr")
+private external fun runtimePrintToStdErr(message: String)
 
-@OptIn(ExperimentalForeignApi::class)
-internal actual fun platformPrintErr(message: String) {
-  fprintf(stderr, "%s$lineBreak", message)
-}
+internal actual inline fun platformPrintErrLn(): Unit =
+  runtimePrintToStdErr(lineBreak)
+
+internal actual inline fun platformPrintErrLn(message: String): Unit =
+  runtimePrintToStdErr("$message$lineBreak")
+
+internal actual inline fun platformPrintErr(message: String): Unit =
+  runtimePrintToStdErr(message)

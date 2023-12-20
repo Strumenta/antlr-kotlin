@@ -1,19 +1,8 @@
 package com.strumenta.kotlinmultiplatform
 
-/**
- * Returns whether we are running in Node.js or not.
- *
- * @author Edoardo Luppi
- */
-@Suppress("unused")
-internal val isNode = js(
-  """
-  (typeof process !== 'undefined'
-      && process.versions != null
-      && process.versions.node != null) ||
-  (typeof window !== 'undefined'
-      && typeof window.process !== 'undefined'
-      && window.process.versions != null
-      && window.process.versions.node != null)
-  """
-).unsafeCast<Boolean>()
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun platformGetEnv(name: String): String? {
+  // TODO(Edoardo): support for Node.js
+  // Browser is not supported
+  return null
+}

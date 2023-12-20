@@ -1,6 +1,26 @@
 package com.strumenta.kotlinmultiplatform
 
 public object System {
+  public interface PrintStream {
+    /**
+     * Prints the line separator to the standard output stream.
+     */
+    public fun println()
+
+    /**
+     * Prints the given message and the line separator to the standard output stream.
+     */
+    public fun println(message: String)
+
+    /**
+     * Prints the given message to the standard output stream.
+     */
+    public fun print(message: String)
+  }
+
+  public val out: PrintStream = StdPrintStream
+  public val err: PrintStream = ErrPrintStream
+
   @Suppress("SpellCheckingInspection")
   public fun getenv(name: String, defaultValue: String? = null): String? =
     platformGetEnv(name) ?: defaultValue
@@ -13,15 +33,10 @@ public object System {
     src.copyInto(dest, destPos, srcPos, srcPos + length)
   }
 
-  public val out: PrintStream = StdPrintStream
-  public val err: PrintStream = ErrPrintStream
-
-  public interface PrintStream {
-    public fun println(message: String = "")
-    public fun print(message: String)
-  }
-
   private object StdPrintStream : PrintStream {
+    override fun println(): Unit =
+      kotlin.io.println()
+
     override fun println(message: String): Unit =
       kotlin.io.println(message)
 
@@ -30,6 +45,9 @@ public object System {
   }
 
   private object ErrPrintStream : PrintStream {
+    override fun println(): Unit =
+      platformPrintErrLn()
+
     override fun println(message: String): Unit =
       platformPrintErrLn(message)
 

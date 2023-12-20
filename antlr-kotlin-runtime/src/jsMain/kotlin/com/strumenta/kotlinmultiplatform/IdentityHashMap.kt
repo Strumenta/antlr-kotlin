@@ -16,7 +16,8 @@
 
 package com.strumenta.kotlinmultiplatform
 
-// TODO(Edoardo): implement real identity comparison with ES6 Map
+// Note(Edoardo): this is implemented as an HashMap in the JS target,
+//  so let's keep it as it is
 public actual class IdentityHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
   public actual constructor() : this(LinkedHashMap())
 }

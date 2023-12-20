@@ -1,7 +1,15 @@
 package com.strumenta.kotlinmultiplatform
 
-internal actual fun platformPrintErrLn(message: String): Unit =
-  System.err.println(message)
+import java.lang.System as JavaSystem
 
-internal actual fun platformPrintErr(message: String): Unit =
-  System.err.print(message)
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun platformPrintErrLn(): Unit =
+  JavaSystem.err.println()
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun platformPrintErrLn(message: String): Unit =
+  JavaSystem.err.println(message)
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun platformPrintErr(message: String): Unit =
+  JavaSystem.err.print(message)

@@ -1,5 +1,10 @@
 package com.strumenta.kotlinmultiplatform.ext
 
+import com.strumenta.kotlinmultiplatform.highSurrogate
+import com.strumenta.kotlinmultiplatform.isBmpCodePoint
+import com.strumenta.kotlinmultiplatform.isValidCodePoint
+import com.strumenta.kotlinmultiplatform.lowSurrogate
+
 /**
  * Appends the string representation of the [codePoint] argument to this sequence.
  *

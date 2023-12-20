@@ -11,4 +11,4 @@ package com.strumenta.kotlinmultiplatform
  *
  * @author Edoardo Luppi
  */
-internal expect fun platformGetEnv(name: String): String?
+internal expect inline fun platformGetEnv(name: String): String?
