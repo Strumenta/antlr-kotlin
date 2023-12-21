@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.21"
-kotlin-wrappers = "1.0.0-pre.659"
+kotlin-wrappers = "1.0.0-pre.668"
 kotlinx-resources = "0.4.0"
 antlr4 = "4.13.1"
 dokka = "1.9.10"
