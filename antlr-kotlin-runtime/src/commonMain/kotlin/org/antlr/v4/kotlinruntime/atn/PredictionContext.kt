@@ -6,9 +6,9 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.IdentityHashMap
-import com.strumenta.kotlinmultiplatform.System
-import com.strumenta.kotlinmultiplatform.assert
+import com.strumenta.antlrkotlin.runtime.IdentityHashMap
+import com.strumenta.antlrkotlin.runtime.System
+import com.strumenta.antlrkotlin.runtime.assert
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
@@ -228,7 +228,7 @@ public abstract class PredictionContext protected constructor(
 
         // Else: ax + ay = a'[x,y]
         // merge parents x and y, giving array node with x,y then remainders
-        // of those graphs.  dup a, a' points at merged array
+        // of those graphs. dup a, a' points at merged array
         // new joined parent so create new singleton pointing to it, a'
         @Suppress("LocalVariableName")
         val a_ = SingletonPredictionContext.create(parent, a.returnState)

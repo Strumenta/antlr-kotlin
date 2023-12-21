@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.System
+import com.strumenta.antlrkotlin.runtime.System
 
 /**
  * @author Sam Harwell

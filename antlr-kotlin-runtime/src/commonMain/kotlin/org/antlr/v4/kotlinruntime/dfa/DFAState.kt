@@ -14,14 +14,14 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * A DFA state represents a set of possible ATN configurations.
  * As Aho, Sethi, Ullman p. 117 says "The DFA uses its state
  * to keep track of all possible states the ATN can be in after
- * reading each input symbol.  That is to say, after reading
+ * reading each input symbol. That is to say, after reading
  * input a1a2..an, the DFA is in a state that represents the
  * subset T of the states of the ATN that are reachable from the
  * ATN's start state along some path labeled a1a2..an."
  * In conventional NFADFA conversion, therefore, the subset T
  * would be a bitset representing the set of states the
- * ATN could be in.  We need to track the alt predicted by each
- * state as well, however.  More importantly, we need to maintain
+ * ATN could be in. We need to track the alt predicted by each
+ * state as well, however. More importantly, we need to maintain
  * a stack of states, tracking the closure operations as they
  * jump from rule to rule, emulating rule invocations (method calls).
  * I have to add a stack to simulate the proper lookahead sequences for

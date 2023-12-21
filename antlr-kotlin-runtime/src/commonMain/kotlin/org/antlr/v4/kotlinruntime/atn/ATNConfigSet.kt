@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.BitSet
+import com.strumenta.antlrkotlin.runtime.BitSet
 import org.antlr.v4.kotlinruntime.misc.AbstractEqualityComparator
 import org.antlr.v4.kotlinruntime.misc.Array2DHashSet
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
@@ -84,7 +84,7 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
   public var conflictingAlts: BitSet? = null
 
   // Used in parser and lexer. In lexer, it indicates we hit a pred
-  // while computing a closure operation.  Don't make a DFA state from this.
+  // while computing a closure operation. Don't make a DFA state from this.
   public var hasSemanticContext: Boolean = false
   public var dipsIntoOuterContext: Boolean = false
 

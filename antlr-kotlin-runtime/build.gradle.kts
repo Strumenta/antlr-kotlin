@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.strumenta.kotlinmultiplatform.gradle.ext.setupPom
-import com.strumenta.kotlinmultiplatform.gradle.ext.targetsNative
+import com.strumenta.antlrkotlin.gradle.ext.setupPom
+import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.Platform
 import org.jetbrains.dokka.gradle.DokkaTask

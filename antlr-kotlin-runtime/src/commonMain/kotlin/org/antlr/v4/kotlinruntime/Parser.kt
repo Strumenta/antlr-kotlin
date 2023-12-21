@@ -5,9 +5,9 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.System
-import com.strumenta.kotlinmultiplatform.System.PrintStream
-import com.strumenta.kotlinmultiplatform.synchronized
+import com.strumenta.antlrkotlin.runtime.System
+import com.strumenta.antlrkotlin.runtime.System.PrintStream
+import com.strumenta.antlrkotlin.runtime.synchronized
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.misc.IntegerStack
 import org.antlr.v4.kotlinruntime.misc.IntervalSet

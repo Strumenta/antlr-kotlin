@@ -1,4 +1,4 @@
-import com.strumenta.kotlinmultiplatform.gradle.ext.setupPom
+import com.strumenta.antlrkotlin.gradle.ext.setupPom
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {

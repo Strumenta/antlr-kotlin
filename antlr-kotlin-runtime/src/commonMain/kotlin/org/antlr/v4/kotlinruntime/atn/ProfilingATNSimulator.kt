@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.atn
 
-import com.strumenta.kotlinmultiplatform.BitSet
+import com.strumenta.antlrkotlin.runtime.BitSet
 import org.antlr.v4.kotlinruntime.Parser
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.TokenStream
@@ -235,7 +235,7 @@ public open class ProfilingATNSimulator(parser: Parser) : ParserATNSimulator(
 
     if (configs.fullCtx && prediction != conflictingAltResolvedBySLL) {
       // Even though this is an ambiguity we are reporting, we can
-      // still detect some context sensitivities.  Both SLL and LL
+      // still detect some context sensitivities. Both SLL and LL
       // are showing a conflict, hence an ambiguity, but if they resolve
       // to different minimum alternatives we have also identified a
       // context sensitivity.

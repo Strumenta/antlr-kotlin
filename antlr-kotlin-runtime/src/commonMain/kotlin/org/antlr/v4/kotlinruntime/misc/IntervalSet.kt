@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime.misc
 
-import com.strumenta.kotlinmultiplatform.ext.appendCodePoint
+import com.strumenta.antlrkotlin.runtime.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.Vocabulary

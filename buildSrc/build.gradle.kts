@@ -14,17 +14,17 @@ gradlePlugin {
   plugins {
     register("strumentaJvmLibrary") {
       id = "strumenta.jvm.library"
-      implementationClass = "com.strumenta.kotlinmultiplatform.gradle.plugins.StrumentaJvmLibraryModulePlugin"
+      implementationClass = "com.strumenta.antlrkotlin.gradle.plugins.StrumentaJvmLibraryModulePlugin"
     }
 
     register("strumentaMultiplatform") {
       id = "strumenta.multiplatform"
-      implementationClass = "com.strumenta.kotlinmultiplatform.gradle.plugins.StrumentaMultiplatformModulePlugin"
+      implementationClass = "com.strumenta.antlrkotlin.gradle.plugins.StrumentaMultiplatformModulePlugin"
     }
 
     register("strumentaGradlePlugin") {
       id = "strumenta.gradle.plugin"
-      implementationClass = "com.strumenta.kotlinmultiplatform.gradle.plugins.StrumentaGradlePluginModulePlugin"
+      implementationClass = "com.strumenta.antlrkotlin.gradle.plugins.StrumentaGradlePluginModulePlugin"
     }
   }
 }

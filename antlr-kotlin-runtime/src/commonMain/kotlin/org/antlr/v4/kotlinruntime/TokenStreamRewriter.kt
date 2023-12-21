@@ -5,7 +5,7 @@
  */
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.System
+import com.strumenta.antlrkotlin.runtime.System
 import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.math.max
 import kotlin.math.min
@@ -392,7 +392,9 @@ public open class TokenStreamRewriter(public val tokenStream: TokenStream) {
   /**
    * We need to combine operations and report invalid operations (like
    * overlapping replaces that are not completed nested). Inserts to
-   * same index need to be combined etc...  Here are the cases:
+   * same index need to be combined, etc.
+   *
+   * Here are the cases:
    *
    * I.i.u I.j.v								leave alone, nonoverlapping
    * I.i.u I.i.v								combine: Iivu

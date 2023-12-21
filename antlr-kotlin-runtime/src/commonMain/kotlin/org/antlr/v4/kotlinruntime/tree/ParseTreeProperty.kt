@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime.tree
 
-import com.strumenta.kotlinmultiplatform.IdentityHashMap
+import com.strumenta.antlrkotlin.runtime.IdentityHashMap
 
 /**
  * Associate a property with a parse tree node. Useful with parse tree listeners

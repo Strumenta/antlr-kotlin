@@ -6,7 +6,7 @@
 
 package org.antlr.v4.kotlinruntime
 
-import com.strumenta.kotlinmultiplatform.System
+import com.strumenta.antlrkotlin.runtime.System
 import org.antlr.v4.kotlinruntime.atn.ATNState
 import org.antlr.v4.kotlinruntime.atn.RuleTransition
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
@@ -662,7 +662,7 @@ public open class DefaultErrorStrategy : ANTLRErrorStrategy {
    * ```
    *
    * At each rule invocation, the set of tokens that could follow
-   * that rule is pushed on a stack.  Here are the various
+   * that rule is pushed on a stack. Here are the various
    * context-sensitive follow sets:
    *
    * ```
