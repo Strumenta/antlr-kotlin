@@ -1,11 +1,11 @@
 [versions]
-kotlin = "1.9.21"
-kotlin-wrappers = "1.0.0-pre.659"
+kotlin = "1.9.22"
+kotlin-wrappers = "1.0.0-pre.668"
 kotlinx-resources = "0.4.0"
 antlr4 = "4.13.1"
 dokka = "1.9.10"
 researchgate-release = "3.0.2"
-maven-publish = "0.25.3"
+maven-publish = "0.26.0"
 gradle-plugin-publish = "1.2.1"
 
 [libraries]
