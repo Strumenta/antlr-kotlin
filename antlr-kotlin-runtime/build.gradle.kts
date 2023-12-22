@@ -16,6 +16,7 @@ plugins {
 strumentaMultiplatform {
   applyJvm()
   applyJs()
+  applyWasi()
 
   // Opting-in for native targets should be explicit,
   // as it makes the build and test process slower.

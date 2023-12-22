@@ -169,6 +169,22 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     }
   }
 
+  @OptIn(ExperimentalWasmDsl::class)
+  fun applyWasi() {
+    project.kmpExtension.wasmWasi {
+      nodejs {
+        testTask {
+          useMocha {
+            // Override default 2s timeout
+            timeout = "30s"
+          }
+
+          filter.isFailOnNoMatchingTests = true
+        }
+      }
+    }
+  }
+
   fun applyNative(action: Action<NativeConfiguration> = Action {}) {
     action.execute(nativeConfig)
 
