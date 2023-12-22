@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.Collections
-import com.strumenta.antlrkotlin.runtime.ext.hashCodeCustom
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.atn.SemanticContext.*
@@ -293,7 +292,8 @@ public abstract class SemanticContext {
       // Note(Edoardo): K/JS KClass.hashCode uses only the class simple name
       //   On the JVM and on Native, the fqn param is ignored
       val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.AND"
-      return MurmurHash.hashCode(opnds, AND::class.hashCodeCustom(fqn))
+      val seed = 31 * fqn.hashCode() + AND::class.hashCode()
+      return MurmurHash.hashCode(opnds, seed)
     }
 
     /**
@@ -400,7 +400,8 @@ public abstract class SemanticContext {
       // Note(Edoardo): K/JS KClass.hashCode uses only the class simple name
       //   On the JVM and on Native, the fqn param is ignored
       val fqn = "org.antlr.v4.kotlinruntime.atn.SemanticContext.OR"
-      return MurmurHash.hashCode(opnds, OR::class.hashCodeCustom(fqn))
+      val seed = 31 * fqn.hashCode() + OR::class.hashCode()
+      return MurmurHash.hashCode(opnds, seed)
     }
 
     /**
