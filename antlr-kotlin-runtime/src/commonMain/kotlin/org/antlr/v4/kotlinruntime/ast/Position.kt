@@ -1,7 +1,7 @@
 package org.antlr.v4.kotlinruntime.ast
 
 /**
- * Both the start point and the end point are included.
+ * Both the [start] point and the [end] point are inclusive.
  */
 public data class Position(val start: Point, val end: Point) {
   public constructor(

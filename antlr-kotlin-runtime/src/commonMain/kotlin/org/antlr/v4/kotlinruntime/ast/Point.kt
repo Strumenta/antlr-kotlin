@@ -1,7 +1,10 @@
 package org.antlr.v4.kotlinruntime.ast
 
 /**
- * The line should be in `1..n`, the column in `0..n`.
+ * Represents a `[line:column]` coordinate inside a textual source.
+ *
+ * @param line Should be in the `1..n` range
+ * @param column Should be in the `0..n` range
  */
 public data class Point(val line: Int, val column: Int) {
   private companion object {
@@ -10,16 +13,16 @@ public data class Point(val line: Int, val column: Int) {
 
   init {
     require(line >= 1) {
-      "Line should be equal or greater than 1, was $line"
+      "Line should be equal or greater than 1, but was $line"
     }
 
     require(column >= 0) {
-      "Column should be equal or greater than 0, was $column"
+      "Column should be equal or greater than 0, but was $column"
     }
   }
 
   override fun toString(): String =
-    "Line $line, Column $column"
+    "line $line : column $column"
 
   /**
    * Translate the point to an offset in the original code stream.

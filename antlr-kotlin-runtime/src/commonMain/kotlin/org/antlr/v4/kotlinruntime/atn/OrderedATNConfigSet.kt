@@ -9,7 +9,6 @@ package org.antlr.v4.kotlinruntime.atn
 import org.antlr.v4.kotlinruntime.misc.ObjectEqualityComparator
 
 /**
- *
  * @author Sam Harwell
  */
 public class OrderedATNConfigSet : ATNConfigSet() {
