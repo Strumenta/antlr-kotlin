@@ -38,18 +38,18 @@ as a multiplatform project running on JVM, JS, and Native.
 
 The supported Native platforms are:
 
-| Tier 1            | Tier 2                | Tier 3   |
-|:------------------|:----------------------|:---------|
-| macosX64          | linuxX64              | mingwX64 |
-| macosArm64        | linuxArm64            |          |
-| iosSimulatorArm64 | watchosSimulatorArm64 |          |
-| iosX64            | watchosX64            |          |
-|                   | watchosArm32          |          |
-|                   | watchosArm64          |          |
-|                   | tvosSimulatorArm64    |          |
-|                   | tvosX64               |          |
-|                   | tvosArm64             |          |
-|                   | iosArm64              |          |
+| Tier 1            | Tier 2                | Tier 3             |
+|:------------------|:----------------------|:-------------------|
+| macosX64          | linuxX64              | androidNativeArm32 |
+| macosArm64        | linuxArm64            | androidNativeArm64 |
+| iosSimulatorArm64 | watchosSimulatorArm64 | androidNativeX86   |
+| iosX64            | watchosX64            | androidNativeX64   |
+|                   | watchosArm32          | watchosDeviceArm64 |
+|                   | watchosArm64          | mingwX64           |
+|                   | tvosSimulatorArm64    |                    |
+|                   | tvosX64               |                    |
+|                   | tvosArm64             |                    |
+|                   | iosArm64              |                    |
 
 ## Gradle Setup
 

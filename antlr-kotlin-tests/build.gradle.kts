@@ -24,7 +24,10 @@ strumentaMultiplatform {
   //
   // Opt in by setting 'target.is.native = true' in gradle.properties
   if (targetsNative()) {
-    applyNative()
+    applyNative {
+      // kotlinx-resources does not support some of the Native targets
+      disableUntestable = true
+    }
   }
 }
 

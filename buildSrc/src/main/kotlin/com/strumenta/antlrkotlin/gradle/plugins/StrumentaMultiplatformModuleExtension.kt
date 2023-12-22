@@ -26,11 +26,18 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     val enableJava: Property<Boolean>
   }
 
+  interface NativeConfiguration {
+    val disableUntestable: Property<Boolean>
+  }
+
   @get:Nested
   abstract val jsConfig: JsConfiguration
 
   @get:Nested
   abstract val jvmConfig: JvmConfiguration
+
+  @get:Nested
+  abstract val nativeConfig: NativeConfiguration
 
   @OptIn(ExperimentalWasmDsl::class)
   fun applyJs(action: Action<JsConfiguration> = Action {}) {
@@ -162,7 +169,9 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     }
   }
 
-  fun applyNative() {
+  fun applyNative(action: Action<NativeConfiguration> = Action {}) {
+    action.execute(nativeConfig)
+
     val isDevelopment = !project.releaseBuild()
     val hostOs = OperatingSystem.current()
 
@@ -170,6 +179,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     // Publishing should occur only from a macOS host
     if (isDevelopment || hostOs.isMacOsX) {
       val kmpExtension = project.kmpExtension
+      val disableUntestable = nativeConfig.disableUntestable.getOrElse(false)
 
       // Tier 1
       // macOS host only
@@ -195,14 +205,15 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       // Tier 3
       kmpExtension.mingwX64()
 
-      // Commented below needs kotlinx-resources support
-      // kmpExtension.androidNativeArm32()
-      // kmpExtension.androidNativeArm64()
-      // kmpExtension.androidNativeX86()
-      // kmpExtension.androidNativeX64()
+      if (!disableUntestable) {
+        kmpExtension.androidNativeArm32()
+        kmpExtension.androidNativeArm64()
+        kmpExtension.androidNativeX86()
+        kmpExtension.androidNativeX64()
 
-      // macOS host only
-      // kmpExtension.watchosDeviceArm64()
+        // macOS host only
+        kmpExtension.watchosDeviceArm64()
+      }
     }
   }
 }
