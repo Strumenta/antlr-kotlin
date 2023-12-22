@@ -36,7 +36,7 @@ jobs:
             target: JS
             task: jsTest
           - java: '17'
-            target: WasmJS
+            target: wasmJS
             task: wasmJsTest
     runs-on: ubuntu-latest
     name: Build (${{ matrix.java }} / ${{ matrix.target }})
