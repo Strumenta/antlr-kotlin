@@ -11,14 +11,15 @@ import org.gradle.api.tasks.Nested
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 /**
  * @see StrumentaMultiplatformModulePlugin
  */
 abstract class StrumentaMultiplatformModuleExtension(private val project: Project) {
   interface JsConfiguration {
-    val nodeJs: Property<Boolean>
     val browser: Property<Boolean>
+    val wasm: Property<Boolean>
   }
 
   interface JvmConfiguration {
@@ -31,22 +32,23 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   @get:Nested
   abstract val jvmConfig: JvmConfiguration
 
+  @OptIn(ExperimentalWasmDsl::class)
   fun applyJs(action: Action<JsConfiguration> = Action {}) {
     action.execute(jsConfig)
 
-    val isNodeJsEnabled = jsConfig.nodeJs.getOrElse(true)
     val isBrowserEnabled = jsConfig.browser.getOrElse(true)
-    project.kmpExtension.js(KotlinJsCompilerType.IR) {
-      if (isNodeJsEnabled) {
-        nodejs {
-          testTask {
-            useMocha {
-              // Override default 2s timeout
-              timeout = "30s"
-            }
+    val isWasmJsEnabled = jsConfig.wasm.getOrElse(true)
 
-            filter.isFailOnNoMatchingTests = true
+    val kmpExtension = project.kmpExtension
+    kmpExtension.js(KotlinJsCompilerType.IR) {
+      nodejs {
+        testTask {
+          useMocha {
+            // Override default 2s timeout
+            timeout = "30s"
           }
+
+          filter.isFailOnNoMatchingTests = true
         }
       }
 
@@ -60,6 +62,68 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
             filter.isFailOnNoMatchingTests = true
           }
+        }
+      }
+    }
+
+    if (isWasmJsEnabled) {
+      kmpExtension.wasmJs {
+        nodejs {
+          testTask {
+            useMocha {
+              // Override default 2s timeout
+              timeout = "30s"
+            }
+
+            filter.isFailOnNoMatchingTests = true
+          }
+        }
+
+        if (isBrowserEnabled) {
+          browser {
+            testTask {
+              useKarma {
+                useSourceMapSupport()
+                useChromeHeadless()
+              }
+
+              filter.isFailOnNoMatchingTests = true
+            }
+          }
+        }
+
+        // Enable WASM optimizations
+        applyBinaryen()
+      }
+
+      // Necessary as we are using dependsOn explicitly.
+      // See https://kotlinlang.org/docs/multiplatform-hierarchy.html#creating-additional-source-sets
+      kmpExtension.applyDefaultHierarchyTemplate()
+
+      val sourceSets = kmpExtension.sourceSets
+
+      // Register a common source set between JS and WASM
+      sourceSets.register("jsAndWasmSharedMain") {
+        dependsOn(sourceSets.getByName("commonMain"))
+
+        sourceSets.getByName("jsMain").dependsOn(this)
+        sourceSets.getByName("wasmJsMain").dependsOn(this)
+      }
+
+      // Register a common test source set between JS and WASM
+      sourceSets.register("jsAndWasmSharedTest") {
+        dependsOn(sourceSets.getByName("commonTest"))
+
+        sourceSets.getByName("jsTest").dependsOn(this)
+        sourceSets.getByName("wasmJsTest").dependsOn(this)
+      }
+
+      // Disable intermediate source set compilation
+      // because we do not need js-wasmJs artifact.
+      // This is taken from kotlinx.coroutines#3966
+      project.tasks.configureEach {
+        if (name == "compileJsAndWasmSharedMainKotlinMetadata") {
+          enabled = false
         }
       }
     }
@@ -99,13 +163,14 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   }
 
   fun applyNative() {
-    val kmpExtension = project.kmpExtension
     val isDevelopment = !project.releaseBuild()
     val hostOs = OperatingSystem.current()
 
     // Development should enable all targets.
     // Publishing should occur only from a macOS host
     if (isDevelopment || hostOs.isMacOsX) {
+      val kmpExtension = project.kmpExtension
+
       // Tier 1
       // macOS host only
       kmpExtension.macosX64()

@@ -14,6 +14,9 @@ strumentaMultiplatform {
   applyJs {
     // We can't properly run grammar tests in the browser
     browser = false
+
+    // kotlinx-resources does not support wasmJs yet
+    wasm = false
   }
 
   // Opting-in for native targets should be explicit,

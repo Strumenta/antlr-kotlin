@@ -11,4 +11,4 @@ internal actual val isNode: Boolean = js(
       && window.process.versions != null
       && window.process.versions.node != null)
   """
-).unsafeCast<Boolean>()
+)
