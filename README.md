@@ -32,24 +32,24 @@ or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automat
 ## Kotlin Runtime
 
 The Kotlin runtime for the Kotlin target is derived from the Java runtime, and is built
-as a multiplatform project running on JVM, JS, and Native.
+as a multiplatform project running on JVM, JS, WebAssembly, and Native.
 
 > :warning: The Native runtime is **not** thread safe
 
 The supported Native platforms are:
 
-| Tier 1            | Tier 2                | Tier 3   |
-|:------------------|:----------------------|:---------|
-| macosX64          | linuxX64              | mingwX64 |
-| macosArm64        | linuxArm64            |          |
-| iosSimulatorArm64 | watchosSimulatorArm64 |          |
-| iosX64            | watchosX64            |          |
-|                   | watchosArm32          |          |
-|                   | watchosArm64          |          |
-|                   | tvosSimulatorArm64    |          |
-|                   | tvosX64               |          |
-|                   | tvosArm64             |          |
-|                   | iosArm64              |          |
+| Tier 1            | Tier 2                | Tier 3             |
+|:------------------|:----------------------|:-------------------|
+| macosX64          | linuxX64              | androidNativeArm32 |
+| macosArm64        | linuxArm64            | androidNativeArm64 |
+| iosSimulatorArm64 | watchosSimulatorArm64 | androidNativeX86   |
+| iosX64            | watchosX64            | androidNativeX64   |
+|                   | watchosArm32          | watchosDeviceArm64 |
+|                   | watchosArm64          | mingwX64           |
+|                   | tvosSimulatorArm64    |                    |
+|                   | tvosX64               |                    |
+|                   | tvosArm64             |                    |
+|                   | iosArm64              |                    |
 
 ## Gradle Setup
 
