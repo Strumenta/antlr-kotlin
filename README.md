@@ -32,7 +32,7 @@ or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automat
 ## Kotlin Runtime
 
 The Kotlin runtime for the Kotlin target is derived from the Java runtime, and is built
-as a multiplatform project running on JVM, JS, and Native.
+as a multiplatform project running on JVM, JS, WebAssembly, and Native.
 
 > :warning: The Native runtime is **not** thread safe
 
