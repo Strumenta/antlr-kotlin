@@ -12,22 +12,19 @@ import org.antlr.v4.kotlinruntime.TokenStream
 
 /**
  * This class represents profiling event information for an ambiguity.
+ *
  * Ambiguities are decisions where a particular input resulted in an SLL
  * conflict, followed by LL prediction also reaching a conflict state
  * (indicating a true ambiguity in the grammar).
- *
- *
  *
  * This event may be reported during SLL prediction in cases where the
  * conflicting SLL configuration set provides sufficient information to
  * determine that the SLL conflict is truly an ambiguity. For example, if none
  * of the ATN configurations in the conflicting SLL configuration set have
  * traversed a global follow transition (i.e.
- * [ATNConfig.reachesIntoOuterContext] is 0 for all configurations), then
+ * [ATNConfig.reachesIntoOuterContext] is `0` for all configurations), then
  * the result of SLL prediction for that input is known to be equivalent to the
  * result of LL prediction for that input.
- *
- *
  *
  * In some cases, the minimum represented alternative in the conflicting LL
  * configuration set is not equal to the minimum represented alternative in the

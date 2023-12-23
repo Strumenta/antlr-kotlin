@@ -15,11 +15,8 @@
  */
 package com.strumenta.antlrkotlin.runtime
 
-import kotlin.native.BitSet as NativeBitSet
-
-@OptIn(ObsoleteNativeApi::class)
-public actual class BitSet actual constructor() {
-  private val wrapped = NativeBitSet()
+public actual class BitSet {
+  private val wrapped = InternalBitSet()
 
   public actual fun set(bitIndex: Int): Unit =
     wrapped.set(bitIndex)
@@ -30,17 +27,8 @@ public actual class BitSet actual constructor() {
   public actual fun get(bitIndex: Int): Boolean =
     wrapped[bitIndex]
 
-  public actual fun cardinality(): Int {
-    var count = 0
-
-    for (i in 0..<wrapped.size) {
-      if (wrapped[i]) {
-        count++
-      }
-    }
-
-    return count
-  }
+  public actual fun cardinality(): Int =
+    wrapped.cardinality()
 
   public actual fun nextSetBit(fromIndex: Int): Int =
     wrapped.nextSetBit(fromIndex)
@@ -54,25 +42,6 @@ public actual class BitSet actual constructor() {
   override fun hashCode(): Int =
     wrapped.hashCode()
 
-  override fun toString(): String {
-    val sb = StringBuilder()
-    var first = true
-    sb.append("{")
-
-    var index = nextSetBit(0)
-
-    while (index != -1) {
-      if (!first) {
-        sb.append(", ")
-      } else {
-        first = false
-      }
-
-      sb.append(index)
-      index = nextSetBit(index + 1)
-    }
-
-    sb.append("}")
-    return sb.toString()
-  }
+  override fun toString(): String =
+    wrapped.toString()
 }

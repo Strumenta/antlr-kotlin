@@ -246,9 +246,8 @@ public open class IntervalSet : IntSet {
    * if this is `{1..5, 10..20}`, adding `6..7` yields
    * `{1..5, 6..7, 10..20}`. Adding `4..8` yields `{1..8, 10..20}`.
    */
-  public fun add(a: Int, b: Int) {
+  public fun add(a: Int, b: Int): Unit =
     add(Interval.of(a, b))
-  }
 
   // Copy on write, so we can cache a..a intervals and sets of that
   protected fun add(addition: Interval) {
@@ -320,7 +319,7 @@ public open class IntervalSet : IntSet {
       // Walk set and add each interval
       val n = other!!.intervals!!.size
 
-      for (i in 0 until n) {
+      for (i in 0..<n) {
         @Suppress("LocalVariableName")
         val I = other.intervals!![i]
         add(I.a, I.b)
@@ -625,7 +624,7 @@ public open class IntervalSet : IntSet {
       return firstInterval.b - firstInterval.a + 1
     }
 
-    for (i in 0 until numIntervals) {
+    for (i in 0..<numIntervals) {
       @Suppress("LocalVariableName")
       val I = intervals!![i]
       n += (I.b - I.a + 1)
@@ -638,7 +637,7 @@ public open class IntervalSet : IntSet {
     val values = IntegerList(size())
     val n = intervals!!.size
 
-    for (i in 0 until n) {
+    for (i in 0..<n) {
       @Suppress("LocalVariableName")
       val I = intervals!![i]
       val a = I.a
@@ -656,7 +655,7 @@ public open class IntervalSet : IntSet {
     val values = ArrayList<Int>()
     val n = intervals!!.size
 
-    for (i in 0 until n) {
+    for (i in 0..<n) {
       @Suppress("LocalVariableName")
       val I = intervals!![i]
       val a = I.a
@@ -696,7 +695,7 @@ public open class IntervalSet : IntSet {
     val n = intervals!!.size
     var index = 0
 
-    for (j in 0 until n) {
+    for (j in 0..<n) {
       @Suppress("LocalVariableName")
       val I = intervals!![j]
       val a = I.a
@@ -724,7 +723,7 @@ public open class IntervalSet : IntSet {
 
     val n = intervals!!.size
 
-    for (i in 0 until n) {
+    for (i in 0..<n) {
       @Suppress("LocalVariableName")
       val I = intervals!![i]
       val a = I.a

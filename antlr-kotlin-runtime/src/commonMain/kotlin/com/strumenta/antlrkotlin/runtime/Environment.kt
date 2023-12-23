@@ -11,4 +11,4 @@ package com.strumenta.antlrkotlin.runtime
  *
  * @author Edoardo Luppi
  */
-internal expect inline fun platformGetEnv(name: String): String?
+internal expect fun platformGetEnv(name: String): String?
