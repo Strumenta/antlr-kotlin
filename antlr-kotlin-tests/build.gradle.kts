@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
+import groovy.lang.Closure
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
@@ -87,5 +88,8 @@ tasks {
 
   withType<KotlinCompile<*>> {
     dependsOn(generateKotlinGrammarSource)
+  }
+  this.matching { it.name.endsWith("SourcesJar") || it.name == "sourcesJar" }.forEach {
+    it.dependsOn(generateKotlinGrammarSource)
   }
 }
