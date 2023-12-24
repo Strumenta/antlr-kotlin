@@ -134,7 +134,7 @@ public interface TokenStream : IntStream {
    * @param stop The last token in the interval to get text for (inclusive)
    * @return The text of all tokens lying between the specified [start] and [stop] tokens
    *
-   * @throws UnsupportedOperationException if this stream does not support
+   * @throws UnsupportedOperationException If this stream does not support
    *   this method for the specified tokens
    */
   public fun getText(start: Token, stop: Token): String?

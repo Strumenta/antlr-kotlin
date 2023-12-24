@@ -194,7 +194,7 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
   /**
    * Recursively walk [tree] against [patternTree], filling [labels].
    *
-   * @return the first node encountered in [tree] which does not match
+   * @return The first node encountered in [tree] which does not match
    *   a corresponding node in [patternTree], or `null` if the match
    *   was successful. The specific node returned depends on the matching
    *   algorithm used by the implementation, and may be overridden

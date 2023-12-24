@@ -157,7 +157,7 @@ public open class IntervalSet : IntSet {
   /**
    * Returns the maximum value contained in the set if not [isNil].
    *
-   * @return The maximum value contained in the set.
+   * @return The maximum value contained in the set
    * @throws RuntimeException If set is empty
    */
   public val maxElement: Int
@@ -175,7 +175,7 @@ public open class IntervalSet : IntSet {
   /**
    * Returns the minimum value contained in the set if not [isNil].
    *
-   * @return The minimum value contained in the set.
+   * @return The minimum value contained in the set
    * @throws RuntimeException If set is empty
    */
   public val minElement: Int

@@ -20,13 +20,13 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  */
 public class LexerChannelAction(public val channel: Int) : LexerAction {
   /**
-   * @return This method returns [LexerActionType.CHANNEL].
+   * @return This method returns [LexerActionType.CHANNEL]
    */
   override val actionType: LexerActionType =
     LexerActionType.CHANNEL
 
   /**
-   * @return This method returns `false`.
+   * @return This method returns `false`
    */
   override val isPositionDependent: Boolean =
     false

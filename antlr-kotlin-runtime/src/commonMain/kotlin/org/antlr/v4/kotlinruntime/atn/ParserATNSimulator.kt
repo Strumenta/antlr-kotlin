@@ -2078,10 +2078,10 @@ public open class ParserATNSimulator(
    * we don't consider any conflicts that include alternative `2`. So, we
    * ignore the conflict between alts `1` and `2`. We ignore a set of
    * conflicting alts when there is an intersection with an alternative
-   * associated with a single alt state in the stateconfig-list map.
+   * associated with a single alt state in the state-config-list map.
    *
    * It's also the case that we might have two conflicting configurations but
-   * also a 3rd nonconflicting configuration for a different alternative:
+   * also a 3rd non-conflicting configuration for a different alternative:
    * `[1|1|[], 1|2|[], 8|3|[]]`. This can come about from grammar:
    *
    * ```
@@ -2187,9 +2187,9 @@ public open class ParserATNSimulator(
    * @param from The source state for the edge
    * @param t The input symbol
    * @param to The target state for the edge
-   * @return If `to` is `null` this method returns `null`,
+   * @return If [to] is `null` this method returns `null`,
    *   otherwise this method returns the result of calling
-   *   [addDFAState] on `to`
+   *   [addDFAState] on [to]
    */
   protected fun addDFAEdge(dfa: DFA, from: DFAState?, t: Int, to: DFAState?): DFAState? {
     if (debug) {

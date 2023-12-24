@@ -20,7 +20,7 @@ import org.antlr.v4.kotlinruntime.TokenSource
  *   the bypass alternative for the rule during ATN deserialization
  * @param label The label associated with the rule tag, or `null` if this is an unlabeled rule tag
  *
- * @exception IllegalArgumentException if [ruleName] is empty
+ * @throws IllegalArgumentException If [ruleName] is empty
  */
 @Suppress("MemberVisibilityCanBePrivate")
 public class RuleTagToken(

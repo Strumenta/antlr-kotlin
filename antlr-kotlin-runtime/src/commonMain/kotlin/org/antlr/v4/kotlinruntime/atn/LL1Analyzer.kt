@@ -140,7 +140,7 @@ public open class LL1Analyzer(public val atn: ATN) {
    * or the end of the outermost rule is reached, [Token.EOF] is added
    * to the result set.
    *
-   * @param s The ATN state.
+   * @param s The ATN state
    * @param stopState The ATN state to stop at.
    *   This can be a [BlockEndState] to detect epsilon paths through a closure
    * @param ctx The outer context, or `null` if the outer context should not be used
@@ -157,7 +157,7 @@ public open class LL1Analyzer(public val atn: ATN) {
    *   result if one is encountered
    * @param addEOF Add [Token.EOF] to the result if the end of the
    *   outermost context is reached.
-   *   This parameter has no effect if [ctx] is `null`.
+   *   This parameter has no effect if [ctx] is `null`
    */
   @Suppress("FunctionName")
   protected open fun _LOOK(

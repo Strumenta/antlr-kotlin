@@ -88,7 +88,7 @@ public abstract class SemanticContext {
    * context (i.e., `null` context). That way, we can evaluate them without
    * having to create proper rule-specific context during prediction (as
    * opposed to the parser, which creates them naturally). In a practical
-   * sense, this avoids a cast exception from [RuleContext] to `myruleContext`.
+   * sense, this avoids a cast exception from [RuleContext] to `myRuleContext`.
    *
    * For context dependent predicates, we must pass in a local context so that
    * references such as `$arg` evaluate properly as `_localctx.arg`. We only
@@ -234,7 +234,7 @@ public abstract class SemanticContext {
     /**
      * Gets the operands for the semantic context operator.
      *
-     * @return a collection of [SemanticContext] operands for the operator
+     * @return A collection of [SemanticContext] operands for the operator
      *
      * @since 4.3
      */
@@ -245,6 +245,7 @@ public abstract class SemanticContext {
    * A semantic context which is true whenever none of the contained contexts is false.
    */
   public class AND(a: SemanticContext, b: SemanticContext) : Operator() {
+    @Suppress("SpellCheckingInspection")
     public val opnds: Array<SemanticContext>
 
     override val operands: Collection<SemanticContext>
@@ -300,8 +301,8 @@ public abstract class SemanticContext {
      * The evaluation of predicates by this context is short-circuiting, but unordered.
      */
     override fun eval(parser: Recognizer<*, *>, parserCallStack: RuleContext): Boolean {
-      for (opnd in opnds) {
-        if (!opnd.eval(parser, parserCallStack)) {
+      for (operand in opnds) {
+        if (!operand.eval(parser, parserCallStack)) {
           return false
         }
       }
@@ -353,6 +354,7 @@ public abstract class SemanticContext {
    * contexts is true.
    */
   public class OR(a: SemanticContext, b: SemanticContext) : Operator() {
+    @Suppress("SpellCheckingInspection")
     public val opnds: Array<SemanticContext>
 
     override val operands: Collection<SemanticContext>
@@ -408,8 +410,8 @@ public abstract class SemanticContext {
      * The evaluation of predicates by this context is short-circuiting, but unordered.
      */
     override fun eval(parser: Recognizer<*, *>, parserCallStack: RuleContext): Boolean {
-      for (opnd in opnds) {
-        if (opnd.eval(parser, parserCallStack)) {
+      for (operand in opnds) {
+        if (operand.eval(parser, parserCallStack)) {
           return true
         }
       }

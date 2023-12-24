@@ -210,14 +210,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
     return "'$s'"
   }
 
-  /**
-   * @throws NullPointerException if `listener` is `null`.
-   */
-  public fun addErrorListener(listener: ANTLRErrorListener?) {
-    if (listener == null) {
-      throw NullPointerException("listener cannot be null.")
-    }
-
+  public fun addErrorListener(listener: ANTLRErrorListener) {
     _listeners.add(listener)
   }
 
