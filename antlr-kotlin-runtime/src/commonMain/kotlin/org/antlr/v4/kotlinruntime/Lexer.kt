@@ -155,7 +155,7 @@ public abstract class Lexer(input: CharStream) : Recognizer<Int, LexerATNSimulat
    * to point to their `Array<String>` [tokenNames].
    */
   @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
-  override val tokenNames: Array<String?> =
+  override val tokenNames: Array<String> =
     emptyArray()
 
   /**

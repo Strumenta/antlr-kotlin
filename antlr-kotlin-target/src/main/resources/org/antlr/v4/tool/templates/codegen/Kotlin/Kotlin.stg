@@ -245,7 +245,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
 
-        private val TOKEN_NAMES: Array\<String?> = Array(SYMBOLIC_NAMES.size) {
+        private val TOKEN_NAMES: Array\<String> = Array(SYMBOLIC_NAMES.size) {
             VOCABULARY.getLiteralName(it)
                 ?: VOCABULARY.getSymbolicName(it)
                 ?: "\<INVALID>"
@@ -273,7 +273,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
         "<parser.grammarFileName>"
 
     @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
-    override val tokenNames: Array\<String?> =
+    override val tokenNames: Array\<String> =
         TOKEN_NAMES
 
     override val ruleNames: Array\<String> =

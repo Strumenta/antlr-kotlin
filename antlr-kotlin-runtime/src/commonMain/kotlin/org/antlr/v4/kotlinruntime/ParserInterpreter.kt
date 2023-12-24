@@ -35,7 +35,7 @@ public open class ParserInterpreter(
 ) : Parser(input) {
   private var _interpreter: ParserATNSimulator
   private val _atn: ATN = atn
-  private val _tokenNames: Array<String?> = Array(atn.maxTokenType) { vocabulary.getDisplayName(it) }
+  private val _tokenNames: Array<String> = Array(atn.maxTokenType) { vocabulary.getDisplayName(it) }
   private val _ruleNames: Array<String> = ruleNames.toTypedArray()
 
   // Not shared like it is for generated parsers
@@ -86,7 +86,7 @@ public open class ParserInterpreter(
     get() = _atn
 
   @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
-  override val tokenNames: Array<String?>
+  override val tokenNames: Array<String>
     get() = _tokenNames
 
   override val ruleNames: Array<String>

@@ -48,7 +48,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * to their `Array<String>` [tokenNames].
    */
   @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
-  public abstract val tokenNames: Array<String?>
+  public abstract val tokenNames: Array<String>
 
   public abstract val ruleNames: Array<String>
 
@@ -184,8 +184,8 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * objects because you don't have to go modify your lexer so that it
    * creates a new Java type.
    *
-   * This method is not called by the ANTLR 4 Runtime. Specific
-   * implementations of [ANTLRErrorStrategy] may provide a similar
+   * **Deprecated**: this method is not called by the ANTLR 4 Runtime.
+   * Specific implementations of [ANTLRErrorStrategy] may provide a similar
    * feature when necessary. For example, see [DefaultErrorStrategy.getTokenErrorDisplay].
    */
   @Deprecated("This method is not called by the ANTLR 4 Runtime")
