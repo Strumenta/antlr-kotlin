@@ -52,9 +52,6 @@ public object Utils {
     return buf.toString()
   }
 
-  public fun readFile(fileName: String): CharArray =
-    Platform.readFile(fileName).toCharArray()
-
   /**
    * Convert an array of strings to a `string -> index` map.
    *
