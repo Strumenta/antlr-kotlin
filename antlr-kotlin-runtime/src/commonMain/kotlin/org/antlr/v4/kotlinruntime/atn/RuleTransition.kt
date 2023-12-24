@@ -22,13 +22,6 @@ public class RuleTransition(
   override val isEpsilon: Boolean =
     true
 
-  @Deprecated("Use RuleTransition(RuleStartState, int, int, ATNState) instead.")
-  public constructor(
-    ruleStart: RuleStartState,
-    ruleIndex: Int,
-    followState: ATNState,
-  ) : this(ruleStart, ruleIndex, 0, followState)
-
   override fun matches(symbol: Int, minVocabSymbol: Int, maxVocabSymbol: Int): Boolean =
     false
 }

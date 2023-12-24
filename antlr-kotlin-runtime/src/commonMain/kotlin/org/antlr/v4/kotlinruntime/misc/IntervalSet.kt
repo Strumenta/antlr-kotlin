@@ -9,7 +9,6 @@ import com.strumenta.antlrkotlin.runtime.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.Vocabulary
-import org.antlr.v4.kotlinruntime.VocabularyImpl
 
 /**
  * This class implements the [IntSet] backed by a sorted array of
@@ -547,15 +546,6 @@ public open class IntervalSet : IntSet {
     return buf.toString()
   }
 
-  @Deprecated(
-    message = "Use {@link #toString(Vocabulary)} instead.",
-    replaceWith = ReplaceWith("toString(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>?))"),
-  )
-  public fun toString(tokenNames: Array<String>): String {
-    @Suppress("UNCHECKED_CAST")
-    return toString(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>))
-  }
-
   public fun toString(vocabulary: Vocabulary): String {
     if (intervals == null || intervals!!.isEmpty()) {
       return "{}"
@@ -597,15 +587,6 @@ public open class IntervalSet : IntSet {
     }
 
     return buf.toString()
-  }
-
-  @Deprecated(
-    message = "Use {@link #elementName(Vocabulary, int)} instead.",
-    replaceWith = ReplaceWith("elementName(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>?), a)"),
-  )
-  protected fun elementName(tokenNames: Array<String>, a: Int): String {
-    @Suppress("UNCHECKED_CAST")
-    return elementName(VocabularyImpl.fromTokenNames(tokenNames as Array<String?>), a)
   }
 
   protected fun elementName(vocabulary: Vocabulary, a: Int): String =

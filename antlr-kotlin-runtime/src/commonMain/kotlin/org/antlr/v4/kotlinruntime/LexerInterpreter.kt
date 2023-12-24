@@ -39,7 +39,7 @@ public open class LexerInterpreter : Lexer {
   override val atn: ATN
     get() = _atn
 
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
   override val tokenNames: Array<String?>
     get() = _tokenNames
 
@@ -52,6 +52,7 @@ public open class LexerInterpreter : Lexer {
   override val modeNames: Array<String>
     get() = _modeNames
 
+  @Suppress("ConvertSecondaryConstructorToPrimary")
   public constructor(
     grammarFileName: String,
     vocabulary: Vocabulary,
@@ -86,40 +87,4 @@ public open class LexerInterpreter : Lexer {
     @Suppress("LeakingThis")
     _interpreter = LexerATNSimulator(this, atn, _decisionToDFA, _sharedContextCache)
   }
-
-  @Deprecated("Use another constructor")
-  public constructor(
-    grammarFileName: String,
-    tokenNames: Collection<String>,
-    ruleNames: Collection<String>,
-    modeNames: Collection<String>,
-    atn: ATN,
-    input: CharStream,
-  ) : this(
-    grammarFileName,
-    VocabularyImpl.fromTokenNames(tokenNames.toTypedArray()),
-    ruleNames,
-    ArrayList<String>(),
-    modeNames,
-    atn,
-    input,
-  )
-
-  @Deprecated("Use another constructor")
-  public constructor(
-    grammarFileName: String,
-    vocabulary: Vocabulary,
-    ruleNames: Collection<String>,
-    modeNames: Collection<String>,
-    atn: ATN,
-    input: CharStream,
-  ) : this(
-    grammarFileName,
-    vocabulary,
-    ruleNames,
-    ArrayList<String>(),
-    modeNames,
-    atn,
-    input,
-  )
 }

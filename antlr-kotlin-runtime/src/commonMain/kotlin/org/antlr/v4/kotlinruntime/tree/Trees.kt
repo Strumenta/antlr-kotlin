@@ -222,10 +222,6 @@ public object Trees {
     return nodes
   }
 
-  @Deprecated("Use getDescendants", replaceWith = ReplaceWith("getDescendants(t)"))
-  public fun descendants(t: ParseTree): List<ParseTree> =
-    getDescendants(t)
-
   /**
    * Find the smallest subtree of [t] enclosing range [startTokenIndex]..[stopTokenIndex]
    * inclusively using postorder traversal.

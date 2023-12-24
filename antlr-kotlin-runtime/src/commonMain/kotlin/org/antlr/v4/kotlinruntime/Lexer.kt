@@ -154,7 +154,7 @@ public abstract class Lexer(input: CharStream) : Recognizer<Int, LexerATNSimulat
    * The generated parsers implement a method that overrides this
    * to point to their `Array<String>` [tokenNames].
    */
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
   override val tokenNames: Array<String?> =
     emptyArray()
 

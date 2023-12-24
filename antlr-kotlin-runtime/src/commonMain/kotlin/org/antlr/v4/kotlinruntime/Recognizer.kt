@@ -47,7 +47,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * The generated parsers implement a method that overrides this to point
    * to their `Array<String>` [tokenNames].
    */
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
   public abstract val tokenNames: Array<String?>
 
   public abstract val ruleNames: Array<String>
@@ -188,7 +188,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * implementations of [ANTLRErrorStrategy] may provide a similar
    * feature when necessary. For example, see [DefaultErrorStrategy.getTokenErrorDisplay].
    */
-  @Deprecated("This method is not called by the ANTLR 4 Runtime.")
+  @Deprecated("This method is not called by the ANTLR 4 Runtime")
   public fun getTokenErrorDisplay(t: Token?): String {
     if (t == null) {
       return "<no token>"

@@ -17,7 +17,7 @@ import kotlin.math.min
  *
  * If you need encoding, pass in stream/reader with correct encoding.
  */
-@Deprecated("as of 4.7, please use CharStreams")
+@Deprecated("As of 4.7, please use CharStreams")
 public open class ANTLRInputStream : CharStream {
   public companion object {
     public const val READ_BUFFER_SIZE: Int = 1024

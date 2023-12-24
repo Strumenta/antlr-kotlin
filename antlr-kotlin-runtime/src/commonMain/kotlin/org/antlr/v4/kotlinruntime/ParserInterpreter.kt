@@ -85,7 +85,7 @@ public open class ParserInterpreter(
   override val atn: ATN
     get() = _atn
 
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
   override val tokenNames: Array<String?>
     get() = _tokenNames
 
@@ -113,15 +113,6 @@ public open class ParserInterpreter(
    */
   public var rootContext: InterpreterRuleContext? = null
     protected set
-
-  @Deprecated("Use ParserInterpreter(String, Vocabulary, Collection, ATN, TokenStream) instead.")
-  public constructor(
-    grammarFileName: String,
-    tokenNames: Collection<String>,
-    ruleNames: Collection<String>,
-    atn: ATN,
-    input: TokenStream,
-  ) : this(grammarFileName, VocabularyImpl.fromTokenNames(tokenNames.toTypedArray()), ruleNames, atn, input)
 
   init {
     // Init decision DFA
