@@ -24,7 +24,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
   }
 
   // TODO: should be thread safe but is not!
-  private val _listeners = ArrayList<ANTLRErrorListener>()
+  private val _listeners = mutableListOf<ANTLRErrorListener>(ConsoleErrorListener.INSTANCE)
 
   /**
    * Indicate that the recognizer has changed internal state that is

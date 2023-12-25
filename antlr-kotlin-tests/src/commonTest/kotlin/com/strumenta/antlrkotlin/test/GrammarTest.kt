@@ -58,11 +58,13 @@ abstract class GrammarTest<L : Lexer, P : Parser> {
     // Create the lexer
     val charStream = CharStreams.fromString(languageSourceText)
     val lexer = createLexer(charStream)
+    lexer.removeErrorListeners()
     lexer.addErrorListener(ThrowingErrorListener)
 
     // Create the parser
     val tokenStream = CommonTokenStream(lexer)
     val parser = createParser(tokenStream)
+    parser.removeErrorListeners()
     parser.addErrorListener(ThrowingErrorListener)
 
     // Get the LISP tree and match it against the expected one

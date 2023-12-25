@@ -116,9 +116,11 @@ class MiniCalcParserTest {
   fun callListener() {
     val input = ANTLRInputStream("input Int width\n")
     val lexer = MiniCalcLexer(input)
+    lexer.removeErrorListeners()
     lexer.addErrorListener(ThrowingErrorListener)
 
     val parser = MiniCalcParser(CommonTokenStream(lexer))
+    parser.removeErrorListeners()
     parser.addErrorListener(ThrowingErrorListener)
 
     val root = parser.miniCalcFile()
