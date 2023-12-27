@@ -54,8 +54,8 @@ public interface IntSet {
    * Return a new [IntSet] object containing all elements that are
    * present in [elements] but not present in the current set.
    *
-   * The following expressions are equivalent for input non-null [IntSet]
-   * instances `x` and `y`.
+   * The following expressions are equivalent for input non-`null`
+   * [IntSet] instances `x` and `y`.
    *
    *  - `x.complement(y)`
    *  - `y.subtract(x)`
@@ -87,8 +87,8 @@ public interface IntSet {
    * Return a new [IntSet] object containing all elements that are
    * present in the current set but not present in the input set [a].
    *
-   * The following expressions are equivalent for input non-null [IntSet]
-   * instances `x` and `y`.
+   * The following expressions are equivalent for input non-`null`
+   * [IntSet] instances `x` and `y`.
    *
    *  - `y.subtract(x)`
    *  - `x.complement(y)`

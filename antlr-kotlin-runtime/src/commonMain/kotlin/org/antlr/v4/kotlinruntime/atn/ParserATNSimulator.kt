@@ -1399,7 +1399,7 @@ public open class ParserATNSimulator(
    * unpredicated config which behaves as "always true".
    *
    * If [complete] is `false`, we stop at the first predicate that evaluates to `true`.
-   * This includes pairs with null predicates.
+   * This includes pairs with `null` predicates.
    */
   public open fun evalSemanticContext(
     predPredictions: Array<DFAState.PredPrediction>,

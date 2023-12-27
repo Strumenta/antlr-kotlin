@@ -91,7 +91,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
   /**
    * The [ParserRuleContext] object for the currently executing rule.
    *
-   * This is always non-null during the parsing process.
+   * This is always non-`null` during the parsing process.
    */
   public var context: ParserRuleContext? = null
 

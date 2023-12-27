@@ -309,7 +309,7 @@ public abstract class PredictionContext protected constructor(
      *
      * <embed src="images/FullMerge_EmptyRoots.svg" type="image/svg+xml"></embed>
      *
-     * Must keep all contexts; [EmptyPredictionContext.Instance] in array is a special value (and null parent).
+     * Must keep all contexts; [EmptyPredictionContext.Instance] in array is a special value (and `null` parent).
      *
      * <embed src="images/FullMerge_EmptyRoot.svg" type="image/svg+xml"></embed>
      *

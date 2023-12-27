@@ -45,7 +45,7 @@ public open class LexerCustomAction(public val ruleIndex: Int, public val action
    * Custom actions are position-dependent since they may represent a
    * user-defined embedded action which makes calls to methods like [Lexer.text].
    *
-   * @return This method returns `true`
+   * Set to `true` by default.
    */
   override val isPositionDependent: Boolean =
     true

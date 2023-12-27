@@ -103,7 +103,7 @@ public open class DFA(
       return
     }
 
-    // Synchronization on s0 here is ok. when the DFA is turned into a
+    // Synchronization on s0 here is ok. When the DFA is turned into a
     // precedence DFA, s0 will be initialized once and not updated again
     // s0.edges is never null for a precedence DFA
     val s0 = s0!!
