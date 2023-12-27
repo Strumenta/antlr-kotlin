@@ -32,45 +32,24 @@ public open class DFA(
   public var s0: DFAState? = null
 
   /**
-   * `true` if this DFA is for a precedence decision, otherwise `false`.
-   * This is the backing field for [isPrecedenceDfa].
-   */
-  private val precedenceDfa: Boolean
-
-  /**
-   * Gets whether this DFA is a precedence DFA. Precedence DFAs use a special
-   * start state [.s0] which is not stored in [.states]. The
-   * [DFAState.edges] array for this start state contains outgoing edges
+   * Whether this DFA is a precedence DFA, or not.
+   *
+   * Precedence DFAs use a special start state [s0] which is not stored in [states].
+   * The [DFAState.edges] array for this start state contains outgoing edges
    * supplying individual start states corresponding to specific precedence
    * values.
    *
-   * @return `true` if this is a precedence DFA, otherwise `false`.
    * @see Parser.precedence
    */
-  public var isPrecedenceDfa: Boolean
-    get() = precedenceDfa
-    /**
-     * Sets whether this is a precedence DFA.
-     *
-     * @param precedenceDfa `true` if this is a precedence DFA, otherwise `false`
-     *
-     * @throws UnsupportedOperationException if [precedenceDfa] does not
-     *   match the value of [isPrecedenceDfa] for the current DFA.
-     *
-     */
-    @Deprecated("This method no longer performs any action.")
-    set(precedenceDfa) {
-      if (precedenceDfa != isPrecedenceDfa) {
-        throw UnsupportedOperationException("The precedenceDfa field cannot change after a DFA is constructed.")
-      }
-    }
+  public val isPrecedenceDfa: Boolean
 
   init {
-    var precedenceDfa = false
+    var isPrecedenceDfa = false
 
     if (atnStartState is StarLoopEntryState) {
       if (atnStartState.isPrecedenceDecision) {
-        precedenceDfa = true
+        isPrecedenceDfa = true
+
         val precedenceState = DFAState(ATNConfigSet())
         precedenceState.edges = arrayOfNulls<DFAState?>(0)
         precedenceState.isAcceptState = false
@@ -79,7 +58,7 @@ public open class DFA(
       }
     }
 
-    this.precedenceDfa = precedenceDfa
+    this.isPrecedenceDfa = isPrecedenceDfa
   }
 
   /**
@@ -89,12 +68,12 @@ public open class DFA(
    * @return The start state corresponding to the specified precedence,
    *   or `null` if no start state exists for the specified precedence
    *
-   * @throws IllegalStateException if this is not a precedence DFA
+   * @throws IllegalStateException If this is not a precedence DFA
    * @see isPrecedenceDfa
    */
   public fun getPrecedenceStartState(precedence: Int): DFAState? {
-    check(isPrecedenceDfa) {
-      "Only precedence DFAs may contain a precedence start state."
+    if (!isPrecedenceDfa) {
+      throw IllegalStateException("Only precedence DFAs may contain a precedence start state.")
     }
 
     // s0.edges is never null for a precedence DFA
@@ -112,19 +91,19 @@ public open class DFA(
    * @param precedence The current precedence
    * @param startState The start state corresponding to the specified precedence
    *
-   * @throws IllegalStateException if this is not a precedence DFA
+   * @throws IllegalStateException If this is not a precedence DFA
    * @see isPrecedenceDfa
    */
   public fun setPrecedenceStartState(precedence: Int, startState: DFAState) {
-    check(isPrecedenceDfa) {
-      "Only precedence DFAs may contain a precedence start state."
+    if (!isPrecedenceDfa) {
+      throw IllegalStateException("Only precedence DFAs may contain a precedence start state.")
     }
 
     if (precedence < 0) {
       return
     }
 
-    // synchronization on s0 here is ok. when the DFA is turned into a
+    // Synchronization on s0 here is ok. When the DFA is turned into a
     // precedence DFA, s0 will be initialized once and not updated again
     // s0.edges is never null for a precedence DFA
     val s0 = s0!!

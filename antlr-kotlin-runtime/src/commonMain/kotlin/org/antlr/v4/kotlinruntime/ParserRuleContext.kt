@@ -7,7 +7,10 @@ package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.ast.Position
 import org.antlr.v4.kotlinruntime.misc.Interval
-import org.antlr.v4.kotlinruntime.tree.*
+import org.antlr.v4.kotlinruntime.tree.ErrorNode
+import org.antlr.v4.kotlinruntime.tree.ParseTree
+import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
+import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import kotlin.jvm.JvmStatic
 import kotlin.reflect.KClass
 
@@ -189,34 +192,6 @@ public open class ParserRuleContext : RuleContext {
   public fun addErrorNode(errorNode: ErrorNode): ErrorNode {
     errorNode.assignParent(this)
     return addAnyChild(errorNode)
-  }
-
-  /**
-   * Add a child to this node based upon [matchedToken].
-   *
-   * It creates a [TerminalNodeImpl] rather than using [Parser.createTerminalNode].
-   * I'm leaving this in for compatibility but the parser doesn't use this anymore.
-   */
-  @Deprecated("Not used anymore")
-  public fun addChild(matchedToken: Token): TerminalNode {
-    val t = TerminalNodeImpl(matchedToken)
-    addAnyChild(t)
-    t.assignParent(this)
-    return t
-  }
-
-  /**
-   * Add a child to this node based upon [badToken].
-   *
-   * It creates a [ErrorNodeImpl] rather than using [Parser.createErrorNode].
-   * I'm leaving this in for compatibility but the parser doesn't use this anymore.
-   */
-  @Deprecated("Not used anymore")
-  public fun addErrorNode(badToken: Token): ErrorNode {
-    val t = ErrorNodeImpl(badToken)
-    addAnyChild(t)
-    t.assignParent(this)
-    return t
   }
 
   /**

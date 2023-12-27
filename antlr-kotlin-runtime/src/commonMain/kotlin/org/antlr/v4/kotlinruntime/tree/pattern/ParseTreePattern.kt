@@ -42,7 +42,7 @@ public class ParseTreePattern(
    * Determine whether a parse tree matches this tree pattern.
    *
    * @param tree The parse tree to match against this tree pattern
-   * @return `true` if `tree` is a match for the current tree pattern, otherwise `false`
+   * @return `true` if [tree] is a match for the current tree pattern, otherwise `false`
    */
   public fun matches(tree: ParseTree): Boolean =
     matcher.match(tree, this).succeeded()

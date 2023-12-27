@@ -91,7 +91,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
   /**
    * The [ParserRuleContext] object for the currently executing rule.
    *
-   * This is always non-null during the parsing process.
+   * This is always non-`null` during the parsing process.
    */
   public var context: ParserRuleContext? = null
 
@@ -647,13 +647,6 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     context = localctx
   }
 
-  @Deprecated(
-    message = "Use enterRecursionRule(ParserRuleContext, int, int, int)} instead",
-    replaceWith = ReplaceWith("enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex]!!.stateNumber, ruleIndex, 0)"),
-  )
-  public open fun enterRecursionRule(localctx: ParserRuleContext, ruleIndex: Int): Unit =
-    enterRecursionRule(localctx, atn.ruleToStartState!![ruleIndex].stateNumber, ruleIndex, 0)
-
   public open fun enterRecursionRule(localctx: ParserRuleContext, state: Int, ruleIndex: Int, precedence: Int) {
     this.state = state
     _precedenceStack.push(precedence)
@@ -784,10 +777,6 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     val ruleIndex = ruleIndexMap[ruleName]
     return ruleIndex ?: -1
   }
-
-  @Deprecated("Use 'context' directly", replaceWith = ReplaceWith("context"))
-  public fun getRuleContext(): ParserRuleContext? =
-    context
 
   /**
    * Return a list of strings of the rule names in your parser instance

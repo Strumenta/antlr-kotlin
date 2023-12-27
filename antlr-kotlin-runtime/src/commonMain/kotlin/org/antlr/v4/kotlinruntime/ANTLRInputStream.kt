@@ -10,14 +10,14 @@ import org.antlr.v4.kotlinruntime.misc.Interval
 import kotlin.math.min
 
 /**
- * Vacuum all input from a [Reader]/[InputStream] and then treat it
+ * Vacuum all input from a `Reader`/`InputStream` and then treat it
  * like a [CharArray] buffer.
  *
  * Can also pass in a [String] or [CharArray] to use.
  *
  * If you need encoding, pass in stream/reader with correct encoding.
  */
-@Deprecated("as of 4.7, please use CharStreams")
+@Deprecated("As of 4.7, please use CharStreams")
 public open class ANTLRInputStream : CharStream {
   public companion object {
     public const val READ_BUFFER_SIZE: Int = 1024
@@ -145,7 +145,7 @@ public open class ANTLRInputStream : CharStream {
   /**
    * [consume] ahead until `p == index`.
    *
-   * Can't just set `p = index` as we must update line and charPositionInLine.
+   * Can't just set `p = index` as we must update `line` and `charPositionInLine`.
    *
    * If we seek backwards, just set [p].
    */

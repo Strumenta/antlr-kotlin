@@ -34,7 +34,7 @@ public interface IntSet {
    *   A `null` argument is treated as though it were an empty set
    * @return `this` (to support chained calls)
    *
-   * @throws IllegalStateException if the current set is read-only
+   * @throws IllegalStateException If the current set is read-only
    */
   public fun addAll(set: IntSet?): IntSet
 
@@ -46,7 +46,7 @@ public interface IntSet {
    *   A `null` argument is treated as though it were an empty set.
    * @return A new [IntSet] instance containing the intersection of the
    *   current set and `a`. The value `null` may be returned in
-   *   place of an empty result set.
+   *   place of an empty result set
    */
   public fun and(a: IntSet?): IntSet?
 
@@ -54,8 +54,8 @@ public interface IntSet {
    * Return a new [IntSet] object containing all elements that are
    * present in [elements] but not present in the current set.
    *
-   * The following expressions are equivalent for input non-null [IntSet]
-   * instances `x` and `y`.
+   * The following expressions are equivalent for input non-`null`
+   * [IntSet] instances `x` and `y`.
    *
    *  - `x.complement(y)`
    *  - `y.subtract(x)`
@@ -64,7 +64,7 @@ public interface IntSet {
    *   A `null` argument is treated as though it were an empty set.
    * @return A new [IntSet] instance containing the elements present in
    *   `elements` but not present in the current set. The value
-   *   `null` may be returned in place of an empty result set.
+   *   `null` may be returned in place of an empty result set
    */
   public fun complement(elements: IntSet?): IntSet?
 
@@ -79,7 +79,7 @@ public interface IntSet {
    *   A `null` argument is treated as though it were an empty set.
    * @return A new [IntSet] instance containing the union of the current
    *   set and `a`. The value `null` may be returned in place of an
-   *   empty result set.
+   *   empty result set
    */
   public fun or(a: IntSet?): IntSet
 
@@ -87,8 +87,8 @@ public interface IntSet {
    * Return a new [IntSet] object containing all elements that are
    * present in the current set but not present in the input set [a].
    *
-   * The following expressions are equivalent for input non-null [IntSet]
-   * instances `x` and `y`.
+   * The following expressions are equivalent for input non-`null`
+   * [IntSet] instances `x` and `y`.
    *
    *  - `y.subtract(x)`
    *  - `x.complement(y)`
@@ -97,22 +97,22 @@ public interface IntSet {
    *   A `null` argument is treated as though it were an empty set.
    * @return A new [IntSet] instance containing the elements present in
    *   `elements` but not present in the current set.
-   *   The value `null` may be returned in place of an empty result set.
+   *   The value `null` may be returned in place of an empty result set
    */
   public fun subtract(a: IntSet?): IntSet
 
   /**
    * Return the total number of elements represented by the current set.
    *
-   * @return the total number of elements represented by the current set,
-   *   regardless of the manner in which the elements are stored.
+   * @return The total number of elements represented by the current set,
+   *   regardless of the manner in which the elements are stored
    */
   public fun size(): Int
 
   /**
    * Returns `true` if the set contains the specified element.
    *
-   * @param el The element to check for.
+   * @param el The element to check for
    * @return `true` if the set contains `el`, otherwise `false`
    */
   public operator fun contains(el: Int): Boolean

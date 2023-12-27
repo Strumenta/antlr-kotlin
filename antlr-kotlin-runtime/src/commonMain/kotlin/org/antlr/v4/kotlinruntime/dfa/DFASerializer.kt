@@ -7,7 +7,6 @@
 package org.antlr.v4.kotlinruntime.dfa
 
 import org.antlr.v4.kotlinruntime.Vocabulary
-import org.antlr.v4.kotlinruntime.VocabularyImpl
 
 /**
  * A DFA walker that knows how to dump them to serialized strings.
@@ -16,14 +15,6 @@ public open class DFASerializer(
   private val dfa: DFA,
   private val vocabulary: Vocabulary,
 ) {
-  @Deprecated("Use {@link #DFASerializer(DFA, Vocabulary)} instead.")
-  @Suppress("UNCHECKED_CAST")
-  public constructor(dfa: DFA, tokenNames: Array<String>) :
-    this(
-      dfa,
-      VocabularyImpl.fromTokenNames(tokenNames as Array<String?>),
-    )
-
   override fun toString(): String {
     if (dfa.s0 == null) {
       return "null"

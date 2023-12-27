@@ -35,7 +35,7 @@ public open class ParserInterpreter(
 ) : Parser(input) {
   private var _interpreter: ParserATNSimulator
   private val _atn: ATN = atn
-  private val _tokenNames: Array<String?> = Array(atn.maxTokenType) { vocabulary.getDisplayName(it) }
+  private val _tokenNames: Array<String> = Array(atn.maxTokenType) { vocabulary.getDisplayName(it) }
   private val _ruleNames: Array<String> = ruleNames.toTypedArray()
 
   // Not shared like it is for generated parsers
@@ -85,8 +85,8 @@ public open class ParserInterpreter(
   override val atn: ATN
     get() = _atn
 
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
-  override val tokenNames: Array<String?>
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
+  override val tokenNames: Array<String>
     get() = _tokenNames
 
   override val ruleNames: Array<String>
@@ -113,15 +113,6 @@ public open class ParserInterpreter(
    */
   public var rootContext: InterpreterRuleContext? = null
     protected set
-
-  @Deprecated("Use ParserInterpreter(String, Vocabulary, Collection, ATN, TokenStream) instead.")
-  public constructor(
-    grammarFileName: String,
-    tokenNames: Collection<String>,
-    ruleNames: Collection<String>,
-    atn: ATN,
-    input: TokenStream,
-  ) : this(grammarFileName, VocabularyImpl.fromTokenNames(tokenNames.toTypedArray()), ruleNames, atn, input)
 
   init {
     // Init decision DFA

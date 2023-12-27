@@ -54,7 +54,7 @@ public abstract class ATNSimulator(
    * performance (but not accuracy) of other parsers which are being used
    * concurrently.
    *
-   * @throws UnsupportedOperationException if the current instance does not
+   * @throws UnsupportedOperationException If the current instance does not
    *   support clearing the DFA
    *
    * @since 4.3

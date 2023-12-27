@@ -22,7 +22,7 @@ package org.antlr.v4.kotlinruntime.tree.pattern
  *   If this is `null`, the [TagChunk] represents an unlabeled tag
  * @param tag The tag for this chunk, which should be the name of a parser rule or token type
  *
- * @exception IllegalArgumentException If [tag] is empty
+ * @throws IllegalArgumentException If [tag] is empty
  */
 internal class TagChunk(val label: String?, val tag: String) : Chunk() {
   @Suppress("unused")

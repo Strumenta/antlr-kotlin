@@ -18,7 +18,7 @@ public open class LexerInterpreter : Lexer {
   private val _grammarFileName: String
   private val _vocabulary: Vocabulary
   private val _atn: ATN
-  private val _tokenNames: Array<String?>
+  private val _tokenNames: Array<String>
   private val _ruleNames: Array<String>
   private val _channelNames: Array<String>
   private val _modeNames: Array<String>
@@ -39,8 +39,8 @@ public open class LexerInterpreter : Lexer {
   override val atn: ATN
     get() = _atn
 
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
-  override val tokenNames: Array<String?>
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
+  override val tokenNames: Array<String>
     get() = _tokenNames
 
   override val ruleNames: Array<String>
@@ -52,6 +52,7 @@ public open class LexerInterpreter : Lexer {
   override val modeNames: Array<String>
     get() = _modeNames
 
+  @Suppress("ConvertSecondaryConstructorToPrimary")
   public constructor(
     grammarFileName: String,
     vocabulary: Vocabulary,
@@ -68,10 +69,8 @@ public open class LexerInterpreter : Lexer {
     this._grammarFileName = grammarFileName
     this._atn = atn
 
-    _tokenNames = arrayOfNulls(atn.maxTokenType)
-
-    for (i in _tokenNames.indices) {
-      _tokenNames[i] = vocabulary.getDisplayName(i)
+    _tokenNames = Array(atn.maxTokenType) {
+      vocabulary.getDisplayName(it)
     }
 
     this._ruleNames = ruleNames.toTypedArray()
@@ -86,40 +85,4 @@ public open class LexerInterpreter : Lexer {
     @Suppress("LeakingThis")
     _interpreter = LexerATNSimulator(this, atn, _decisionToDFA, _sharedContextCache)
   }
-
-  @Deprecated("Use another constructor")
-  public constructor(
-    grammarFileName: String,
-    tokenNames: Collection<String>,
-    ruleNames: Collection<String>,
-    modeNames: Collection<String>,
-    atn: ATN,
-    input: CharStream,
-  ) : this(
-    grammarFileName,
-    VocabularyImpl.fromTokenNames(tokenNames.toTypedArray()),
-    ruleNames,
-    ArrayList<String>(),
-    modeNames,
-    atn,
-    input,
-  )
-
-  @Deprecated("Use another constructor")
-  public constructor(
-    grammarFileName: String,
-    vocabulary: Vocabulary,
-    ruleNames: Collection<String>,
-    modeNames: Collection<String>,
-    atn: ATN,
-    input: CharStream,
-  ) : this(
-    grammarFileName,
-    vocabulary,
-    ruleNames,
-    ArrayList<String>(),
-    modeNames,
-    atn,
-    input,
-  )
 }

@@ -67,8 +67,7 @@ private fun decodeBuffer(size: Int, startAddress: UInt, endAddress: UInt): Map<S
       result[key] = value
       currentIndex = 0
     } else {
-      buffer[currentIndex] = byte
-      currentIndex++
+      buffer[currentIndex++] = byte
     }
 
     currentPtr += 1

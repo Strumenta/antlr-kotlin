@@ -85,15 +85,6 @@ public open class BufferedTokenStream(tokenSource: TokenSource) : TokenStream {
     // No resources to release
   }
 
-  /**
-   * This method resets the token stream back to the first token in the buffer.
-   *
-   * It is equivalent to calling `seek(0)`.
-   */
-  @Deprecated("Use seek(0) instead", replaceWith = ReplaceWith("seek(0)"))
-  public fun reset(): Unit =
-    seek(0)
-
   override fun seek(index: Int) {
     lazyInit()
     p = adjustSeekIndex(index)

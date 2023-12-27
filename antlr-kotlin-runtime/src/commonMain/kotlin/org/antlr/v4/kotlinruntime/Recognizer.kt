@@ -24,7 +24,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
   }
 
   // TODO: should be thread safe but is not!
-  private val _listeners = ArrayList<ANTLRErrorListener>()
+  private val _listeners = mutableListOf<ANTLRErrorListener>(ConsoleErrorListener.INSTANCE)
 
   /**
    * Indicate that the recognizer has changed internal state that is
@@ -47,8 +47,8 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * The generated parsers implement a method that overrides this to point
    * to their `Array<String>` [tokenNames].
    */
-  @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
-  public abstract val tokenNames: Array<String?>
+  @Deprecated("Use vocabulary instead", ReplaceWith("vocabulary"))
+  public abstract val tokenNames: Array<String>
 
   public abstract val ruleNames: Array<String>
 
@@ -184,11 +184,11 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
    * objects because you don't have to go modify your lexer so that it
    * creates a new Java type.
    *
-   * This method is not called by the ANTLR 4 Runtime. Specific
-   * implementations of [ANTLRErrorStrategy] may provide a similar
+   * **Deprecated**: this method is not called by the ANTLR 4 Runtime.
+   * Specific implementations of [ANTLRErrorStrategy] may provide a similar
    * feature when necessary. For example, see [DefaultErrorStrategy.getTokenErrorDisplay].
    */
-  @Deprecated("This method is not called by the ANTLR 4 Runtime.")
+  @Deprecated("This method is not called by the ANTLR 4 Runtime")
   public fun getTokenErrorDisplay(t: Token?): String {
     if (t == null) {
       return "<no token>"
@@ -210,14 +210,7 @@ public abstract class Recognizer<Symbol, ATNInterpreter : ATNSimulator> {
     return "'$s'"
   }
 
-  /**
-   * @throws NullPointerException if `listener` is `null`.
-   */
-  public fun addErrorListener(listener: ANTLRErrorListener?) {
-    if (listener == null) {
-      throw NullPointerException("listener cannot be null.")
-    }
-
+  public fun addErrorListener(listener: ANTLRErrorListener) {
     _listeners.add(listener)
   }
 

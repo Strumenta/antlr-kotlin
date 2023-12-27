@@ -430,7 +430,7 @@ public open class TokenStreamRewriter(public val tokenStream: TokenStream) {
    *    insert with replace and delete this replace
    * 3. Throw exception if index in same range as previous replace
    *
-   * Don't actually delete; make op null in list. Easier to walk list.
+   * Don't actually delete; make op `null` in list. Easier to walk list.
    * Later we can throw as we add to index  op map.
    *
    * Note that I.2 R.2-2 will wipe out I.2 even though, technically, the

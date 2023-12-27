@@ -480,7 +480,7 @@ public open class Array2DHashSet<T>(
   /**
    * Return [o] as an instance of the element type [T].
    *
-   * If [o] is non-null but known to not be an instance of [T], this
+   * If [o] is non-`null` but known to not be an instance of [T], this
    * method returns `null`. The base implementation does not perform any
    * type checks.
    *

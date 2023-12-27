@@ -326,7 +326,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * Returns `-1` if there is no such bits after [startIndex].
    *
-   * @throws IndexOutOfBoundsException if [startIndex] `< 0`
+   * @throws IndexOutOfBoundsException If [startIndex] `< 0`
    */
   fun nextSetBit(startIndex: Int = 0): Int =
     nextBit(startIndex, true)
@@ -422,7 +422,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    * If [startIndex] >= [size], will return [startIndex] assuming that
    * the set has an infinite sequence of `false` bits after `(size - 1)-th`.
    *
-   * @throws IndexOutOfBoundsException if [startIndex] `< -1`
+   * @throws IndexOutOfBoundsException If [startIndex] `< -1`
    */
   fun previousClearBit(startIndex: Int): Int =
     previousBit(startIndex, false)

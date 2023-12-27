@@ -170,7 +170,8 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 /**
  * This interface defines a complete generic visitor for a parse tree produced by [<file.parserName>].
  *
- * @param T The return type of the visit operation. Use [Unit] for operations with no return type.
+ * @param T The return type of the visit operation.
+ *   Use [Unit] for operations with no return type
  */
 public interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
 <file.visitorNames:{lname |
@@ -202,7 +203,8 @@ import org.antlr.v4.kotlinruntime.tree.AbstractParseTreeVisitor
  * which can be extended to create a visitor which only needs to handle a subset
  * of the available methods.
  *
- * @param T The return type of the visit operation. Use [Unit] for operations with no return type.
+ * @param T The return type of the visit operation.
+ *   Use [Unit] for operations with no return type
  */
 public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
 <file.visitorNames:{lname |
@@ -243,7 +245,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
 
-        private val TOKEN_NAMES: Array\<String?> = Array(SYMBOLIC_NAMES.size) {
+        private val TOKEN_NAMES: Array\<String> = Array(SYMBOLIC_NAMES.size) {
             VOCABULARY.getLiteralName(it)
                 ?: VOCABULARY.getSymbolicName(it)
                 ?: "\<INVALID>"
@@ -271,7 +273,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
         "<parser.grammarFileName>"
 
     @Deprecated("Use vocabulary instead", replaceWith = ReplaceWith("vocabulary"))
-    override val tokenNames: Array\<String?> =
+    override val tokenNames: Array\<String> =
         TOKEN_NAMES
 
     override val ruleNames: Array\<String> =

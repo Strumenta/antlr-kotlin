@@ -16,7 +16,7 @@ import org.antlr.v4.kotlinruntime.tree.Trees
  * A rule context is a record of a single rule invocation.
  *
  * We form a stack of these context objects using the parent
- * pointer. A parent pointer of null indicates that the current
+ * pointer. A parent pointer of `null` indicates that the current
  * context is the bottom of the stack. The ParserRuleContext subclass
  * as a children list so that we can turn this data structure into a
  * tree.

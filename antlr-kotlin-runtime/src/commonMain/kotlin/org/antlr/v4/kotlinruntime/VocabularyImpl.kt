@@ -51,7 +51,7 @@ public class VocabularyImpl(
      * @param tokenNames The token names, or `null` if no token names are available
      * @return A [Vocabulary] instance which uses [tokenNames] for the display names of tokens
      */
-    public fun fromTokenNames(tokenNames: Array<String?>?): Vocabulary {
+    public fun fromTokenNames(tokenNames: Array<String>?): Vocabulary {
       if (tokenNames.isNullOrEmpty()) {
         return EMPTY_VOCABULARY
       }
@@ -60,7 +60,7 @@ public class VocabularyImpl(
       val symbolicNames = tokenNames.copyOf(tokenNames.size)
 
       for (i in tokenNames.indices) {
-        val tokenName = tokenNames[i] ?: continue
+        val tokenName = tokenNames[i]
 
         if (tokenName.isNotEmpty()) {
           val firstChar = tokenName[0]
@@ -79,7 +79,8 @@ public class VocabularyImpl(
         symbolicNames[i] = null
       }
 
-      return VocabularyImpl(literalNames, symbolicNames, tokenNames)
+      @Suppress("UNCHECKED_CAST")
+      return VocabularyImpl(literalNames, symbolicNames, tokenNames as Array<String?>)
     }
   }
 
