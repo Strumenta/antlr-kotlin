@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
-import groovy.lang.Closure
+import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
@@ -33,9 +33,6 @@ strumentaMultiplatform {
 }
 
 kotlin {
-  // We are ok to publish this module, but sources are unnecessary
-  withSourcesJar(publish = false)
-
   sourceSets {
     commonMain {
       kotlin {
@@ -89,7 +86,21 @@ tasks {
   withType<KotlinCompile<*>> {
     dependsOn(generateKotlinGrammarSource)
   }
-  this.matching { it.name.endsWith("SourcesJar") || it.name == "sourcesJar" }.forEach {
-    it.dependsOn(generateKotlinGrammarSource)
+
+  //
+  // The source JAR tasks must explicitly depend on the grammar generation
+  // to avoid Gradle complaining and erroring out
+  //
+
+  sourcesJar {
+    dependsOn(generateKotlinGrammarSource)
+  }
+
+  kotlin.targets.configureEach {
+    if (publishable) {
+      named<Jar>("${targetName}SourcesJar") {
+        dependsOn(generateKotlinGrammarSource)
+      }
+    }
   }
 }
