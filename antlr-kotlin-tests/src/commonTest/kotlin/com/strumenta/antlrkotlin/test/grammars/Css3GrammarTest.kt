@@ -15,8 +15,12 @@ class Css3GrammarTest : GrammarTest<css3Lexer, css3Parser>() {
   override fun createParser(input: TokenStream): css3Parser =
     css3Parser(input)
 
-  override fun setupTreeTestRuns(runs: MutableSet<TestRun>) {
-    runs += TestRun("css3/at-rule.css", "css3/at-rule.css.tree")
+  override fun setupTreeTestRuns(runs: MutableSet<LispTestRun>) {
+    runs += LispTestRun("css3/at-rule.css", "css3/at-rule.css.tree")
+  }
+
+  override fun setupErrorsTestRuns(runs: MutableSet<ErrorsTestRun>) {
+    // No test runs
   }
 
   override fun getTree(parser: css3Parser): ParserRuleContext =
