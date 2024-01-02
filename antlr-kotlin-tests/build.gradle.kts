@@ -68,7 +68,12 @@ tasks {
 
   val generateKotlinGrammarSource = register<AntlrTask>("generateKotlinGrammarSource") {
     dependsOn("cleanGenerateKotlinGrammarSource")
-    setSource(layout.projectDirectory.dir("antlr"))
+
+    // Only include *.g4 files. This allows tools (e.g., IDE plugins)
+    // to generate temporary files inside the base path
+    source = fileTree(layout.projectDirectory.dir("antlr")) {
+      include("**/*.g4")
+    }
 
     val pkgName = "com.strumenta.antlrkotlin.test.generated"
     arguments = listOf(
