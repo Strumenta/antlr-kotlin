@@ -15,9 +15,13 @@ class CPP14GrammarTest : GrammarTest<CPP14Lexer, CPP14Parser>() {
   override fun createParser(input: TokenStream): CPP14Parser =
     CPP14Parser(input)
 
-  override fun setupTreeTestRuns(runs: MutableSet<TestRun>) {
-    runs += TestRun("cpp/test.cpp", "cpp/test.cpp.tree")
-    runs += TestRun("cpp/macro.cpp", "cpp/macro.cpp.tree")
+  override fun setupTreeTestRuns(runs: MutableSet<LispTestRun>) {
+    runs += LispTestRun("cpp/test.cpp", "cpp/test.cpp.tree")
+    runs += LispTestRun("cpp/macro.cpp", "cpp/macro.cpp.tree")
+  }
+
+  override fun setupErrorsTestRuns(runs: MutableSet<ErrorsTestRun>) {
+    // No test runs
   }
 
   override fun getTree(parser: CPP14Parser): ParserRuleContext =

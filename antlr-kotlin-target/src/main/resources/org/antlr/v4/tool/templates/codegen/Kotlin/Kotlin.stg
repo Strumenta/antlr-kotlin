@@ -980,29 +980,38 @@ SerializedJavaATN(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
 <model.segments:{segment|private const val SERIALIZED_ATN_SEGMENT<i0>: String =
-    "<segment>";}; separator="\n">
-private val SERIALIZED_ATN: String =
-    listOf(<model.segments:{segment | SERIALIZED_ATN_SEGMENT<i0>}; separator=",\n">).joinToString("")
+    "<segment>"
+}; separator="\n">
+
+private val SERIALIZED_ATN = buildString(65535 / 3 * <length(model.segments)>) {
+    <model.segments:{segment | append(SERIALIZED_ATN_SEGMENT<i0>)}; separator="\n">
+}
+
 <else>
 <! only one segment, can be inlined !>
 private const val SERIALIZED_ATN: String =
     "<model.serialized>"
-<endif>
 
+<endif>
 private val ATN = ATNDeserializer().deserialize(SERIALIZED_ATN.toCharArray())
 >>
 
 SerializedATNEnriched(model) ::= <<
 <if(rest(model.segments))>
 <! requires segmented representation !>
-<model.segments:{segment|private const val SERIALIZED_ATN_SEGMENT<i0>: String  =
-    "<segment>";}; separator="\n">
-private val SERIALIZED_ATN: String =
-    listOf(<model.segments:{segment | SERIALIZED_ATN_SEGMENT<i0>}; separator=",\n">).joinToString("")
+<model.segments:{segment|private const val SERIALIZED_ATN_SEGMENT<i0>: String =
+    "<segment>"
+}; separator="\n">
+
+private val SERIALIZED_ATN = buildString(65535 / 3 * <length(model.segments)>) {
+    <model.segments:{segment | append(SERIALIZED_ATN_SEGMENT<i0>)}; separator="\n">
+}
+
 <else>
 <! only one segment, can be inlined !>
 private const val SERIALIZED_ATN: String =
     "<model.serialized>"
+
 <endif>
 private val ATN = ATNDeserializer().deserialize(SERIALIZED_ATN.toCharArray())
 >>
