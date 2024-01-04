@@ -961,12 +961,15 @@ public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(i
     override val serializedATN: String =
         SERIALIZED_ATN
 
+    @kotlin.ExperimentalStdlibApi
     override val ruleNames: Array\<String> =
         Rules.entries.map(Rules::name).toTypedArray()
 
+    @kotlin.ExperimentalStdlibApi
     override val channelNames: Array\<String> =
         Channels.entries.map(Channels::name).toTypedArray()
 
+    @kotlin.ExperimentalStdlibApi
     override val modeNames: Array\<String> =
         Modes.entries.map(Modes::name).toTypedArray()
 
