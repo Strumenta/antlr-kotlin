@@ -76,21 +76,19 @@ public object Trees {
 
   public fun getNodeText(t: Tree, ruleNames: List<String>?): String {
     if (ruleNames != null) {
-      if (t is RuleContext) {
-        val ruleIndex = t.ruleContext.ruleIndex
-        val ruleName = ruleNames[ruleIndex]
-        val altNumber = t.altNumber
-
-        return if (altNumber != ATN.INVALID_ALT_NUMBER) {
-          "$ruleName:$altNumber"
-        } else {
-          ruleName
+      when (t) {
+        is RuleContext -> {
+          val ruleIndex = t.ruleContext.ruleIndex
+          val ruleName = ruleNames[ruleIndex]
+          val altNumber = t.altNumber
+          return if (altNumber != ATN.INVALID_ALT_NUMBER) {
+            "$ruleName:$altNumber"
+          } else {
+            ruleName
+          }
         }
-      } else if (t is ErrorNode) {
-        return t.toString()
-      } else if (t is TerminalNode) {
-        val symbol = t.symbol
-        return symbol.text!!
+        is ErrorNode -> return t.toString()
+        is TerminalNode -> return t.symbol.text!!
       }
     }
 
