@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.antlrkotlin.runtime
 
 import java.util.IdentityHashMap as JavaIdentityHashMap
 
-public actual class IdentityHashMap<K, V>(private val wrapped: JavaIdentityHashMap<K, V> = JavaIdentityHashMap()) : MutableMap<K, V> by wrapped {
-  public actual constructor() : this(JavaIdentityHashMap())
-}
+public actual typealias IdentityHashMap<K, V> = JavaIdentityHashMap<K, V>
