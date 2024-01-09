@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.antlrkotlin.runtime
 
-public actual class WeakHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
-  public actual constructor() : this(LinkedHashMap())
-}
+// Note(Edoardo): this is implemented as an HashMap in the JS target,
+//  so let's keep it as it is
+public actual typealias WeakHashMap<K, V> = HashMap<K, V>

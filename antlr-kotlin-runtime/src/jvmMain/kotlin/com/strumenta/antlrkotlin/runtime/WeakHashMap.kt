@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.antlrkotlin.runtime
 
 import java.util.WeakHashMap as JavaWeakHashMap
 
-public actual class WeakHashMap<K, V>(private val wrapped: JavaWeakHashMap<K, V> = JavaWeakHashMap()) : MutableMap<K, V> by wrapped {
-  public actual constructor() : this(JavaWeakHashMap())
-}
+public actual typealias WeakHashMap<K, V> = JavaWeakHashMap<K, V>
