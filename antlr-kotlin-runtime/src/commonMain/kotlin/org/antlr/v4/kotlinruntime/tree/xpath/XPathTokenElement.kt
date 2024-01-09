@@ -18,7 +18,7 @@ public open class XPathTokenElement(tokenName: String, protected var tokenType: 
 
     for (c in Trees.getChildren(t)) {
       if (c is TerminalNode) {
-        if (c.symbol!!.type == tokenType && !invert || c.symbol!!.type != tokenType && invert) {
+        if (c.symbol.type == tokenType && !invert || c.symbol.type != tokenType && invert) {
           nodes.add(c)
         }
       }

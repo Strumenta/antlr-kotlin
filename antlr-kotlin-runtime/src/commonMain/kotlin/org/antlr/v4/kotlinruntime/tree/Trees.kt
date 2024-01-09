@@ -90,10 +90,7 @@ public object Trees {
         return t.toString()
       } else if (t is TerminalNode) {
         val symbol = t.symbol
-
-        if (symbol != null) {
-          return symbol.text!!
-        }
+        return symbol.text!!
       }
     }
 
@@ -189,7 +186,7 @@ public object Trees {
   ) {
     // Check this node (the root) first
     if (findTokens && t is TerminalNode) {
-      if (t.symbol!!.type == index) {
+      if (t.symbol.type == index) {
         nodes.add(t)
       }
     } else if (!findTokens && t is ParserRuleContext) {

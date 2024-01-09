@@ -9,5 +9,5 @@ package org.antlr.v4.kotlinruntime.tree
 import org.antlr.v4.kotlinruntime.Token
 
 public interface TerminalNode : ParseTree {
-  public val symbol: Token?
+  public val symbol: Token
 }

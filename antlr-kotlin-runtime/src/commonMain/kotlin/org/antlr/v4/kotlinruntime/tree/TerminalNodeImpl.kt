@@ -11,21 +11,20 @@ import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.Interval
 
-public open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
+public open class TerminalNodeImpl(override var symbol: Token) : TerminalNode {
   private var parent: ParseTree? = null
 
   override val childCount: Int = 0
 
   override val text: String
-    get() = symbol!!.text!!
+    get() = symbol.text!!
 
-  override val payload: Token?
+  override val payload: Token
     get() = symbol
 
   override val sourceInterval: Interval
     get() {
-      val tempSymbol = symbol ?: return Interval.INVALID
-      val tokenIndex = tempSymbol.tokenIndex
+      val tokenIndex = symbol.tokenIndex
       return Interval(tokenIndex, tokenIndex)
     }
 
@@ -46,10 +45,10 @@ public open class TerminalNodeImpl(override var symbol: Token?) : TerminalNode {
     toString()
 
   override fun toString(): String =
-    if (symbol!!.type == Token.EOF) {
+    if (symbol.type == Token.EOF) {
       "<EOF>"
     } else {
-      symbol!!.text!!
+      symbol.text!!
     }
 
   override fun toStringTree(): String =
