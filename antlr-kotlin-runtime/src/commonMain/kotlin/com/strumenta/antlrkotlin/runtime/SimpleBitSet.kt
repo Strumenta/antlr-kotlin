@@ -12,7 +12,6 @@ import kotlin.math.min
  * @constructor Creates an empty bit set with the specified [size]
  * @param size The size of one element in the array used to store bits
  */
-@Suppress("unused")
 public class SimpleBitSet(size: Int) {
   private companion object {
     // Default size of one element in the array used to store bits.

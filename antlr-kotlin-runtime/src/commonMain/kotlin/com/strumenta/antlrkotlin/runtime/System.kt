@@ -21,7 +21,6 @@ public object System {
   public var out: PrintStream = StdPrintStream
   public var err: PrintStream = ErrPrintStream
 
-  @Suppress("SpellCheckingInspection")
   public fun getenv(name: String, defaultValue: String? = null): String? =
     platformGetEnv(name) ?: defaultValue
 
