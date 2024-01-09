@@ -64,21 +64,21 @@ class MiniCalcParserTest {
     val lexer = MiniCalcLexer(input)
     val parser = MiniCalcParser(CommonTokenStream(lexer))
     val root = parser.miniCalcFile()
-    val line = root.findLine(0)!!
-    val statement = line.findStatement()!!
+    val line = root.getLine(0)!!
+    val statement = line.getStatement()
 
     @Suppress("UNUSED_VARIABLE")
     val inputDeclStmt = statement as MiniCalcParser.InputDeclarationStatementContext
-    val inputDecl = statement.findInputDeclaration()!!
+    val inputDecl = statement.getInputDeclaration()
 
     val inputKw = inputDecl.INPUT()
-    assertEquals("input", inputKw!!.text)
+    assertEquals("input", inputKw.text)
 
-    val type = inputDecl.findType()!!
+    val type = inputDecl.getType()
     val intKw = (type as MiniCalcParser.IntegerContext).INT()
-    assertEquals("Int", intKw!!.text)
+    assertEquals("Int", intKw.text)
 
-    val id = inputDecl.ID()!!
+    val id = inputDecl.ID()
     assertEquals("width", id.text)
 
     val newline = line.NEWLINE()!!
