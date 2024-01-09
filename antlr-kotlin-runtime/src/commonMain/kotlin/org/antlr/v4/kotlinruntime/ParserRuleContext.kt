@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
  * A rule invocation record for parsing.
  *
  * Contains all the information about the current rule not stored in the
- * RuleContext. It handles parse tree children list, any ATN state
+ * RuleContext. It handles parse-tree children list, any ATN state
  * tracing, and the default values available for rule invocations:
  * start, stop, rule index, current alt number.
  *
@@ -201,9 +201,8 @@ public open class ParserRuleContext : RuleContext {
    * If we have `# label`, we will need to remove generic `ruleContext` object.
    */
   public fun removeLastChild() {
-    children?.also {
-      it.removeAt(it.size - 1)
-    }
+    val tempChildren = children
+    tempChildren?.removeAt(tempChildren.size - 1)
   }
 
   override fun getChild(i: Int): ParseTree? {
