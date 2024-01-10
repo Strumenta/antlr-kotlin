@@ -87,8 +87,13 @@ public object Trees {
             ruleName
           }
         }
-        is ErrorNode -> return t.toString()
-        is TerminalNode -> return t.symbol.text!!
+        is ErrorNode -> {
+          return t.toString()
+        }
+        is TerminalNode -> {
+          val text = t.symbol.text
+          return text ?: throw IllegalStateException("Symbol text should not be null")
+        }
       }
     }
 
