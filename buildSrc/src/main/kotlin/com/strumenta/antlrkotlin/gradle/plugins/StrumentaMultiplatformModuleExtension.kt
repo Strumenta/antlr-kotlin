@@ -194,46 +194,46 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     // Development should enable all targets.
     // Publishing should occur only from a macOS host
     if (isDevelopment || hostOs.isMacOsX) {
-      val kmpExtension = project.kmpExtension
       val disableUntestable = nativeConfig.disableUntestable.getOrElse(false)
+      with(project.kmpExtension) {
+        // Tier 1
+        // macOS host only
+        macosX64()
+        macosArm64()
+        iosSimulatorArm64()
+        iosX64()
 
-      // Tier 1
-      // macOS host only
-      kmpExtension.macosX64()
-      kmpExtension.macosArm64()
-      kmpExtension.iosSimulatorArm64()
-      kmpExtension.iosX64()
-
-      // Tier 2
-      kmpExtension.linuxX64()
-      kmpExtension.linuxArm64()
-
-      // macOS host only
-      kmpExtension.watchosSimulatorArm64()
-      kmpExtension.watchosX64()
-      kmpExtension.watchosArm32()
-      kmpExtension.watchosArm64()
-      kmpExtension.tvosSimulatorArm64()
-      kmpExtension.tvosX64()
-      kmpExtension.tvosArm64()
-      kmpExtension.iosArm64()
-
-      // Tier 3
-      kmpExtension.mingwX64()
-
-      if (!disableUntestable) {
-        kmpExtension.androidNativeArm32()
-        kmpExtension.androidNativeArm64()
-        kmpExtension.androidNativeX86()
-        kmpExtension.androidNativeX64()
+        // Tier 2
+        linuxX64()
+        linuxArm64()
 
         // macOS host only
-        kmpExtension.watchosDeviceArm64()
+        watchosSimulatorArm64()
+        watchosX64()
+        watchosArm32()
+        watchosArm64()
+        tvosSimulatorArm64()
+        tvosX64()
+        tvosArm64()
+        iosArm64()
 
-        // Deprecated.
-        // Should follow the same route as official Kotlin libraries
-        @Suppress("DEPRECATION")
-        kmpExtension.linuxArm32Hfp()
+        // Tier 3
+        mingwX64()
+
+        if (!disableUntestable) {
+          androidNativeArm32()
+          androidNativeArm64()
+          androidNativeX86()
+          androidNativeX64()
+
+          // macOS host only
+          watchosDeviceArm64()
+
+          // Deprecated.
+          // Should follow the same route as official Kotlin libraries
+          @Suppress("DEPRECATION")
+          linuxArm32Hfp()
+        }
       }
     }
   }
