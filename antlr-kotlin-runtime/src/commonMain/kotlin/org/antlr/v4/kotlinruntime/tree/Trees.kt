@@ -76,23 +76,23 @@ public object Trees {
 
   public fun getNodeText(t: Tree, ruleNames: List<String>?): String {
     if (ruleNames != null) {
-      if (t is RuleContext) {
-        val ruleIndex = t.ruleContext.ruleIndex
-        val ruleName = ruleNames[ruleIndex]
-        val altNumber = t.altNumber
-
-        return if (altNumber != ATN.INVALID_ALT_NUMBER) {
-          "$ruleName:$altNumber"
-        } else {
-          ruleName
+      when (t) {
+        is RuleContext -> {
+          val ruleIndex = t.ruleContext.ruleIndex
+          val ruleName = ruleNames[ruleIndex]
+          val altNumber = t.altNumber
+          return if (altNumber != ATN.INVALID_ALT_NUMBER) {
+            "$ruleName:$altNumber"
+          } else {
+            ruleName
+          }
         }
-      } else if (t is ErrorNode) {
-        return t.toString()
-      } else if (t is TerminalNode) {
-        val symbol = t.symbol
-
-        if (symbol != null) {
-          return symbol.text!!
+        is ErrorNode -> {
+          return t.toString()
+        }
+        is TerminalNode -> {
+          val text = t.symbol.text
+          return text ?: throw IllegalStateException("Symbol text should not be null")
         }
       }
     }
@@ -189,7 +189,7 @@ public object Trees {
   ) {
     // Check this node (the root) first
     if (findTokens && t is TerminalNode) {
-      if (t.symbol!!.type == index) {
+      if (t.symbol.type == index) {
         nodes.add(t)
       }
     } else if (!findTokens && t is ParserRuleContext) {

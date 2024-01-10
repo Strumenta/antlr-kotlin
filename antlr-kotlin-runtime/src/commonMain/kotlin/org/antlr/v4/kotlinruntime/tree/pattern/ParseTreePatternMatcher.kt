@@ -209,7 +209,7 @@ public open class ParseTreePatternMatcher(public val lexer: Lexer, public val pa
       var mismatchedNode: ParseTree? = null
 
       // Both are tokens and they have same type
-      if (tree.symbol?.type == patternTree.symbol?.type) {
+      if (tree.symbol.type == patternTree.symbol.type) {
         if (patternTree.symbol is TokenTagToken) { // x and <ID>
           val tokenTagToken = patternTree.symbol as TokenTagToken
 

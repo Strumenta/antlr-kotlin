@@ -252,7 +252,7 @@ public open class ParserRuleContext : RuleContext {
       if (o is TerminalNode) {
         val symbol = o.symbol
 
-        if (symbol!!.type == ttype) {
+        if (symbol.type == ttype) {
           j++
 
           if (j == i) {
@@ -273,7 +273,7 @@ public open class ParserRuleContext : RuleContext {
       if (o is TerminalNode) {
         val symbol = o.symbol
 
-        if (symbol!!.type == ttype) {
+        if (symbol.type == ttype) {
           tokens.add(o)
         }
       }

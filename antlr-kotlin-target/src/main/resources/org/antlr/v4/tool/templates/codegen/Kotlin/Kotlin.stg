@@ -741,7 +741,7 @@ TokenTypeDecl(t) ::= "var <t.name>: Int"
 TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList\<Token>()"
 RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
 RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
-ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode? = getToken(Tokens.<t.name>.id, 0)"
+ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.name>.id, 0)<if(!t.optional)>!!<endif>"
 ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>.id)"
 
 ContextTokenListIndexedGetterDecl(t) ::= <<
@@ -749,15 +749,15 @@ public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>.id, i)!!
 >>
 
 ContextRuleGetterDecl(r) ::= <<
-public fun find<r.escapedName; format="cap">(): <r.ctxName>? = getRuleContext(<r.ctxName>::class, 0)
+public fun get<r.escapedName; format="cap">(): <r.ctxName><if(r.optional)>?<endif> = getRuleContext(<r.ctxName>::class, 0)<if(!r.optional)>!!<endif>
 >>
 
 ContextRuleListGetterDecl(r) ::= <<
-public fun find<r.escapedName; format="cap">(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
+public fun get<r.escapedName; format="cap">(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
 >>
 
 ContextRuleListIndexedGetterDecl(r) ::= <<
-public fun find<r.escapedName; format="cap">(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
+public fun get<r.escapedName; format="cap">(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
