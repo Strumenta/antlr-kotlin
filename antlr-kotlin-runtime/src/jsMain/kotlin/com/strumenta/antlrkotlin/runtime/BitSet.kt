@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.strumenta.antlrkotlin.runtime
 
 import js.core.delete
@@ -55,16 +54,16 @@ public actual class BitSet {
     @Suppress("SimplifyBooleanWithConstants")
     wrapped.count { it == true }
 
-  public actual fun nextSetBit(fromIndex: Int): Int {
-    if (fromIndex < 0) {
-      throw IndexOutOfBoundsException("fromIndex < 0: $fromIndex")
+  public actual fun nextSetBit(startIndex: Int): Int {
+    if (startIndex < 0) {
+      throw IndexOutOfBoundsException("fromIndex < 0: $startIndex")
     }
 
-    if (fromIndex >= wrapped.size) {
+    if (startIndex >= wrapped.size) {
       return -1
     }
 
-    for (n in fromIndex..<wrapped.size) {
+    for (n in startIndex..<wrapped.size) {
       @Suppress("SimplifyBooleanWithConstants")
       if (wrapped[n] == true) {
         return n
@@ -74,10 +73,10 @@ public actual class BitSet {
     return -1
   }
 
-  public actual fun or(otherBitSet: BitSet) {
-    for (i in 0..<otherBitSet.wrapped.size) {
+  public actual fun or(another: BitSet) {
+    for (i in 0..<another.wrapped.size) {
       @Suppress("SimplifyBooleanWithConstants")
-      val result = wrapped[i] == true || otherBitSet.wrapped[i] == true
+      val result = wrapped[i] == true || another.wrapped[i] == true
 
       // This check avoids setting a "false" boolean value,
       // as we want to keep the "undefined" slots

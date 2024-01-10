@@ -15,6 +15,7 @@
  */
 package com.strumenta.antlrkotlin.runtime
 
-public actual class WeakHashMap<K, V>(private val wrapped: LinkedHashMap<K, V> = LinkedHashMap()) : MutableMap<K, V> by wrapped {
-  public actual constructor() : this(LinkedHashMap())
-}
+// TODO(Edoardo): implement real weak keys.
+//  See kotlinlang.org/api/latest/jvm/stdlib/kotlin.native.ref
+//  for classes and functions useful for a possible implementation
+public actual typealias WeakHashMap<K, V> = HashMap<K, V>

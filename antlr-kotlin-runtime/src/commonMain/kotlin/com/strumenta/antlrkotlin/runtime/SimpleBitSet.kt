@@ -12,8 +12,7 @@ import kotlin.math.min
  * @constructor Creates an empty bit set with the specified [size]
  * @param size The size of one element in the array used to store bits
  */
-@Suppress("unused")
-internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
+public class SimpleBitSet(size: Int) {
   private companion object {
     // Default size of one element in the array used to store bits.
     private const val ELEMENT_SIZE: Int = 64
@@ -56,13 +55,13 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * Returns `-1` if the bit set is empty.
    */
-  val lastTrueIndex: Int
+  public val lastTrueIndex: Int
     get() = previousSetBit(size)
 
   /**
    * Is `true` if this bit set contains no bits set to `true`.
    */
-  val isEmpty: Boolean
+  public val isEmpty: Boolean
     get() = bits.all { it == ALL_FALSE }
 
   /**
@@ -70,13 +69,18 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * All bits with indices >= [size] assumed to be `0`.
    */
-  var size: Int = size
+  public var size: Int = size
     private set
+
+  /**
+   * Creates a bit set of the default [ELEMENT_SIZE] length.
+   */
+  public constructor() : this(ELEMENT_SIZE)
 
   /**
    * Creates a bit set of given [length] filling elements using [initializer].
    */
-  constructor(length: Int, initializer: (Int) -> Boolean) : this(length) {
+  public constructor(length: Int, initializer: (Int) -> Boolean) : this(length) {
     for (i in 0..<length) {
       set(i, initializer(i))
     }
@@ -140,9 +144,15 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
   }
 
   /**
+   * Sets the bit at the specified [bitIndex] to `true`.
+   */
+  public fun set(bitIndex: Int): Unit =
+    set(bitIndex, true)
+
+  /**
    * Sets the bit at the specified [bitIndex] to the specified [value].
    */
-  fun set(bitIndex: Int, value: Boolean = true) {
+  public fun set(bitIndex: Int, value: Boolean) {
     ensureCapacity(bitIndex)
     val (elementIndex, offset) = bitIndex.asBitCoordinates
     setBitsWithMask(elementIndex, offset.asMask, value)
@@ -152,13 +162,13 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    * Sets the bits at indices between [from] (inclusive) and [to] (exclusive)
    * to the specified [value].
    */
-  fun set(from: Int, to: Int, value: Boolean = true): Unit =
+  public fun set(from: Int, to: Int, value: Boolean = true): Unit =
     set(from..<to, value)
 
   /**
    * Sets the bits in the specified index [range] to the specified [value].
    */
-  fun set(range: IntRange, value: Boolean = true) {
+  public fun set(range: IntRange, value: Boolean = true) {
     if (range.first < 0 || range.last < 0) {
       throw IndexOutOfBoundsException("range bounds < 0: $range")
     }
@@ -193,25 +203,25 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
   /**
    * Clears the bit at the specified [bitIndex].
    */
-  fun clear(bitIndex: Int): Unit =
+  public fun clear(bitIndex: Int): Unit =
     set(bitIndex, false)
 
   /**
    * Clears the bits with indices between [from] (inclusive) and [to] (exclusive).
    */
-  fun clear(from: Int, to: Int): Unit =
+  public fun clear(from: Int, to: Int): Unit =
     set(from, to, false)
 
   /**
    * Clears the bits in the specified [range].
    */
-  fun clear(range: IntRange): Unit =
+  public fun clear(range: IntRange): Unit =
     set(range, false)
 
   /**
    * Sets all bits in the bit set to `false`.
    */
-  fun clear() {
+  public fun clear() {
     for (i in bits.indices) {
       bits[i] = ALL_FALSE
     }
@@ -220,7 +230,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
   /**
    * Reverses the bit specified by [bitIndex].
    */
-  fun flip(bitIndex: Int) {
+  public fun flip(bitIndex: Int) {
     ensureCapacity(bitIndex)
     val (elementIndex, offset) = bitIndex.asBitCoordinates
     flipBitsWithMask(elementIndex, offset.asMask)
@@ -229,14 +239,14 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
   /**
    * Reverses the bits with indices between [from] (inclusive) and [to] (exclusive).
    */
-  fun flip(from: Int, to: Int): Unit =
+  public fun flip(from: Int, to: Int): Unit =
     flip(from..<to)
 
   /**
    * Reverses the bits in the specified index [range] (both inclusive).
    */
   @Suppress("MemberVisibilityCanBePrivate")
-  fun flip(range: IntRange) {
+  public fun flip(range: IntRange) {
     if (range.first < 0 || range.last < 0) {
       throw IndexOutOfBoundsException("range bounds < 0: $range")
     }
@@ -328,7 +338,8 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * @throws IndexOutOfBoundsException If [startIndex] `< 0`
    */
-  fun nextSetBit(startIndex: Int = 0): Int =
+  @Suppress("MemberVisibilityCanBePrivate")
+  public fun nextSetBit(startIndex: Int): Int =
     nextBit(startIndex, true)
 
   /**
@@ -339,7 +350,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * @throws IndexOutOfBoundsException If [startIndex] `< 0`
    */
-  fun nextClearBit(startIndex: Int = 0): Int =
+  public fun nextClearBit(startIndex: Int): Int =
     nextBit(startIndex, false)
 
   /**
@@ -348,7 +359,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    * Returns `-1` if there is no such bits before [startIndex], or if [startIndex] >= [size].
    */
   @Suppress("MemberVisibilityCanBePrivate")
-  fun previousBit(startIndex: Int, lookFor: Boolean): Int {
+  public fun previousBit(startIndex: Int, lookFor: Boolean): Int {
     var correctStartIndex = startIndex
 
     if (startIndex >= size) {
@@ -411,7 +422,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    * @throws IndexOutOfBoundsException If [startIndex] < `-1`
    */
   @Suppress("MemberVisibilityCanBePrivate")
-  fun previousSetBit(startIndex: Int): Int =
+  public fun previousSetBit(startIndex: Int): Int =
     previousBit(startIndex, true)
 
   /**
@@ -424,13 +435,13 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * @throws IndexOutOfBoundsException If [startIndex] `< -1`
    */
-  fun previousClearBit(startIndex: Int): Int =
+  public fun previousClearBit(startIndex: Int): Int =
     previousBit(startIndex, false)
 
   /**
    * Returns the value of the bit at the specified [bitIndex].
    */
-  operator fun get(bitIndex: Int): Boolean {
+  public operator fun get(bitIndex: Int): Boolean {
     if (bitIndex < 0) {
       throw IndexOutOfBoundsException("bitIndex < 0: $bitIndex")
     }
@@ -443,7 +454,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
     return bits[elementIndex] and offset.asMask != 0L
   }
 
-  private inline fun doOperation(another: InternalBitSet, operation: Long.(Long) -> Long) {
+  private inline fun doOperation(another: SimpleBitSet, operation: Long.(Long) -> Long) {
     ensureCapacity(another.lastIndex)
     var index = 0
 
@@ -464,7 +475,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * The result is saved in this bit set.
    */
-  fun and(another: InternalBitSet): Unit =
+  public fun and(another: SimpleBitSet): Unit =
     doOperation(another, Long::and)
 
   /**
@@ -473,7 +484,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * The result is saved in this bit set.
    */
-  fun or(another: InternalBitSet): Unit =
+  public fun or(another: SimpleBitSet): Unit =
     doOperation(another, Long::or)
 
   /**
@@ -482,7 +493,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * The result is saved in this bit set.
    */
-  fun xor(another: InternalBitSet): Unit =
+  public fun xor(another: SimpleBitSet): Unit =
     doOperation(another, Long::xor)
 
   /**
@@ -491,7 +502,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    *
    * The result is saved in this bit set.
    */
-  fun andNot(another: InternalBitSet) {
+  public fun andNot(another: SimpleBitSet) {
     ensureCapacity(another.lastIndex)
     var index = 0
 
@@ -510,7 +521,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
    * Returns `true` if [another] bit set has any bits set to `true`
    * that are also set to `true` in this bit set.
    */
-  fun intersects(another: InternalBitSet): Boolean {
+  public fun intersects(another: SimpleBitSet): Boolean {
     val to = min(bits.size, another.bits.size)
     return (0..<to).any { bits[it] and another.bits[it] != 0L }
   }
@@ -518,7 +529,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
   /**
    * Returns the number of bits set to `true` in this bit set.
    */
-  fun cardinality(): Int {
+  public fun cardinality(): Int {
     var count = 0
 
     for (i in 0..<size) {
@@ -567,7 +578,7 @@ internal class InternalBitSet(size: Int = ELEMENT_SIZE) {
       return true
     }
 
-    if (other !is InternalBitSet) {
+    if (other !is SimpleBitSet) {
       return false
     }
 

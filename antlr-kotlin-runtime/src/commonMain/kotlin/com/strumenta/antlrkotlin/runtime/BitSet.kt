@@ -39,11 +39,11 @@ public expect class BitSet() {
    *
    * If no such bit exists then `-1` is returned.
    *
-   * @param fromIndex The index to start checking from (inclusive)
+   * @param startIndex The index to start checking from (inclusive)
    * @return The index of the next set bit, or `-1` if there is no such bit
    * @throws IndexOutOfBoundsException If the specified index is negative
    */
-  public fun nextSetBit(fromIndex: Int): Int
+  public fun nextSetBit(startIndex: Int): Int
 
   /**
    * Performs a logical **OR** of this bit set with the bit set argument.
@@ -52,7 +52,7 @@ public expect class BitSet() {
    * if and only if it either already had the value `true` or the
    * corresponding bit in the bit set argument has the value `true`.
    *
-   * @param otherBitSet The other `BitSet`
+   * @param another The other `BitSet`
    */
-  public fun or(otherBitSet: BitSet)
+  public fun or(another: BitSet)
 }
