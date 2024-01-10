@@ -229,6 +229,11 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
         // macOS host only
         kmpExtension.watchosDeviceArm64()
+
+        // Deprecated.
+        // Should follow the same route as official Kotlin libraries
+        @Suppress("DEPRECATION")
+        kmpExtension.linuxArm32Hfp()
       }
     }
   }
