@@ -49,7 +49,7 @@ class MiniCalcLexerTest {
     val token = lexer.nextToken()
 
     assertEquals("1", token.text)
-    assertEquals(MiniCalcLexer.Tokens.INTLIT.id, token.type)
+    assertEquals(MiniCalcLexer.Tokens.INTLIT, token.type)
   }
 
   @Test
@@ -60,22 +60,22 @@ class MiniCalcLexerTest {
 
     var i = 0
     assertEquals("1", tokens[i].text)
-    assertEquals(MiniCalcLexer.Tokens.INTLIT.id, tokens[i].type)
+    assertEquals(MiniCalcLexer.Tokens.INTLIT, tokens[i].type)
 
     i++
     assertEquals(" ", tokens[i].text)
-    assertEquals(MiniCalcLexer.Tokens.WS.id, tokens[i].type)
+    assertEquals(MiniCalcLexer.Tokens.WS, tokens[i].type)
 
     i++
     assertEquals("+", tokens[i].text)
-    assertEquals(MiniCalcLexer.Tokens.PLUS.id, tokens[i].type)
+    assertEquals(MiniCalcLexer.Tokens.PLUS, tokens[i].type)
 
     i++
     assertEquals(" ", tokens[i].text)
-    assertEquals(MiniCalcLexer.Tokens.WS.id, tokens[i].type)
+    assertEquals(MiniCalcLexer.Tokens.WS, tokens[i].type)
 
     i++
     assertEquals("2", tokens[i].text)
-    assertEquals(MiniCalcLexer.Tokens.INTLIT.id, tokens[i].type)
+    assertEquals(MiniCalcLexer.Tokens.INTLIT, tokens[i].type)
   }
 }

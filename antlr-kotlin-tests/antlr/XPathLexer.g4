@@ -13,9 +13,9 @@ Id        : NAME_START_CHAR NAME_CHAR* {
   val text = this.text;
 
   type = if (text[0].isUpperCase()) {
-    Tokens.TokenRef.id;
+    Tokens.TokenRef;
   } else {
-    Tokens.RuleRef.id;
+    Tokens.RuleRef;
   }
 };
 String    : '\'' .*? '\'';

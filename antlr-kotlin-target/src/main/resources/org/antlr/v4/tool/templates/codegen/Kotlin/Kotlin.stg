@@ -226,7 +226,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf", "RemoveRedundantBackticks")
+@Suppress("FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     private companion object {
         init {
@@ -250,19 +250,28 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
                 ?: VOCABULARY.getSymbolicName(it)
                 ?: "\<INVALID>"
         }
+
+        <!
+        We must duplicate token names as the code generator uses
+        simple labels, and we cannot properly prefix them with 'Tokens.'
+        !>
+        <if(parser.tokens)>
+        <parser.tokens:{k | private const val <k> = Tokens.<k>}; separator="\n">
+        <endif>
     }
 
     <if(parser.tokens)>
-    public enum class Tokens(public val id: kotlin.Int) {
-        EOF(-1),
-        <parser.tokens:{k | `<k>`(<parser.tokens.(k)>)}; separator=",\n", wrap, anchor>
+    public object Tokens {
+        public const val EOF: Int = -1
+        <parser.tokens:{k | public const val <k>: Int = <parser.tokens.(k)>}; separator="\n">
     }
-    <endif>
 
+    <endif>
     <if(parser.rules)>
-    public enum class Rules(public val id: kotlin.Int) {
-        <parser.rules:{r | `<r.name>`(<r.index>)}; separator=",\n", wrap, anchor>
+    public object Rules {
+        <parser.rules:{r | public const val <r.name; format="cap">: Int = <r.index>}; separator="\n">
     }
+
     <endif>
 
     override var interpreter: ParserATNSimulator =
@@ -287,10 +296,6 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
     override val serializedATN: String =
         SERIALIZED_ATN
-
-    <if(parser.tokens)>
-    <parser.tokens:{k | private val <k> = Tokens.<k>.id}; separator="\n", wrap, anchor>
-    <endif>
 
     /* Named actions */
     <namedActions.members>
@@ -377,9 +382,9 @@ RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,fina
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
-    var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.name>}>)
-    enterRule(_localctx, <currentRule.startState>, Rules.<currentRule.name>.id)
+public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.escapedName>(<args; separator=", ">): <currentRule.ctxType> {
+    var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.escapedName>}>)
+    enterRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">)
     <namedActions.init>
     <locals; separator="\n">
 
@@ -423,7 +428,7 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
     var _prevctx = _localctx
     var _startState = <currentRule.startState>
-    enterRecursionRule(_localctx, <currentRule.startState>, Rules.<currentRule.name>.id, _p)
+    enterRecursionRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">, _p)
     <namedActions.init>
     <locals; separator="\n">
 
@@ -629,7 +634,7 @@ cases(tokens) ::= <<
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
-<if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.name>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>)
+<if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>)
 >>
 
 MatchToken(m) ::= <<
@@ -650,7 +655,7 @@ if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
     <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
 }
 else {
-    if (_input.LA(1) == Tokens.EOF.id) {
+    if (_input.LA(1) == Tokens.EOF) {
         isMatchedEOF = true
     }
 
@@ -741,11 +746,11 @@ TokenTypeDecl(t) ::= "var <t.name>: Int"
 TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList\<Token>()"
 RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
 RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
-ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.name>.id, 0)<if(!t.optional)>!!<endif>"
-ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>.id)"
+ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.name>, 0)<if(!t.optional)>!!<endif>"
+ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>)"
 
 ContextTokenListIndexedGetterDecl(t) ::= <<
-public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>.id, i)!!
+public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>, i)!!
 >>
 
 ContextRuleGetterDecl(r) ::= <<
@@ -777,7 +782,7 @@ StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, exten
 @Suppress("FunctionName")
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
-        get() = Rules.<struct.derivedFromName>.id
+        get() = Rules.<struct.derivedFromName; format="cap">
         set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
 
     <attrs:{a | public var <a>}; separator="\n">
@@ -856,7 +861,7 @@ _localctx.<label>.add(_prevctx!!)
 _localctx.<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, Rules.<ruleName>.id)
+pushNewRecursionContext(_localctx, _startState, Rules.<ruleName; format="cap">)
 >>
 
 recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= <<
@@ -868,7 +873,7 @@ _localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Conte
 (_localctx as <currentAltLabel; format="cap">Context).<label> = _prevctx
 <endif>
 <endif>
-pushNewRecursionContext(_localctx, _startState, Rules.<ruleName>.id)
+pushNewRecursionContext(_localctx, _startState, Rules.<ruleName; format="cap">)
 >>
 
 recRuleReplaceContext(ctxName) ::= <<
@@ -902,7 +907,7 @@ import org.antlr.v4.kotlinruntime.misc.*
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "EnumEntryName", "RemoveRedundantBackticks")
+@Suppress("FunctionName", "LocalVariableName", "ConstPropertyName")
 public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(input) {
     private companion object {
         init {
@@ -921,28 +926,24 @@ public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(i
     }
 
     <if(lexer.tokens)>
-    public enum class Tokens(public val id: kotlin.Int) {
-        <lexer.tokens:{k | `<k>`(<lexer.tokens.(k)>)}; separator=",\n", wrap, anchor>
+    public object Tokens {
+        <lexer.tokens:{k | public const val <k>: Int = <lexer.tokens.(k)>}; separator="\n">
     }
+
     <endif>
-
-    public enum class Channels(public val id: kotlin.Int) {
-        DEFAULT_TOKEN_CHANNEL(0),
-        HIDDEN(1),
+    public object Channels {
+        public const val DEFAULT_TOKEN_CHANNEL: Int = 0
+        public const val HIDDEN: Int = 1
         <if(lexer.escapedChannels)>
-        <lexer.escapedChannels:{c | `<c>`(<lexer.escapedChannels.(c)>)}; separator=",\n", wrap, anchor>
+        <lexer.escapedChannels:{c | public const val <c>: Int = <lexer.escapedChannels.(c)>}; separator="\n">
         <endif>
     }
 
-    public enum class Modes(public val id: kotlin.Int) {
-        DEFAULT_MODE(0),
+    public object Modes {
+        public const val DEFAULT_MODE: Int = 0
         <if(rest(lexer.modes))>
-        <rest(lexer.modes):{m | `<m>`(<i>)}; separator=",\n", wrap, anchor>
+        <rest(lexer.modes):{m | public const val <m>: Int = <i>}; separator="\n">
         <endif>
-    }
-
-    public enum class Rules {
-        <lexer.ruleNames:{r | `<r>`}; separator=",\n", wrap, anchor>
     }
 
     override var interpreter: LexerATNSimulator =
@@ -961,14 +962,18 @@ public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(i
     override val serializedATN: String =
         SERIALIZED_ATN
 
-    override val ruleNames: Array\<String> =
-        Rules.entries.map(Rules::name).toTypedArray()
+    override val ruleNames: Array\<String> = arrayOf(
+        <lexer.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>
+    )
 
-    override val channelNames: Array\<String> =
-        Channels.entries.map(Channels::name).toTypedArray()
+    override val channelNames: Array\<String> = arrayOf(
+        "DEFAULT_TOKEN_CHANNEL", "HIDDEN",
+        <lexer.channelNames:{c| "<c>"}; separator=", ", wrap, anchor>
+    )
 
-    override val modeNames: Array\<String> =
-        Modes.entries.map(Modes::name).toTypedArray()
+    override val modeNames: Array\<String> = arrayOf(
+        <lexer.modes:{m| "<m>"}; separator=", ", wrap, anchor>
+    )
 
     <namedActions.members>
 
