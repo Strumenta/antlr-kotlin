@@ -137,8 +137,9 @@ public open class RuleContext : RuleNode {
    */
   public open var altNumber: Int
     get() = ATN.INVALID_ALT_NUMBER
-    // TODO(Edoardo): can we transform this to a 'val' and remove the setter?
-    set(@Suppress("UNUSED_PARAMETER") altNumber) {}
+    // Default implementation does nothing to avoid backing field
+    // overhead for trees that don't need it
+    set(@Suppress("UNUSED_PARAMETER") value) {}
 
   override val childCount: Int = 0
 

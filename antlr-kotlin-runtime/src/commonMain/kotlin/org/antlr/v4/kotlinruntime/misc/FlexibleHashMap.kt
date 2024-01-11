@@ -36,14 +36,17 @@ public open class FlexibleHashMap<K, V>(
       "${key}:${value}"
   }
 
-  // TODO: are bucket entries actually nullable?
   protected var buckets: Array<MutableList<Entry<K, V>?>?>
 
   /**
    * How many elements in set.
    */
   protected var n: Int = 0
-  protected var currentPrime: Int = 1 // jump by 4 primes each expand or whatever
+
+  /**
+   * Jump by 4 primes each expand or whatever.
+   */
+  protected var currentPrime: Int = 1
 
   /**
    * When to expand.
