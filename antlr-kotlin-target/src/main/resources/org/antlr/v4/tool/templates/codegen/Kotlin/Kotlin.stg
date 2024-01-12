@@ -240,8 +240,9 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
         }
 
         private val SHARED_CONTEXT_CACHE = PredictionContextCache()
-        private val RULE_NAMES: Array\<String> =
-            arrayOf(<parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>)
+        private val RULE_NAMES: Array\<String> = arrayOf(
+            <parser.ruleNames:{r | "<r>"}; separator=", ", wrap, anchor>
+        )
 
         <vocabulary(parser.literalNames, parser.symbolicNames)>
 
@@ -318,11 +319,13 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
-private val LITERAL_NAMES: Array\<String?> =
-    arrayOf(<literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val LITERAL_NAMES: Array\<String?> = arrayOf(
+    <literalNames:{t | <t>}; null="null", separator=", ", wrap, anchor>
+)
 
-private val SYMBOLIC_NAMES: Array\<String?> =
-    arrayOf(<symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>)
+private val SYMBOLIC_NAMES: Array\<String?> = arrayOf(
+    <symbolicNames:{t | <t>}; null="null", separator=", ", wrap, anchor>
+)
 
 private val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
 >>
