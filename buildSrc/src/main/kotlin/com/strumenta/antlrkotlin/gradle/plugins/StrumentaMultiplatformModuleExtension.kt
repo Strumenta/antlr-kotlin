@@ -9,9 +9,11 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Nested
 import org.gradle.internal.os.OperatingSystem
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 /**
  * @see StrumentaMultiplatformModulePlugin
@@ -69,6 +71,15 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
             filter.isFailOnNoMatchingTests = true
           }
+        }
+      }
+
+      // Compile JS using ES classes.
+      // This is the only way it works for prod/dev/test compilations.
+      // See discussion in https://youtrack.jetbrains.com/issue/KT-56818
+      project.tasks.withType<Kotlin2JsCompile> {
+        kotlinOptions {
+          useEsClasses = true
         }
       }
     }
