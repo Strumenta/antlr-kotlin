@@ -652,7 +652,7 @@ this.state = <m.stateNumber>
 <capture>
 
 if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
-    <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this) as Token}><else>errorHandler.recoverInline(this)<endif>
+    <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this)}><else>errorHandler.recoverInline(this)<endif>
 }
 else {
     if (_input.LA(1) == Tokens.EOF) {
@@ -842,10 +842,11 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
 AttributeDecl(d) ::= "<d.escapedName><if(d.type)>: <KotlinTypeMap.(d.type)><endif><if(d.initValue)> = <d.initValue><endif>"
 
 // If we don't know location of label def x, use this template
-labelref(x) ::= "<if(!x.isLocal)>(_localctx as <x.ctx.name>).<endif><x.escapedName>"
+labelref(x) ::= "<if(!x.isLocal)>_localctx.<endif><x.escapedName>"
 
-// For any action chunk, what is correctly-typed context struct ptr?
-ctx(actionChunk) ::= "(_localctx as <actionChunk.ctx.name>)"
+// Keep to match the Java target template.
+// All usages could be inlined tho
+ctx(actionChunk) ::= "_localctx"
 
 // used for left-recursive rules
 recRuleAltPredicate(ruleName, opPrec) ::= "precpred(context!!, <opPrec>)"
@@ -868,9 +869,9 @@ recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= 
 _localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
-(_localctx as <currentAltLabel; format="cap">Context).<label>.add(_prevctx!!)
+_localctx.<label>.add(_prevctx!!)
 <else>
-(_localctx as <currentAltLabel; format="cap">Context).<label> = _prevctx
+_localctx.<label> = _prevctx
 <endif>
 <endif>
 pushNewRecursionContext(_localctx, _startState, Rules.<ruleName; format="cap">)
