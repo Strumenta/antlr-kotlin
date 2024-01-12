@@ -106,6 +106,7 @@ public interface <file.grammarName>Listener : ParseTreeListener {
      */
     public fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)}; separator="\n">
 }
+
 >>
 
 BaseListenerFile(file, header, namedActions) ::= <<
@@ -156,6 +157,7 @@ public open class <file.grammarName>BaseListener : <file.grammarName>Listener {
      */
     override fun visitErrorNode(node: ErrorNode) {}
 }
+
 >>
 
 VisitorFile(file, header, namedActions) ::= <<
@@ -187,6 +189,7 @@ public interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
      */
     public fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T}; separator="\n">
 }
+
 >>
 
 BaseVisitorFile(file, header, namedActions) ::= <<
@@ -215,6 +218,7 @@ public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<
         return this.visitChildren(ctx)!!
     \}}; separator="\n">
 }
+
 >>
 
 fileHeader(grammarFileName, ANTLRVersion) ::= <<
@@ -226,7 +230,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
+@Suppress("ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     private companion object {
         init {
@@ -274,7 +278,6 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     }
 
     <endif>
-
     override var interpreter: ParserATNSimulator =
         @Suppress("LeakingThis")
         ParserATNSimulator(this, ATN, DECISION_TO_DFA, SHARED_CONTEXT_CACHE)
@@ -303,8 +306,8 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
     /* Funcs */
     <funcs; separator="\n\n">
+    <if(sempredFuncs)>
 
-<if(sempredFuncs)>
     override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
         when (ruleIndex) {
             <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>?, predIndex)}; separator="\n">
@@ -314,8 +317,9 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
     }
 
     <sempredFuncs.values; separator="\n\n">
-<endif>
+    <endif>
 }
+
 >>
 
 vocabulary(literalNames, symbolicNames) ::= <<
@@ -332,6 +336,7 @@ private val VOCABULARY = VocabularyImpl(LITERAL_NAMES, SYMBOLIC_NAMES)
 
 dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
 <if(actionFuncs)>
+
 override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
     when (ruleIndex) {
         <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx, actionIndex)}; separator="\n">
@@ -340,8 +345,8 @@ override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
 
 <actionFuncs.values; separator="\n\n">
 <endif>
-
 <if(sempredFuncs)>
+
 override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
     when (ruleIndex) {
         <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx, predIndex)}; separator="\n">
@@ -392,9 +397,9 @@ public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><e
     <locals; separator="\n">
 
     try {
-<if(currentRule.hasLookaheadBlock)>
+    <if(currentRule.hasLookaheadBlock)>
         var _alt: Int
-<endif>
+    <endif>
         <code>
         <postamble; separator="\n">
         <namedActions.after>
@@ -436,9 +441,9 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     <locals; separator="\n">
 
     try {
-<if(currentRule.hasLookaheadBlock)>
+    <if(currentRule.hasLookaheadBlock)>
         var _alt: Int
-<endif>
+    <endif>
         <code>
         <postamble; separator="\n">
         <namedActions.after>
@@ -746,9 +751,9 @@ AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
 TokenDecl(t) ::= "<t.name>: <KotlinTypeMap.(TokenLabelType())>? = null"
 TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList\<Token>()"
+TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList()"
 RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList\<<rdecl.ctxName>>()"
+RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList()"
 ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.name>, 0)<if(!t.optional)>!!<endif>"
 ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>)"
 
@@ -782,7 +787,6 @@ CaptureNextToken(d) ::= "<d.varName> = _input.LT(1)"
 CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1)"
 
 StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers, signatures) ::= <<
-@Suppress("FunctionName")
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override var ruleIndex: Int
         get() = Rules.<struct.derivedFromName; format="cap">
@@ -795,15 +799,15 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
         <struct.ctorAttrs:{a | this.<a.name> = <a.name>}; separator="\n">
     }
 
-<if(struct.provideCopyFrom)> <! don't need copy unless we have subclasses !>
+    <! Don't need copy unless we have subclasses !>
+    <if(struct.provideCopyFrom)>
     public constructor() : super()
 
     public fun copyFrom(ctx: <struct.name>) {
         super.copyFrom(ctx)
         <struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
     }
-
-<endif>
+    <endif>
     <dispatchMethods; separator="\n\n">
     <extensionMembers; separator="\n\n">
 }
@@ -834,10 +838,10 @@ override fun <if(method.isEnter)>enter<else>exit<endif>Rule(listener: ParseTreeL
 
 VisitorDispatchMethod(method) ::= <<
 override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
-    if (visitor is <parser.grammarName>Visitor) {
-        return visitor.visit<struct.derivedFromName; format="cap">(this)
+    return if (visitor is <parser.grammarName>Visitor) {
+        visitor.visit<struct.derivedFromName; format="cap">(this)
     } else {
-        return visitor.visitChildren(this)!!
+        visitor.visitChildren(this)!!
     }
 }
 >>
@@ -911,7 +915,7 @@ import org.antlr.v4.kotlinruntime.misc.*
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-@Suppress("FunctionName", "LocalVariableName", "ConstPropertyName")
+@Suppress("ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName")
 public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(input) {
     private companion object {
         init {
@@ -983,6 +987,7 @@ public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(i
 
     <dumpActions(lexer, "", actionFuncs, sempredFuncs)>
 }
+
 >>
 
 SerializedJavaATN(model) ::= <<
