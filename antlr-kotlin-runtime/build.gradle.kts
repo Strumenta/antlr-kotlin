@@ -51,7 +51,6 @@ kotlin {
 }
 
 mavenPublishing {
-  @Suppress("UnstableApiUsage")
   coordinates(
     groupId = project.group as String,
     artifactId = project.name,

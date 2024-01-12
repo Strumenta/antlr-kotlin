@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.strumenta.antlrkotlin.gradle.ext.setupPom
 import com.vanniktech.maven.publish.SonatypeHost
 
@@ -11,7 +13,6 @@ dependencies {
 }
 
 mavenPublishing {
-  @Suppress("UnstableApiUsage")
   coordinates(
     groupId = project.group as String,
     artifactId = project.name,
