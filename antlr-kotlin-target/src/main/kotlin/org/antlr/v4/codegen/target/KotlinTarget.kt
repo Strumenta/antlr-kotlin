@@ -3,6 +3,7 @@ package org.antlr.v4.codegen.target
 import org.antlr.v4.codegen.CodeGenerator
 import org.antlr.v4.codegen.Target
 import org.antlr.v4.codegen.UnicodeEscapes
+import org.antlr.v4.tool.Grammar
 
 public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerator) {
   private companion object {
@@ -85,6 +86,13 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
 
   override fun appendUnicodeEscapedCodePoint(codePoint: Int, sb: StringBuilder): Unit =
     UnicodeEscapes.appendEscapedCodePoint(sb, codePoint, "Java")
+
+  override fun getTokenTypeAsTargetLabel(g: Grammar, ttype: Int): String {
+    // All tokens are namespaced inside a Tokens object.
+    // Here we simply force the qualification
+    val label = super.getTokenTypeAsTargetLabel(g, ttype)
+    return "Tokens.$label"
+  }
 
   override fun getTargetStringLiteralFromANTLRStringLiteral(
     generator: CodeGenerator,

@@ -255,14 +255,6 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
                 ?: VOCABULARY.getSymbolicName(it)
                 ?: "\<INVALID>"
         }
-
-        <!
-        We must duplicate token names as the code generator uses
-        simple labels, and we cannot properly prefix them with 'Tokens.'
-        !>
-        <if(parser.tokens)>
-        <parser.tokens:{k | private const val <k> = Tokens.<k>}; separator="\n">
-        <endif>
     }
 
     <if(parser.tokens)>
