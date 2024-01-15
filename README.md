@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 This project contains everything needed to support Kotlin as a target for ANTLR.
 
@@ -23,7 +24,7 @@ The runtime and target's template are up-to-date with mainstream commit: `master
 
 ## Kotlin Target
 
-The Kotlin target is a plugin for the ANTLR generator.  
+The Kotlin target is a plugin for the ANTLR generator.
 It should be added to the classpath used to run the ANTLR Tool.
 
 You will need to specify the target language to be `Kotlin` (`-Dlanguage=Kotlin`),
@@ -55,7 +56,7 @@ The supported Native platforms are:
 
 To start using ANTLR Kotlin:
 
-1. Add the `mavenCentral` repository to the list of repositories in your build script.  
+1. Add the `mavenCentral` repository to the list of repositories in your build script.
    This is required as artifacts are pushed to Maven Central.
 
    ```kotlin
@@ -72,7 +73,7 @@ To start using ANTLR Kotlin:
    }
    ```
 
-3. Add the ANTLR Kotlin Runtime to the list of dependencies.  
+3. Add the ANTLR Kotlin Runtime to the list of dependencies.
    If you are working in a multiplatform project, add it to the common source set.
 
    ```kotlin
@@ -164,3 +165,9 @@ You can see the complete list on GitHub, but here we list those who contributed 
 - Patrick Del Conte [@exaV](https://github.com/exaV)
 
 [1]: https://plugins.gradle.org/plugin/com.strumenta.antlr-kotlin
+
+## License
+
+Users of this project can choose which license to apply: either the Apache License 2 or the BSD 3-Clause License.
+
+The licenses are alternatively.
