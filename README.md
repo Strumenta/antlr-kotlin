@@ -168,6 +168,6 @@ You can see the complete list on GitHub, but here we list those who contributed 
 
 ## License
 
-Users of this project can choose which license to apply: either the Apache License 2 or the BSD 3-Clause License.
+Consumers of this project may choose the most appropriate license: either the Apache License 2.0, or the 3-Clause BSD License.
 
 The licenses are alternatively.
