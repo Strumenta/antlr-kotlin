@@ -25,6 +25,7 @@ The runtime and target's template are up-to-date with mainstream commit: `master
 ## Kotlin Target
 
 The Kotlin target is a plugin for the ANTLR generator.
+
 It should be added to the classpath used to run the ANTLR Tool.
 
 You will need to specify the target language to be `Kotlin` (`-Dlanguage=Kotlin`),
