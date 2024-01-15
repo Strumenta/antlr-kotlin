@@ -9,34 +9,37 @@ public class KotlinTarget(codeGenerator: CodeGenerator) : JavaTarget(codeGenerat
   private companion object {
     /**
      * Reserved Kotlin keywords.
+     *
+     * See [hard keywords](https://kotlinlang.org/docs/keyword-reference.html#hard-keywords).
      */
     private val kotlinKeywords = arrayOf(
-      "abstract",
-      "catch",
+      "as",
+      "break",
       "class",
-      "const",
+      "continue",
+      "do",
       "else",
-      "enum",
       "false",
       "for",
+      "fun",
       "if",
-      "implements",
-      "import",
+      "in",
       "interface",
-      "internal",
       "is",
       "null",
       "object",
       "package",
-      "private",
-      "public",
       "return",
+      "super",
       "this",
       "throw",
       "true",
       "try",
+      "typealias",
+      "typeof",
       "val",
       "var",
+      "when",
       "while",
     )
 
