@@ -169,5 +169,3 @@ You can see the complete list on GitHub, but here we list those who contributed 
 ## License
 
 Consumers of this project may choose the most appropriate license: either the Apache License 2.0, or the 3-Clause BSD License.
-
-The licenses are alternatively.
