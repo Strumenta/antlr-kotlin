@@ -187,7 +187,7 @@ public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<
      * The default implementation returns the result of calling [visitChildren] on [ctx].
      */
     override fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T {
-        return this.visitChildren(ctx)!!
+        return visitChildren(ctx)!!
     \}}; separator="\n">
 }
 
@@ -441,7 +441,7 @@ CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
 >>
 
 LL1AltBlock(choice, preamble, alts, error) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
 <preamble; separator="\n">
@@ -456,7 +456,7 @@ when (_input.LA(1)) {
 >>
 
 LL1OptionalBlock(choice, alts, error) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 
 when (_input.LA(1)) {
@@ -469,7 +469,7 @@ when (_input.LA(1)) {
 >>
 
 LL1OptionalBlockSingleAlt(choice, expr, alts, preamble, error, followExpr) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 <preamble; separator="\n">
 
@@ -479,26 +479,26 @@ if (<expr>) {
 >>
 
 LL1StarBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 <preamble; separator="\n">
 
 while (<loopExpr>) {
     <alts; separator="\n">
-    this.state = <choice.loopBackStateNumber>
+    state = <choice.loopBackStateNumber>
     errorHandler.sync(this)
     <iteration>
 }
 >>
 
 LL1PlusBlockSingleAlt(choice, loopExpr, alts, preamble, iteration) ::= <<
-this.state = <choice.blockStartStateNumber> <! alt block decision !>
+state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
 <preamble; separator="\n">
 
 do {
     <alts; separator="\n">
-    this.state = <choice.stateNumber> <! loopback/exit decision !>
+    state = <choice.stateNumber> <! loopback/exit decision !>
     errorHandler.sync(this)
     <iteration>
 } while (<loopExpr>)
@@ -507,7 +507,7 @@ do {
 // LL(*) stuff
 
 AltBlock(choice, preamble, alts, error) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 <if(choice.label)><labelref(choice.label)> = _input.LT(1)<endif>
 <preamble; separator="\n">
@@ -521,7 +521,7 @@ when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
 >>
 
 OptionalBlock(choice, alts, error) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 
 when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
@@ -533,7 +533,7 @@ when (interpreter.adaptivePredict(_input, <choice.decision>, context)) {
 >>
 
 StarBlock(choice, alts, sync, iteration) ::= <<
-this.state = <choice.stateNumber>
+state = <choice.stateNumber>
 errorHandler.sync(this)
 _alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 
@@ -543,14 +543,14 @@ while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER) {
         <alts> <! should only be one !>
     }
 
-    this.state = <choice.loopBackStateNumber>
+    state = <choice.loopBackStateNumber>
     errorHandler.sync(this)
     _alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 }
 >>
 
 PlusBlock(choice, alts, error) ::= <<
-this.state = <choice.blockStartStateNumber> <! alt block decision !>
+state = <choice.blockStartStateNumber> <! alt block decision !>
 errorHandler.sync(this)
 _alt = 1<if(!choice.ast.greedy)> + 1<endif>
 
@@ -563,7 +563,7 @@ do {
         else -> <error>
     }
 
-    this.state = <choice.loopBackStateNumber> <! loopback/exit decision !>
+    state = <choice.loopBackStateNumber> <! loopback/exit decision !>
     errorHandler.sync(this)
     _alt = interpreter.adaptivePredict(_input, <choice.decision>, context)
 } while (_alt != <choice.exitAlt> && _alt != INVALID_ALT_NUMBER)
@@ -605,7 +605,7 @@ cases(tokens) ::= <<
 <tokens:{t | <t.name>}; separator=", "> -> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
-this.state = <r.stateNumber>
+state = <r.stateNumber>
 <if(r.labels)>
 
 if (true) {
@@ -618,7 +618,7 @@ if (true) {
 >>
 
 MatchToken(m) ::= <<
-this.state = <m.stateNumber>
+state = <m.stateNumber>
 <if(m.labels)>
 
 if (true) {
@@ -635,7 +635,7 @@ MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
 MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
-this.state = <m.stateNumber>
+state = <m.stateNumber>
 <if(m.labels)>
 
 if (true) {
@@ -664,7 +664,7 @@ else {
 >>
 
 Wildcard(w) ::= <<
-this.state = <w.stateNumber>
+state = <w.stateNumber>
 <if(w.labels)>
 
 val _mwc = matchWildcard()
@@ -681,7 +681,7 @@ Action(a, foo, chunks) ::= "<chunks>"
 ArgAction(a, chunks) ::= "<chunks>"
 
 SemPred(p, chunks, failChunks) ::= <<
-this.state = <p.stateNumber>
+state = <p.stateNumber>
 
 if (!(<chunks>)) {
     throw FailedPredicateException(this, <p.predicate><if(failChunks)>, <failChunks><elseif(p.msg)>, <p.msg><endif>)
