@@ -22,6 +22,11 @@ fun MavenPublishBaseExtension.setupPom(project: Project, projectDescription: Str
         url.set("https://www.apache.org/licenses/LICENSE-2.0")
         distribution.set("repo")
       }
+      license {
+        name.set("BSD 3-Clause")
+        url.set("https://opensource.org/license/bsd-3-clause/")
+        distribution.set("repo")
+      }
     }
 
     // The developers entry is strictly required by Maven Central
