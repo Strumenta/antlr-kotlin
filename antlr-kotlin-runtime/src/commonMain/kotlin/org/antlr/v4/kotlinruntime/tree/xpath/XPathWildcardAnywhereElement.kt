@@ -9,7 +9,7 @@ public open class XPathWildcardAnywhereElement : XPathElement(XPath.WILDCARD) {
   override fun evaluate(t: ParseTree): Collection<ParseTree> =
     if (invert) {
       // !* is weird but valid (empty)
-      ArrayList()
+      emptyList()
     } else {
       Trees.getDescendants(t)
     }

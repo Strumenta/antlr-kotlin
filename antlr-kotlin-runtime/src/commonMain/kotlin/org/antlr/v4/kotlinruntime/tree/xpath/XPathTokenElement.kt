@@ -10,9 +10,10 @@ import org.antlr.v4.kotlinruntime.tree.Trees
 public open class XPathTokenElement(tokenName: String, protected var tokenType: Int) : XPathElement(tokenName) {
   override fun evaluate(t: ParseTree): Collection<ParseTree> {
     // Return all children of t that match nodeName
-    val nodes = ArrayList<ParseTree>()
+    val children = Trees.getChildren(t)
+    val nodes = ArrayList<ParseTree>(children.size)
 
-    for (c in Trees.getChildren(t)) {
+    for (c in children) {
       if (c is TerminalNode) {
         if (c.symbol.type == tokenType && !invert || c.symbol.type != tokenType && invert) {
           nodes.add(c)
