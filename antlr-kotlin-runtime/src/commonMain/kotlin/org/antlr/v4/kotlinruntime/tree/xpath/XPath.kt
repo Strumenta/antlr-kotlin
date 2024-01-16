@@ -14,12 +14,12 @@ import org.antlr.v4.kotlinruntime.tree.xpath.XPathLexer.Tokens
  * itself then walk path elements from left to right. At each separator-word
  * pair, find set of nodes. Next stage uses those as work list.
  *
- * The basic interface is [XPath.findAll]`(tree, pathString, parser)`.
+ * The basic interface is [XPath.findAll]`(tree, xpath, parser)`.
  *
  * But that is just shorthand for:
  *
  * ```
- * val p = XPath(parser, pathString)
+ * val p = XPath(parser, xpath)
  * return p.evaluate(tree)
  * ```
  *
@@ -58,9 +58,8 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
   public open fun split(xpath: String): Array<XPathElement> {
     val input = CharStreams.fromString(xpath)
     val lexer = object : XPathLexer(input) {
-      override fun recover(e: LexerNoViableAltException) {
+      override fun recover(e: LexerNoViableAltException): Unit =
         throw e
-      }
     }
 
     lexer.removeErrorListeners()
