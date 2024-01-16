@@ -634,12 +634,28 @@ cases(tokens) ::= <<
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
-<if(r.labels)><r.labels:{l | <labelref(l)> = }><endif><r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>,<endif><endif><argExprsChunks>)
+<if(r.labels)>
+
+if (true) {
+    val _ctx = <r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>, <endif><endif><argExprsChunks>)
+    <r.labels:{l | <labelref(l)> = _ctx}; separator="\n">
+}
+<else>
+<r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>, <endif><endif><argExprsChunks>)
+<endif>
 >>
 
 MatchToken(m) ::= <<
 this.state = <m.stateNumber>
-<if(m.labels)><m.labels:{l | <labelref(l)> = }><endif>match(<m.name>)
+<if(m.labels)>
+
+if (true) {
+    val _token = match(<m.name>)
+    <m.labels:{l | <labelref(l)> = _token}; separator="\n">
+}
+<else>
+match(<m.name>)
+<endif>
 >>
 
 MatchSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, false)>"
@@ -648,11 +664,22 @@ MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 
 CommonSetStuff(m, expr, capture, invert) ::= <<
 this.state = <m.stateNumber>
-<if(m.labels)><m.labels:{l | <labelref(l)> = }>_input.LT(1)<endif>
+<if(m.labels)>
+
+if (true) {
+    val _token = _input.LT(1)
+    <m.labels:{l | <labelref(l)> = _token}; separator="\n">
+}
+<endif>
 <capture>
 
 if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
-    <if(m.labels)><m.labels:{l | <labelref(l)> = errorHandler.recoverInline(this)}><else>errorHandler.recoverInline(this)<endif>
+    <if(m.labels)>
+    val _token = errorHandler.recoverInline(this)
+    <m.labels:{l | <labelref(l)> = _token}; separator="\n">
+    <else>
+    errorHandler.recoverInline(this)
+    <endif>
 }
 else {
     if (_input.LA(1) == Tokens.EOF) {
@@ -666,7 +693,13 @@ else {
 
 Wildcard(w) ::= <<
 this.state = <w.stateNumber>
-<if(w.labels)><w.labels:{l | <labelref(l)> = }><endif>matchWildcard()
+<if(w.labels)>
+
+val _mwc = matchWildcard()
+<w.labels:{l | <labelref(l)> = _mwc}; separator="\n">
+<else>
+matchWildcard()
+<endif>
 >>
 
 // Action stuff
