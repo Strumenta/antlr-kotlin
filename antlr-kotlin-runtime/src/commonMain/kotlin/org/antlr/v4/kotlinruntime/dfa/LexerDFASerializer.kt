@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
- * Use of this file is governed by the BSD 3-clause license that
- * can be found in the LICENSE.txt file in the project root.
- */
+// Copyright 2017-2024 Strumenta and contributors, licensed under Apache 2.0.
+// Copyright 2024 Strumenta and contributors, licensed under BSD 3-Clause.
 
 package org.antlr.v4.kotlinruntime.dfa
 
