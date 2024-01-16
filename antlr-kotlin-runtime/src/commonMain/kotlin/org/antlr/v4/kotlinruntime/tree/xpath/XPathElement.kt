@@ -9,12 +9,13 @@ public abstract class XPathElement(protected var nodeName: String) {
   public var invert: Boolean = false
 
   /**
-   * Given tree rooted at [t] return all nodes matched by this path element.
+   * Given tree rooted at [t], returns all nodes matched by this path element.
    */
   public abstract fun evaluate(t: ParseTree): Collection<ParseTree>
 
-  public override fun toString(): String {
+  override fun toString(): String {
     val inv = if (invert) "!" else ""
-    return "${this::class.simpleName}[$inv$nodeName]"
+    val className = this::class.simpleName
+    return "$className[$inv$nodeName]"
   }
 }
