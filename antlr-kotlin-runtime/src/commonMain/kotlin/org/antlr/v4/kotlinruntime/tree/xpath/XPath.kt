@@ -86,13 +86,13 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
       var next: Token?
 
       when (el.type) {
-        Tokens.Root.id,
-        Tokens.Anywhere.id -> {
-          val anywhere = el.type == Tokens.Anywhere.id
+        Tokens.Root,
+        Tokens.Anywhere -> {
+          val anywhere = el.type == Tokens.Anywhere
           i++
           next = tokens[i]
 
-          val invert = next.type == Tokens.Bang.id
+          val invert = next.type == Tokens.Bang
 
           if (invert) {
             i++
@@ -104,9 +104,9 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
           elements.add(pathElement)
           i++
         }
-        Tokens.TokenRef.id,
-        Tokens.RuleRef.id,
-        Tokens.Wildcard.id -> {
+        Tokens.TokenRef,
+        Tokens.RuleRef,
+        Tokens.Wildcard -> {
           elements.add(getXPathElement(el, false))
           i++
         }
@@ -133,15 +133,15 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
     val ruleIndex = parser.getRuleIndex(word)
 
     return when (wordToken.type) {
-      Tokens.Wildcard.id -> {
+      Tokens.Wildcard -> {
         if (anywhere) {
           XPathWildcardAnywhereElement()
         } else {
           XPathWildcardElement()
         }
       }
-      Tokens.TokenRef.id,
-      Tokens.String.id -> {
+      Tokens.TokenRef,
+      Tokens.String -> {
         if (ttype == Token.INVALID_TYPE) {
           throw IllegalArgumentException("$word at index ${wordToken.startIndex} isn't a valid token name")
         }
