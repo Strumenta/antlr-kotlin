@@ -9,12 +9,13 @@ public open class XPathWildcardElement : XPathElement(XPath.WILDCARD) {
   override fun evaluate(t: ParseTree): Collection<ParseTree> {
     if (invert) {
       // !* is weird but valid (empty)
-      return ArrayList()
+      return emptyList()
     }
 
-    val kids = ArrayList<ParseTree>()
+    val children = Trees.getChildren(t)
+    val kids = ArrayList<ParseTree>(children.size)
 
-    for (c in Trees.getChildren(t)) {
+    for (c in children) {
       kids.add(c as ParseTree)
     }
 

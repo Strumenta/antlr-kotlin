@@ -9,9 +9,10 @@ import org.antlr.v4.kotlinruntime.tree.Trees
 public open class XPathRuleElement(ruleName: String, protected var ruleIndex: Int) : XPathElement(ruleName) {
   override fun evaluate(t: ParseTree): Collection<ParseTree> {
     // Return all children of t that match nodeName
-    val nodes = ArrayList<ParseTree>()
+    val children = Trees.getChildren(t)
+    val nodes = ArrayList<ParseTree>(children.size)
 
-    for (c in Trees.getChildren(t)) {
+    for (c in children) {
       if (c is ParserRuleContext) {
         if (c.ruleIndex == ruleIndex && !invert || c.ruleIndex != ruleIndex && invert) {
           nodes.add(c)

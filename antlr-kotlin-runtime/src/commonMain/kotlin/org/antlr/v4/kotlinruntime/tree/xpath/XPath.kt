@@ -76,8 +76,8 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
     }
 
     val tokens = tokenStream.tokens
-    val elements = ArrayList<XPathElement>()
     val n = tokens.size
+    val elements = ArrayList<XPathElement>(n)
     var i = 0
 
     loop@ while (i < n) {
