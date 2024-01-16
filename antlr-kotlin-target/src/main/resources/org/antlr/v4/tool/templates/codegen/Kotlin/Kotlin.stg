@@ -350,12 +350,13 @@ private fun <r.name>_sempred(_localctx: <r.ctxType>?, predIndex: Int): Boolean {
 }
 >>
 
-RuleFunction(currentRule,args,code,locals,ruleCtx,altLabelCtxs,namedActions,finallyAction,postamble,exceptions) ::= <<
+RuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedActions, finallyAction, postamble, exceptions) ::= <<
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
 public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.escapedName>(<args; separator=", ">): <currentRule.ctxType> {
     var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.escapedName>}>)
+
     enterRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">)
     <namedActions.init>
     <locals; separator="\n">
@@ -400,6 +401,7 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
     var _prevctx = _localctx
     var _startState = <currentRule.startState>
+
     enterRecursionRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">, _p)
     <namedActions.init>
     <locals; separator="\n">
@@ -433,11 +435,9 @@ enterOuterAlt(_localctx, <currentOuterMostAltCodeBlock.alt.altNum>)
 >>
 
 CodeBlockForAlt(currentAltCodeBlock, locals, preamble, ops) ::= <<
-if (true) {
-    <locals; separator="\n">
-    <preamble; separator="\n">
-    <ops; separator="\n">
-}
+<locals; separator="\n">
+<preamble; separator="\n">
+<ops; separator="\n">
 >>
 
 LL1AltBlock(choice, preamble, alts, error) ::= <<
@@ -707,7 +707,7 @@ LexerPushModeCommand(arg, grammar) ::= "pushMode(<arg>)"
 
 ActionText(t) ::= "<t.text>"
 ActionTemplate(t) ::= "<t.st>"
-ArgRef(a) ::= "_localctx!!.<a.name>"
+ArgRef(a) ::= "_localctx.<a.name>"
 LocalRef(a) ::= "_localctx.<a.name>"
 RetValueRef(a) ::= "_localctx.<a.name>"
 QRetValueRef(a) ::= "<ctx(a)>.<a.dict>.<a.name>"
@@ -716,7 +716,7 @@ QRetValueRef(a) ::= "<ctx(a)>.<a.dict>.<a.name>"
 TokenRef(t) ::= "<ctx(t)>.<t.name>"
 LabelRef(t) ::= "<ctx(t)>.<t.name>"
 ListLabelRef(t) ::= "<ctx(t)>.<ListLabelName(t.name)>"
-SetAttr(s, rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>;"
+SetAttr(s, rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>"
 
 TokenLabelType() ::= "<file.TokenLabelType; null={Token}>"
 InputSymbolType() ::= "<file.InputSymbolType; null={Token}>"
@@ -802,7 +802,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
 
     public fun copyFrom(ctx: <struct.name>) {
         super.copyFrom(ctx)
-        <struct.attrs:{a | this.<a.name> = ctx.<a.name>;}; separator="\n">
+        <struct.attrs:{a | this.<a.name> = ctx.<a.name>}; separator="\n">
     }
     <endif>
     <dispatchMethods; separator="\n\n">
@@ -855,13 +855,13 @@ ctx(actionChunk) ::= "_localctx"
 // used for left-recursive rules
 recRuleAltPredicate(ruleName, opPrec) ::= "precpred(context!!, <opPrec>)"
 recRuleSetReturnAction(src, name) ::= "$<name> = $<src>.<name>"
-recRuleSetStopToken() ::= "this.context!!.stop = _input.LT(-1)"
+recRuleSetStopToken() ::= "context!!.stop = _input.LT(-1)"
 
 recRuleAltStartAction(ruleName, ctxName, label, isListLabel) ::= <<
 _localctx = <ctxName>Context(_parentctx, _parentState)
 <if(label)>
 <if(isListLabel)>
-_localctx.<label>.add(_prevctx!!)
+_localctx.<label>.add(_prevctx)
 <else>
 _localctx.<label> = _prevctx
 <endif>
@@ -873,7 +873,7 @@ recRuleLabeledAltStartAction(ruleName, currentAltLabel, label, isListLabel) ::= 
 _localctx = <currentAltLabel; format="cap">Context(<ruleName; format="cap">Context(_parentctx, _parentState))
 <if(label)>
 <if(isListLabel)>
-_localctx.<label>.add(_prevctx!!)
+_localctx.<label>.add(_prevctx)
 <else>
 _localctx.<label> = _prevctx
 <endif>
