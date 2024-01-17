@@ -202,7 +202,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "ConstantConditionIf")
+@Suppress("UNUSED_VARIABLE", "ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     private companion object {
         init {
@@ -356,6 +356,8 @@ RuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedAction
 
 public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.escapedName>(<args; separator=", ">): <currentRule.ctxType> {
     var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.escapedName>}>)
+    var _token: Token?
+    var _ctx: RuleContext?
 
     enterRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">)
     <namedActions.init>
@@ -401,6 +403,8 @@ private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType>
     var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
     var _prevctx = _localctx
     var _startState = <currentRule.startState>
+    var _token: Token?
+    var _ctx: RuleContext?
 
     enterRecursionRule(_localctx, <currentRule.startState>, Rules.<currentRule.name; format="cap">, _p)
     <namedActions.init>
@@ -607,11 +611,8 @@ cases(tokens) ::= <<
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
 <if(r.labels)>
-
-if (true) {
-    val _ctx = <r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>, <endif><endif><argExprsChunks>)
-    <r.labels:{l | <labelref(l)> = _ctx}; separator="\n">
-}
+_ctx = <r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>, <endif><endif><argExprsChunks>)
+<r.labels:{l | <labelref(l)> = _ctx}; separator="\n">
 <else>
 <r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)>, <endif><endif><argExprsChunks>)
 <endif>
@@ -620,11 +621,8 @@ if (true) {
 MatchToken(m) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)>
-
-if (true) {
-    val _token = match(<m.name>)
-    <m.labels:{l | <labelref(l)> = _token}; separator="\n">
-}
+_token = match(<m.name>)
+<m.labels:{l | <labelref(l)> = _token}; separator="\n">
 <else>
 match(<m.name>)
 <endif>
@@ -637,17 +635,14 @@ MatchNotSet(m, expr, capture) ::= "<CommonSetStuff(m, expr, capture, true)>"
 CommonSetStuff(m, expr, capture, invert) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)>
-
-if (true) {
-    val _token = _input.LT(1)
-    <m.labels:{l | <labelref(l)> = _token}; separator="\n">
-}
+_token = _input.LT(1)
+<m.labels:{l | <labelref(l)> = _token}; separator="\n">
 <endif>
 <capture>
 
 if (<if(invert)><m.varName> \<= 0 || <else>!<endif>(<expr>)) {
     <if(m.labels)>
-    val _token = errorHandler.recoverInline(this)
+    _token = errorHandler.recoverInline(this)
     <m.labels:{l | <labelref(l)> = _token}; separator="\n">
     <else>
     errorHandler.recoverInline(this)
@@ -666,9 +661,8 @@ else {
 Wildcard(w) ::= <<
 this.state = <w.stateNumber>
 <if(w.labels)>
-
-val _mwc = matchWildcard()
-<w.labels:{l | <labelref(l)> = _mwc}; separator="\n">
+_token = matchWildcard()
+<w.labels:{l | <labelref(l)> = _token}; separator="\n">
 <else>
 matchWildcard()
 <endif>
