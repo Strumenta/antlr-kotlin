@@ -119,7 +119,7 @@ public open class RuleContext : RuleNode {
       return builder.toString()
     }
 
-  public open var ruleIndex: Int = -1
+  public open val ruleIndex: Int = -1
 
   /**
    * For rule associated with this parse tree internal node, return
