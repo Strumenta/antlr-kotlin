@@ -15,7 +15,11 @@ package org.antlr.v4.kotlinruntime
  * provide equivalent functionality.
  */
 public class InterpreterRuleContext : ParserRuleContext {
-  public constructor()
+  override val ruleIndex: Int
+
+  public constructor() {
+    ruleIndex = -1
+  }
 
   /**
    * Constructs a new [InterpreterRuleContext] with the specified

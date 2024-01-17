@@ -779,9 +779,7 @@ CaptureNextTokenType(d) ::= "<d.varName> = _input.LA(1)"
 
 StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, extensionMembers, signatures) ::= <<
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
-    override var ruleIndex: Int
-        get() = Rules.<struct.derivedFromName; format="cap">
-        set(@Suppress("UNUSED_PARAMETER") value) = throw RuntimeException()
+    override val ruleIndex: Int = Rules.<struct.derivedFromName; format="cap">
 
     <attrs:{a | public var <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
