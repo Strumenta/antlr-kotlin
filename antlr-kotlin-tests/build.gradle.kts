@@ -3,6 +3,7 @@
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
   id("strumenta.multiplatform")
@@ -33,6 +34,21 @@ strumentaMultiplatform {
 }
 
 kotlin {
+  jvm {
+    // The TSQL grammar test fails because of a compiler error
+    // when targeting the JVM (MethodTooLargeException), even
+    // if we never test on the JVM.
+    // Here we simply filter out the generated TSQL Kotlin files
+    // from the compilation phase
+    compilations.configureEach {
+      compileTaskProvider.configure {
+        if (this is KotlinJvmCompile) {
+          exclude("**/test/generated/TSql*.kt")
+        }
+      }
+    }
+  }
+
   sourceSets {
     commonMain {
       kotlin {
