@@ -119,6 +119,11 @@ public open class RuleContext : RuleNode {
       return builder.toString()
     }
 
+  /**
+   * The default value `-1` represents an invalid rule index.
+   *
+   * Each subclass may override this field to provide a valid index.
+   */
   public open val ruleIndex: Int = -1
 
   /**
