@@ -1,4 +1,4 @@
-grammar Expr;
+grammar XPathExpr;
 
 prog
   : func+
