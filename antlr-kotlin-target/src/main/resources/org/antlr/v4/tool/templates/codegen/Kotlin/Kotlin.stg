@@ -754,8 +754,8 @@ ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start!!, _input.LT(-1)
 ThisRulePropertyRef_ctx(r) ::= "_localctx"
 ThisRulePropertyRef_parser(r) ::= "this"
 
-NonLocalAttrRef(s) ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name>"
-SetNonLocalAttr(s, rhsChunks) ::= "((<s.ruleName; format=\"cap\">Context)getInvokingContext(<s.ruleIndex>)).<s.name> = <rhsChunks>"
+NonLocalAttrRef(s) ::= "(getInvokingContext(<s.ruleIndex>) as <s.ruleName; format=\"cap\">Context).<s.escapedName>"
+SetNonLocalAttr(s, rhsChunks) ::= "(getInvokingContext(<s.ruleIndex>) as <s.ruleName; format=\"cap\">Context).<s.escapedName> = <rhsChunks>"
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
