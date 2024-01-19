@@ -130,7 +130,7 @@ public open class LexerATNSimulator(
 
   override fun clearDFA() {
     for (d in decisionToDFA.indices) {
-      decisionToDFA[d] = DFA(atn.getDecisionState(d) as DecisionState, d)
+      decisionToDFA[d] = DFA(atn.getDecisionState(d)!!, d)
     }
   }
 

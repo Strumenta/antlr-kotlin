@@ -115,8 +115,7 @@ public open class ParserInterpreter(
     // Init decision DFA
     val numberOfDecisions = atn.numberOfDecisions
     decisionToDFA = Array(numberOfDecisions) {
-      val decisionState = atn.getDecisionState(it)
-      DFA(decisionState!!, it)
+      DFA(atn.getDecisionState(it)!!, it)
     }
 
     // Get ATN simulator that knows how to do predictions
