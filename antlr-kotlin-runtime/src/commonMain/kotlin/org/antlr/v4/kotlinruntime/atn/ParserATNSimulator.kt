@@ -578,7 +578,7 @@ public open class ParserATNSimulator(
 
     // Create new target state, we'll add to DFA after it's complete
     @Suppress("LocalVariableName")
-    var D: DFAState? = DFAState(reach)
+    val D = DFAState(reach)
     val predictedAlt = getUniqueAlt(reach)
 
     if (debug) {
@@ -594,12 +594,12 @@ public open class ParserATNSimulator(
 
     if (predictedAlt != ATN.INVALID_ALT_NUMBER) {
       // NO CONFLICT, UNIQUELY PREDICTED ALT
-      D!!.isAcceptState = true
+      D.isAcceptState = true
       D.configs.uniqueAlt = predictedAlt
       D.prediction = predictedAlt
     } else if (PredictionMode.hasSLLConflictTerminatingPrediction(predictionMode, reach)) {
       // MORE THAN ONE VIABLE ALTERNATIVE
-      D!!.configs.conflictingAlts = getConflictingAlts(reach)
+      D.configs.conflictingAlts = getConflictingAlts(reach)
       D.requiresFullContext = true
 
       // In SLL-only mode, we will stop at this state and return the minimum alt
@@ -607,7 +607,7 @@ public open class ParserATNSimulator(
       D.prediction = D.configs.conflictingAlts!!.nextSetBit(0)
     }
 
-    if (D!!.isAcceptState && D.configs.hasSemanticContext) {
+    if (D.isAcceptState && D.configs.hasSemanticContext) {
       predicateDFAState(D, atn.getDecisionState(dfa.decision)!!)
 
       if (D.predicates != null) {
@@ -616,8 +616,7 @@ public open class ParserATNSimulator(
     }
 
     // All adds to dfa are done after we've created full D state
-    D = addDFAEdge(dfa, previousD, t, D)
-    return D
+    return addDFAEdge(dfa, previousD, t, D)
   }
 
   protected open fun predicateDFAState(dfaState: DFAState, decisionState: DecisionState) {
