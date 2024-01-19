@@ -1,28 +1,47 @@
 // Copyright 2017-2024 Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024 Strumenta and contributors, licensed under BSD 3-Clause.
 
-KotlinTypeInitMap ::= [
-    "Int":"0",
-    "Long":"0L",
-    "Float":"0.0F",
-    "Double":"0.0",
-    "Boolean":"false",
-    "Byte":"0",
-    "Short":"0",
-    "Char":"0.toChar()",
-    default:"null" // Anything other than a primitive type is an object
+// Translates types used in the ANTLR grammar
+// to types used by the Kotlin language
+TypeMap ::= [
+  "int": "Int",
+  "long": "Long",
+  "float": "Float",
+  "double": "Double",
+  "boolean": "Boolean",
+  "byte": "Byte",
+  "short": "Short",
+  "char": "Char",
+  default: key
 ]
 
-KotlinTypeMap ::= [
-    "int":"Int",
-    "long":"Long",
-    "float":"Float",
-    "double":"Double",
-    "boolean":"Boolean",
-    "byte":"Byte",
-    "short":"Short",
-    "char":"Char",
-    default:key
+// Maps primitive types to their default values.
+// For objects the default value is always null
+TypeDefaultValueMap ::= [
+  "Int": "0",
+  "Long": "0L",
+  "Float": "0.0F",
+  "Double": "0.0",
+  "Boolean": "false",
+  "Byte": "0",
+  "Short": "0",
+  "Char": "Char.MIN_VALUE",
+  default: "null"
+]
+
+// States whether a type is a primitive type.
+// If the type is primitive we can declare it non-null and
+// assign a default value to it, basically mimicking Java
+IsPrimitiveTypeMap ::= [
+  "int": true,
+  "long": true,
+  "float": true,
+  "double": true,
+  "boolean": true,
+  "byte": true,
+  "short": true,
+  "char": true,
+  default: false
 ]
 
 ParserFile(file, parser, namedActions, contextSuperClass) ::= <<
@@ -704,7 +723,7 @@ ActionTemplate(t) ::= "<t.st>"
 ArgRef(a) ::= "_localctx.<a.name>"
 LocalRef(a) ::= "_localctx.<a.name>"
 RetValueRef(a) ::= "_localctx.<a.name>"
-QRetValueRef(a) ::= "<ctx(a)>.<a.dict>.<a.name>"
+QRetValueRef(a) ::= "<ctx(a)>.<a.dict>!!.<a.name>"
 
 /** How to translate $tokenLabel */
 TokenRef(t) ::= "<ctx(t)>.<t.name>"
@@ -715,23 +734,23 @@ SetAttr(s, rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>"
 TokenLabelType() ::= "<file.TokenLabelType; null={Token}>"
 InputSymbolType() ::= "<file.InputSymbolType; null={Token}>"
 
-TokenPropertyRef_text(t) ::= "(<ctx(t)>.<t.label>?.text)"
-TokenPropertyRef_type(t) ::= "(<ctx(t)>.<t.label>?.type?:0)"
-TokenPropertyRef_line(t) ::= "(<ctx(t)>.<t.label>?.line?:0)"
-TokenPropertyRef_pos(t) ::= "(<ctx(t)>.<t.label>?.charPositionInLine()?:0)"
-TokenPropertyRef_channel(t) ::= "(<ctx(t)>.<t.label>?.channel()?:0)"
-TokenPropertyRef_index(t) ::= "(<ctx(t)>.<t.label>!?.tokenIndex()?:0)"
-TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.label.asInt()?:0)"
+TokenPropertyRef_text(t) ::= "(<ctx(t)>.<t.label>!!.text!!)"
+TokenPropertyRef_type(t) ::= "(<ctx(t)>.<t.label>?.type ?: 0)"
+TokenPropertyRef_line(t) ::= "(<ctx(t)>.<t.label>?.line ?: 0)"
+TokenPropertyRef_pos(t) ::= "(<ctx(t)>.<t.label>?.charPositionInLine ?: 0)"
+TokenPropertyRef_channel(t) ::= "(<ctx(t)>.<t.label>?.channel ?: 0)"
+TokenPropertyRef_index(t) ::= "(<ctx(t)>.<t.label>?.tokenIndex ?: 0)"
+TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.text!!.toInt() ?: 0)"
 
 RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>?.start)"
 RulePropertyRef_stop(r)	::= "(<ctx(r)>.<r.label>?.stop)"
-RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input.getText(it.start, it.stop)})"
+RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input.getText(it.start!!, it.stop!!) })"
 RulePropertyRef_ctx(r) ::= "<ctx(r)>.<r.label>"
 RulePropertyRef_parser(r) ::= "this"
 
 ThisRulePropertyRef_start(r) ::= "_localctx.start"
 ThisRulePropertyRef_stop(r) ::= "_localctx.stop"
-ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start, _input.LT(-1))"
+ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start!!, _input.LT(-1)!!)"
 ThisRulePropertyRef_ctx(r) ::= "_localctx"
 ThisRulePropertyRef_parser(r) ::= "this"
 
@@ -740,7 +759,7 @@ SetNonLocalAttr(s, rhsChunks) ::= "((<s.ruleName; format=\"cap\">Context)getInvo
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "<t.name>: <KotlinTypeMap.(TokenLabelType())>? = null"
+TokenDecl(t) ::= "<t.name>: <TypeMap.(TokenLabelType())>? = null"
 TokenTypeDecl(t) ::= "var <t.name>: Int"
 TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList()"
 RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
@@ -835,7 +854,7 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
 }
 >>
 
-AttributeDecl(d) ::= "<d.escapedName><if(d.type)>: <KotlinTypeMap.(d.type)><endif><if(d.initValue)> = <d.initValue><endif>"
+AttributeDecl(d) ::= "<d.escapedName>: <TypeMap.(d.type)><if(!IsPrimitiveTypeMap.(d.type))>?<endif> = <if(d.initValue)><d.initValue><else><TypeDefaultValueMap.(TypeMap.(d.type))><endif>"
 
 // If we don't know location of label def x, use this template
 labelref(x) ::= "<if(!x.isLocal)>_localctx.<endif><x.escapedName>"
@@ -1021,7 +1040,7 @@ private val ATN = ATNDeserializer().deserialize(SERIALIZED_ATN.toCharArray())
 
 // Using a type to init value map, try to init a type; if not in table must be an object, default value is "null".
 initValue(typeName) ::= <<
-<KotlinTypeInitMap.(typeName)>
+<TypeDefaultValueMap.(typeName)>
 >>
 
 codeFileExtension() ::= ".kt"
