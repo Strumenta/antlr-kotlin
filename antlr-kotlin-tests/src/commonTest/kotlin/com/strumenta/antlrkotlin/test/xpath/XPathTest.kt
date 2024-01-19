@@ -1,7 +1,7 @@
 package com.strumenta.antlrkotlin.test.xpath
 
-import com.strumenta.antlrkotlin.test.generated.ExprLexer
-import com.strumenta.antlrkotlin.test.generated.ExprParser
+import com.strumenta.antlrkotlin.test.generated.XPathExprLexer
+import com.strumenta.antlrkotlin.test.generated.XPathExprParser
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.RuleContext
@@ -147,8 +147,8 @@ class XPathTest {
   }
 
   private fun parseAndFindAll(input: String, xpath: String): Pair<Array<String>, Collection<ParseTree>> {
-    val lexer = ExprLexer(CharStreams.fromString(input))
-    val parser = ExprParser(CommonTokenStream(lexer))
+    val lexer = XPathExprLexer(CharStreams.fromString(input))
+    val parser = XPathExprParser(CommonTokenStream(lexer))
     val nodes = XPath.findAll(parser.prog(), xpath, parser)
     return Pair(parser.ruleNames, nodes)
   }
