@@ -608,7 +608,7 @@ public open class ParserATNSimulator(
     }
 
     if (D!!.isAcceptState && D.configs.hasSemanticContext) {
-      predicateDFAState(D, atn.getDecisionState(dfa.decision))
+      predicateDFAState(D, atn.getDecisionState(dfa.decision)!!)
 
       if (D.predicates != null) {
         D.prediction = ATN.INVALID_ALT_NUMBER
@@ -620,10 +620,10 @@ public open class ParserATNSimulator(
     return D
   }
 
-  protected open fun predicateDFAState(dfaState: DFAState, decisionState: DecisionState?) {
+  protected open fun predicateDFAState(dfaState: DFAState, decisionState: DecisionState) {
     // We need to test all predicates, even in DFA states that
     // uniquely predict alternative.
-    val nAlts = decisionState!!.numberOfTransitions
+    val nAlts = decisionState.numberOfTransitions
 
     // Update DFA so reach becomes accept state with (predicate,alt)
     // pairs if preds found for conflicting alts
