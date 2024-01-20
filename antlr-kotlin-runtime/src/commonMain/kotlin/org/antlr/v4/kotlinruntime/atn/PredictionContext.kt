@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.IdentityHashMap
@@ -48,6 +47,11 @@ public abstract class PredictionContext protected constructor(
      * Here, `$` = [EMPTY_RETURN_STATE].
      */
     public const val EMPTY_RETURN_STATE: Int = Int.MAX_VALUE
+
+    // TODO(Edoardo): replace with AtomicInt.
+    //  Currently blocked by kotlinx-atomicfu not supporting linuxArm32Hfp (#207)
+    //  but it is not an urgent change, so we can keep it like this for now
+    private var globalNodeCount = 0
 
     /**
      * Convert a [RuleContext] tree to a [PredictionContext] graph.
@@ -547,8 +551,86 @@ public abstract class PredictionContext protected constructor(
       }
     }
 
-    // TODO(Edoardo): needs AtomicFU 0.24.0
-    // public fun toDOTString(context: PredictionContext?): String
+    public fun toDOTString(context: PredictionContext?): String {
+      if (context == null) {
+        return ""
+      }
+
+      val buf = StringBuilder(1024)
+      buf.append("digraph G {\n")
+      buf.append("rankdir=LR;\n")
+
+      val nodes = getAllContextNodes(context).sortedBy(PredictionContext::id)
+
+      for (current in nodes) {
+        if (current is SingletonPredictionContext) {
+          buf.append("  s")
+          buf.append(current.id)
+
+          val returnState = if (current is EmptyPredictionContext) {
+            "$"
+          } else {
+            current.getReturnState(0).toString()
+          }
+
+          buf.append(" [label=\"")
+          buf.append(returnState)
+          buf.append("\"];\n")
+          continue
+        }
+
+        val arr = current as ArrayPredictionContext
+        buf.append("  s")
+        buf.append(arr.id)
+        buf.append(" [shape=box, label=\"")
+        buf.append("[")
+
+        var first = true
+
+        for (inv in arr.returnStates) {
+          if (!first) {
+            buf.append(", ")
+          }
+
+          if (inv == EMPTY_RETURN_STATE) {
+            buf.append("$")
+          } else {
+            buf.append(inv)
+          }
+
+          first = false
+        }
+
+        buf.append("]")
+        buf.append("\"];\n")
+      }
+
+      for (current in nodes) {
+        if (current === EmptyPredictionContext.Instance) {
+          continue
+        }
+
+        val size = current.size()
+
+        for (i in 0..<size) {
+          val parent = current.getParent(i) ?: continue
+          buf.append("  s")
+          buf.append(current.id)
+          buf.append("->")
+          buf.append("s")
+          buf.append(parent.id)
+
+          if (size > 1) {
+            buf.append(" [label=\"parent[$i]\"];\n")
+          } else {
+            buf.append(";\n")
+          }
+        }
+      }
+
+      buf.append("}\n")
+      return buf.toString()
+    }
 
     // From Sam
     public fun getCachedContext(
@@ -642,6 +724,8 @@ public abstract class PredictionContext protected constructor(
       }
     }
   }
+
+  public val id: Int = globalNodeCount++
 
   /**
    * This means only the [EmptyPredictionContext.Instance]
