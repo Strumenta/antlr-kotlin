@@ -759,16 +759,17 @@ SetNonLocalAttr(s, rhsChunks) ::= "(getInvokingContext(<s.ruleIndex>) as <s.rule
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "<t.name>: <TypeMap.(TokenLabelType())>? = null"
-TokenTypeDecl(t) ::= "var <t.name>: Int"
-TokenListDecl(t) ::= "<t.name>: MutableList\<Token> = ArrayList()"
-RuleContextDecl(r) ::= "<r.name>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "<rdecl.name>: MutableList\<<rdecl.ctxName>> = ArrayList()"
-ContextTokenGetterDecl(t) ::= "public fun <t.name>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.name>, 0)<if(!t.optional)>!!<endif>"
-ContextTokenListGetterDecl(t) ::= "public fun <t.name>(): List\<TerminalNode> = getTokens(Tokens.<t.name>)"
+TokenDecl(t) ::= "<t.escapedName>: <TypeMap.(TokenLabelType())>? = null"
+TokenTypeDecl(t) ::= "var <t.escapedName>: Int"
+TokenListDecl(t) ::= "<t.escapedName>: MutableList\<Token> = ArrayList()"
+RuleContextDecl(r) ::= "<r.escapedName>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "<rdecl.escapedName>: MutableList\<<rdecl.ctxName>> = ArrayList()"
+
+ContextTokenGetterDecl(t) ::= "public fun <t.escapedName>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.escapedName>, 0)<if(!t.optional)>!!<endif>"
+ContextTokenListGetterDecl(t) ::= "public fun <t.escapedName>(): List\<TerminalNode> = getTokens(Tokens.<t.escapedName>)"
 
 ContextTokenListIndexedGetterDecl(t) ::= <<
-public fun <t.name>(i: Int): TerminalNode = getToken(Tokens.<t.name>, i)!!
+public fun <t.escapedName>(i: Int): TerminalNode = getToken(Tokens.<t.escapedName>, i)!!
 >>
 
 ContextRuleGetterDecl(r) ::= <<
