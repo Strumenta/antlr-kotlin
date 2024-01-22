@@ -769,7 +769,7 @@ ContextTokenGetterDecl(t) ::= "public fun <t.escapedName>(): TerminalNode<if(t.o
 ContextTokenListGetterDecl(t) ::= "public fun <t.escapedName>(): List\<TerminalNode> = getTokens(Tokens.<t.escapedName>)"
 
 ContextTokenListIndexedGetterDecl(t) ::= <<
-public fun <t.escapedName>(i: Int): TerminalNode = getToken(Tokens.<t.escapedName>, i)!!
+public fun <t.escapedName>(i: Int): TerminalNode? = getToken(Tokens.<t.escapedName>, i)
 >>
 
 ContextRuleGetterDecl(r) ::= <<
