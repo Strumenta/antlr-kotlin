@@ -214,7 +214,7 @@ import org.antlr.v4.kotlinruntime.misc.IntervalSet
  */
 @Suppress("MemberVisibilityCanBePrivate", "PropertyName")
 public open class ParserATNSimulator(
-  public val parser: Parser?,
+  public val parser: Parser,
   atn: ATN,
   public val decisionToDFA: Array<DFA>,
   sharedContextCache: PredictionContextCache,
@@ -320,7 +320,7 @@ public open class ParserATNSimulator(
       var s0 = if (dfa.isPrecedenceDfa) {
         // the start state for a precedence DFA depends on the current
         // parser precedence, and is provided by a DFA method.
-        dfa.getPrecedenceStartState(parser!!.precedence)
+        dfa.getPrecedenceStartState(parser.precedence)
       } else {
         // the start state for a "regular" DFA is just s0
         dfa.s0
@@ -345,7 +345,7 @@ public open class ParserATNSimulator(
           dfa.s0!!.configs = s0Closure
           s0Closure = applyPrecedenceFilter(s0Closure)
           s0 = addDFAState(dfa, DFAState(s0Closure))
-          dfa.setPrecedenceStartState(parser!!.precedence, s0)
+          dfa.setPrecedenceStartState(parser.precedence, s0)
         } else {
           s0 = addDFAState(dfa, DFAState(s0Closure))
           dfa.s0 = s0
@@ -355,7 +355,7 @@ public open class ParserATNSimulator(
       val alt = execATN(dfa, s0, input, index, tempOuterContext!!)
 
       if (debug) {
-        System.out.println("DFA after predictATN: ${dfa.toString(parser!!.vocabulary)}")
+        System.out.println("DFA after predictATN: ${dfa.toString(parser.vocabulary)}")
       }
 
       return alt
@@ -960,7 +960,7 @@ public open class ParserATNSimulator(
     val configs = ATNConfigSet(fullCtx)
 
     if (trace_atn_sim) {
-      System.out.println("computeStartState from ATN state $p initialContext=${initialContext.toString(parser!!)}")
+      System.out.println("computeStartState from ATN state $p initialContext=${initialContext.toString(parser)}")
     }
 
     for (i in 0..<p.numberOfTransitions) {
@@ -1138,7 +1138,7 @@ public open class ParserATNSimulator(
         continue
       }
 
-      val updatedContext = config.semanticContext.evalPrecedence(parser!!, _outerContext!!)
+      val updatedContext = config.semanticContext.evalPrecedence(parser, _outerContext!!)
         ?: continue // The configuration was eliminated
 
       statesFromAlt1[config.state.stateNumber] = config.context!!
@@ -1457,11 +1457,11 @@ public open class ParserATNSimulator(
    */
   protected open fun evalSemanticContext(
     pred: SemanticContext,
-    parserCallStack: ParserRuleContext?,
+    parserCallStack: ParserRuleContext,
     alt: Int,
     fullCtx: Boolean,
   ): Boolean =
-    pred.eval(parser!!, parserCallStack!!)
+    pred.eval(parser, parserCallStack)
 
   // TODO: If we are doing predicates, there is no point in pursuing
   //  closure operations if we reach a DFA state that uniquely predicts
@@ -1853,7 +1853,7 @@ public open class ParserATNSimulator(
   }
 
   public open fun getRuleName(index: Int): String {
-    if (parser != null && index >= 0) {
+    if (index >= 0) {
       return parser.ruleNames[index]
     }
 
@@ -1929,10 +1929,7 @@ public open class ParserATNSimulator(
   ): ATNConfig? {
     if (debug) {
       System.out.println("PRED (collectPredicates=$collectPredicates) ${pt.precedence}>=_p, ctx dependent=true")
-
-      if (parser != null) {
-        System.out.println("context surrounding pred is ${parser.getRuleInvocationStack()}")
-      }
+      System.out.println("context surrounding pred is ${parser.getRuleInvocationStack()}")
     }
 
     var c: ATNConfig? = null
@@ -1946,7 +1943,7 @@ public open class ParserATNSimulator(
         val currentPosition = _input!!.index()
         _input!!.seek(_startIndex)
 
-        val predSucceeds = evalSemanticContext(pt.predicate, _outerContext, config.alt, fullCtx)
+        val predSucceeds = evalSemanticContext(pt.predicate, _outerContext!!, config.alt, fullCtx)
         _input!!.seek(currentPosition)
 
         if (predSucceeds) {
@@ -1982,9 +1979,7 @@ public open class ParserATNSimulator(
           ", ctx dependent=${pt.isCtxDependent}"
       )
 
-      if (parser != null) {
-        System.out.println("context surrounding pred is ${parser.getRuleInvocationStack()}")
-      }
+      System.out.println("context surrounding pred is ${parser.getRuleInvocationStack()}")
     }
 
     var c: ATNConfig? = null
@@ -1998,7 +1993,7 @@ public open class ParserATNSimulator(
         val currentPosition = _input!!.index()
         _input!!.seek(_startIndex)
 
-        val predSucceeds = evalSemanticContext(pt.predicate, _outerContext, config.alt, fullCtx)
+        val predSucceeds = evalSemanticContext(pt.predicate, _outerContext!!, config.alt, fullCtx)
         _input!!.seek(currentPosition)
 
         if (predSucceeds) {
@@ -2104,7 +2099,7 @@ public open class ParserATNSimulator(
       return "EOF"
     }
 
-    val vocabulary = parser?.vocabulary ?: VocabularyImpl.EMPTY_VOCABULARY
+    val vocabulary = parser.vocabulary
     val displayName = vocabulary.getDisplayName(t)
 
     if (displayName == t.toString()) {
@@ -2150,7 +2145,7 @@ public open class ParserATNSimulator(
     startIndex: Int,
   ): NoViableAltException =
     NoViableAltException(
-      recognizer = parser!!,
+      recognizer = parser,
       input = input,
       startToken = input[startIndex],
       offendingToken = input.LT(1),
@@ -2204,7 +2199,7 @@ public open class ParserATNSimulator(
     }
 
     if (debug) {
-      System.out.println("DFA=\n${dfa.toString(parser?.vocabulary ?: VocabularyImpl.EMPTY_VOCABULARY)}")
+      System.out.println("DFA=\n${dfa.toString(parser.vocabulary)}")
     }
 
     return tto
@@ -2272,11 +2267,11 @@ public open class ParserATNSimulator(
       System.out.println(
         "reportAttemptingFullContext" +
           " decision=${dfa.decision}:$configs" +
-          ", input=${parser?.tokenStream?.getText(interval)}"
+          ", input=${parser.tokenStream.getText(interval)}"
       )
     }
 
-    parser?.errorListenerDispatch?.reportAttemptingFullContext(
+    parser.errorListenerDispatch.reportAttemptingFullContext(
       recognizer = parser,
       dfa = dfa,
       startIndex = startIndex,
@@ -2298,11 +2293,11 @@ public open class ParserATNSimulator(
       System.out.println(
         "reportContextSensitivity" +
           " decision=${dfa.decision}:$configs" +
-          ", input=${parser?.tokenStream?.getText(interval)}"
+          ", input=${parser.tokenStream.getText(interval)}"
       )
     }
 
-    parser?.errorListenerDispatch?.reportContextSensitivity(
+    parser.errorListenerDispatch.reportContextSensitivity(
       recognizer = parser,
       dfa = dfa,
       startIndex = startIndex,
@@ -2326,10 +2321,10 @@ public open class ParserATNSimulator(
   ) {
     if (debug || retry_debug) {
       val interval = Interval.of(startIndex, stopIndex)
-      System.out.println("reportAmbiguity $ambigAlts:$configs, input=${parser?.tokenStream?.getText(interval)}")
+      System.out.println("reportAmbiguity $ambigAlts:$configs, input=${parser.tokenStream.getText(interval)}")
     }
 
-    parser?.errorListenerDispatch?.reportAmbiguity(
+    parser.errorListenerDispatch.reportAmbiguity(
       recognizer = parser,
       dfa = dfa,
       startIndex = startIndex,
