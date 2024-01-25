@@ -170,7 +170,7 @@ public open class ProfilingATNSimulator(parser: Parser) : ParserATNSimulator(
 
   protected override fun evalSemanticContext(
     pred: SemanticContext,
-    parserCallStack: ParserRuleContext?,
+    parserCallStack: ParserRuleContext,
     alt: Int,
     fullCtx: Boolean,
   ): Boolean {
