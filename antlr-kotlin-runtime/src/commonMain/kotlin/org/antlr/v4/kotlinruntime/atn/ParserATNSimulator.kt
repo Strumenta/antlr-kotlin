@@ -279,15 +279,6 @@ public open class ParserATNSimulator(
   protected var _outerContext: ParserRuleContext? = null
   protected var _dfa: DFA? = null
 
-  /**
-   * Testing only!
-   */
-  public constructor(
-    atn: ATN,
-    decisionToDFA: Array<DFA>,
-    sharedContextCache: PredictionContextCache,
-  ) : this(null, atn, decisionToDFA, sharedContextCache)
-
   override fun reset() {
     // Noop
   }
