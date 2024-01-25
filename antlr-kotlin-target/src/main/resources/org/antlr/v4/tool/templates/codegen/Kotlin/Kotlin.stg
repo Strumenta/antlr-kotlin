@@ -293,7 +293,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
     override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
         when (ruleIndex) {
-            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>?, predIndex)}; separator="\n">
+            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
         }
 
         return true
@@ -322,7 +322,7 @@ dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
 
 override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
     when (ruleIndex) {
-        <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx, actionIndex)}; separator="\n">
+        <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx as <f.ctxType>, actionIndex)}; separator="\n">
     }
 }
 
@@ -332,7 +332,7 @@ override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
 
 override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
     when (ruleIndex) {
-        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx, predIndex)}; separator="\n">
+        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
     }
 
     return true
@@ -346,7 +346,7 @@ override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): B
  * overriding implementation impossible to maintain.
  */
 RuleActionFunction(r, actions) ::= <<
-private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
+private fun <r.name>_action(_localctx: <r.ctxType>, actionIndex: Int) {
     when (actionIndex) {
 <actions:{index|
         <index> -> {
@@ -360,7 +360,7 @@ private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
  * overriding implementation impossible to maintain.
  */
 RuleSempredFunction(r, actions) ::= <<
-private fun <r.name>_sempred(_localctx: <r.ctxType>?, predIndex: Int): Boolean {
+private fun <r.name>_sempred(_localctx: <r.ctxType>, predIndex: Int): Boolean {
     when (predIndex) {
         <actions:{index|<index> -> return (<actions.(index)>)}; separator="\n">
     }
