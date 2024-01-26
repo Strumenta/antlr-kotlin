@@ -1,6 +1,6 @@
 package com.strumenta.antlrkotlin.test
 
-import com.strumenta.antlrkotlin.loadResourceText
+import com.strumenta.antlrkotlin.util.loadResourceText
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.tree.Trees
 import kotlin.test.Test
