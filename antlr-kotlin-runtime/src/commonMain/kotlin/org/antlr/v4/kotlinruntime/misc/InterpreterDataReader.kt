@@ -56,8 +56,6 @@ public object InterpreterDataReader {
     }
 
     val literalNames = ArrayList<String>()
-    val symbolicNames = ArrayList<String>()
-    val ruleNames = ArrayList<String>()
 
     while (true) {
       line = reader.readLineOrNull()
@@ -75,6 +73,8 @@ public object InterpreterDataReader {
       throw RuntimeException("Unexpected data entry")
     }
 
+    val symbolicNames = ArrayList<String>()
+
     while (true) {
       line = reader.readLineOrNull()
 
@@ -91,6 +91,8 @@ public object InterpreterDataReader {
     if (line != "rule names:") {
       throw RuntimeException("Unexpected data entry")
     }
+
+    val ruleNames = ArrayList<String>()
 
     while (true) {
       line = reader.readLineOrNull()
