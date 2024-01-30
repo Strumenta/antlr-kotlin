@@ -3,14 +3,17 @@
 package org.antlr.v4.kotlinruntime.benchmarks
 
 import org.antlr.v4.kotlinruntime.benchmarks.mysql.MySQLBenchmarks
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.time.Duration
 import kotlin.time.measureTime
 
 // An handy way to manually run benchmarks, as we can just use the gutter runners.
+// Remove the @Ignore annotation to execute them.
 //
 // TODO(Edoardo): remove once kotlinx-benchmark properly supports the JS target.
 //  See https://github.com/Kotlin/kotlinx-benchmark/issues/185
+@Ignore
 class ManualMySQLBenchmarks {
   @Test
   fun benchmarks() {
