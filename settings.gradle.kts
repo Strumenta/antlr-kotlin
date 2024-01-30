@@ -1,5 +1,12 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+dependencyResolutionManagement {
+  @Suppress("UnstableApiUsage")
+  repositories {
+    mavenCentral()
+  }
+}
+
 rootProject.name = "antlr-kotlin"
 
 include("antlr-kotlin-runtime")

@@ -12,10 +12,6 @@ plugins {
 allprojects {
   group = "com.strumenta"
 
-  repositories {
-    mavenCentral()
-  }
-
   apply(plugin = "com.vanniktech.maven.publish")
 
   // Allow publishing to a private Maven repository, other than to Maven Central
