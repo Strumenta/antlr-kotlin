@@ -5,7 +5,6 @@ package org.antlr.v4.kotlinruntime
 import com.strumenta.antlrkotlin.runtime.assert
 import com.strumenta.antlrkotlin.runtime.ext.codePointIndices
 import org.antlr.v4.kotlinruntime.misc.Interval
-import kotlin.math.min
 
 public class StringCharStream(
   private val source: String,
@@ -51,9 +50,19 @@ public class StringCharStream(
     getText(Interval.of(0, size - 1))
 
   override fun getText(interval: Interval): String {
-    val startIndex = min(interval.a, size)
-    val endIndex = min(interval.b, size)
-    return source.substring(codePointIndices[startIndex], codePointIndices[endIndex] + 1)
+    if (interval.a >= size || interval.b < 0) {
+      return ""
+    }
+
+    val start = codePointIndices[interval.a]
+    val bPlus1 = interval.b + 1
+    val stop = if (bPlus1 < codePointIndices.size) {
+      codePointIndices[bPlus1]
+    } else {
+      source.length
+    }
+
+    return source.substring(start, stop)
   }
 
   override fun LA(i: Int): Int =
