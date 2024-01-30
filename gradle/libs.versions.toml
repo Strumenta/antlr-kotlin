@@ -1,6 +1,7 @@
 [versions]
 kotlin = "1.9.22"
 kotlin-wrappers = "1.0.0-pre.683"
+kotlinx-benchmark = "0.4.10"
 kotlinx-resources = "0.4.0"
 antlr4 = "4.13.1"
 dokka = "1.9.10"
@@ -11,6 +12,8 @@ gradle-plugin-publish = "1.2.1"
 [libraries]
 kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
 kotlin-wrappers-kotlin-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js" }
+kotlin-wrappers-kotlin-node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node" }
+kotlinx-benchmark = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
 kotlinx-resources = { group = "com.goncalossilva", name = "resources", version.ref = "kotlinx-resources" }
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }
 
@@ -23,6 +26,8 @@ gradle-plugin-publish-plugin = { group = "com.gradle.publish", name = "plugin-pu
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 kotlinx-resources = { id = "com.goncalossilva.resources", version.ref = "kotlinx-resources" }
 researchgate-release = { id = "net.researchgate.release", version.ref = "researchgate-release" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
