@@ -22,6 +22,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   interface JsConfiguration {
     val browser: Property<Boolean>
     val wasm: Property<Boolean>
+    val testTimeout: Property<Int>
   }
 
   interface JvmConfiguration {
@@ -47,6 +48,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
     val isBrowserEnabled = jsConfig.browser.getOrElse(true)
     val isWasmJsEnabled = jsConfig.wasm.getOrElse(true)
+    val testTimeout = jsConfig.testTimeout.getOrElse(30)
 
     val kmpExtension = project.kmpExtension
     kmpExtension.js(KotlinJsCompilerType.IR) {
@@ -54,7 +56,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
         testTask {
           useMocha {
             // Override default 2s timeout
-            timeout = "30s"
+            timeout = "${testTimeout}s"
           }
 
           filter.isFailOnNoMatchingTests = true
@@ -77,7 +79,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       // Compile JS using ES classes.
       // This is the only way it works for prod/dev/test compilations.
       // See discussion in https://youtrack.jetbrains.com/issue/KT-56818
-      project.tasks.withType<Kotlin2JsCompile> {
+      project.tasks.withType<Kotlin2JsCompile>().configureEach {
         kotlinOptions {
           useEsClasses = true
         }
@@ -90,7 +92,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
           testTask {
             useMocha {
               // Override default 2s timeout
-              timeout = "30s"
+              timeout = "${testTimeout}s"
             }
 
             filter.isFailOnNoMatchingTests = true
