@@ -6,7 +6,7 @@ public class StringLineReader(str: String) : LineReader {
   private val lines = str.lineSequence().iterator()
 
   override fun readLine(): String =
-    if (lines.hasNext()) lines.next() else throw NoSuchElementException()
+    readLineOrNull() ?: throw NoSuchElementException()
 
   override fun readLineOrNull(): String? =
     if (lines.hasNext()) lines.next() else null
