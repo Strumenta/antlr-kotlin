@@ -23,39 +23,32 @@ class ManualMySQLBenchmarks {
         benchmarks.statements()
       }
 
-      val ms = toMilliseconds(duration)
+      val ms = milliseconds(duration)
       println("Warm up ${it + 1}: $ms ms")
     }
 
-    val statementsAvg = benchmarkStatements(benchmarks)
-    val queriesAvg = benchmarkQueries(benchmarks)
-    val insertsAvg = benchmarkInserts(benchmarks)
-
-    print("\nStatements:\t\t$statementsAvg ms")
-    print("\nQueries:\t\t$queriesAvg ms")
-    print("\nInserts:\t\t$insertsAvg ms")
-  }
-
-  private fun benchmarkStatements(benchmarks: MySQLBenchmarks): Double =
-    averageTimeMs("statements", 8) {
+    val statementsAvg = averageTimeMs("statements", 8) {
       measureTime {
         benchmarks.statements()
       }
     }
 
-  private fun benchmarkQueries(benchmarks: MySQLBenchmarks): Double =
-    averageTimeMs("queries", 8) {
+    val queriesAvg = averageTimeMs("queries", 8) {
       measureTime {
         benchmarks.queries()
       }
     }
 
-  private fun benchmarkInserts(benchmarks: MySQLBenchmarks): Double =
-    averageTimeMs("inserts", 8) {
+    val insertsAvg = averageTimeMs("inserts", 8) {
       measureTime {
         benchmarks.inserts()
       }
     }
+
+    print("\nStatements:\t\t$statementsAvg ms")
+    print("\nQueries:\t\t$queriesAvg ms")
+    print("\nInserts:\t\t$insertsAvg ms")
+  }
 
   private fun averageTimeMs(title: String, times: Int, action: () -> Duration): Double {
     val durations = ArrayList<Duration>(times)
@@ -63,7 +56,7 @@ class ManualMySQLBenchmarks {
 
     for (i in 0..<times) {
       val duration = action()
-      val ms = toMilliseconds(duration)
+      val ms = milliseconds(duration)
       println("Iteration ${i + 1}: $ms ms")
       durations.add(duration)
     }
@@ -78,9 +71,9 @@ class ManualMySQLBenchmarks {
 
     val sum = durations.fold(Duration.ZERO) { acc, duration -> acc + duration }
     val duration = sum / durations.size
-    return toMilliseconds(duration)
+    return milliseconds(duration)
   }
 
-  private fun toMilliseconds(duration: Duration): Double =
+  private fun milliseconds(duration: Duration): Double =
     duration.inWholeNanoseconds.toDouble() / 1000000.0
 }
