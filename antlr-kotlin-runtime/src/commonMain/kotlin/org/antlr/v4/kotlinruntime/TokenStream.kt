@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.misc.Interval
@@ -134,5 +133,5 @@ public interface TokenStream : IntStream {
    * @throws UnsupportedOperationException If this stream does not support
    *   this method for the specified tokens
    */
-  public fun getText(start: Token, stop: Token): String?
+  public fun getText(start: Token?, stop: Token?): String?
 }

@@ -53,6 +53,6 @@ internal object DummyTokenStream : TokenStream {
   override fun getText(ctx: RuleContext): String =
     throw UnsupportedOperationException()
 
-  override fun getText(start: Token, stop: Token): String =
+  override fun getText(start: Token?, stop: Token?): String =
     throw UnsupportedOperationException()
 }
