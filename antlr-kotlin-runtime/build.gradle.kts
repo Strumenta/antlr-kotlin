@@ -5,8 +5,6 @@ import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.Platform
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 
 plugins {
   id("strumenta.multiplatform")
@@ -72,25 +70,5 @@ tasks.withType<DokkaTask>().configureEach {
       suppress = false
       platform = Platform.jvm
     }
-  }
-}
-
-//
-// The following is required to support the wasmJs target.
-//
-// Node.js Canary is set to 21.0.0-v8-canary20231019bd785be450
-// as that is the last version to ship Windows binaries too.
-//
-
-rootProject.extensions.configure<NodeJsRootExtension> {
-  nodeVersion = "21.0.0-v8-canary20231019bd785be450"
-  nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
-}
-
-rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-  val flag = "--ignore-engines"
-
-  if (!args.contains(flag)) {
-    args.add(flag)
   }
 }

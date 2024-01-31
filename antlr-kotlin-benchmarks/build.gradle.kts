@@ -14,9 +14,8 @@ plugins {
 strumentaMultiplatform {
   applyJvm()
   applyJs {
-    // We cannot properly run benchmarks in the browser, or under wasmJs
+    // We cannot properly run benchmarks in the browser
     browser = false
-    wasm = false
 
     // Benchmarks need quite some time to complete
     testTimeout = 360
@@ -65,6 +64,7 @@ benchmark {
 
     // Blocked by https://github.com/Kotlin/kotlinx-benchmark/issues/185
     // register("js")
+    // register("wasmJs")
   }
 }
 

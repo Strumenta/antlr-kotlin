@@ -7,10 +7,11 @@ import node.buffer.BufferEncoding
 import node.fs.ReadFileSyncStringOptions
 import node.fs.readFileSync
 
+// TODO(Edoardo): this should probably be replaced by a Gradle task,
+//  but in the meantime it should work consistently
+private const val basePath = "../../../../antlr-kotlin-benchmarks/build/processedResources/js/main"
+
 public actual fun readBenchmarkFile(name: String): String {
-  // TODO(Edoardo): this should probably be replaced by a Gradle task,
-  //  but in the meantime it should work consistently
-  val basePath = "../../../../antlr-kotlin-benchmarks/build/processedResources/js/main"
   val options = jso<ReadFileSyncStringOptions> {
     encoding = BufferEncoding.utf8
   }
