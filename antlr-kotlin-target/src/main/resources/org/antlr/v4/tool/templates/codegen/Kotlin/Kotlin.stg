@@ -57,6 +57,7 @@ import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.misc.*
 import org.antlr.v4.kotlinruntime.tree.*
+import kotlin.jvm.JvmField
 
 <parser>
 >>
@@ -293,7 +294,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
     override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
         when (ruleIndex) {
-            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
+            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>?, predIndex)}; separator="\n">
         }
 
         return true
@@ -322,7 +323,7 @@ dumpActions(recog, argFuncs, actionFuncs, sempredFuncs) ::= <<
 
 override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
     when (ruleIndex) {
-        <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx as <f.ctxType>, actionIndex)}; separator="\n">
+        <recog.actionFuncs.values:{f|<f.ruleIndex> -> <f.name>_action(_localctx, actionIndex)}; separator="\n">
     }
 }
 
@@ -332,7 +333,7 @@ override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
 
 override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
     when (ruleIndex) {
-        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
+        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx, predIndex)}; separator="\n">
     }
 
     return true
@@ -346,7 +347,7 @@ override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): B
  * overriding implementation impossible to maintain.
  */
 RuleActionFunction(r, actions) ::= <<
-private fun <r.name>_action(_localctx: <r.ctxType>, actionIndex: Int) {
+private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
     when (actionIndex) {
 <actions:{index|
         <index> -> {
@@ -356,11 +357,15 @@ private fun <r.name>_action(_localctx: <r.ctxType>, actionIndex: Int) {
 }
 >>
 
-/* This generates a private method since the predIndex is generated, making an
- * overriding implementation impossible to maintain.
- */
+// This generates a private method since the predIndex is generated, making an
+// overriding implementation impossible to maintain.
+//
+// We suppress UNSAFE_CALL as in "_localctx.something" _localctx is null,
+// but we should be able to compile anyway.
+// An alternative is to change RetValueRef to "_localctx!!.<a.name>".
 RuleSempredFunction(r, actions) ::= <<
-private fun <r.name>_sempred(_localctx: <r.ctxType>, predIndex: Int): Boolean {
+@Suppress("UNSAFE_CALL")
+private fun <r.name>_sempred(_localctx: <r.ctxType>?, predIndex: Int): Boolean {
     when (predIndex) {
         <actions:{index|<index> -> return (<actions.(index)>)}; separator="\n">
     }
@@ -412,11 +417,11 @@ LeftRecursiveRuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public<endif> fun <currentRule.name>(<args; separator=", ">): <currentRule.ctxType> {
-    return <currentRule.name>(0<currentRule.args:{a | , <a.name>}>)
+<if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else>public<endif> fun <currentRule.escapedName>(<args; separator=", ">): <currentRule.ctxType> {
+    return <currentRule.escapedName>(0<currentRule.args:{a | , <a.name>}>)
 }
 
-private fun <currentRule.name>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType> {
+private fun <currentRule.escapedName>(_p: Int<args:{a | , <a>}>): <currentRule.ctxType> {
     var _parentctx = context
     var _parentState = state
     var _localctx = <currentRule.ctxType>(context, _parentState<currentRule.args:{a | , <a.name>}>)
@@ -621,11 +626,11 @@ offsetShift(shiftAmount, offset) ::= <%
 
 // produces more efficient bytecode when bits.tokens contains at most two items
 bitsetInlineComparison(s, bits) ::= <%
-<bits.tokens:{t | <s.varName> == <t.name>}; separator=" || ">
+<bits.tokens:{t | <s.varName> == Tokens.<t.name>}; separator=" || ">
 %>
 
 cases(tokens) ::= <<
-<tokens:{t | <t.name>}; separator=", "> -> >>
+<tokens:{t | Tokens.<t.name>}; separator=", "> -> >>
 
 InvokeRule(r, argExprsChunks) ::= <<
 this.state = <r.stateNumber>
@@ -640,10 +645,10 @@ _ctx = <r.escapedName>(<if(r.ast.options.p)><r.ast.options.p><if(argExprsChunks)
 MatchToken(m) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)>
-_token = match(<m.name>)
+_token = match(Tokens.<m.name>)
 <m.labels:{l | <labelref(l)> = _token}; separator="\n">
 <else>
-match(<m.name>)
+match(Tokens.<m.name>)
 <endif>
 >>
 
@@ -722,13 +727,13 @@ ActionText(t) ::= "<t.text>"
 ActionTemplate(t) ::= "<t.st>"
 ArgRef(a) ::= "_localctx.<a.name>"
 LocalRef(a) ::= "_localctx.<a.name>"
-RetValueRef(a) ::= "_localctx.<a.name>"
+RetValueRef(a) ::= "_localctx.<a.escapedName>"
 QRetValueRef(a) ::= "<ctx(a)>.<a.dict>!!.<a.name>"
 
 /** How to translate $tokenLabel */
 TokenRef(t) ::= "<ctx(t)>.<t.name>"
 LabelRef(t) ::= "<ctx(t)>.<t.name>"
-ListLabelRef(t) ::= "<ctx(t)>.<ListLabelName(t.name)>"
+ListLabelRef(t) ::= "<ctx(t)>.<ListLabelName(t.escapedName)>"
 SetAttr(s, rhsChunks) ::= "<ctx(s)>.<s.name> = <rhsChunks>"
 
 TokenLabelType() ::= "<file.TokenLabelType; null={Token}>"
@@ -744,13 +749,13 @@ TokenPropertyRef_int(t) ::= "(<ctx(t)>.<t.label>?.text!!.toInt() ?: 0)"
 
 RulePropertyRef_start(r) ::= "(<ctx(r)>.<r.label>?.start)"
 RulePropertyRef_stop(r)	::= "(<ctx(r)>.<r.label>?.stop)"
-RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input.getText(it.start!!, it.stop!!) })"
+RulePropertyRef_text(r)	::= "(<ctx(r)>.<r.label>?.let { _input.getText(it.start, it.stop) })"
 RulePropertyRef_ctx(r) ::= "<ctx(r)>.<r.label>"
 RulePropertyRef_parser(r) ::= "this"
 
 ThisRulePropertyRef_start(r) ::= "_localctx.start"
 ThisRulePropertyRef_stop(r) ::= "_localctx.stop"
-ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start!!, _input.LT(-1)!!)"
+ThisRulePropertyRef_text(r) ::= "_input.getText(_localctx.start, _input.LT(-1))"
 ThisRulePropertyRef_ctx(r) ::= "_localctx"
 ThisRulePropertyRef_parser(r) ::= "this"
 
@@ -801,11 +806,11 @@ StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, exten
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override val ruleIndex: Int = Rules.<struct.derivedFromName; format="cap">
 
-    <attrs:{a | public var <a>}; separator="\n">
+    <attrs:{a | @JvmField public var <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
     public constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState) {
-        <struct.ctorAttrs:{a | this.<a.name> = <a.name>}; separator="\n">
+        <struct.ctorAttrs:{a | this.<a.escapedName> = <a.escapedName>}; separator="\n">
     }
 
     <! Don't need copy unless we have subclasses !>
@@ -814,7 +819,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
 
     public fun copyFrom(ctx: <struct.name>) {
         super.copyFrom(ctx)
-        <struct.attrs:{a | this.<a.name> = ctx.<a.name>}; separator="\n">
+        <struct.attrs:{a | this.<a.escapedName> = ctx.<a.escapedName>}; separator="\n">
     }
     <endif>
     <dispatchMethods; separator="\n\n">
@@ -825,7 +830,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
 
 AltLabelStructDecl(struct, attrs, getters, dispatchMethods) ::= <<
 public open class <struct.name> : <currentRule.name; format="cap">Context {
-    <attrs:{a | public var <a>}; separator="\n">
+    <attrs:{a | @JvmField public var <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
     public constructor(ctx: <currentRule.name; format="cap">Context) {
@@ -959,7 +964,7 @@ public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(i
     public object Modes {
         public const val DEFAULT_MODE: Int = 0
         <if(rest(lexer.modes))>
-        <rest(lexer.modes):{m | public const val <m>: Int = <i>}; separator="\n">
+        <rest(lexer.modes):{m | public const val <m; format="upper">: Int = <i>}; separator="\n">
         <endif>
     }
 
