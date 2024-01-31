@@ -174,16 +174,14 @@ public open class ATNDeserializer(deserializationOptions: ATNDeserializationOpti
     for (state in atn.states) {
       if (state is BlockStartState) {
         // We need to know the end state to set its start state
-        if (state.endState == null) {
-          throw IllegalStateException()
-        }
+        val endState = state.endState ?: throw IllegalStateException()
 
         // Block end states can only be associated to a single block start state
-        if (state.endState!!.startState != null) {
+        if (endState.startState != null) {
           throw IllegalStateException()
         }
 
-        state.endState!!.startState = state
+        endState.startState = state
       }
 
       if (state is PlusLoopbackState) {
@@ -538,13 +536,10 @@ public open class ATNDeserializer(deserializationOptions: ATNDeserializationOpti
       LexerActionType.TYPE -> LexerTypeAction(data1)
     }
 
-  public open fun decodeIntsEncodedAs16BitWords(data16: CharArray): IntArray =
-    decodeIntsEncodedAs16BitWords(data16, false)
-
   /**
    * Convert a list of chars (16 uint) that represent a serialized and compressed list of ints for an ATN.
    */
-  public open fun decodeIntsEncodedAs16BitWords(data16: CharArray, trimToSize: Boolean): IntArray {
+  public open fun decodeIntsEncodedAs16BitWords(data16: CharArray, trimToSize: Boolean = false): IntArray {
     // Will be strictly smaller, but we waste bit of space to avoid copying during initialization of parsers
     val data = IntArray(data16.size)
     var i = 0
