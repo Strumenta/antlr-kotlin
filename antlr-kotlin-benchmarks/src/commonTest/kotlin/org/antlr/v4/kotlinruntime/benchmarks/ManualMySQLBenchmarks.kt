@@ -54,6 +54,10 @@ class ManualMySQLBenchmarks {
   }
 
   private fun averageTimeMs(title: String, times: Int, action: () -> Duration): Double {
+    require(times > 3) {
+      "At least 4 iterations are required"
+    }
+
     val durations = ArrayList<Duration>(times)
     println("\nBenchmark: $title")
 
@@ -68,12 +72,18 @@ class ManualMySQLBenchmarks {
   }
 
   private fun averageMs(durations: List<Duration>): Double {
-    if (durations.isEmpty()) {
-      return 0.0
+    require(durations.size > 3) {
+      "At least 4 durations are required"
     }
 
-    val sum = durations.fold(Duration.ZERO) { acc, duration -> acc + duration }
-    val duration = sum / durations.size
+    // Sort and drop the slowest run
+    val durationsMinusSlowest = durations.asSequence()
+      .sortedDescending()
+      .drop(1)
+      .toList()
+
+    val sum = durationsMinusSlowest.fold(Duration.ZERO) { acc, duration -> acc + duration }
+    val duration = sum / durationsMinusSlowest.size
     return milliseconds(duration)
   }
 
