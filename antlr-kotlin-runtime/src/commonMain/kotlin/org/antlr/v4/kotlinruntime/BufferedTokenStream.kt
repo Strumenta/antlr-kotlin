@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.antlrkotlin.runtime.assert
@@ -474,8 +473,12 @@ public open class BufferedTokenStream(tokenSource: TokenSource) : TokenStream {
   override fun getText(ctx: RuleContext): String =
     getText(ctx.sourceInterval)
 
-  override fun getText(start: Token, stop: Token): String? =
-    getText(Interval.of(start.tokenIndex, stop.tokenIndex))
+  override fun getText(start: Token?, stop: Token?): String? =
+    if (start != null && stop != null) {
+      getText(Interval.of(start.tokenIndex, stop.tokenIndex))
+    } else {
+      ""
+    }
 
   /**
    * Get all tokens from lexer until `EOF`.
