@@ -36,7 +36,8 @@ or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automat
 The Kotlin runtime for the Kotlin target is derived from the Java runtime, and is built
 as a multiplatform project running on JVM, JS, WebAssembly (including WASI), and Native.
 
-> :warning: The Native runtime is **not** thread safe
+> [!WARNING]  
+> The Native runtime is not thread safe
 
 The supported Native platforms are:
 
@@ -53,7 +54,8 @@ The supported Native platforms are:
 |                   | tvosArm64             |                    |
 |                   | iosArm64              |                    |
 
-> :warning: The `linuxArm32Hfp` platform is deprecated
+> [!NOTE]  
+> The `linuxArm32Hfp` platform is deprecated
 
 ## Gradle Setup
 
@@ -155,7 +157,7 @@ The scenario has been adapted from [antlr4ng][2].
   To run benchmarks, use:
 
   ```
-  gradlew :antlr-kotlin-benchmarks:jvmBenchmark
+  ./gradlew :antlr-kotlin-benchmarks:jvmBenchmark
   ```
 
 - JS and WebAssembly benchmarks cannot use kotlinx-benchmark currently.  
