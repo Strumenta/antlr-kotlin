@@ -144,6 +144,33 @@ To start using ANTLR Kotlin:
    }
    ```
 
+## Benchmarks
+
+The [antlr-kotlin-benchmarks](./antlr-kotlin-benchmarks) module contains benchmarking code
+targeting JVM, JS and WebAssembly.  
+The scenario has been adapted from [antlr4ng][2].
+
+- JVM benchmarks use [kotlinx-benchmark][3], which under the hood uses JMH.
+
+  To run benchmarks, use:
+
+  ```
+  gradlew :antlr-kotlin-benchmarks:jvmBenchmark
+  ```
+
+- JS and WebAssembly benchmarks cannot use kotlinx-benchmark currently.  
+  Instead, they use a test case which re-uses the benchmark code.
+
+  To run benchmarks, remove the `@Ignore` annotation on `ManualMySQLBenchmarks`, and use:
+
+  ```
+  ./gradlew :antlr-kotlin-benchmarks:jsTest
+  ```
+  or
+  ```
+  ./gradlew :antlr-kotlin-benchmarks:wasmJsTest
+  ```
+
 ## Maven Central Publication
 
 Publication can be performed running:
@@ -167,8 +194,10 @@ You can see the complete list on GitHub, but here we list those who contributed 
 - [@phyrian](https://github.com/phyrian)
 - Patrick Del Conte [@exaV](https://github.com/exaV)
 
-[1]: https://plugins.gradle.org/plugin/com.strumenta.antlr-kotlin
-
 ## License
 
 Consumers of this project may choose the most appropriate license: either the Apache License 2.0, or the 3-Clause BSD License.
+
+[1]: https://plugins.gradle.org/plugin/com.strumenta.antlr-kotlin
+[2]: https://github.com/mike-lischke/antlr4ng/tree/master/tests/benchmarks
+[3]: https://github.com/Kotlin/kotlinx-benchmark
