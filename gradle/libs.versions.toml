@@ -1,6 +1,7 @@
 [versions]
 kotlin = "1.9.22"
 kotlin-wrappers = "1.0.0-pre.683"
+kotlinx-io = "0.3.1"
 kotlinx-benchmark = "0.4.10"
 kotlinx-resources = "0.4.0"
 antlr4 = "4.13.1"
@@ -13,6 +14,7 @@ gradle-plugin-publish = "1.2.1"
 kotlin-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
 kotlin-wrappers-kotlin-js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js" }
 kotlin-wrappers-kotlin-node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node" }
+kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 kotlinx-benchmark = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
 kotlinx-resources = { group = "com.goncalossilva", name = "resources", version.ref = "kotlinx-resources" }
 antlr4 = { group = "org.antlr", name = "antlr4", version.ref = "antlr4" }

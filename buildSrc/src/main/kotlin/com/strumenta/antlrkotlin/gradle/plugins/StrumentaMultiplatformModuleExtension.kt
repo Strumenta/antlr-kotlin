@@ -12,6 +12,7 @@ import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
@@ -22,7 +23,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   interface JsConfiguration {
     val browser: Property<Boolean>
     val wasm: Property<Boolean>
-    val testTimeout: Property<Int>
+    val testsTimeout: Property<Int>
   }
 
   interface JvmConfiguration {
@@ -31,6 +32,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
   interface NativeConfiguration {
     val disableUntestable: Property<Boolean>
+    val enableOptimizationInTests: Property<Boolean>
   }
 
   @get:Nested
@@ -48,7 +50,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
     val isBrowserEnabled = jsConfig.browser.getOrElse(true)
     val isWasmJsEnabled = jsConfig.wasm.getOrElse(true)
-    val testTimeout = jsConfig.testTimeout.getOrElse(30)
+    val testsTimeout = jsConfig.testsTimeout.getOrElse(30)
 
     val kmpExtension = project.kmpExtension
     kmpExtension.js(KotlinJsCompilerType.IR) {
@@ -56,7 +58,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
         testTask {
           useMocha {
             // Override default 2s timeout
-            timeout = "${testTimeout}s"
+            timeout = "${testsTimeout}s"
           }
 
           filter.isFailOnNoMatchingTests = true
@@ -92,7 +94,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
           testTask {
             useMocha {
               // Override default 2s timeout
-              timeout = "${testTimeout}s"
+              timeout = "${testsTimeout}s"
             }
 
             filter.isFailOnNoMatchingTests = true
@@ -208,16 +210,28 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     // Publishing should occur only from a macOS host
     if (isDevelopment || hostOs.isMacOsX) {
       val disableUntestable = nativeConfig.disableUntestable.getOrElse(false)
+      val enableOptimization = nativeConfig.enableOptimizationInTests.getOrElse(false)
+      val configuration: (KotlinNativeTargetWithHostTests).() -> Unit = {
+        if (enableOptimization) {
+          testRuns.configureEach {
+            binaries.configureEach {
+              optimized = true
+              debuggable = false
+            }
+          }
+        }
+      }
+
       with(project.kmpExtension) {
         // Tier 1
         // macOS host only
-        macosX64()
-        macosArm64()
+        macosX64(configuration)
+        macosArm64(configuration)
         iosSimulatorArm64()
         iosX64()
 
         // Tier 2
-        linuxX64()
+        linuxX64(configuration)
         linuxArm64()
 
         // macOS host only
@@ -231,7 +245,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
         iosArm64()
 
         // Tier 3
-        mingwX64()
+        mingwX64(configuration)
 
         if (!disableUntestable) {
           androidNativeArm32()

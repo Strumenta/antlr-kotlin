@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
@@ -18,7 +19,20 @@ strumentaMultiplatform {
     browser = false
 
     // Benchmarks need quite some time to complete
-    testTimeout = 360
+    testsTimeout = 360
+  }
+
+  // Opting-in for native targets should be explicit,
+  // as it makes the build and test process slower.
+  //
+  // Opt in by setting 'target.is.native = true' in gradle.properties
+  if (targetsNative()) {
+    applyNative {
+      disableUntestable = true
+
+      // We want to benchmark a release binary, not a debug one
+      enableOptimizationInTests = true
+    }
   }
 }
 
@@ -46,6 +60,12 @@ kotlin {
         implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
         implementation(libs.kotlin.wrappers.kotlin.js)
         implementation(libs.kotlin.wrappers.kotlin.node)
+      }
+    }
+
+    nativeMain {
+      dependencies {
+        implementation(libs.kotlinx.io.core)
       }
     }
   }
