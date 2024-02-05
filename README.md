@@ -160,7 +160,7 @@ The scenario has been adapted from [antlr4ng][2].
   ./gradlew :antlr-kotlin-benchmarks:jvmBenchmark
   ```
 
-- JS and WebAssembly benchmarks cannot use kotlinx-benchmark currently.  
+- JS, WebAssembly and Native benchmarks cannot use kotlinx-benchmark currently.  
   Instead, they use a test case which re-uses the benchmark code.
 
   To run benchmarks, remove the `@Ignore` annotation on `ManualMySQLBenchmarks`, and use:
@@ -171,6 +171,10 @@ The scenario has been adapted from [antlr4ng][2].
   or
   ```
   ./gradlew :antlr-kotlin-benchmarks:wasmJsTest
+  ```
+  or
+  ```
+  ./gradlew :antlr-kotlin-benchmarks:mingwX64Test
   ```
 
 ## Maven Central Publication
