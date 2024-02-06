@@ -2,7 +2,12 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-public expect class BitSet() {
+public expect class BitSet(size: Int) {
+  /**
+   * Creates a bit set with an initial capacity of 64 bits.
+   */
+  public constructor()
+
   /**
    * Sets the bit at the specified index to `true`.
    *

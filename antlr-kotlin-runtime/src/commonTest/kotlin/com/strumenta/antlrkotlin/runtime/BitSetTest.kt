@@ -142,10 +142,13 @@ class BitSetTest {
     val bitSet1 = BitSet()
     bitSet1.set(2)
     bitSet1.set(5)
+    bitSet1.clear(10)
 
     val bitSet2 = BitSet()
     bitSet2.set(2)
     bitSet2.set(5)
+    bitSet2.set(10000)
+    bitSet2.clear(10000)
 
     assertEquals(bitSet1, bitSet2)
     assertEquals(bitSet1.hashCode(), bitSet2.hashCode())
