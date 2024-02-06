@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.Token
@@ -9,13 +8,10 @@ import org.antlr.v4.kotlinruntime.misc.IntervalSet
 /**
  * @author Sam Harwell
  */
-public open class ATNDeserializer(deserializationOptions: ATNDeserializationOptions? = ATNDeserializationOptions.defaultOptions) {
+public open class ATNDeserializer(private val deserializationOptions: ATNDeserializationOptions = ATNDeserializationOptions.defaultOptions) {
   public companion object {
     public const val SERIALIZED_VERSION: Int = 4
   }
-
-  private val deserializationOptions: ATNDeserializationOptions =
-    deserializationOptions ?: ATNDeserializationOptions.defaultOptions
 
   public open fun deserialize(data: CharArray): ATN =
     deserialize(decodeIntsEncodedAs16BitWords(data))
@@ -566,7 +562,7 @@ public open class ATNDeserializer(deserializationOptions: ATNDeserializationOpti
     }
 
     if (trimToSize) {
-      return data.copyOf(i2)
+      return data.copyOfRange(0, i2)
     }
 
     return data
