@@ -23,6 +23,12 @@ public class SimpleBitSet(size: Int) {
     private const val ALL_FALSE: Long = 0L // 0x0000_0000_0000_0000
   }
 
+  init {
+    require(size >= 0) {
+      "The initial bitset size must be equal or greater than 0"
+    }
+  }
+
   private var bits: LongArray = LongArray(bitToElementSize(size))
 
   private val lastIndex: Int
