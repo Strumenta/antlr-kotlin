@@ -6,30 +6,29 @@ package org.antlr.v4.kotlinruntime.atn
 /**
  * @author Sam Harwell
  */
-@Suppress("MemberVisibilityCanBePrivate")
 public open class ATNDeserializationOptions {
   public companion object {
-    public val defaultOptions: ATNDeserializationOptions = ATNDeserializationOptions()
-
-    init {
-      defaultOptions.makeReadOnly()
+    public val defaultOptions: ATNDeserializationOptions = ATNDeserializationOptions().also {
+      it.makeReadOnly()
     }
   }
 
+  private var readOnly = false
   private var verifyATN = false
   private var generateRuleBypassTransitions = false
 
-  public var isReadOnly: Boolean = false
-    private set
+  @Suppress("MemberVisibilityCanBePrivate")
+  public open val isReadOnly: Boolean
+    get() = readOnly
 
-  public var isVerifyATN: Boolean
+  public open var isVerifyATN: Boolean
     get() = verifyATN
-    set(verifyATN) {
+    set(value) {
       throwIfReadOnly()
-      this.verifyATN = verifyATN
+      verifyATN = value
     }
 
-  public var isGenerateRuleBypassTransitions: Boolean
+  public open var isGenerateRuleBypassTransitions: Boolean
     get() = generateRuleBypassTransitions
     set(value) {
       throwIfReadOnly()
@@ -47,11 +46,11 @@ public open class ATNDeserializationOptions {
   }
 
   public open fun makeReadOnly() {
-    isReadOnly = true
+    readOnly = true
   }
 
   protected open fun throwIfReadOnly() {
-    if (isReadOnly) {
+    if (readOnly) {
       throw IllegalStateException("The object is read only.")
     }
   }
