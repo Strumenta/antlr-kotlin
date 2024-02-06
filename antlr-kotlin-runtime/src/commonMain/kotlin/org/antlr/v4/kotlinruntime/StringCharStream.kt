@@ -3,16 +3,22 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.antlrkotlin.runtime.assert
-import com.strumenta.antlrkotlin.runtime.ext.codePointIndices
+import com.strumenta.antlrkotlin.runtime.ext.codePointIndicesFast
 import org.antlr.v4.kotlinruntime.misc.Interval
 
-public class StringCharStream(
+public open class StringCharStream(
   private val source: String,
   override val sourceName: String = IntStream.UNKNOWN_SOURCE_NAME,
 ) : CharStream {
-  private val codePointIndices = source.codePointIndices()
-  private val size = codePointIndices.size
+  private val codePointIndices: IntArray
+  private val size: Int
   private var position = 0
+
+  init {
+    val (codePointIndices, size) = codePointIndicesFast(source)
+    this.codePointIndices = codePointIndices
+    this.size = size
+  }
 
   override fun consume() {
     if (size - position == 0) {
@@ -56,7 +62,7 @@ public class StringCharStream(
 
     val start = codePointIndices[interval.a]
     val bPlus1 = interval.b + 1
-    val stop = if (bPlus1 < codePointIndices.size) {
+    val stop = if (bPlus1 < size) {
       codePointIndices[bPlus1]
     } else {
       source.length
