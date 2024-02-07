@@ -64,17 +64,17 @@ class MiniCalcParserTest {
     val lexer = MiniCalcLexer(input)
     val parser = MiniCalcParser(CommonTokenStream(lexer))
     val root = parser.miniCalcFile()
-    val line = root.getLine(0)!!
-    val statement = line.getStatement()
+    val line = root.line(0)!!
+    val statement = line.statement()
 
     @Suppress("UNUSED_VARIABLE")
     val inputDeclStmt = statement as MiniCalcParser.InputDeclarationStatementContext
-    val inputDecl = statement.getInputDeclaration()
+    val inputDecl = statement.inputDeclaration()
 
     val inputKw = inputDecl.INPUT()
     assertEquals("input", inputKw.text)
 
-    val type = inputDecl.getType()
+    val type = inputDecl.type()
     val intKw = (type as MiniCalcParser.IntegerContext).INT()
     assertEquals("Int", intKw.text)
 

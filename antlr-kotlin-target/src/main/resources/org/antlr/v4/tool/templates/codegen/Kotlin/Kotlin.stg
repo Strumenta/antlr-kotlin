@@ -57,6 +57,7 @@ import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.misc.*
 import org.antlr.v4.kotlinruntime.tree.*
+import kotlin.js.JsName
 import kotlin.jvm.JvmField
 
 <parser>
@@ -764,11 +765,11 @@ SetNonLocalAttr(s, rhsChunks) ::= "(getInvokingContext(<s.ruleIndex>) as <s.rule
 
 AddToLabelList(a) ::= "<ctx(a.label)>.<a.listName>.add(<labelref(a.label)>!!)"
 
-TokenDecl(t) ::= "<t.escapedName>: <TypeMap.(TokenLabelType())>? = null"
+TokenDecl(t) ::= "@JvmField @JsName(\"<t.escapedName>$\") public var <t.escapedName>: <TypeMap.(TokenLabelType())>? = null"
 TokenTypeDecl(t) ::= "var <t.escapedName>: Int"
-TokenListDecl(t) ::= "<t.escapedName>: MutableList\<Token> = ArrayList()"
-RuleContextDecl(r) ::= "<r.escapedName>: <r.ctxName>? = null"
-RuleContextListDecl(rdecl) ::= "<rdecl.escapedName>: MutableList\<<rdecl.ctxName>> = ArrayList()"
+TokenListDecl(t) ::= "@JvmField @JsName(\"<t.escapedName>$\") public var <t.escapedName>: MutableList\<Token> = ArrayList()"
+RuleContextDecl(r) ::= "@JvmField @JsName(\"<r.escapedName>$\") public var <r.escapedName>: <r.ctxName>? = null"
+RuleContextListDecl(rdecl) ::= "@JvmField @JsName(\"<rdecl.escapedName>$\") public var <rdecl.escapedName>: MutableList\<<rdecl.ctxName>> = ArrayList()"
 
 ContextTokenGetterDecl(t) ::= "public fun <t.escapedName>(): TerminalNode<if(t.optional)>?<endif> = getToken(Tokens.<t.escapedName>, 0)<if(!t.optional)>!!<endif>"
 ContextTokenListGetterDecl(t) ::= "public fun <t.escapedName>(): List\<TerminalNode> = getTokens(Tokens.<t.escapedName>)"
@@ -778,15 +779,15 @@ public fun <t.escapedName>(i: Int): TerminalNode? = getToken(Tokens.<t.escapedNa
 >>
 
 ContextRuleGetterDecl(r) ::= <<
-public fun get<r.escapedName; format="cap">(): <r.ctxName><if(r.optional)>?<endif> = getRuleContext(<r.ctxName>::class, 0)<if(!r.optional)>!!<endif>
+public fun <r.escapedName>(): <r.ctxName><if(r.optional)>?<endif> = getRuleContext(<r.ctxName>::class, 0)<if(!r.optional)>!!<endif>
 >>
 
 ContextRuleListGetterDecl(r) ::= <<
-public fun get<r.escapedName; format="cap">(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
+public fun <r.escapedName>(): List\<<r.ctxName>\> = getRuleContexts(<r.ctxName>::class)
 >>
 
 ContextRuleListIndexedGetterDecl(r) ::= <<
-public fun get<r.escapedName; format="cap">(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
+public fun <r.escapedName>(i: Int): <r.ctxName>? = getRuleContext(<r.ctxName>::class, i)
 >>
 
 LexerRuleContext() ::= "RuleContext"
@@ -806,7 +807,7 @@ StructDecl(struct, ctorAttrs, attrs, getters, dispatchMethods, interfaces, exten
 public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><else>ParserRuleContext<endif><if(interfaces)> : <interfaces; separator=", "><endif> {
     override val ruleIndex: Int = Rules.<struct.derivedFromName; format="cap">
 
-    <attrs:{a | @JvmField public var <a>}; separator="\n">
+    <attrs:{a | <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
     public constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState) {
@@ -830,7 +831,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
 
 AltLabelStructDecl(struct, attrs, getters, dispatchMethods) ::= <<
 public open class <struct.name> : <currentRule.name; format="cap">Context {
-    <attrs:{a | @JvmField public var <a>}; separator="\n">
+    <attrs:{a | <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
     public constructor(ctx: <currentRule.name; format="cap">Context) {
@@ -860,7 +861,7 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
 }
 >>
 
-AttributeDecl(d) ::= "<d.escapedName>: <TypeMap.(d.type)><if(!IsPrimitiveTypeMap.(d.type))>?<endif> = <if(d.initValue)><d.initValue><else><TypeDefaultValueMap.(TypeMap.(d.type))><endif>"
+AttributeDecl(d) ::= "@JvmField @JsName(\"<d.escapedName>$\") public var <d.escapedName>: <TypeMap.(d.type)><if(!IsPrimitiveTypeMap.(d.type))>?<endif> = <if(d.initValue)><d.initValue><else><TypeDefaultValueMap.(TypeMap.(d.type))><endif>"
 
 // If we don't know location of label def x, use this template
 labelref(x) ::= "<if(!x.isLocal)>_localctx.<endif><x.escapedName>"
