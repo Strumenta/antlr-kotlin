@@ -97,7 +97,8 @@ public interface <file.grammarName>Listener : ParseTreeListener {
      *
      * @param ctx The parse tree
      */
-    public fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)}; separator="\n">
+    public fun exit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context)
+}; separator="\n">
 }
 
 >>
@@ -180,7 +181,8 @@ public interface <file.grammarName>Visitor\<T> : ParseTreeVisitor\<T> {
      * @param ctx The parse tree
      * @return The visitor result
      */
-    public fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T}; separator="\n">
+    public fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T
+}; separator="\n">
 }
 
 >>
@@ -223,7 +225,7 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("UNUSED_VARIABLE", "ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary")
+@Suppress("UNUSED_VARIABLE", "ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "CanBeVal")
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     private companion object {
         init {
