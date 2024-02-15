@@ -33,7 +33,7 @@ public interface IntSet {
    *
    * @throws IllegalStateException If the current set is read-only
    */
-  public fun addAll(set: IntSet?): IntSet
+  public fun addAll(set: IntSet): IntSet
 
   /**
    * Return a new [IntSet] object containing all elements that are
@@ -45,7 +45,7 @@ public interface IntSet {
    *   current set and `a`. The value `null` may be returned in
    *   place of an empty result set
    */
-  public fun and(a: IntSet?): IntSet?
+  public fun and(a: IntSet): IntSet
 
   /**
    * Return a new [IntSet] object containing all elements that are
@@ -63,7 +63,7 @@ public interface IntSet {
    *   `elements` but not present in the current set. The value
    *   `null` may be returned in place of an empty result set
    */
-  public fun complement(elements: IntSet?): IntSet?
+  public fun complement(elements: IntSet): IntSet
 
   /**
    * Return a new [IntSet] object containing all elements that are
@@ -78,7 +78,7 @@ public interface IntSet {
    *   set and `a`. The value `null` may be returned in place of an
    *   empty result set
    */
-  public fun or(a: IntSet?): IntSet
+  public fun or(a: IntSet): IntSet
 
   /**
    * Return a new [IntSet] object containing all elements that are
@@ -96,7 +96,7 @@ public interface IntSet {
    *   `elements` but not present in the current set.
    *   The value `null` may be returned in place of an empty result set
    */
-  public fun subtract(a: IntSet?): IntSet
+  public fun subtract(a: IntSet): IntSet
 
   /**
    * Return the total number of elements represented by the current set.
@@ -112,7 +112,7 @@ public interface IntSet {
    * @param el The element to check for
    * @return `true` if the set contains `el`, otherwise `false`
    */
-  public operator fun contains(el: Int): Boolean
+  public fun contains(el: Int): Boolean
 
   /**
    * Removes the specified value from the current set.
@@ -133,6 +133,6 @@ public interface IntSet {
   public fun toList(): List<Int>
 
   override fun equals(other: Any?): Boolean
-
+  override fun hashCode(): Int
   override fun toString(): String
 }
