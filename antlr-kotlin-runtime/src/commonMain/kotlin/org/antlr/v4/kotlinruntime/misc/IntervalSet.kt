@@ -17,8 +17,8 @@ import org.antlr.v4.kotlinruntime.Vocabulary
  * This class is able to represent sets containing any combination of values in
  * the range [Int.MIN_VALUE] to [Int.MAX_VALUE] (inclusive).
  */
-@Suppress("MemberVisibilityCanBePrivate")
-public open class IntervalSet : IntSet {
+@Suppress("MemberVisibilityCanBePrivate", "LocalVariableName")
+public class IntervalSet : IntSet {
   @Suppress("MemberVisibilityCanBePrivate")
   public companion object {
     public val COMPLETE_CHAR_SET: IntervalSet = of(Lexer.MIN_CHAR_VALUE, Lexer.MAX_CHAR_VALUE).also {
@@ -50,7 +50,7 @@ public open class IntervalSet : IntSet {
     /**
      * Combine all sets in the array returned the or'd value.
      */
-    public fun or(sets: Array<IntervalSet>): IntervalSet {
+    public fun or(vararg sets: IntervalSet): IntervalSet {
       val r = IntervalSet()
 
       for (s in sets) {
@@ -66,14 +66,14 @@ public open class IntervalSet : IntSet {
      * The specific operation is `left - right`.
      * If either of the input sets is `null`, it is treated as though it was an empty set.
      */
-    public fun subtract(left: IntervalSet?, right: IntervalSet?): IntervalSet {
-      if (left == null || left.isNil) {
+    public fun subtract(left: IntervalSet, right: IntervalSet): IntervalSet {
+      if (left.isNil) {
         return IntervalSet()
       }
 
       val result = IntervalSet(left)
 
-      if (right == null || right.isNil) {
+      if (right.isNil) {
         // Right set has no elements; just return the copy of the current set
         return result
       }
@@ -81,9 +81,9 @@ public open class IntervalSet : IntSet {
       var resultI = 0
       var rightI = 0
 
-      while (resultI < result.intervals!!.size && rightI < right.intervals!!.size) {
-        val resultInterval = result.intervals!![resultI]
-        val rightInterval = right.intervals!![rightI]
+      while (resultI < result._intervals.size && rightI < right._intervals.size) {
+        val resultInterval = result._intervals[resultI]
+        val rightInterval = right._intervals[rightI]
 
         // Operation: (resultInterval - rightInterval) and update indexes
 
@@ -111,26 +111,26 @@ public open class IntervalSet : IntSet {
         if (beforeCurrent != null) {
           if (afterCurrent != null) {
             // Split the current interval into two
-            result.intervals!![resultI] = beforeCurrent
-            result.intervals!!.add(resultI + 1, afterCurrent)
+            result._intervals[resultI] = beforeCurrent
+            result._intervals.add(resultI + 1, afterCurrent)
             resultI++
             rightI++
             continue
           } else {
             // Replace the current interval
-            result.intervals!![resultI] = beforeCurrent
+            result._intervals[resultI] = beforeCurrent
             resultI++
             continue
           }
         } else {
           if (afterCurrent != null) {
             // Replace the current interval
-            result.intervals!![resultI] = afterCurrent
+            result._intervals[resultI] = afterCurrent
             rightI++
             continue
           } else {
             // Remove the current interval (thus no need to increment resultI)
-            result.intervals!!.removeAt(resultI)
+            result._intervals.removeAt(resultI)
             continue
           }
         }
@@ -143,13 +143,16 @@ public open class IntervalSet : IntSet {
     }
   }
 
+  private var _intervals: MutableList<Interval> = ArrayList(8)
+
   /**
    * The list of sorted, disjoint intervals.
    */
-  public var intervals: MutableList<Interval>? = null
+  public val intervals: List<Interval>
+    get() = _intervals
 
   override val isNil: Boolean
-    get() = intervals.isNullOrEmpty()
+    get() = _intervals.size == 0
 
   /**
    * Returns the maximum value contained in the set if not [isNil].
@@ -163,9 +166,7 @@ public open class IntervalSet : IntSet {
         throw RuntimeException("set is empty")
       }
 
-      // Note(Edoardo): !isNil ensures intervals is not null
-      val tempIntervals = intervals!!
-      val last = tempIntervals[tempIntervals.size - 1]
+      val last = _intervals[_intervals.size - 1]
       return last.b
     }
 
@@ -181,33 +182,30 @@ public open class IntervalSet : IntSet {
         throw RuntimeException("set is empty")
       }
 
-      // Note(Edoardo): !isNil ensures intervals is not null
-      return intervals!![0].a
+      return _intervals[0].a
     }
 
   public var isReadonly: Boolean = false
-    set(readonly) {
-      if (field && !readonly) {
+    set(value) {
+      if (field && !value) {
         throw IllegalStateException("can't alter readonly IntervalSet")
       }
 
-      field = readonly
+      field = value
     }
 
   public constructor(intervals: MutableList<Interval>) {
-    this.intervals = intervals
+    _intervals = intervals
   }
 
   public constructor(set: IntervalSet) : this() {
-    @Suppress("LeakingThis")
     addAll(set)
   }
 
   public constructor(vararg els: Int) {
-    intervals = ArrayList(els.size)
+    _intervals = ArrayList(els.size)
 
     for (e in els) {
-      @Suppress("LeakingThis")
       add(e)
     }
   }
@@ -217,7 +215,7 @@ public open class IntervalSet : IntSet {
       throw IllegalStateException("can't alter readonly IntervalSet")
     }
 
-    intervals!!.clear()
+    _intervals.clear()
   }
 
   /**
@@ -225,13 +223,8 @@ public open class IntervalSet : IntSet {
    *
    * An isolated element is stored as a range `el..el`.
    */
-  override fun add(el: Int) {
-    if (isReadonly) {
-      throw IllegalStateException("can't alter readonly IntervalSet")
-    }
-
+  override fun add(el: Int): Unit =
     add(el, el)
-  }
 
   /**
    * Add interval; i.e., add all integers from a to b to set.
@@ -246,7 +239,7 @@ public open class IntervalSet : IntSet {
     add(Interval.of(a, b))
 
   // Copy on write, so we can cache a..a intervals and sets of that
-  protected fun add(addition: Interval) {
+  private fun add(addition: Interval) {
     if (isReadonly) {
       throw IllegalStateException("can't alter readonly IntervalSet")
     }
@@ -257,7 +250,7 @@ public open class IntervalSet : IntSet {
 
     // Find position in list.
     // Use iterators as we modify list in place
-    val iter = intervals!!.listIterator()
+    val iter = _intervals.listIterator()
 
     while (iter.hasNext()) {
       val r = iter.next()
@@ -301,23 +294,16 @@ public open class IntervalSet : IntSet {
     }
 
     // Ok, must be after last interval (and disjoint from last interval), just add it
-    intervals!!.add(addition)
+    _intervals.add(addition)
   }
 
-  override fun addAll(set: IntSet?): IntervalSet {
-    if (set == null) {
-      return this
-    }
-
+  override fun addAll(set: IntSet): IntervalSet {
     if (set is IntervalSet) {
-      val other = set as IntervalSet?
-
       // Walk set and add each interval
-      val n = other!!.intervals!!.size
+      val setIntervals = set._intervals
 
-      for (i in 0..<n) {
-        @Suppress("LocalVariableName")
-        val I = other.intervals!![i]
+      for (i in 0..<setIntervals.size) {
+        val I = setIntervals[i]
         add(I.a, I.b)
       }
     } else {
@@ -329,13 +315,13 @@ public open class IntervalSet : IntSet {
     return this
   }
 
-  public fun complement(minElement: Int, maxElement: Int): IntervalSet? =
+  public fun complement(minElement: Int, maxElement: Int): IntervalSet =
     complement(of(minElement, maxElement))
 
-  override fun complement(elements: IntSet?): IntervalSet? {
-    if (elements == null || elements.isNil) {
+  override fun complement(elements: IntSet): IntervalSet {
+    if (elements.isNil) {
       // Nothing in common with null set
-      return null
+      return IntervalSet()
     }
 
     val vocabularyIS = if (elements is IntervalSet) {
@@ -349,8 +335,8 @@ public open class IntervalSet : IntSet {
     return vocabularyIS.subtract(this)
   }
 
-  override fun subtract(a: IntSet?): IntervalSet {
-    if (a == null || a.isNil) {
+  override fun subtract(a: IntSet): IntervalSet {
+    if (a.isNil) {
       return IntervalSet(this)
     }
 
@@ -363,24 +349,24 @@ public open class IntervalSet : IntSet {
     return subtract(this, other)
   }
 
-  override fun or(a: IntSet?): IntervalSet {
+  override fun or(a: IntSet): IntervalSet {
     val o = IntervalSet()
     o.addAll(this)
     o.addAll(a)
     return o
   }
 
-  override fun and(a: IntSet?): IntervalSet? {
-    if (a == null) { // || other !is IntervalSet) {
+  override fun and(a: IntSet): IntervalSet {
+    if (a.isNil) {
       // Nothing in common with null set
-      return null
+      return IntervalSet()
     }
 
-    val myIntervals = intervals
-    val theirIntervals = (a as IntervalSet).intervals
+    val myIntervals = _intervals
+    val theirIntervals = (a as IntervalSet)._intervals
     var intersection: IntervalSet? = null
-    val mySize = myIntervals!!.size
-    val theirSize = theirIntervals!!.size
+    val mySize = myIntervals.size
+    val theirSize = theirIntervals.size
     var i = 0
     var j = 0
 
@@ -437,7 +423,7 @@ public open class IntervalSet : IntSet {
   }
 
   override operator fun contains(el: Int): Boolean {
-    val n = intervals!!.size
+    val n = _intervals.size
     var l = 0
     var r = n - 1
 
@@ -445,8 +431,7 @@ public open class IntervalSet : IntSet {
     while (l <= r) {
       val m = (l + r) / 2
 
-      @Suppress("LocalVariableName")
-      val I = intervals!![m]
+      val I = _intervals[m]
       val a = I.a
       val b = I.b
 
@@ -465,13 +450,12 @@ public open class IntervalSet : IntSet {
   override fun hashCode(): Int {
     var hash = MurmurHash.initialize()
 
-    @Suppress("LocalVariableName")
-    for (I in intervals!!) {
+    for (I in _intervals) {
       hash = MurmurHash.update(hash, I.a)
       hash = MurmurHash.update(hash, I.b)
     }
 
-    hash = MurmurHash.finish(hash, intervals!!.size * 2)
+    hash = MurmurHash.finish(hash, _intervals.size * 2)
     return hash
   }
 
@@ -483,27 +467,27 @@ public open class IntervalSet : IntSet {
    * [Interval.equals] is used by the [List.equals] method to check the ranges.
    */
   override fun equals(other: Any?): Boolean =
-    other is IntervalSet && intervals == other.intervals
+    other is IntervalSet && _intervals == other._intervals
 
   override fun toString(): String =
     toString(false)
 
   public fun toString(elemAreChar: Boolean): String {
-    if (intervals == null || intervals!!.isEmpty()) {
+    if (_intervals.isEmpty()) {
       return "{}"
     }
 
-    val buf = StringBuilder()
+    val buf = StringBuilder(64)
 
     if (size() > 1) {
       buf.append("{")
     }
 
-    val iter = intervals!!.iterator()
+    val n = _intervals.size
+    var i = 0
 
-    while (iter.hasNext()) {
-      @Suppress("LocalVariableName")
-      val I = iter.next()
+    while (i < n) {
+      val I = _intervals[i++]
       val a = I.a
       val b = I.b
 
@@ -531,7 +515,7 @@ public open class IntervalSet : IntSet {
         }
       }
 
-      if (iter.hasNext()) {
+      if (i < n) {
         buf.append(", ")
       }
     }
@@ -544,37 +528,37 @@ public open class IntervalSet : IntSet {
   }
 
   public fun toString(vocabulary: Vocabulary): String {
-    if (intervals == null || intervals!!.isEmpty()) {
+    if (_intervals.isEmpty()) {
       return "{}"
     }
 
-    val buf = StringBuilder()
+    val buf = StringBuilder(64)
 
     if (size() > 1) {
       buf.append("{")
     }
 
-    val iter = intervals!!.iterator()
+    val n = _intervals.size
+    var i = 0
 
-    while (iter.hasNext()) {
-      @Suppress("LocalVariableName")
-      val I = iter.next()
+    while (i < n) {
+      val I = _intervals[i++]
       val a = I.a
       val b = I.b
 
       if (a == b) {
         buf.append(elementName(vocabulary, a))
       } else {
-        for (i in a..b) {
-          if (i > a) {
+        for (p in a..b) {
+          if (p > a) {
             buf.append(", ")
           }
 
-          buf.append(elementName(vocabulary, i))
+          buf.append(elementName(vocabulary, p))
         }
       }
 
-      if (iter.hasNext()) {
+      if (i < n) {
         buf.append(", ")
       }
     }
@@ -586,7 +570,7 @@ public open class IntervalSet : IntSet {
     return buf.toString()
   }
 
-  protected fun elementName(vocabulary: Vocabulary, a: Int): String =
+  private fun elementName(vocabulary: Vocabulary, a: Int): String =
     when (a) {
       Token.EOF -> "<EOF>"
       Token.EPSILON -> "<EPSILON>"
@@ -594,17 +578,17 @@ public open class IntervalSet : IntSet {
     }
 
   override fun size(): Int {
-    var n = 0
-    val numIntervals = intervals!!.size
+    val numIntervals = _intervals.size
 
     if (numIntervals == 1) {
-      val firstInterval = intervals!![0]
+      val firstInterval = _intervals[0]
       return firstInterval.b - firstInterval.a + 1
     }
 
+    var n = 0
+
     for (i in 0..<numIntervals) {
-      @Suppress("LocalVariableName")
-      val I = intervals!![i]
+      val I = _intervals[i]
       n += (I.b - I.a + 1)
     }
 
@@ -613,11 +597,10 @@ public open class IntervalSet : IntSet {
 
   public fun toIntegerList(): IntegerList {
     val values = IntegerList(size())
-    val n = intervals!!.size
+    val n = _intervals.size
 
     for (i in 0..<n) {
-      @Suppress("LocalVariableName")
-      val I = intervals!![i]
+      val I = _intervals[i]
       val a = I.a
       val b = I.b
 
@@ -630,12 +613,11 @@ public open class IntervalSet : IntSet {
   }
 
   override fun toList(): List<Int> {
-    val values = ArrayList<Int>()
-    val n = intervals!!.size
+    val values = ArrayList<Int>(32)
+    val n = _intervals.size
 
     for (i in 0..<n) {
-      @Suppress("LocalVariableName")
-      val I = intervals!![i]
+      val I = _intervals[i]
       val a = I.a
       val b = I.b
 
@@ -648,10 +630,9 @@ public open class IntervalSet : IntSet {
   }
 
   public fun toSet(): Set<Int> {
-    val s = HashSet<Int>()
+    val s = HashSet<Int>(32)
 
-    @Suppress("LocalVariableName")
-    for (I in intervals!!) {
+    for (I in _intervals) {
       val a = I.a
       val b = I.b
 
@@ -670,12 +651,11 @@ public open class IntervalSet : IntSet {
    * if you're not doing that for a new ANTLR code gen target.
    */
   public operator fun get(i: Int): Int {
-    val n = intervals!!.size
+    val n = _intervals.size
     var index = 0
 
     for (j in 0..<n) {
-      @Suppress("LocalVariableName")
-      val I = intervals!![j]
+      val I = _intervals[j]
       val a = I.a
       val b = I.b
 
@@ -691,19 +671,15 @@ public open class IntervalSet : IntSet {
     return -1
   }
 
-  public fun toArray(): IntArray =
-    toIntegerList().toArray()
-
   override fun remove(el: Int) {
     if (isReadonly) {
       throw IllegalStateException("can't alter readonly IntervalSet")
     }
 
-    val n = intervals!!.size
+    val n = _intervals.size
 
     for (i in 0..<n) {
-      @Suppress("LocalVariableName")
-      val I = intervals!![i]
+      val I = _intervals[i]
       val a = I.a
       val b = I.b
 
@@ -713,7 +689,7 @@ public open class IntervalSet : IntSet {
 
       // If whole interval x..x, rm
       if (el == a && el == b) {
-        intervals!!.removeAt(i)
+        _intervals.removeAt(i)
         break
       }
 
@@ -730,8 +706,7 @@ public open class IntervalSet : IntSet {
       }
 
       // If in middle a..x..b, split interval
-      @Suppress("ConvertTwoComparisonsToRangeCheck")
-      if (el > a && el < b) {
+      if (el < b) {
         // Found in this interval
         val oldB = I.b
         I.b = el - 1      // [a..x-1]

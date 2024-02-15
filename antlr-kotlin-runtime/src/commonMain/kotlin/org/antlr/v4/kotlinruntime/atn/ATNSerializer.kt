@@ -24,7 +24,7 @@ public open class ATNSerializer(public var atn: ATN) {
 
       for (set in sets) {
         val containsEof = set.contains(Token.EOF)
-        val intervals = set.intervals!!
+        val intervals = set.intervals
 
         if (containsEof && intervals[0].b == Token.EOF) {
           data.add(intervals.size - 1)
