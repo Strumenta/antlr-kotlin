@@ -41,7 +41,7 @@ public abstract class ATNState {
     public const val PLUS_LOOP_BACK: Int = 11
     public const val LOOP_END: Int = 12
 
-    public val serializationNames: List<String> = listOf(
+    public val serializationNames: Array<String> = arrayOf(
       "INVALID",
       "BASIC",
       "RULE_START",
@@ -54,7 +54,7 @@ public abstract class ATNState {
       "STAR_LOOP_BACK",
       "STAR_LOOP_ENTRY",
       "PLUS_LOOP_BACK",
-      "LOOP_END"
+      "LOOP_END",
     )
 
     public const val INVALID_STATE_NUMBER: Int = -1
