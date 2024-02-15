@@ -5,7 +5,6 @@ package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 import kotlin.js.JsName
-import kotlin.reflect.KClass
 
 /**
  * An ATN transition between any two ATN states.
@@ -37,7 +36,7 @@ public abstract class Transition protected constructor(public var target: ATNSta
     public const val WILDCARD: Int = 9
     public const val PRECEDENCE: Int = 10
 
-    public val serializationNames: List<String> = listOf(
+    public val serializationNames: Array<String> = arrayOf(
       "INVALID",
       "EPSILON",
       "RANGE",
@@ -48,21 +47,8 @@ public abstract class Transition protected constructor(public var target: ATNSta
       "SET",
       "NOT_SET",
       "WILDCARD",
-      "PRECEDENCE"
+      "PRECEDENCE",
     )
-
-    public val serializationTypes: Map<KClass<out Transition>, Int> = buildMap {
-      put(EpsilonTransition::class, EPSILON)
-      put(RangeTransition::class, RANGE)
-      put(RuleTransition::class, RULE)
-      put(PredicateTransition::class, PREDICATE)
-      put(AtomTransition::class, ATOM)
-      put(ActionTransition::class, ACTION)
-      put(SetTransition::class, SET)
-      put(NotSetTransition::class, NOT_SET)
-      put(WildcardTransition::class, WILDCARD)
-      put(PrecedencePredicateTransition::class, PRECEDENCE)
-    }
   }
 
   public abstract val serializationType: Int

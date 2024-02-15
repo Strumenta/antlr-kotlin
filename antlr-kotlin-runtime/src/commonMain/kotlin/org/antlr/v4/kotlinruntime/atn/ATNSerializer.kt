@@ -201,7 +201,7 @@ public open class ATNSerializer(public var atn: ATN) {
 
         val src = s.stateNumber
         var trg = t.target.stateNumber
-        val edgeType = Transition.serializationTypes[t::class]!!
+        val edgeType = t.serializationType
         var arg1 = 0
         var arg2 = 0
         var arg3 = 0
@@ -360,7 +360,7 @@ public open class ATNSerializer(public var atn: ATN) {
 
       for (i in 0..<s.numberOfTransitions) {
         val t = s.transition(i)
-        val edgeType = Transition.serializationTypes[t::class]!!
+        val edgeType = t.serializationType
 
         if (edgeType == Transition.SET || edgeType == Transition.NOT_SET) {
           val st = t as SetTransition
