@@ -143,7 +143,7 @@ public class IntervalSet : IntSet {
     }
   }
 
-  private var _intervals: MutableList<Interval> = ArrayList(8)
+  private val _intervals: MutableList<Interval>
 
   /**
    * The list of sorted, disjoint intervals.
@@ -194,20 +194,21 @@ public class IntervalSet : IntSet {
       field = value
     }
 
+  // This is the most used constructor.
+  // Before, the vararg one was getting used, allocating an IntArray for no reason
+  public constructor() {
+    // The initial size of 16 is a best guess by evaluating
+    // the size when executed under multiple grammars
+    _intervals = ArrayList(16)
+  }
+
   public constructor(intervals: MutableList<Interval>) {
     _intervals = intervals
   }
 
-  public constructor(set: IntervalSet) : this() {
+  public constructor(set: IntervalSet) {
+    _intervals = ArrayList(set._intervals.size)
     addAll(set)
-  }
-
-  public constructor(vararg els: Int) {
-    _intervals = ArrayList(els.size)
-
-    for (e in els) {
-      add(e)
-    }
   }
 
   public fun clear() {
