@@ -485,10 +485,10 @@ public class IntervalSet : IntSet {
     }
 
     val n = _intervals.size
-    var i = 0
+    var index = 0
 
-    while (i < n) {
-      val I = _intervals[i++]
+    while (index < n) {
+      val I = _intervals[index++]
       val a = I.a
       val b = I.b
 
@@ -516,7 +516,7 @@ public class IntervalSet : IntSet {
         }
       }
 
-      if (i < n) {
+      if (index < n) {
         buf.append(", ")
       }
     }
@@ -540,10 +540,10 @@ public class IntervalSet : IntSet {
     }
 
     val n = _intervals.size
-    var i = 0
+    var index = 0
 
-    while (i < n) {
-      val I = _intervals[i++]
+    while (index < n) {
+      val I = _intervals[index++]
       val a = I.a
       val b = I.b
 
@@ -559,7 +559,7 @@ public class IntervalSet : IntSet {
         }
       }
 
-      if (i < n) {
+      if (index < n) {
         buf.append(", ")
       }
     }
