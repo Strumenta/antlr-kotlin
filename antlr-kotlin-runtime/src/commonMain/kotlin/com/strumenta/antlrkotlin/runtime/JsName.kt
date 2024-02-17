@@ -18,5 +18,4 @@ package com.strumenta.antlrkotlin.runtime
   AnnotationTarget.PROPERTY_GETTER,
   AnnotationTarget.PROPERTY_SETTER,
 )
-@Retention(AnnotationRetention.SOURCE)
 public expect annotation class JsName(val name: String)
