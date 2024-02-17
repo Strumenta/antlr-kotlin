@@ -51,13 +51,13 @@ package <file.genPackage>
 <endif>
 <namedActions.header>
 
+import com.strumenta.antlrkotlin.runtime.JsName
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
 import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.misc.*
 import org.antlr.v4.kotlinruntime.tree.*
-import kotlin.js.JsName
 import kotlin.jvm.JvmField
 
 <parser>
@@ -225,7 +225,18 @@ Parser(parser, funcs, atn, sempredFuncs, superClass) ::= <<
 >>
 
 Parser_(parser, funcs, atn, sempredFuncs, superClass) ::= <<
-@Suppress("UNUSED_VARIABLE", "ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName", "ConvertSecondaryConstructorToPrimary", "CanBeVal")
+@Suppress(
+    // This is required as we are using a custom JsName alias that is not recognized by the IDE.
+    // No name clashes will happen tho.
+    "JS_NAME_CLASH",
+    "UNUSED_VARIABLE",
+    "ClassName",
+    "FunctionName",
+    "LocalVariableName",
+    "ConstPropertyName",
+    "ConvertSecondaryConstructorToPrimary",
+    "CanBeVal",
+)
 public open class <parser.name>(input: TokenStream) : <superClass; null="Parser">(input) {
     private companion object {
         init {
@@ -932,7 +943,12 @@ import org.antlr.v4.kotlinruntime.misc.*
 >>
 
 Lexer(lexer, atn, actionFuncs, sempredFuncs, superClass) ::= <<
-@Suppress("ClassName", "FunctionName", "LocalVariableName", "ConstPropertyName")
+@Suppress(
+    "ClassName",
+    "FunctionName",
+    "LocalVariableName",
+    "ConstPropertyName",
+)
 public open class <lexer.name>(input: CharStream) : <superClass; null="Lexer">(input) {
     private companion object {
         init {
