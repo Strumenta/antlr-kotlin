@@ -23,11 +23,7 @@ import javax.inject.Inject
  */
 @NonNullApi
 @CacheableTask
-public abstract class AntlrKotlinTask @Inject constructor(
-  private val deleter: Deleter,
-  private val projectLayout: ProjectLayout,
-  private val workerProcessBuilderFactory: WorkerProcessFactory,
-) : SourceTask() {
+public abstract class AntlrKotlinTask : SourceTask() {
   private var sourceSetDirectories: FileCollection? = null
 
   /**
@@ -99,6 +95,19 @@ public abstract class AntlrKotlinTask @Inject constructor(
   @get:PathSensitive(PathSensitivity.RELATIVE)
   @get:InputFiles
   protected val stableSources: FileCollection = project.files({ this.source })
+
+  // Note(Edoardo): we had to move injected properties from
+  //  constructor injection to method injection to correctly
+  //  support Gradle's configuration cache
+
+  @get:Inject
+  protected abstract val deleter: Deleter
+
+  @get:Inject
+  protected abstract val projectLayout: ProjectLayout
+
+  @get:Inject
+  protected abstract val workerProcessBuilderFactory: WorkerProcessFactory
 
   /**
    * Generate the parsers.
