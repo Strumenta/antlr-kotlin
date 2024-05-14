@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.9.24"
 kotlin-wrappers = "1.0.0-pre.748"
-kotlinx-io = "0.3.1"
+kotlinx-io = "0.3.4"
 kotlinx-benchmark = "0.4.10"
 kotlinx-resources = "0.4.1"
 antlr4 = "4.13.1"
