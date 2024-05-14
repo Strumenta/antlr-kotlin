@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 kotlin-wrappers = "1.0.0-pre.729"
 kotlinx-io = "0.3.1"
 kotlinx-benchmark = "0.4.10"
