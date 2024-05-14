@@ -138,4 +138,5 @@ Desktop.ini
 *~
 .directory
 .merge_file*
-.idea
+.idea/
+.kotlin/
