@@ -3,7 +3,6 @@ package com.strumenta.antlrkotlin.gradle.ext
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.Project
 
-@Suppress("UnstableApiUsage")
 fun MavenPublishBaseExtension.setupPom(project: Project, projectDescription: String) {
   pom {
     name.set(project.name)
