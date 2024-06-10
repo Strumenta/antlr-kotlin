@@ -173,7 +173,7 @@ public open class RuleContext : RuleNode {
   override fun getChild(i: Int): ParseTree? =
     null
 
-  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T? =
+  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T =
     visitor.visitChildren(this)
 
   /**

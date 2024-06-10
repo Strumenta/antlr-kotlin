@@ -13,6 +13,6 @@ import org.antlr.v4.kotlinruntime.Token
  * upon no viable alternative exceptions.
  */
 public class ErrorNodeImpl(token: Token) : TerminalNodeImpl(token), ErrorNode {
-  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T? =
+  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T =
     visitor.visitErrorNode(this)
 }

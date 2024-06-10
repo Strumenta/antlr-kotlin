@@ -204,13 +204,13 @@ import org.antlr.v4.kotlinruntime.tree.AbstractParseTreeVisitor
  * @param T The return type of the visit operation.
  *   Use [Unit] for operations with no return type
  */
-public open class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
+public abstract class <file.grammarName>BaseVisitor\<T> : AbstractParseTreeVisitor\<T>(), <file.grammarName>Visitor\<T> {
 <file.visitorNames:{lname |
     /**
      * The default implementation returns the result of calling [visitChildren] on [ctx].
      */
     override fun visit<lname; format="cap">(ctx: <file.parserName>.<lname; format="cap">Context): T {
-        return this.visitChildren(ctx)!!
+        return this.visitChildren(ctx)
     \}}; separator="\n">
 }
 
@@ -869,7 +869,7 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
     return if (visitor is <parser.grammarName>Visitor) {
         visitor.visit<struct.derivedFromName; format="cap">(this)
     } else {
-        visitor.visitChildren(this)!!
+        visitor.visitChildren(this)
     }
 }
 >>
