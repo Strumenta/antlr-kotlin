@@ -35,7 +35,7 @@ public open class TerminalNodeImpl(override var symbol: Token) : TerminalNode {
   override fun getChild(i: Int): ParseTree? =
     null
 
-  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T? =
+  override fun <T> accept(visitor: ParseTreeVisitor<out T>): T =
     visitor.visitTerminal(this)
 
   override fun toStringTree(parser: Parser): String =

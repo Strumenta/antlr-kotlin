@@ -17,7 +17,7 @@ public interface ParseTreeVisitor<T> {
    * @param tree The [ParseTree] to visit
    * @return The result of visiting the parse tree
    */
-  public fun visit(tree: ParseTree): T?
+  public fun visit(tree: ParseTree): T
 
   /**
    * Visit the children of a node, and return a user-defined result of the
@@ -26,7 +26,7 @@ public interface ParseTreeVisitor<T> {
    * @param node The [RuleNode] whose children should be visited
    * @return The result of visiting the children of the node
    */
-  public fun visitChildren(node: RuleNode): T?
+  public fun visitChildren(node: RuleNode): T
 
   /**
    * Visit a terminal node, and return a user-defined result of the operation.
@@ -34,7 +34,7 @@ public interface ParseTreeVisitor<T> {
    * @param node The [TerminalNode] to visit
    * @return The result of visiting the node
    */
-  public fun visitTerminal(node: TerminalNode): T?
+  public fun visitTerminal(node: TerminalNode): T
 
   /**
    * Visit an error node, and return a user-defined result of the operation.
@@ -42,5 +42,5 @@ public interface ParseTreeVisitor<T> {
    * @param node The [ErrorNode] to visit
    * @return The result of visiting the node
    */
-  public fun visitErrorNode(node: ErrorNode): T?
+  public fun visitErrorNode(node: ErrorNode): T
 }

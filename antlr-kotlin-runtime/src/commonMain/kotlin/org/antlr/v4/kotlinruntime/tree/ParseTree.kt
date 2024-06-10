@@ -44,7 +44,7 @@ public interface ParseTree : SyntaxTree {
   /**
    * The [ParseTreeVisitor] needs a double dispatch method.
    */
-  public fun <T> accept(visitor: ParseTreeVisitor<out T>): T?
+  public fun <T> accept(visitor: ParseTreeVisitor<out T>): T
 
   /**
    * Specialize [toStringTree] so that it can print out more information

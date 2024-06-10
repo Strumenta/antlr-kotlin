@@ -7,7 +7,7 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
   /**
    * The default implementation calls [ParseTree.accept] on the specified tree.
    */
-  override fun visit(tree: ParseTree): T? =
+  override fun visit(tree: ParseTree): T =
     tree.accept(this)
 
   /**
@@ -24,7 +24,7 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
    * the tree structure. Visitors that modify the tree should override this
    * method to behave properly in respect to the specific algorithm in use.
    */
-  override fun visitChildren(node: RuleNode): T? {
+  override fun visitChildren(node: RuleNode): T {
     var result = defaultResult()
     val n = node.childCount
 
@@ -33,8 +33,12 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
         break
       }
 
-      val c = node.getChild(i)!!
-      val childResult = c.accept(this)!!
+      // We can assert node.getChild(i) is not null as we are
+      // iterating over a known set of children (0 to n).
+      // It is essential here for the RuleNode implementation
+      // to return the correct amount of children.
+      val c = node.getChild(i) ?: error("Check RuleNode.childCount implementations")
+      val childResult = c.accept(this)
       result = aggregateResult(result, childResult)
     }
 
@@ -44,13 +48,13 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
   /**
    * The default implementation returns the result of [defaultResult].
    */
-  override fun visitTerminal(node: TerminalNode): T? =
+  override fun visitTerminal(node: TerminalNode): T =
     defaultResult()
 
   /**
    * The default implementation returns the result of [defaultResult].
    */
-  override fun visitErrorNode(node: ErrorNode): T? =
+  override fun visitErrorNode(node: ErrorNode): T =
     defaultResult()
 
   /**
@@ -62,12 +66,9 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
    * The default implementation of [visitChildren] initializes
    * its aggregate result to this value.
    *
-   * The base implementation returns `null`.
-   *
    * @return The default value returned by visitor methods
    */
-  protected open fun defaultResult(): T? =
-    null
+  protected abstract fun defaultResult(): T
 
   /**
    * Aggregates the results of visiting multiple children of a node.
@@ -87,7 +88,7 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
    *
    * @return The updated aggregate result
    */
-  protected open fun aggregateResult(aggregate: T?, nextResult: T): T =
+  protected open fun aggregateResult(aggregate: T, nextResult: T): T =
     nextResult
 
   /**
@@ -113,6 +114,6 @@ public abstract class AbstractParseTreeVisitor<T> : ParseTreeVisitor<T> {
    *   `false` to stop visiting children and immediately return the
    *   current aggregate result from [visitChildren]
    */
-  protected open fun shouldVisitNextChild(node: RuleNode, currentResult: T?): Boolean =
+  protected open fun shouldVisitNextChild(node: RuleNode, currentResult: T): Boolean =
     true
 }
