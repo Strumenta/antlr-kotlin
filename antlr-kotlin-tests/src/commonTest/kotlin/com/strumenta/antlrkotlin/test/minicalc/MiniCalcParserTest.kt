@@ -5,6 +5,7 @@ package com.strumenta.antlrkotlin.test.minicalc
 import com.strumenta.antlrkotlin.test.ThrowingErrorListener
 import com.strumenta.antlrkotlin.test.generated.MiniCalcLexer
 import com.strumenta.antlrkotlin.test.generated.MiniCalcParser
+import com.strumenta.antlrkotlin.test.generated.MiniCalcParserBaseVisitor
 import org.antlr.v4.kotlinruntime.ANTLRInputStream
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.ast.Point
@@ -13,6 +14,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeWalker
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class MiniCalcParserTest {
@@ -127,5 +129,24 @@ class MiniCalcParserTest {
     val localListener = LocalListener()
     ParseTreeWalker.DEFAULT.walk(localListener, root)
     assertEquals(Position(1, 0, 2, 0), root.position)
+  }
+
+  @Test // https://github.com/Strumenta/antlr-kotlin/issues/182
+  fun callVisitorWithNullableType() {
+    val input = ANTLRInputStream("input Int width\n")
+    val lexer = MiniCalcLexer(input)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(ThrowingErrorListener)
+
+    val parser = MiniCalcParser(CommonTokenStream(lexer))
+    parser.removeErrorListeners()
+    parser.addErrorListener(ThrowingErrorListener)
+
+    val visitor = object : MiniCalcParserBaseVisitor<String?>() {
+      override fun defaultResult(): String? = null
+    }
+
+    val root = parser.miniCalcFile()
+    assertNull(root.accept(visitor))
   }
 }
