@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.misc.IntegerStack
@@ -10,7 +9,7 @@ import org.antlr.v4.kotlinruntime.misc.IntegerStack
  * doesn't use the thread stack but heap-based stacks. Makes it possible to
  * process deeply nested parse trees.
  */
-public class IterativeParseTreeWalker : ParseTreeWalker() {
+public open class IterativeParseTreeWalker : ParseTreeWalker() {
   override fun walk(listener: ParseTreeListener, t: ParseTree) {
     val nodeStack = ArrayDeque<ParseTree>()
     val indexStack = IntegerStack()

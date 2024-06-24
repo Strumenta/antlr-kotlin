@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.ParserRuleContext
@@ -49,7 +48,7 @@ public open class ParseTreeWalker {
    * @param listener The listener responding to the trigger events
    * @param r The grammar rule containing the rule context
    */
-  protected fun enterRule(listener: ParseTreeListener, r: RuleNode) {
+  protected open fun enterRule(listener: ParseTreeListener, r: RuleNode) {
     val ctx = r.ruleContext as ParserRuleContext
     listener.enterEveryRule(ctx)
     ctx.enterRule(listener)
@@ -62,7 +61,7 @@ public open class ParseTreeWalker {
    * @param listener The listener responding to the trigger events
    * @param r The grammar rule containing the rule context
    */
-  protected fun exitRule(listener: ParseTreeListener, r: RuleNode) {
+  protected open fun exitRule(listener: ParseTreeListener, r: RuleNode) {
     val ctx = r.ruleContext as ParserRuleContext
     ctx.exitRule(listener)
     listener.exitEveryRule(ctx)
