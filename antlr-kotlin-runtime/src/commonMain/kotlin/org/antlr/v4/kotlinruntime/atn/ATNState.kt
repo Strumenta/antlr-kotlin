@@ -1,10 +1,10 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.System
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
+import kotlin.jvm.JvmField
 
 /**
  * The following images show the relation of states and
@@ -41,6 +41,7 @@ public abstract class ATNState {
     public const val PLUS_LOOP_BACK: Int = 11
     public const val LOOP_END: Int = 12
 
+    @JvmField
     public val serializationNames: Array<String> = arrayOf(
       "INVALID",
       "BASIC",

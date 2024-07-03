@@ -12,7 +12,6 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * utility methods for analyzing configuration sets for conflicts and/or
  * ambiguities.
  */
-@Suppress("MemberVisibilityCanBePrivate")
 public enum class PredictionMode {
   /**
    * The SLL(*) prediction mode. This prediction mode ignores the current

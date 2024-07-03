@@ -10,6 +10,7 @@ import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
+import kotlin.jvm.JvmField
 
 @Suppress("EqualsOrHashCode", "MemberVisibilityCanBePrivate")
 public abstract class PredictionContext protected constructor(
@@ -723,6 +724,7 @@ public abstract class PredictionContext protected constructor(
     }
   }
 
+  @JvmField
   public val id: Int = globalNodeCount++
 
   /**

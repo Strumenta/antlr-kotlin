@@ -2,6 +2,7 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package org.antlr.v4.kotlinruntime
 
+import kotlin.jvm.JvmField
 import kotlin.math.max
 
 /**
@@ -34,6 +35,7 @@ public class VocabularyImpl(
      * [getDisplayName] returns the numeric value for all tokens
      * except [Token.EOF].
      */
+    @JvmField
     public val EMPTY_VOCABULARY: Vocabulary = VocabularyImpl(EMPTY_NAMES, EMPTY_NAMES, EMPTY_NAMES)
 
     /**

@@ -8,7 +8,7 @@ import org.antlr.v4.kotlinruntime.tree.ErrorNode
 import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.tree.ParseTreeListener
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
-import kotlin.jvm.JvmStatic
+import kotlin.jvm.JvmField
 import kotlin.reflect.KClass
 
 /**
@@ -37,7 +37,7 @@ import kotlin.reflect.KClass
 @Suppress("MemberVisibilityCanBePrivate")
 public open class ParserRuleContext : RuleContext {
   public companion object {
-    @JvmStatic
+    @JvmField
     public val EMPTY: ParserRuleContext = ParserRuleContext()
   }
 
