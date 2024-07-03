@@ -14,7 +14,7 @@ public open class SingletonPredictionContext internal constructor(
     public fun create(parent: PredictionContext?, returnState: Int): SingletonPredictionContext =
       if (returnState == EMPTY_RETURN_STATE && parent == null) {
         // Someone can pass in the bits of an array ctx that mean $
-        EmptyPredictionContext.Instance
+        EmptyPredictionContext
       } else {
         SingletonPredictionContext(parent, returnState)
       }

@@ -1,17 +1,15 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.misc
 
 import kotlin.math.floor
-
 
 /**
  * A limited map (many unsupported operations) that lets me use varying hashCode/equals.
  */
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 public open class FlexibleHashMap<K, V>(
-  protected val comparator: AbstractEqualityComparator<K> = ObjectEqualityComparator.INSTANCE,
+  protected val comparator: AbstractEqualityComparator<K> = ObjectEqualityComparator,
   public val initialCapacity: Int = INITIAL_CAPACITY,
   public val initialBucketCapacity: Int = INITIAL_BUCKET_CAPACITY,
 ) : MutableMap<K, V> {

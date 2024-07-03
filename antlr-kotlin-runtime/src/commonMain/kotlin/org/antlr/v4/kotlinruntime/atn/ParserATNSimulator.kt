@@ -1210,8 +1210,8 @@ public open class ParserATNSimulator(
 
     for (i in 1..nAlts) {
       if (altToPred[i] == null) {
-        altToPred[i] = SemanticContext.Empty.Instance
-      } else if (altToPred[i] !== SemanticContext.Empty.Instance) {
+        altToPred[i] = SemanticContext.Empty
+      } else if (altToPred[i] !== SemanticContext.Empty) {
         nPredAlts++
       }
     }
@@ -1249,7 +1249,7 @@ public open class ParserATNSimulator(
         pairs.add(DFAState.PredPrediction(pred, i))
       }
 
-      if (pred !== SemanticContext.Empty.Instance) {
+      if (pred !== SemanticContext.Empty) {
         containsPredicate = true
       }
     }
@@ -1362,7 +1362,7 @@ public open class ParserATNSimulator(
     val failed = ATNConfigSet(configs.fullCtx)
 
     for (c in configs) {
-      if (c.semanticContext !== SemanticContext.Empty.Instance) {
+      if (c.semanticContext !== SemanticContext.Empty) {
         val predicateEvaluationResult = evalSemanticContext(c.semanticContext, outerContext, c.alt, configs.fullCtx)
 
         if (predicateEvaluationResult) {
@@ -1396,7 +1396,7 @@ public open class ParserATNSimulator(
     val predictions = BitSet()
 
     for (pair in predPredictions) {
-      if (pair.pred === SemanticContext.Empty.Instance) {
+      if (pair.pred === SemanticContext.Empty) {
         predictions.set(pair.alt)
 
         if (!complete) {
@@ -1511,7 +1511,7 @@ public open class ParserATNSimulator(
         for (i in 0..<config.context!!.size()) {
           if (config.context!!.getReturnState(i) == PredictionContext.EMPTY_RETURN_STATE) {
             if (fullCtx) {
-              configs.add(ATNConfig(config, config.state, EmptyPredictionContext.Instance), mergeCache)
+              configs.add(ATNConfig(config, config.state, EmptyPredictionContext), mergeCache)
               continue
             }
 

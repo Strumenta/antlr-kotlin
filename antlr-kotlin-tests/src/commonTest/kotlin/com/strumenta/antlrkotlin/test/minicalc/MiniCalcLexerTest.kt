@@ -26,8 +26,8 @@ class MiniCalcLexerTest {
 
   @Test
   fun emptyPredictionContext() {
-    assertEquals(true, EmptyPredictionContext().hasEmptyPath())
-    assertEquals(true, EmptyPredictionContext().isEmpty)
+    assertEquals(true, EmptyPredictionContext.hasEmptyPath())
+    assertEquals(true, EmptyPredictionContext.isEmpty)
   }
 
   @Test

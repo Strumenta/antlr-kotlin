@@ -56,7 +56,7 @@ public abstract class PredictionContext protected constructor(
     /**
      * Convert a [RuleContext] tree to a [PredictionContext] graph.
      *
-     * Return [EmptyPredictionContext.Instance] if [outerContext] is empty or `null`.
+     * Return [EmptyPredictionContext] if [outerContext] is empty or `null`.
      */
     public fun fromRuleContext(atn: ATN, outerContext: RuleContext?): PredictionContext {
       val tempOuterContext = outerContext ?: ParserRuleContext.EMPTY
@@ -64,7 +64,7 @@ public abstract class PredictionContext protected constructor(
       // If we are in RuleContext of start rule, s, then PredictionContext
       // is EMPTY. Nobody called us. (if we are empty, return empty)
       if (tempOuterContext.parent == null || tempOuterContext === ParserRuleContext.EMPTY) {
-        return EmptyPredictionContext.Instance
+        return EmptyPredictionContext
       }
 
       // If we have a parent, convert it to a PredictionContext graph
@@ -284,19 +284,19 @@ public abstract class PredictionContext protected constructor(
     }
 
     /**
-     * Handle case where at least one of [a] or [b] is [EmptyPredictionContext.Instance].
+     * Handle case where at least one of [a] or [b] is [EmptyPredictionContext].
      *
-     * In the following diagrams, the symbol `$` is used to represent [EmptyPredictionContext.Instance].
+     * In the following diagrams, the symbol `$` is used to represent [EmptyPredictionContext].
      *
      * ### Local-Context Merges
      *
      * These local-context merge operations are used when [rootIsWildcard] is true.
      *
-     * [EmptyPredictionContext.Instance] is superset of any graph; return [EmptyPredictionContext.Instance].
+     * [EmptyPredictionContext] is superset of any graph; return [EmptyPredictionContext].
      *
      * <embed src="images/LocalMerge_EmptyRoot.svg" type="image/svg+xml"></embed>
      *
-     * [EmptyPredictionContext.Instance] and anything is `#EMPTY`, so merged parent is `#EMPTY`; return left graph.
+     * [EmptyPredictionContext] and anything is `#EMPTY`, so merged parent is `#EMPTY`; return left graph.
      *
      * <embed src="images/LocalMerge_EmptyParent.svg" type="image/svg+xml"></embed>
      *
@@ -310,7 +310,7 @@ public abstract class PredictionContext protected constructor(
      *
      * <embed src="images/FullMerge_EmptyRoots.svg" type="image/svg+xml"></embed>
      *
-     * Must keep all contexts; [EmptyPredictionContext.Instance] in array is a special value (and `null` parent).
+     * Must keep all contexts; [EmptyPredictionContext] in array is a special value (and `null` parent).
      *
      * <embed src="images/FullMerge_EmptyRoot.svg" type="image/svg+xml"></embed>
      *
@@ -327,29 +327,29 @@ public abstract class PredictionContext protected constructor(
       rootIsWildcard: Boolean,
     ): PredictionContext? {
       if (rootIsWildcard) {
-        if (a === EmptyPredictionContext.Instance) {
+        if (a === EmptyPredictionContext) {
           // * + b = *
-          return EmptyPredictionContext.Instance
+          return EmptyPredictionContext
         }
 
-        if (b === EmptyPredictionContext.Instance) {
+        if (b === EmptyPredictionContext) {
           // a + * = *
-          return EmptyPredictionContext.Instance
+          return EmptyPredictionContext
         }
       } else {
-        if (a === EmptyPredictionContext.Instance && b === EmptyPredictionContext.Instance) {
+        if (a === EmptyPredictionContext && b === EmptyPredictionContext) {
           // $ + $ = $
-          return EmptyPredictionContext.Instance
+          return EmptyPredictionContext
         }
 
-        if (a === EmptyPredictionContext.Instance) {
+        if (a === EmptyPredictionContext) {
           // $ + x = [x,$]
           val payloads = intArrayOf(b.returnState, EMPTY_RETURN_STATE)
           val parents = arrayOf(b.parent, null)
           return ArrayPredictionContext(parents, payloads)
         }
 
-        if (b === EmptyPredictionContext.Instance) {
+        if (b === EmptyPredictionContext) {
           // x + $ = [x,$] ($ is always last if present)
           val payloads = intArrayOf(a.returnState, EMPTY_RETURN_STATE)
           val parents = arrayOf(a.parent, null)
@@ -604,7 +604,7 @@ public abstract class PredictionContext protected constructor(
       }
 
       for (current in nodes) {
-        if (current === EmptyPredictionContext.Instance) {
+        if (current === EmptyPredictionContext) {
           continue
         }
 
@@ -681,7 +681,7 @@ public abstract class PredictionContext protected constructor(
       }
 
       val updated = if (parents.isEmpty()) {
-        EmptyPredictionContext.Instance
+        EmptyPredictionContext
       } else if (parents.size == 1) {
         SingletonPredictionContext.create(parents[0], context.getReturnState(0))
       } else {
@@ -726,11 +726,11 @@ public abstract class PredictionContext protected constructor(
   public val id: Int = globalNodeCount++
 
   /**
-   * This means only the [EmptyPredictionContext.Instance]
+   * This means only the [EmptyPredictionContext]
    * (wildcard? not sure) context is in set.
    */
   public open val isEmpty: Boolean
-    get() = this === EmptyPredictionContext.Instance
+    get() = this === EmptyPredictionContext
 
   public abstract fun size(): Int
   public abstract fun getParent(index: Int): PredictionContext?
@@ -745,7 +745,7 @@ public abstract class PredictionContext protected constructor(
     toString()
 
   public open fun toStrings(recognizer: Recognizer<*, *>, currentState: Int): Array<String> =
-    toStrings(recognizer, EmptyPredictionContext.Instance, currentState)
+    toStrings(recognizer, EmptyPredictionContext, currentState)
 
   // From Sam
   public open fun toStrings(recognizer: Recognizer<*, *>?, stop: PredictionContext, currentState: Int): Array<String> {
