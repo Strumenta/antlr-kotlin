@@ -6,6 +6,8 @@ import com.strumenta.antlrkotlin.runtime.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.Vocabulary
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 /**
  * This class implements the [IntSet] backed by a sorted array of
@@ -17,14 +19,15 @@ import org.antlr.v4.kotlinruntime.Vocabulary
  * This class is able to represent sets containing any combination of values in
  * the range [Int.MIN_VALUE] to [Int.MAX_VALUE] (inclusive).
  */
-@Suppress("MemberVisibilityCanBePrivate", "LocalVariableName")
+@Suppress("LocalVariableName")
 public class IntervalSet : IntSet {
-  @Suppress("MemberVisibilityCanBePrivate")
   public companion object {
+    @JvmField
     public val COMPLETE_CHAR_SET: IntervalSet = of(Lexer.MIN_CHAR_VALUE, Lexer.MAX_CHAR_VALUE).also {
       it.isReadonly = true
     }
 
+    @JvmField
     public val EMPTY_SET: IntervalSet = IntervalSet().also {
       it.isReadonly = true
     }
@@ -32,6 +35,7 @@ public class IntervalSet : IntSet {
     /**
      * Create a set with a single element, [a].
      */
+    @JvmStatic
     public fun of(a: Int): IntervalSet {
       val s = IntervalSet()
       s.add(a)
@@ -41,6 +45,7 @@ public class IntervalSet : IntSet {
     /**
      * Create a set with all int(s) within range `a..b` (inclusive).
      */
+    @JvmStatic
     public fun of(a: Int, b: Int): IntervalSet {
       val s = IntervalSet()
       s.add(a, b)
@@ -50,6 +55,7 @@ public class IntervalSet : IntSet {
     /**
      * Combine all sets in the array returned the or'd value.
      */
+    @JvmStatic
     public fun or(vararg sets: IntervalSet): IntervalSet {
       val r = IntervalSet()
 
@@ -66,6 +72,7 @@ public class IntervalSet : IntSet {
      * The specific operation is `left - right`.
      * If either of the input sets is `null`, it is treated as though it was an empty set.
      */
+    @JvmStatic
     public fun subtract(left: IntervalSet, right: IntervalSet): IntervalSet {
       if (left.isNil) {
         return IntervalSet()

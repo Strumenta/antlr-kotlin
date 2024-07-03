@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.CharStream
@@ -8,6 +7,7 @@ import org.antlr.v4.kotlinruntime.IntStream
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
+import kotlin.jvm.JvmStatic
 
 /**
  * Represents an executor for a sequence of lexer actions which traversed during
@@ -36,6 +36,7 @@ public class LexerActionExecutor(public val lexerActions: Array<LexerAction>) {
      * @return A [LexerActionExecutor] for executing the combine actions
      *   of [lexerActionExecutor] and [lexerAction]
      */
+    @JvmStatic
     public fun append(lexerActionExecutor: LexerActionExecutor?, lexerAction: LexerAction): LexerActionExecutor {
       if (lexerActionExecutor == null) {
         return LexerActionExecutor(arrayOf(lexerAction))

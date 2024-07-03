@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.Collections
@@ -22,6 +21,7 @@ import kotlin.jvm.JvmStatic
  */
 public abstract class SemanticContext {
   public companion object {
+    @JvmStatic
     public fun and(a: SemanticContext?, b: SemanticContext?): SemanticContext? {
       if (a == null || a === Empty) {
         return b
@@ -42,6 +42,7 @@ public abstract class SemanticContext {
     /**
      * @see ParserATNSimulator.getPredsForAmbigAlts
      */
+    @JvmStatic
     public fun or(a: SemanticContext?, b: SemanticContext?): SemanticContext? {
       if (a == null) {
         return b

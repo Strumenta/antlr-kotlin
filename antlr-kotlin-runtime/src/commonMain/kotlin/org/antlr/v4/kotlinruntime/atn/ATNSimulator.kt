@@ -1,12 +1,12 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.IdentityHashMap
 import com.strumenta.antlrkotlin.runtime.synchronized
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import org.antlr.v4.kotlinruntime.dfa.DFAState
+import kotlin.jvm.JvmField
 
 public abstract class ATNSimulator(
   public val atn: ATN,
@@ -38,6 +38,7 @@ public abstract class ATNSimulator(
     /**
      * Must distinguish between missing edge and edge we know leads nowhere.
      */
+    @JvmField
     public val ERROR: DFAState = DFAState(ATNConfigSet()).also {
       it.stateNumber = Int.MAX_VALUE
     }

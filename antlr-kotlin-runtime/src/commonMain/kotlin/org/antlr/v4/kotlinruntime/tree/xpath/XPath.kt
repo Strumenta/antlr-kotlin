@@ -5,6 +5,7 @@ package org.antlr.v4.kotlinruntime.tree.xpath
 import org.antlr.v4.kotlinruntime.*
 import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.tree.xpath.XPathLexer.Tokens
+import kotlin.jvm.JvmStatic
 
 /**
  * Represent a subset of XPath XML path syntax for use in identifying nodes in
@@ -46,6 +47,7 @@ public open class XPath(protected var parser: Parser, protected var xpath: Strin
     public const val WILDCARD: String = "*"   // Word not operator/separator
     public const val NOT: String = "!"        // Word for invert operator
 
+    @JvmStatic
     public fun findAll(tree: ParseTree, xpath: String, parser: Parser): Collection<ParseTree> {
       val p = XPath(parser, xpath)
       return p.evaluate(tree)

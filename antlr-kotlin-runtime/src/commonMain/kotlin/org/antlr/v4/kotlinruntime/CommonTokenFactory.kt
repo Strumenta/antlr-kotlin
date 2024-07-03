@@ -1,9 +1,9 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.jvm.JvmField
 
 /**
  * This default implementation of [TokenFactory] creates [CommonToken] objects.
@@ -33,6 +33,7 @@ public open class CommonTokenFactory(
      *
      * This token factory does not explicitly copy token text when constructing tokens.
      */
+    @JvmField
     public val DEFAULT: TokenFactory<CommonToken> = CommonTokenFactory()
   }
 

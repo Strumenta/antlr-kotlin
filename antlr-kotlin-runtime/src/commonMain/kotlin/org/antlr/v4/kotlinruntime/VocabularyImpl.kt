@@ -2,6 +2,8 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package org.antlr.v4.kotlinruntime
 
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 import kotlin.math.max
 
 /**
@@ -34,6 +36,7 @@ public class VocabularyImpl(
      * [getDisplayName] returns the numeric value for all tokens
      * except [Token.EOF].
      */
+    @JvmField
     public val EMPTY_VOCABULARY: Vocabulary = VocabularyImpl(EMPTY_NAMES, EMPTY_NAMES, EMPTY_NAMES)
 
     /**
@@ -48,6 +51,7 @@ public class VocabularyImpl(
      * @param tokenNames The token names, or `null` if no token names are available
      * @return A [Vocabulary] instance which uses [tokenNames] for the display names of tokens
      */
+    @JvmStatic
     public fun fromTokenNames(tokenNames: Array<String>?): Vocabulary {
       if (tokenNames.isNullOrEmpty()) {
         return EMPTY_VOCABULARY

@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.BitSet
@@ -13,6 +12,8 @@ import org.antlr.v4.kotlinruntime.dfa.DFAState
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
 import org.antlr.v4.kotlinruntime.misc.Interval
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 /**
  * The embodiment of the adaptive LL(*), ALL(*), parsing strategy.
@@ -220,17 +221,26 @@ public open class ParserATNSimulator(
   sharedContextCache: PredictionContextCache,
 ) : ATNSimulator(atn, sharedContextCache) {
   public companion object {
+    @JvmField
     public var debug: Boolean = false
+
+    @JvmField
     public var trace_atn_sim: Boolean = false
+
+    @JvmField
     public var dfa_debug: Boolean = false
+
+    @JvmField
     public var retry_debug: Boolean = false
 
     /**
      * Just in case this optimization is bad, add an ENV variable to turn it off.
      */
+    @JvmField
     public val TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT: Boolean =
       getSafeEnv("TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT", "false").toBoolean()
 
+    @JvmStatic
     protected fun getUniqueAlt(configs: ATNConfigSet): Int {
       var alt = ATN.INVALID_ALT_NUMBER
 

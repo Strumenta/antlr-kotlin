@@ -1,10 +1,10 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
 import kotlin.js.JsName
+import kotlin.jvm.JvmField
 
 /**
  * An ATN transition between any two ATN states.
@@ -36,6 +36,7 @@ public abstract class Transition protected constructor(public var target: ATNSta
     public const val WILDCARD: Int = 9
     public const val PRECEDENCE: Int = 10
 
+    @JvmField
     public val serializationNames: Array<String> = arrayOf(
       "INVALID",
       "EPSILON",

@@ -3,6 +3,7 @@
 package org.antlr.v4.kotlinruntime
 
 import org.antlr.v4.kotlinruntime.misc.Interval
+import kotlin.jvm.JvmField
 
 public open class CommonToken : WritableToken {
   protected companion object {
@@ -10,6 +11,7 @@ public open class CommonToken : WritableToken {
      * An empty pair which is used as the default value of
      * [source] for tokens that do not have a source.
      */
+    @JvmField
     protected val EMPTY_SOURCE: Pair<TokenSource?, CharStream?> = Pair<TokenSource?, CharStream?>(null, null)
   }
 

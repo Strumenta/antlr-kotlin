@@ -1,9 +1,9 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.assert
+import kotlin.jvm.JvmStatic
 
 @Suppress("EqualsOrHashCode")
 public open class SingletonPredictionContext internal constructor(
@@ -11,6 +11,7 @@ public open class SingletonPredictionContext internal constructor(
   public val returnState: Int,
 ) : PredictionContext(if (parent != null) calculateHashCode(parent, returnState) else calculateEmptyHashCode()) {
   public companion object {
+    @JvmStatic
     public fun create(parent: PredictionContext?, returnState: Int): SingletonPredictionContext =
       if (returnState == EMPTY_RETURN_STATE && parent == null) {
         // Someone can pass in the bits of an array ctx that mean $

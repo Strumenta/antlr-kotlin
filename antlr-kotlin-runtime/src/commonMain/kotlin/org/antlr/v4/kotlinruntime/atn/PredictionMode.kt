@@ -6,13 +6,13 @@ import com.strumenta.antlrkotlin.runtime.BitSet
 import org.antlr.v4.kotlinruntime.misc.AbstractEqualityComparator
 import org.antlr.v4.kotlinruntime.misc.FlexibleHashMap
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
+import kotlin.jvm.JvmStatic
 
 /**
  * This enumeration defines the prediction modes available in ANTLR 4 along with
  * utility methods for analyzing configuration sets for conflicts and/or
  * ambiguities.
  */
-@Suppress("MemberVisibilityCanBePrivate")
 public enum class PredictionMode {
   /**
    * The SLL(*) prediction mode. This prediction mode ignores the current
@@ -198,6 +198,7 @@ public enum class PredictionMode {
      * the configurations to strip out all the predicates so that a standard
      * [ATNConfigSet] will merge everything ignoring predicates.
      */
+    @JvmStatic
     public fun hasSLLConflictTerminatingPrediction(mode: PredictionMode, configs: ATNConfigSet): Boolean {
       var tempConfig = configs
 
@@ -245,6 +246,7 @@ public enum class PredictionMode {
      * @return `true` if any configuration in [configs] is in a [RuleStopState],
      *   otherwise `false`
      */
+    @JvmStatic
     public fun hasConfigInRuleStopState(configs: ATNConfigSet): Boolean {
       for (c in configs) {
         if (c.state is RuleStopState) {
@@ -265,6 +267,7 @@ public enum class PredictionMode {
      * @return `true` if all configurations in [configs] are in a [RuleStopState],
      *   otherwise `false`
      */
+    @JvmStatic
     public fun allConfigsInRuleStopStates(configs: ATNConfigSet): Boolean {
       for (config in configs) {
         if (config.state !is RuleStopState) {
@@ -403,6 +406,7 @@ public enum class PredictionMode {
      * we need exact ambiguity detection when the sets look like
      * `A={{1,2}}` or `{{1,2},{1,2}}`, etc...
      */
+    @JvmStatic
     public fun resolvesToJustOneViableAlt(altSets: Collection<BitSet>): Int =
       getSingleViableAlt(altSets)
 
@@ -414,6 +418,7 @@ public enum class PredictionMode {
      * @return `true` if every [BitSet] in [altSets] has
      *   [BitSet.cardinality] `> 1`, otherwise `false`
      */
+    @JvmStatic
     public fun allSubsetsConflict(altSets: Collection<BitSet>): Boolean =
       !hasNonConflictingAltSet(altSets)
 
@@ -425,6 +430,7 @@ public enum class PredictionMode {
      * @return `true` if [altSets] contains a [BitSet] with
      *   [BitSet.cardinality] `1`, otherwise `false`
      */
+    @JvmStatic
     public fun hasNonConflictingAltSet(altSets: Collection<BitSet>): Boolean {
       for (alts in altSets) {
         if (alts.cardinality() == 1) {
@@ -443,6 +449,7 @@ public enum class PredictionMode {
      * @return `true` if [altSets] contains a [BitSet] with
      *   [BitSet.cardinality] `> 1`, otherwise `false`
      */
+    @JvmStatic
     public fun hasConflictingAltSet(altSets: Collection<BitSet>): Boolean {
       for (alts in altSets) {
         if (alts.cardinality() > 1) {
@@ -460,6 +467,7 @@ public enum class PredictionMode {
      * @return `true` if every member of [altSets] is equal to the
      *   others, otherwise `false`
      */
+    @JvmStatic
     public fun allSubsetsEqual(altSets: Collection<BitSet>): Boolean {
       val it = altSets.iterator()
       val first = it.next()
@@ -482,6 +490,7 @@ public enum class PredictionMode {
      *
      * @param altSets A collection of alternative subsets
      */
+    @JvmStatic
     public fun getUniqueAlt(altSets: Collection<BitSet>): Int {
       val all = getAlts(altSets)
 
@@ -501,6 +510,7 @@ public enum class PredictionMode {
      * @param altSets A collection of alternative subsets
      * @return The set of represented alternatives in [altSets]
      */
+    @JvmStatic
     public fun getAlts(altSets: Collection<BitSet>): BitSet {
       val all = BitSet()
 
@@ -516,6 +526,7 @@ public enum class PredictionMode {
      *
      * @since 4.5.1
      */
+    @JvmStatic
     public fun getAlts(configs: ATNConfigSet): BitSet {
       val alts = BitSet()
 
@@ -535,6 +546,7 @@ public enum class PredictionMode {
      * map[c] U= c.alt # map hash/equals uses s and x, not alt and not pred
      * ```
      */
+    @JvmStatic
     public fun getConflictingAltSubsets(configs: ATNConfigSet): Collection<BitSet> {
       val configToAlts = AltAndContextMap()
 
@@ -561,6 +573,7 @@ public enum class PredictionMode {
      * map[c.state] U= c.alt
      * ```
      */
+    @JvmStatic
     public fun getStateToAltMap(configs: ATNConfigSet): Map<ATNState, BitSet> {
       val m = HashMap<ATNState, BitSet>()
 
@@ -578,6 +591,7 @@ public enum class PredictionMode {
       return m
     }
 
+    @JvmStatic
     public fun hasStateAssociatedWithOneAlt(configs: ATNConfigSet): Boolean {
       val x = getStateToAltMap(configs)
 
@@ -590,6 +604,7 @@ public enum class PredictionMode {
       return false
     }
 
+    @JvmStatic
     public fun getSingleViableAlt(altSets: Collection<BitSet>): Int {
       val viableAlts = BitSet()
 

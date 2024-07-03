@@ -3,6 +3,7 @@
 package org.antlr.v4.kotlinruntime
 
 import com.strumenta.antlrkotlin.runtime.System
+import kotlin.jvm.JvmField
 
 /**
  * @author Sam Harwell
@@ -12,6 +13,7 @@ public open class ConsoleErrorListener : BaseErrorListener() {
     /**
      * Provides a default instance of [ConsoleErrorListener].
      */
+    @JvmField
     public val INSTANCE: ConsoleErrorListener = ConsoleErrorListener()
   }
 

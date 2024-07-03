@@ -3,11 +3,11 @@
 package org.antlr.v4.kotlinruntime.tree
 
 import org.antlr.v4.kotlinruntime.ParserRuleContext
-import kotlin.jvm.JvmStatic
+import kotlin.jvm.JvmField
 
 public open class ParseTreeWalker {
   public companion object {
-    @JvmStatic
+    @JvmField
     public val DEFAULT: ParseTreeWalker = ParseTreeWalker()
   }
 

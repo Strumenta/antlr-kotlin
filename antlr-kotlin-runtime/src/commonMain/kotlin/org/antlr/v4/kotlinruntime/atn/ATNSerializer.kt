@@ -1,12 +1,12 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.assert
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.misc.IntegerList
 import org.antlr.v4.kotlinruntime.misc.IntervalSet
+import kotlin.jvm.JvmStatic
 
 /**
  * This class represents a target neutral serializer for ATNs. An ATN is converted to a list of integers
@@ -18,6 +18,10 @@ import org.antlr.v4.kotlinruntime.misc.IntervalSet
  */
 public open class ATNSerializer(public var atn: ATN) {
   public companion object {
+    @JvmStatic
+    public fun getSerialized(atn: ATN): IntegerList =
+      ATNSerializer(atn).serialize()
+
     private fun serializeSets(data: IntegerList, sets: Collection<IntervalSet>) {
       val nSets = sets.size
       data.add(nSets)
@@ -49,9 +53,6 @@ public open class ATNSerializer(public var atn: ATN) {
         }
       }
     }
-
-    public fun getSerialized(atn: ATN): IntegerList =
-      ATNSerializer(atn).serialize()
   }
 
   private val data = IntegerList()

@@ -10,6 +10,8 @@ import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
 import org.antlr.v4.kotlinruntime.misc.DoubleKeyMap
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 
 @Suppress("EqualsOrHashCode", "MemberVisibilityCanBePrivate")
 public abstract class PredictionContext protected constructor(
@@ -58,6 +60,7 @@ public abstract class PredictionContext protected constructor(
      *
      * Return [EmptyPredictionContext] if [outerContext] is empty or `null`.
      */
+    @JvmStatic
     public fun fromRuleContext(atn: ATN, outerContext: RuleContext?): PredictionContext {
       val tempOuterContext = outerContext ?: ParserRuleContext.EMPTY
 
@@ -74,12 +77,14 @@ public abstract class PredictionContext protected constructor(
       return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
     }
 
+    @JvmStatic
     public fun calculateEmptyHashCode(): Int {
       var hash = MurmurHash.initialize(INITIAL_HASH)
       hash = MurmurHash.finish(hash, 0)
       return hash
     }
 
+    @JvmStatic
     public fun calculateHashCode(parent: PredictionContext, returnState: Int): Int {
       var hash = MurmurHash.initialize(INITIAL_HASH)
       hash = MurmurHash.update(hash, parent)
@@ -88,6 +93,7 @@ public abstract class PredictionContext protected constructor(
       return hash
     }
 
+    @JvmStatic
     public fun calculateHashCode(parents: Array<PredictionContext?>, returnStates: IntArray): Int {
       var hash = MurmurHash.initialize(INITIAL_HASH)
 
@@ -104,6 +110,7 @@ public abstract class PredictionContext protected constructor(
     }
 
     // Dispatch
+    @JvmStatic
     public fun merge(
       a: PredictionContext?,
       b: PredictionContext?,
@@ -185,6 +192,7 @@ public abstract class PredictionContext protected constructor(
      *   otherwise `false` to indicate a full-context merge
      * @param mergeCache
      */
+    @JvmStatic
     public fun mergeSingletons(
       a: SingletonPredictionContext,
       b: SingletonPredictionContext,
@@ -321,6 +329,7 @@ public abstract class PredictionContext protected constructor(
      * @param rootIsWildcard `true` if this is a local-context merge,
      *   otherwise false to indicate a full-context merge
      */
+    @JvmStatic
     public fun mergeRoot(
       a: SingletonPredictionContext,
       b: SingletonPredictionContext,
@@ -383,6 +392,7 @@ public abstract class PredictionContext protected constructor(
      *
      * <embed src="images/ArrayMerge_EqualTop.svg" type="image/svg+xml"></embed>
      */
+    @JvmStatic
     public fun mergeArrays(
       a: ArrayPredictionContext,
       b: ArrayPredictionContext,
@@ -532,6 +542,7 @@ public abstract class PredictionContext protected constructor(
      *
      * Merge any `equals()` ones.
      */
+    @JvmStatic
     protected fun combineCommonParents(parents: Array<PredictionContext?>) {
       val uniqueParents = HashMap<PredictionContext?, PredictionContext?>()
 
@@ -549,6 +560,7 @@ public abstract class PredictionContext protected constructor(
       }
     }
 
+    @JvmStatic
     public fun toDOTString(context: PredictionContext?): String {
       if (context == null) {
         return ""
@@ -631,6 +643,7 @@ public abstract class PredictionContext protected constructor(
     }
 
     // From Sam
+    @JvmStatic
     public fun getCachedContext(
       context: PredictionContext,
       contextCache: PredictionContextCache,
@@ -697,6 +710,7 @@ public abstract class PredictionContext protected constructor(
     }
 
     // ter's recursive version of Sam's getAllNodes()
+    @JvmStatic
     public fun getAllContextNodes(context: PredictionContext): List<PredictionContext> {
       val nodes = ArrayList<PredictionContext>()
       val visited = IdentityHashMap<PredictionContext, PredictionContext>()
@@ -704,6 +718,7 @@ public abstract class PredictionContext protected constructor(
       return nodes
     }
 
+    @JvmStatic
     @Suppress("FunctionName")
     public fun getAllContextNodes_(
       context: PredictionContext?,
@@ -723,6 +738,7 @@ public abstract class PredictionContext protected constructor(
     }
   }
 
+  @JvmField
   public val id: Int = globalNodeCount++
 
   /**
