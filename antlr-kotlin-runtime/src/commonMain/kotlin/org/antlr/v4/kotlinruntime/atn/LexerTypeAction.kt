@@ -15,7 +15,7 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * @author Sam Harwell
  * @since 4.2
  */
-public class LexerTypeAction(public val type: Int) : LexerAction {
+public open class LexerTypeAction(public val type: Int) : LexerAction {
   /**
    * Returns [LexerActionType.TYPE].
    */
