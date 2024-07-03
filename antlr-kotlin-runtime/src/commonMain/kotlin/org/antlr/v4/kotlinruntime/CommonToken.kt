@@ -31,6 +31,8 @@ public open class CommonToken : WritableToken {
 
   override var type: Int = 0
   override var line: Int = 0
+
+  // At construction time it is set to the invalid state `-1`
   override var charPositionInLine: Int = -1
   override var channel: Int = Token.DEFAULT_CHANNEL
   override var tokenIndex: Int = -1
