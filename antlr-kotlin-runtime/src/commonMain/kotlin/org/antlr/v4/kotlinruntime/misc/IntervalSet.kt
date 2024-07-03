@@ -6,6 +6,7 @@ import com.strumenta.antlrkotlin.runtime.ext.appendCodePoint
 import org.antlr.v4.kotlinruntime.Lexer
 import org.antlr.v4.kotlinruntime.Token
 import org.antlr.v4.kotlinruntime.Vocabulary
+import kotlin.jvm.JvmField
 
 /**
  * This class implements the [IntSet] backed by a sorted array of
@@ -17,14 +18,15 @@ import org.antlr.v4.kotlinruntime.Vocabulary
  * This class is able to represent sets containing any combination of values in
  * the range [Int.MIN_VALUE] to [Int.MAX_VALUE] (inclusive).
  */
-@Suppress("MemberVisibilityCanBePrivate", "LocalVariableName")
+@Suppress("LocalVariableName")
 public class IntervalSet : IntSet {
-  @Suppress("MemberVisibilityCanBePrivate")
   public companion object {
+    @JvmField
     public val COMPLETE_CHAR_SET: IntervalSet = of(Lexer.MIN_CHAR_VALUE, Lexer.MAX_CHAR_VALUE).also {
       it.isReadonly = true
     }
 
+    @JvmField
     public val EMPTY_SET: IntervalSet = IntervalSet().also {
       it.isReadonly = true
     }

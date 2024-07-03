@@ -2,6 +2,7 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package org.antlr.v4.kotlinruntime.misc
 
+import kotlin.jvm.JvmField
 import kotlin.math.max
 import kotlin.math.min
 
@@ -12,8 +13,11 @@ import kotlin.math.min
 public class Interval(public var a: Int, public var b: Int) {
   public companion object {
     public const val INTERVAL_POOL_MAX_VALUE: Int = 1000
+
+    @JvmField
     public val INVALID: Interval = Interval(-1, -2)
 
+    @JvmField
     internal val cache = arrayOfNulls<Interval>(INTERVAL_POOL_MAX_VALUE + 1)
 
     /**
