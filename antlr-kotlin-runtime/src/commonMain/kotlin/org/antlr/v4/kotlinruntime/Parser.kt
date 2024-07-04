@@ -49,8 +49,10 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     }
 
     override fun exitEveryRule(ctx: ParserRuleContext) {
-      if (ctx.children is ArrayList<*>) {
-        (ctx.children as ArrayList<*>).trimToSize()
+      val children = ctx.children
+
+      if (children is ArrayList<*>) {
+        children.trimToSize()
       }
     }
   }
