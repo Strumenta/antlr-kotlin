@@ -25,10 +25,10 @@ public open class TerminalNodeImpl(override var symbol: Token) : TerminalNode {
       return Interval(tokenIndex, tokenIndex)
     }
 
-  override fun readParent(): ParseTree? =
+  override fun getParent(): ParseTree? =
     parent
 
-  override fun assignParent(value: RuleContext?) {
+  override fun setParent(value: RuleContext?) {
     parent = value
   }
 
