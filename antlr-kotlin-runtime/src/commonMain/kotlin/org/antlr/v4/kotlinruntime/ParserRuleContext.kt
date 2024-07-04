@@ -41,6 +41,23 @@ public open class ParserRuleContext : RuleContext {
     public val EMPTY: ParserRuleContext = ParserRuleContext()
   }
 
+  // This does not exist in the Java runtime
+  public val position: Position?
+    get() {
+      val start = this.start
+      val stop = this.stop
+
+      if (start != null && stop != null) {
+        val endPoint = stop.endPoint()
+
+        if (endPoint != null) {
+          return Position(start.startPoint(), endPoint)
+        }
+      }
+
+      return null
+    }
+
   /**
    * If we are debugging or building a parse tree for a visitor,
    * we need to track all the tokens and rule invocations associated
@@ -48,15 +65,8 @@ public open class ParserRuleContext : RuleContext {
    * operation because we don't have the need to track the details about
    * how we parse this rule.
    */
+  @JvmField
   public var children: MutableList<ParseTree>? = null
-
-  // This does not exist in the Java runtime
-  public val position: Position?
-    get() = if (start != null && stop?.endPoint() != null) {
-      Position(start!!.startPoint(), stop!!.endPoint()!!)
-    } else {
-      null
-    }
 
   /**
    * The initial token in this context.
@@ -81,6 +91,7 @@ public open class ParserRuleContext : RuleContext {
    *
    * If the rule successfully completed, this is `null`.
    */
+  @JvmField
   public var exception: RecognitionException? = null
 
   override val childCount: Int
@@ -98,11 +109,26 @@ public open class ParserRuleContext : RuleContext {
       }
     }
 
+  // Override to make the type more specific
+  override val ruleContext: ParserRuleContext
+    get() = this
+
+  // Override to make the type more specific
+  override val payload: ParserRuleContext
+    get() = this
+
   public constructor()
   public constructor(parent: ParserRuleContext?, invokingStateNumber: Int) : super(parent, invokingStateNumber)
 
-  override fun readParent(): ParserRuleContext? =
-    super.readParent() as ParserRuleContext?
+  // Override to make the type more specific
+  override fun getParent(): ParserRuleContext? =
+    parent as ParserRuleContext?
+
+  override fun setParent(value: RuleContext?) {
+    // Although we could assign 'value' straight away, we cast it
+    // to ensure we are dealing with a compatible type
+    parent = value as ParserRuleContext?
+  }
 
   /**
    * Copy a context (I'm deliberately not using copy constructor) to avoid
@@ -153,12 +179,12 @@ public open class ParserRuleContext : RuleContext {
    * Other [addChild] methods call this.
    *
    * We cannot set the parent pointer of the incoming node
-   * because the existing interfaces do not have a [assignParent]
+   * because the existing interfaces do not have a [setParent]
    * method and I don't want to break backward compatibility for this.
    *
    * @since 4.7
    */
-  public fun <T : ParseTree> addAnyChild(t: T): T {
+  public open fun <T : ParseTree> addAnyChild(t: T): T {
     var childrenTemp = children
 
     if (childrenTemp == null) {
@@ -170,14 +196,14 @@ public open class ParserRuleContext : RuleContext {
     return t
   }
 
-  public fun addChild(ruleInvocation: RuleContext): RuleContext =
+  public open fun addChild(ruleInvocation: RuleContext): RuleContext =
     addAnyChild(ruleInvocation)
 
   /**
    * Add a token leaf node child and force its parent to be this node.
    */
-  public fun addChild(t: TerminalNode): TerminalNode {
-    t.assignParent(this)
+  public open fun addChild(t: TerminalNode): TerminalNode {
+    t.setParent(this)
     return addAnyChild(t)
   }
 
@@ -186,8 +212,8 @@ public open class ParserRuleContext : RuleContext {
    *
    * @since 4.7
    */
-  public fun addErrorNode(errorNode: ErrorNode): ErrorNode {
-    errorNode.assignParent(this)
+  public open fun addErrorNode(errorNode: ErrorNode): ErrorNode {
+    errorNode.setParent(this)
     return addAnyChild(errorNode)
   }
 
@@ -197,7 +223,7 @@ public open class ParserRuleContext : RuleContext {
    *
    * If we have `# label`, we will need to remove generic `ruleContext` object.
    */
-  public fun removeLastChild() {
+  public open fun removeLastChild() {
     val tempChildren = children
     tempChildren?.removeAt(tempChildren.size - 1)
   }
@@ -211,7 +237,7 @@ public open class ParserRuleContext : RuleContext {
     }
   }
 
-  public fun <T : ParseTree> getChild(ctxType: KClass<T>, i: Int): T? {
+  public open fun <T : ParseTree> getChild(ctxType: KClass<T>, i: Int): T? {
     val tempChildren = children
 
     if (tempChildren == null || i < 0 || i >= tempChildren.size) {
@@ -235,7 +261,7 @@ public open class ParserRuleContext : RuleContext {
     return null
   }
 
-  public fun getToken(ttype: Int, i: Int): TerminalNode? {
+  public open fun getToken(ttype: Int, i: Int): TerminalNode? {
     val tempChildren = children
 
     if (tempChildren == null || i < 0 || i >= tempChildren.size) {
@@ -262,7 +288,7 @@ public open class ParserRuleContext : RuleContext {
     return null
   }
 
-  public fun getTokens(ttype: Int): List<TerminalNode> {
+  public open fun getTokens(ttype: Int): List<TerminalNode> {
     val tempChildren = children ?: return emptyList()
     val tokens = ArrayList<TerminalNode>()
 
@@ -279,10 +305,10 @@ public open class ParserRuleContext : RuleContext {
     return tokens
   }
 
-  public fun <T : ParserRuleContext> getRuleContext(ctxType: KClass<T>, i: Int): T? =
+  public open fun <T : ParserRuleContext> getRuleContext(ctxType: KClass<T>, i: Int): T? =
     getChild(ctxType, i)
 
-  public fun <T : ParserRuleContext> getRuleContexts(ctxType: KClass<T>): List<T> {
+  public open fun <T : ParserRuleContext> getRuleContexts(ctxType: KClass<T>): List<T> {
     val tempChildren = children ?: return emptyList()
     val contexts = ArrayList<T>()
 
@@ -299,7 +325,7 @@ public open class ParserRuleContext : RuleContext {
   /**
    * Used for rule context info debugging during parse-time, not so much for ATN debugging.
    */
-  public fun toInfoString(recognizer: Parser): String {
+  public open fun toInfoString(recognizer: Parser): String {
     val rules = recognizer.getRuleInvocationStack(this).toMutableList()
     rules.reverse()
     return "ParserRuleContext$rules{start=$start, stop=$stop}"

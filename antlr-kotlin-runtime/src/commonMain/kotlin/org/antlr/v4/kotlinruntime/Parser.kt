@@ -584,7 +584,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     ErrorNodeImpl(t)
 
   protected open fun addContextToParseTree() {
-    val parent = context!!.readParent()
+    val parent = context!!.getParent()
 
     // Add current context to parent if we have a parent
     parent?.addChild(context!!)
@@ -620,7 +620,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     // Trigger event on context, before it reverts to parent
     triggerExitRuleEvent()
     state = context!!.invokingState
-    context = context!!.readParent()
+    context = context!!.getParent()
   }
 
   public fun enterOuterAlt(localctx: ParserRuleContext, altNum: Int) {
@@ -629,7 +629,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     // If we have new localctx, make sure we replace existing ctx
     // that is previous child of parse tree
     if (buildParseTree && context !== localctx) {
-      val parent = context!!.readParent()
+      val parent = context!!.getParent()
 
       if (parent != null) {
         parent.removeLastChild()
@@ -657,7 +657,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
    */
   public open fun pushNewRecursionContext(localctx: ParserRuleContext, state: Int, ruleIndex: Int) {
     val previous = context
-    previous!!.assignParent(localctx)
+    previous!!.setParent(localctx)
     previous.invokingState = state
     previous.stop = _input.LT(-1)
 
@@ -683,14 +683,14 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     if (parseListeners.isNotEmpty()) {
       while (context !== _parentctx) {
         triggerExitRuleEvent()
-        context = context!!.readParent()
+        context = context!!.getParent()
       }
     } else {
       context = _parentctx
     }
 
     // Hook into tree
-    retCtx!!.assignParent(_parentctx)
+    retCtx!!.setParent(_parentctx)
 
     if (buildParseTree && _parentctx != null) {
       // Add return ctx into invoking rule's tree
@@ -706,7 +706,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
         return p
       }
 
-      p = p.readParent()
+      p = p.getParent()
     }
 
     return null
@@ -757,7 +757,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
         return true
       }
 
-      ctx = ctx.readParent()
+      ctx = ctx.getParent()
     }
 
     return following.contains(Token.EPSILON) && symbol == Token.EOF
@@ -795,7 +795,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
         stack.add(ruleNames[ruleIndex])
       }
 
-      p = p.readParent()
+      p = p.getParent()
     }
 
     return stack

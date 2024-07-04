@@ -64,12 +64,12 @@ public abstract class PredictionContext protected constructor(
 
       // If we are in RuleContext of start rule, s, then PredictionContext
       // is EMPTY. Nobody called us. (if we are empty, return empty)
-      if (tempOuterContext.parent == null || tempOuterContext === ParserRuleContext.EMPTY) {
+      if (tempOuterContext.getParent() == null || tempOuterContext === ParserRuleContext.EMPTY) {
         return EmptyPredictionContext
       }
 
       // If we have a parent, convert it to a PredictionContext graph
-      val parent = fromRuleContext(atn, tempOuterContext.readParent())
+      val parent = fromRuleContext(atn, tempOuterContext.getParent())
       val state = atn.states[tempOuterContext.invokingState]
       val transition = state!!.transition(0) as RuleTransition
       return SingletonPredictionContext.create(parent, transition.followState.stateNumber)
