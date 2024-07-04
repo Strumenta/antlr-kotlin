@@ -106,8 +106,8 @@ public class MySQLErrorListener : BaseErrorListener() {
       // Walk up from generic rules to reach something that gives us more context, if needed.
       var context = parser.context
 
-      while (context?.parent != null && simpleRules.contains(context.ruleIndex)) {
-        context = context.parent as ParserRuleContext?
+      while (context?.getParent() != null && simpleRules.contains(context.ruleIndex)) {
+        context = context.getParent()
       }
 
       // Try to find the expected input by examining the current parser context and

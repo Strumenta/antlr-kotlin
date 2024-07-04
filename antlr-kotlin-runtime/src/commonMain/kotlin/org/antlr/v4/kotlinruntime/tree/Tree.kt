@@ -29,7 +29,7 @@ public interface Tree {
    *
    * If the return value is `null`, then this node is the root of the tree.
    */
-  public fun readParent(): Tree?
+  public fun getParent(): Tree?
 
   /**
    * If there are children, get the `i`th value indexed from `0`.

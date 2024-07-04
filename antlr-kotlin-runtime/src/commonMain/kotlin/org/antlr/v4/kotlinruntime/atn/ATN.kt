@@ -177,7 +177,7 @@ public class ATN(public val grammarType: ATNType, public val maxTokenType: Int) 
       following = nextTokens(rt.followState)
       expected.addAll(following)
       expected.remove(Token.EPSILON)
-      ctx = ctx.readParent()
+      ctx = ctx.getParent()
     }
 
     if (following.contains(Token.EPSILON)) {

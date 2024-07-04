@@ -124,17 +124,17 @@ public object Trees {
    * @since 4.5.1
    */
   public fun getAncestors(t: Tree): List<Tree> {
-    if (t.readParent() == null) {
+    if (t.getParent() == null) {
       return emptyList()
     }
 
     val ancestors = ArrayList<Tree>()
-    var t1 = t.readParent()
+    var t1 = t.getParent()
 
     while (t1 != null) {
       // Insert at start
       ancestors.add(0, t1)
-      t1 = t1.readParent()
+      t1 = t1.getParent()
     }
 
     return ancestors
@@ -146,11 +146,11 @@ public object Trees {
    * @since 4.5.1
    */
   public fun isAncestorOf(t: Tree?, u: Tree?): Boolean {
-    if (t == null || u == null || t.readParent() == null) {
+    if (t == null || u == null || t.getParent() == null) {
       return false
     }
 
-    var p = u.readParent()
+    var p = u.getParent()
 
     while (p != null) {
       // Keep reference equality!
@@ -158,7 +158,7 @@ public object Trees {
         return true
       }
 
-      p = p.readParent()
+      p = p.getParent()
     }
 
     return false

@@ -8,6 +8,7 @@ import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 import org.antlr.v4.kotlinruntime.tree.RuleNode
 import org.antlr.v4.kotlinruntime.tree.Trees
+import kotlin.jvm.JvmField
 
 /**
  * A rule context is a record of a single rule invocation.
@@ -68,7 +69,8 @@ public open class RuleContext : RuleNode {
   /**
    * What context invoked this rule?
    */
-  public var parent: RuleContext? = null
+  @JvmField
+  protected var parent: RuleContext? = null
 
   /**
    * What state invoked the rule associated with this context?
@@ -77,6 +79,7 @@ public open class RuleContext : RuleNode {
    * If [parent] is `null`, this should be `-1` as this context
    * object represents the start rule.
    */
+  @JvmField
   public var invokingState: Int = -1
 
   /**
@@ -151,14 +154,14 @@ public open class RuleContext : RuleNode {
     this.invokingState = invokingState
   }
 
-  override fun readParent(): RuleContext? =
+  override fun getParent(): RuleContext? =
     parent
 
-  override fun assignParent(value: RuleContext?) {
+  override fun setParent(value: RuleContext?) {
     parent = value
   }
 
-  public fun depth(): Int {
+  public open fun depth(): Int {
     var n = 0
     var p: RuleContext? = this
 
@@ -191,7 +194,7 @@ public open class RuleContext : RuleNode {
    *
    * Print just a node if this is a leaf.
    */
-  public fun toStringTree(ruleNames: List<String>?): String =
+  public open fun toStringTree(ruleNames: List<String>?): String =
     Trees.toStringTree(this, ruleNames)
 
   override fun toStringTree(): String =
@@ -201,7 +204,7 @@ public open class RuleContext : RuleNode {
     toString(ruleNames = null, stop = null)
 
   // recog null unless ParserRuleContext, in which case we use subclass toString(...)
-  public fun toString(recog: Recognizer<*, *>?, stop: RuleContext = ParserRuleContext.EMPTY): String {
+  public open fun toString(recog: Recognizer<*, *>?, stop: RuleContext = ParserRuleContext.EMPTY): String {
     val ruleNames = recog?.ruleNames
     val ruleNamesList = if (ruleNames != null) {
       listOf(*ruleNames)
@@ -212,7 +215,7 @@ public open class RuleContext : RuleNode {
     return toString(ruleNamesList, stop)
   }
 
-  public fun toString(ruleNames: List<String>?, stop: RuleContext? = null): String {
+  public open fun toString(ruleNames: List<String>?, stop: RuleContext? = null): String {
     val buf = StringBuilder()
     var p: RuleContext? = this
     buf.append("[")

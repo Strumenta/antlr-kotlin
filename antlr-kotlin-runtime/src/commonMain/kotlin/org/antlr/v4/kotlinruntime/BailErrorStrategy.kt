@@ -45,7 +45,7 @@ public class BailErrorStrategy : DefaultErrorStrategy() {
 
     while (context != null) {
       context.exception = e
-      context = context.readParent()
+      context = context.getParent()
     }
 
     throw ParseCancellationException(e)
@@ -62,7 +62,7 @@ public class BailErrorStrategy : DefaultErrorStrategy() {
 
     while (context != null) {
       context.exception = e
-      context = context.readParent()
+      context = context.getParent()
     }
 
     throw ParseCancellationException(e)
