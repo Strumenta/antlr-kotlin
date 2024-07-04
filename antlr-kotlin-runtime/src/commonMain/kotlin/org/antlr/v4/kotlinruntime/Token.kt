@@ -117,10 +117,8 @@ public interface Token {
   public fun startPoint(): Point =
     Point(line, charPositionInLine)
 
-  public fun endPoint(): Point? =
-    if (text == null) {
-      null
-    } else {
-      Point(line, charPositionInLine).advance(text!!)
-    }
+  public fun endPoint(): Point? {
+    val text = this.text ?: return null
+    return Point(line, charPositionInLine).advance(text)
+  }
 }

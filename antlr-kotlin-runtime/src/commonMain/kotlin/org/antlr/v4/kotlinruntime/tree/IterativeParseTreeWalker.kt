@@ -57,7 +57,11 @@ public open class IterativeParseTreeWalker : ParseTreeWalker() {
         // No next, sibling, so move up
         currentNode = nodeStack.removeFirst()
         currentIndex = indexStack.pop()
-      } while (currentNode != null)
+
+        // The original condition was 'currentNode != null',
+        // but since nodeStack.removeFirst() throws if there
+        // is no element, the condition is always true
+      } while (true)
     }
   }
 }
