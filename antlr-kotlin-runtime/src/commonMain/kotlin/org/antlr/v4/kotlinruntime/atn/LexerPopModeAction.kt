@@ -9,7 +9,7 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * Implements the `popMode` lexer action by calling [Lexer.popMode].
  *
  * The `popMode` command does not have any parameters,
- * so this action is implemented as a singleton instance.
+ * so this action is implemented as an object.
  *
  * @author Sam Harwell
  * @since 4.2

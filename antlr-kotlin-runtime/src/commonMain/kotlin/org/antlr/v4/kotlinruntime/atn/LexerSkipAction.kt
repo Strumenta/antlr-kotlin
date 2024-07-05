@@ -9,7 +9,7 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
  * Implements the `skip` lexer action by calling [Lexer.skip].
  *
  * The `skip` command does not have any parameters,
- * so this action is implemented as a singleton instance.
+ * so this action is implemented as an object.
  *
  * @author Sam Harwell
  * @since 4.2

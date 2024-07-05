@@ -44,8 +44,8 @@ public open class ParserRuleContext : RuleContext {
   // This does not exist in the Java runtime
   public val position: Position?
     get() {
-      val start = start
-      val stop = stop
+      val start = this.start
+      val stop = this.stop
 
       if (start != null && stop != null) {
         val endPoint = stop.endPoint()

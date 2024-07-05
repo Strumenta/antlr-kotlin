@@ -117,7 +117,7 @@ public interface Token {
     Point(line, charPositionInLine)
 
   public fun endPoint(): Point? {
-    val text = text ?: return null
+    val text = this.text ?: return null
     return Point(line, charPositionInLine).advance(text)
   }
 }
