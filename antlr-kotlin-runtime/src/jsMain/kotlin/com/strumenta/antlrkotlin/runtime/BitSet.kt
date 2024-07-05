@@ -7,7 +7,7 @@ import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 @Suppress("SimplifyBooleanWithConstants")
 public actual class BitSet actual constructor(size: Int) {
-  private val bits = newArray(size)
+  private val bits = newArray<Boolean>(size)
 
   init {
     require(size >= 0) {
@@ -158,8 +158,4 @@ public actual class BitSet actual constructor(size: Int) {
 
     return -1
   }
-
-  @Suppress("UNUSED_PARAMETER")
-  private fun newArray(size: Int): Array<Boolean> =
-    js("Array(size)").unsafeCast<Array<Boolean>>()
 }
