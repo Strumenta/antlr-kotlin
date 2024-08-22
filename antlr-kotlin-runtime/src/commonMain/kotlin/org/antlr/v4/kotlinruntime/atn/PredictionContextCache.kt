@@ -22,8 +22,8 @@ public open class PredictionContextCache {
    * Protect shared cache from unsafe thread access.
    */
   public open fun add(ctx: PredictionContext): PredictionContext {
-    if (ctx === EmptyPredictionContext.Instance) {
-      return EmptyPredictionContext.Instance
+    if (ctx === EmptyPredictionContext) {
+      return EmptyPredictionContext
     }
 
     val existing = cache[ctx]

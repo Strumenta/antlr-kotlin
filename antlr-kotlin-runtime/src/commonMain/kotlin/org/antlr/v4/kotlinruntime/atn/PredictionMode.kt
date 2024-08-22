@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import com.strumenta.antlrkotlin.runtime.BitSet
@@ -74,13 +73,9 @@ public enum class PredictionMode {
   /**
    * A map that uses just the state and the stack context as the key.
    */
-  internal class AltAndContextMap : FlexibleHashMap<ATNConfig, BitSet>(AltAndContextConfigEqualityComparator.INSTANCE)
+  internal class AltAndContextMap : FlexibleHashMap<ATNConfig, BitSet>(AltAndContextConfigEqualityComparator)
 
-  private class AltAndContextConfigEqualityComparator private constructor() : AbstractEqualityComparator<ATNConfig>() {
-    companion object {
-      val INSTANCE = AltAndContextConfigEqualityComparator()
-    }
-
+  private object AltAndContextConfigEqualityComparator : AbstractEqualityComparator<ATNConfig>() {
     /**
      * The hash code is only a function of the [ATNState.stateNumber] and [ATNConfig.context].
      */
@@ -225,7 +220,7 @@ public enum class PredictionMode {
 
           for (c in tempConfig) {
             var tempC = c
-            tempC = ATNConfig(tempC, SemanticContext.Empty.Instance)
+            tempC = ATNConfig(tempC, SemanticContext.Empty)
             dup.add(tempC)
           }
 

@@ -35,11 +35,7 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
     }
   }
 
-  public class TrimToSizeListener : ParseTreeListener {
-    public companion object {
-      public val INSTANCE: TrimToSizeListener = TrimToSizeListener()
-    }
-
+  public object TrimToSizeListener : ParseTreeListener {
     override fun enterEveryRule(ctx: ParserRuleContext) {
       // Noop
     }
@@ -143,16 +139,16 @@ public abstract class Parser(input: TokenStream) : Recognizer<Token, ParserATNSi
    * This property is set to `false` by default for a newly constructed parser.
    */
   public var trimParseTree: Boolean
-    get() = parseListeners.contains(TrimToSizeListener.INSTANCE)
+    get() = parseListeners.contains(TrimToSizeListener)
     set(value) {
       if (value) {
         if (trimParseTree) {
           return
         }
 
-        addParseListener(TrimToSizeListener.INSTANCE)
+        addParseListener(TrimToSizeListener)
       } else {
-        removeParseListener(TrimToSizeListener.INSTANCE)
+        removeParseListener(TrimToSizeListener)
       }
     }
 

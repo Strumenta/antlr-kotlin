@@ -23,11 +23,11 @@ import kotlin.jvm.JvmStatic
 public abstract class SemanticContext {
   public companion object {
     public fun and(a: SemanticContext?, b: SemanticContext?): SemanticContext? {
-      if (a == null || a === Empty.Instance) {
+      if (a == null || a === Empty) {
         return b
       }
 
-      if (b == null || b === Empty.Instance) {
+      if (b == null || b === Empty) {
         return a
       }
 
@@ -51,8 +51,8 @@ public abstract class SemanticContext {
         return a
       }
 
-      if (a === Empty.Instance || b === Empty.Instance) {
-        return Empty.Instance
+      if (a === Empty || b === Empty) {
+        return Empty
       }
 
       val result = OR(a, b)
@@ -102,7 +102,7 @@ public abstract class SemanticContext {
    * @param parserCallStack
    * @return The simplified semantic context after precedence predicates are
    *   evaluated, which will be one of the following values:
-   *   - [Empty.Instance]: if the predicate simplifies to `true` after
+   *   - [Empty]: if the predicate simplifies to `true` after
    *     precedence predicates are evaluated
    *   - `null`: if the predicate simplifies to `false` after
    *     precedence predicates are evaluated
@@ -114,16 +114,11 @@ public abstract class SemanticContext {
   public open fun evalPrecedence(parser: Recognizer<*, *>, parserCallStack: RuleContext): SemanticContext? =
     this
 
-  public class Empty : SemanticContext() {
-    public companion object {
-      /**
-       * The default [SemanticContext], which is semantically equivalent to
-       * a predicate of the form `{true}?`.
-       */
-      @JvmStatic
-      public val Instance: Empty = Empty()
-    }
-
+  /**
+   * The default [SemanticContext], which is semantically equivalent to
+   * a predicate of the form `{true}?`.
+   */
+  public object Empty : SemanticContext() {
     override fun eval(parser: Recognizer<*, *>, parserCallStack: RuleContext): Boolean =
       false
   }
@@ -190,7 +185,7 @@ public abstract class SemanticContext {
 
     override fun evalPrecedence(parser: Recognizer<*, *>, parserCallStack: RuleContext): SemanticContext? =
       if (parser.precpred(parserCallStack, precedence)) {
-        Empty.Instance
+        Empty
       } else {
         null
       }
@@ -318,7 +313,7 @@ public abstract class SemanticContext {
         if (evaluated == null) {
           // The AND context is false if any element is false
           return null
-        } else if (evaluated !== Empty.Instance) {
+        } else if (evaluated !== Empty) {
           // Reduce the result by skipping true elements
           operands.add(evaluated)
         }
@@ -330,7 +325,7 @@ public abstract class SemanticContext {
 
       if (operands.isEmpty()) {
         // All elements were true, so the AND context is true
-        return Empty.Instance
+        return Empty
       }
 
       var result: SemanticContext? = operands[0]
@@ -424,9 +419,9 @@ public abstract class SemanticContext {
         val evaluated = context.evalPrecedence(parser, parserCallStack)
         differs = differs or (evaluated !== context)
 
-        if (evaluated === Empty.Instance) {
+        if (evaluated === Empty) {
           // The OR context is true if any element is true
-          return Empty.Instance
+          return Empty
         } else if (evaluated != null) {
           // Reduce the result by skipping false elements
           operands.add(evaluated)

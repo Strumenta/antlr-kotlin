@@ -1,29 +1,20 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.Lexer
-import org.antlr.v4.kotlinruntime.atn.LexerPopModeAction.Companion.INSTANCE
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 /**
  * Implements the `popMode` lexer action by calling [Lexer.popMode].
  *
- * The `popMode` command does not have any parameters, so this action is
- * implemented as a singleton instance exposed by [INSTANCE].
+ * The `popMode` command does not have any parameters,
+ * so this action is implemented as an object.
  *
  * @author Sam Harwell
  * @since 4.2
  */
-public class LexerPopModeAction private constructor() : LexerAction {
-  public companion object {
-    /**
-     * Provides a singleton instance of this parameterless lexer action.
-     */
-    public val INSTANCE: LexerPopModeAction = LexerPopModeAction()
-  }
-
+public object LexerPopModeAction : LexerAction {
   /**
    * Returns [LexerActionType.POP_MODE].
    */

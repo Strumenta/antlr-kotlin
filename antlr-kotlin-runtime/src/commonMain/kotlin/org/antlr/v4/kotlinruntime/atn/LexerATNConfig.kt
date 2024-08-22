@@ -20,7 +20,7 @@ public class LexerATNConfig : ATNConfig {
     state: ATNState,
     alt: Int,
     context: PredictionContext,
-  ) : super(state, alt, context, SemanticContext.Empty.Instance) {
+  ) : super(state, alt, context, SemanticContext.Empty) {
     passedThroughNonGreedyDecision = false
     lexerActionExecutor = null
   }
@@ -30,7 +30,7 @@ public class LexerATNConfig : ATNConfig {
     alt: Int,
     context: PredictionContext,
     lexerActionExecutor: LexerActionExecutor,
-  ) : super(state, alt, context, SemanticContext.Empty.Instance) {
+  ) : super(state, alt, context, SemanticContext.Empty) {
     this.lexerActionExecutor = lexerActionExecutor
     passedThroughNonGreedyDecision = false
   }
@@ -89,7 +89,7 @@ public class LexerATNConfig : ATNConfig {
       return false
     }
 
-    if (!ObjectEqualityComparator.INSTANCE.equals(lexerActionExecutor, other.lexerActionExecutor)) {
+    if (!ObjectEqualityComparator.equals(lexerActionExecutor, other.lexerActionExecutor)) {
       return false
     }
 

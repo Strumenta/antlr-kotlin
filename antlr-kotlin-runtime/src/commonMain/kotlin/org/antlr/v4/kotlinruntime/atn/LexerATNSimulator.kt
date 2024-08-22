@@ -403,7 +403,7 @@ public open class LexerATNSimulator(
     }
 
   protected open fun computeStartState(input: CharStream, p: ATNState): ATNConfigSet {
-    val initialContext = EmptyPredictionContext.Instance
+    val initialContext = EmptyPredictionContext
     val configs = OrderedATNConfigSet()
 
     for (i in 0..<p.numberOfTransitions) {
@@ -460,7 +460,7 @@ public open class LexerATNSimulator(
           return true
         }
 
-        configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext.Instance))
+        configs.add(LexerATNConfig(config, config.state, EmptyPredictionContext))
         tempCurrentAltReachedAcceptState = true
       }
 
