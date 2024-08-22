@@ -48,7 +48,7 @@ public open class LL1Analyzer(public val atn: ATN) {
       _LOOK(
         s = s.transition(alt).target,
         stopState = null,
-        ctx = EmptyPredictionContext.Instance,
+        ctx = EmptyPredictionContext,
         look = look[alt]!!,
         lookBusy = lookBusy,
         calledRuleStack = BitSet(),
@@ -192,7 +192,7 @@ public open class LL1Analyzer(public val atn: ATN) {
         return
       }
 
-      if (ctx !== EmptyPredictionContext.Instance) {
+      if (ctx !== EmptyPredictionContext) {
         // Run through all possible stack tops in ctx
         val removed = calledRuleStack.get(s.ruleIndex)
 

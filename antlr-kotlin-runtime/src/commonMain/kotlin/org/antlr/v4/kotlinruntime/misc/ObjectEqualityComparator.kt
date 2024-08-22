@@ -8,12 +8,8 @@ package org.antlr.v4.kotlinruntime.misc
  *
  * @author Sam Harwell
  */
-public class ObjectEqualityComparator<in T> : AbstractEqualityComparator<T>() {
-  public companion object {
-    public val INSTANCE: ObjectEqualityComparator<Any?> = ObjectEqualityComparator()
-  }
-
-  override fun hashCode(obj: T): Int =
+public object ObjectEqualityComparator : AbstractEqualityComparator<Any?>() {
+  override fun hashCode(obj: Any?): Int =
     obj?.hashCode() ?: 0
 
   /**
@@ -25,6 +21,6 @@ public class ObjectEqualityComparator<in T> : AbstractEqualityComparator<T>() {
    *
    * Otherwise, this method returns the result of `a == b`.
    */
-  override fun equals(a: T?, b: T?): Boolean =
+  override fun equals(a: Any?, b: Any?): Boolean =
     (a == null && b == null) || a == b
 }

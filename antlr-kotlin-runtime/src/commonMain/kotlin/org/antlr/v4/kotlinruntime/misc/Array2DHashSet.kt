@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.misc
 
 import com.strumenta.antlrkotlin.runtime.assert
@@ -11,7 +10,7 @@ import kotlin.math.floor
  */
 @Suppress("MemberVisibilityCanBePrivate")
 public open class Array2DHashSet<T>(
-  protected val comparator: AbstractEqualityComparator<T> = ObjectEqualityComparator.INSTANCE,
+  protected val comparator: AbstractEqualityComparator<T> = ObjectEqualityComparator,
   protected val initialCapacity: Int = INITIAL_CAPACITY,
   protected val initialBucketCapacity: Int = INITIAL_BUCKET_CAPACITY,
 ) : MutableSet<T> {

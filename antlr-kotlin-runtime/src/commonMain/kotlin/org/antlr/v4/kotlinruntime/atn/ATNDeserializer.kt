@@ -525,10 +525,10 @@ public open class ATNDeserializer(private val deserializationOptions: ATNDeseria
       LexerActionType.CHANNEL -> LexerChannelAction(data1)
       LexerActionType.CUSTOM -> LexerCustomAction(data1, data2)
       LexerActionType.MODE -> LexerModeAction(data1)
-      LexerActionType.MORE -> LexerMoreAction.INSTANCE
-      LexerActionType.POP_MODE -> LexerPopModeAction.INSTANCE
+      LexerActionType.MORE -> LexerMoreAction
+      LexerActionType.POP_MODE -> LexerPopModeAction
       LexerActionType.PUSH_MODE -> LexerPushModeAction(data1)
-      LexerActionType.SKIP -> LexerSkipAction.INSTANCE
+      LexerActionType.SKIP -> LexerSkipAction
       LexerActionType.TYPE -> LexerTypeAction(data1)
     }
 

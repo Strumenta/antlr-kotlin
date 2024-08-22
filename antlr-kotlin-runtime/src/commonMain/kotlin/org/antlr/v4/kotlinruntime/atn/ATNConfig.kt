@@ -95,7 +95,7 @@ public open class ATNConfig {
     state: ATNState,
     alt: Int,
     context: PredictionContext?,
-    semanticContext: SemanticContext = SemanticContext.Empty.Instance,
+    semanticContext: SemanticContext = SemanticContext.Empty,
   ) {
     this.state = state
     this.alt = alt
@@ -181,7 +181,7 @@ public open class ATNConfig {
       buf.append("]")
     }
 
-    if (semanticContext !== SemanticContext.Empty.Instance) {
+    if (semanticContext !== SemanticContext.Empty) {
       buf.append(",")
       buf.append(semanticContext)
     }

@@ -26,13 +26,9 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
    * the number of objects associated with ATNConfigs. The other solution is to
    * use a hash table that lets us specify the equals/hashcode operation.
    */
-  public class ConfigHashSet : AbstractConfigHashSet(ConfigEqualityComparator.INSTANCE)
+  public class ConfigHashSet : AbstractConfigHashSet(ConfigEqualityComparator)
 
-  public class ConfigEqualityComparator private constructor() : AbstractEqualityComparator<ATNConfig>() {
-    public companion object {
-      public val INSTANCE: ConfigEqualityComparator = ConfigEqualityComparator()
-    }
-
+  public object ConfigEqualityComparator : AbstractEqualityComparator<ATNConfig>() {
     override fun hashCode(obj: ATNConfig): Int {
       var hashCode = 7
       hashCode = 31 * hashCode + obj.state.stateNumber
@@ -50,9 +46,9 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
         return false
       }
 
-      return a.state.stateNumber == b.state.stateNumber &&
-        a.alt == b.alt &&
-        a.semanticContext == b.semanticContext
+      return a.state.stateNumber == b.state.stateNumber
+        && a.alt == b.alt
+        && a.semanticContext == b.semanticContext
     }
   }
 
@@ -119,7 +115,7 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
       val preds = ArrayList<SemanticContext>()
 
       for (c in configs) {
-        if (c.semanticContext !== SemanticContext.Empty.Instance) {
+        if (c.semanticContext !== SemanticContext.Empty) {
           preds.add(c.semanticContext)
         }
       }
@@ -171,7 +167,7 @@ public open class ATNConfigSet(public val fullCtx: Boolean = true) : MutableSet<
       throw IllegalStateException("This set is readonly")
     }
 
-    if (config.semanticContext !== SemanticContext.Empty.Instance) {
+    if (config.semanticContext !== SemanticContext.Empty) {
       hasSemanticContext = true
     }
 
