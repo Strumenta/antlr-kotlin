@@ -2,7 +2,7 @@
 
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -98,7 +98,7 @@ tasks {
     outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
   }
 
-  withType<KotlinCompile<*>> {
+  withType<KotlinCompilationTask<*>> {
     dependsOn(generateKotlinGrammarSource)
   }
 

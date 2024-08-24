@@ -3,7 +3,7 @@
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   id("strumenta.multiplatform")
@@ -123,7 +123,7 @@ tasks {
     outputDirectory = layout.buildDirectory.dir(outDir).get().asFile
   }
 
-  withType<KotlinCompile<*>> {
+  withType<KotlinCompilationTask<*>> {
     dependsOn(generateKotlinGrammarSource)
   }
 
