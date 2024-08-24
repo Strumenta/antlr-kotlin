@@ -82,8 +82,8 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       // This is the only way it works for prod/dev/test compilations.
       // See discussion in https://youtrack.jetbrains.com/issue/KT-56818
       project.tasks.withType<Kotlin2JsCompile>().configureEach {
-        kotlinOptions {
-          useEsClasses = true
+        compilerOptions {
+          useEsClasses.set(true)
         }
       }
     }
@@ -165,12 +165,14 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       }
 
       compilations.configureEach {
-        compilerOptions.configure {
-          jvmTarget.set(JvmTarget.JVM_1_8)
-          freeCompilerArgs.add("-Xjvm-default=all")
+        compileTaskProvider.configure {
+          compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+            freeCompilerArgs.add("-Xjvm-default=all")
 
-          if (!isRelease) {
-            freeCompilerArgs.add("-Xdebug")
+            if (!isRelease) {
+              freeCompilerArgs.add("-Xdebug")
+            }
           }
         }
       }
