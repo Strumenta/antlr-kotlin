@@ -33,6 +33,22 @@ class IdentityHashMapTests {
 
     prev = imap.remove(a)
     assertEquals("two", prev)
+    assertTrue(imap.isEmpty())
+
+    val one = A("same")
+    val two = A("same")
+    val three = B("same")
+    assertEquals(one, two)
+    assertEquals<Any>(two, three)
+
+    imap[one] = "one"
+    imap[two] = "two"
+    imap[three] = "three"
+
+    assertEquals(3, imap.size)
+    assertEquals("one", imap[one])
+    assertEquals("two", imap[two])
+    assertEquals("three", imap[three])
   }
 
   @Test
