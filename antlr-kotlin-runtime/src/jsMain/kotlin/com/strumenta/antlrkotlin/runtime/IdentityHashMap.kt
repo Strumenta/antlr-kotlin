@@ -5,7 +5,7 @@ package com.strumenta.antlrkotlin.runtime
 import js.collections.JsMap
 import kotlin.collections.MutableMap.MutableEntry as ME
 
-public actual class IdentityHashMap<K, V> : MutableMap<K, V> {
+internal actual class IdentityHashMap<K, V> : MutableMap<K, V> {
   private val jsMap = JsMap<K, V>()
 
   actual override val size: Int

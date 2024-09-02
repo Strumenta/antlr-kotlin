@@ -635,7 +635,7 @@ public abstract class PredictionContext protected constructor(
     public fun getCachedContext(
       context: PredictionContext,
       contextCache: PredictionContextCache,
-      visited: IdentityHashMap<PredictionContext, PredictionContext>,
+      visited: MutableMap<PredictionContext, PredictionContext>,
     ): PredictionContext {
       if (context.isEmpty) {
         return context

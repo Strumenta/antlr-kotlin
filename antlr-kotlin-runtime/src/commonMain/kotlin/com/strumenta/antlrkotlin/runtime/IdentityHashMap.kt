@@ -2,7 +2,7 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-public expect class IdentityHashMap<K, V>() : MutableMap<K, V> {
+internal expect class IdentityHashMap<K, V>() : MutableMap<K, V> {
   override val size: Int
   override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
   override val keys: MutableSet<K>
