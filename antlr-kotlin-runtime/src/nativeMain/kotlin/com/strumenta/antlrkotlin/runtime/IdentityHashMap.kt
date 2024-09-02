@@ -3,4 +3,5 @@
 package com.strumenta.antlrkotlin.runtime
 
 // TODO(Edoardo): implement real identity comparison
-public actual typealias IdentityHashMap<K, V> = HashMap<K, V>
+@Suppress("ACTUAL_WITHOUT_EXPECT")
+internal actual typealias IdentityHashMap<K, V> = HashMap<K, V>
