@@ -3,4 +3,5 @@
 package com.strumenta.antlrkotlin.runtime
 
 // TODO(Edoardo): implement real weak keys
-public actual typealias WeakHashMap<K, V> = HashMap<K, V>
+@Suppress("ACTUAL_WITHOUT_EXPECT")
+internal actual typealias WeakHashMap<K, V> = HashMap<K, V>
