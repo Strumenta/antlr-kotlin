@@ -7,4 +7,4 @@ package com.strumenta.antlrkotlin.runtime
 //  Also, how are we going to use the "lock" parameter?
 //  Probably it makes sense to just tell consumers the
 //  Kotlin Native implementation is not thread safe.
-public expect inline fun <R> synchronized(lock: Any, block: () -> R): R
+internal expect inline fun <R> synchronized(lock: Any, block: () -> R): R
