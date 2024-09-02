@@ -2,8 +2,8 @@
 
 [![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime)
-[![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-Apache)
+[![License BSD-3](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE-BSD)
 
 This project contains everything needed to support Kotlin as a target for ANTLR.
 
@@ -16,9 +16,6 @@ will run on the JVM (including Android), in the browser, in Node.js, and nativel
 Want to start experimenting immediately? See [Gradle Setup](#gradle-setup).
 
 ## Status
-
-The project should be considered experimental. Several parsers have been implemented and work so far using this target
-but not all the features are complete and well tested.
 
 The runtime and target's template are up-to-date with mainstream commit: `master/e9df464`
 
@@ -37,7 +34,7 @@ The Kotlin runtime for the Kotlin target is derived from the Java runtime, and i
 as a multiplatform project running on JVM, JS, WebAssembly (including WASI), and Native.
 
 > [!WARNING]  
-> The Native runtime is not thread safe
+> The Kotlin ANTLR runtime is **not** thread safe
 
 The supported Native platforms are:
 
