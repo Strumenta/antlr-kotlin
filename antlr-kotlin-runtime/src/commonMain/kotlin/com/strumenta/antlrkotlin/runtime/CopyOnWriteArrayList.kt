@@ -2,9 +2,9 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-public expect class CopyOnWriteArrayList<E>() : MutableList<E> {
+internal expect class CopyOnWriteArrayList<E>() : MutableList<E> {
   // Convenience constructor to avoid initializing with mutable state
-  public constructor(elements: Collection<E>)
+  constructor(elements: Collection<E>)
 
   override val size: Int
   override fun contains(element: E): Boolean
