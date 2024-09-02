@@ -10,7 +10,7 @@ import kotlin.contracts.contract
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("NOTHING_TO_INLINE", "KotlinRedundantDiagnosticSuppress")
-public inline fun assert(condition: Boolean, message: String? = null) {
+internal inline fun assert(condition: Boolean, message: String? = null) {
   contract {
     returns() implies condition
   }
