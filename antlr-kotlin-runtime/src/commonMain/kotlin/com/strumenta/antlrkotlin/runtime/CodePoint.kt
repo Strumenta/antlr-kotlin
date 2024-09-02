@@ -11,14 +11,14 @@ internal const val MIN_LOW_SURROGATE: Int = 0xDC00
 internal const val HIGH_SURROGATE_ENCODE_OFFSET: Int =
   (MIN_HIGH_SURROGATE - (MIN_SUPPLEMENTARY_CODE_POINT_ ushr 10))
 
-public fun isBmpCodePoint(codePoint: Int): Boolean =
+internal inline fun isBmpCodePoint(codePoint: Int): Boolean =
   codePoint ushr 16 == 0
 
-public fun highSurrogate(codePoint: Int): Char =
+internal inline fun highSurrogate(codePoint: Int): Char =
   ((codePoint ushr 10) + HIGH_SURROGATE_ENCODE_OFFSET).toChar()
 
-public fun lowSurrogate(codePoint: Int): Char =
+internal inline fun lowSurrogate(codePoint: Int): Char =
   ((codePoint and 0x3FF) + MIN_LOW_SURROGATE).toChar()
 
-public fun isValidCodePoint(codePoint: Int): Boolean =
+internal inline fun isValidCodePoint(codePoint: Int): Boolean =
   codePoint in 0..MAX_CODE_POINT_
