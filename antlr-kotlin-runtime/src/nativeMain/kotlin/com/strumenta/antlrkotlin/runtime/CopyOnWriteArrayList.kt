@@ -3,4 +3,5 @@
 package com.strumenta.antlrkotlin.runtime
 
 // TODO(Edoardo): make thread safe at some point
-public actual typealias CopyOnWriteArrayList<E> = ArrayList<E>
+@Suppress("ACTUAL_WITHOUT_EXPECT")
+internal actual typealias CopyOnWriteArrayList<E> = ArrayList<E>
