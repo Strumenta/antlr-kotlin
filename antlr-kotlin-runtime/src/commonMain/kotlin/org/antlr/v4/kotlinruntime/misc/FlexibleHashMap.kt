@@ -9,7 +9,7 @@ import kotlin.math.floor
  */
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 public open class FlexibleHashMap<K, V>(
-  protected val comparator: AbstractEqualityComparator<K> = ObjectEqualityComparator,
+  protected val comparator: AbstractEqualityComparator<K> = ObjectEqualityComparator.INSTANCE,
   public val initialCapacity: Int = INITIAL_CAPACITY,
   public val initialBucketCapacity: Int = INITIAL_BUCKET_CAPACITY,
 ) : MutableMap<K, V> {

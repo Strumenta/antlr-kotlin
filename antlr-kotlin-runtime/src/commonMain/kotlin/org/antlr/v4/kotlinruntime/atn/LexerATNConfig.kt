@@ -1,6 +1,5 @@
 // Copyright 2017-present Strumenta and contributors, licensed under Apache 2.0.
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
-
 package org.antlr.v4.kotlinruntime.atn
 
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
@@ -89,7 +88,7 @@ public class LexerATNConfig : ATNConfig {
       return false
     }
 
-    if (!ObjectEqualityComparator.equals(lexerActionExecutor, other.lexerActionExecutor)) {
+    if (!ObjectEqualityComparator.INSTANCE.equals(lexerActionExecutor, other.lexerActionExecutor)) {
       return false
     }
 

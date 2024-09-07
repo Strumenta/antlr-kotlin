@@ -10,7 +10,7 @@ import kotlin.math.floor
  */
 @Suppress("MemberVisibilityCanBePrivate")
 public open class Array2DHashSet<T>(
-  protected val comparator: AbstractEqualityComparator<T> = ObjectEqualityComparator,
+  protected val comparator: AbstractEqualityComparator<T> = ObjectEqualityComparator.INSTANCE,
   protected val initialCapacity: Int = INITIAL_CAPACITY,
   protected val initialBucketCapacity: Int = INITIAL_BUCKET_CAPACITY,
 ) : MutableSet<T> {
