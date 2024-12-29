@@ -37,7 +37,11 @@ internal class AntlrWorkerManager {
     javaCommand.workingDir = workingDir
     javaCommand.maxHeapSize = spec.maxHeapSize
     javaCommand.systemProperty("ANTLR_DO_NOT_EXIT", "true")
-    javaCommand.redirectErrorStream()
+    try {
+      javaCommand.redirectErrorStream()
+    } catch (t: Throwable) {
+      System.err.println("Error stream cannot be redirected: ${t.message}")
+    }
 
     return builder.build()
   }
