@@ -3,6 +3,7 @@
 package com.strumenta.antlrkotlin.gradle.internal
 
 import org.gradle.api.file.FileCollection
+import org.gradle.process.internal.JavaExecHandleBuilder
 import org.gradle.process.internal.worker.RequestHandler
 import org.gradle.process.internal.worker.WorkerProcessFactory
 import java.io.File
@@ -37,8 +38,19 @@ internal class AntlrWorkerManager {
     javaCommand.workingDir = workingDir
     javaCommand.maxHeapSize = spec.maxHeapSize
     javaCommand.systemProperty("ANTLR_DO_NOT_EXIT", "true")
-    javaCommand.redirectErrorStream()
+    javaCommand.redirectErrorStreamCompat()
 
     return builder.build()
+  }
+
+  /**
+   * Merge the process' error stream into its output stream.
+   *
+   * Solves a compatibility issue with Gradle 8.12+.
+   * See [antlr-kotlin/issues/201](https://github.com/Strumenta/antlr-kotlin/issues/201).
+   */
+  private fun JavaExecHandleBuilder.redirectErrorStreamCompat() {
+    val method = this::class.java.getMethod("redirectErrorStream")
+    method.invoke(this)
   }
 }
