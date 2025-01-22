@@ -26,10 +26,7 @@ maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-
 gradle-plugin-publish-plugin = { group = "com.gradle.publish", name = "plugin-publish-plugin", version.ref = "gradle-plugin-publish" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 kotlinx-resources = { id = "com.goncalossilva.resources", version.ref = "kotlinx-resources" }
 researchgate-release = { id = "net.researchgate.release", version.ref = "researchgate-release" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
