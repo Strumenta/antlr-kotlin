@@ -1,10 +1,8 @@
 package com.strumenta.antlrkotlin.gradle.plugins
 
-import com.strumenta.antlrkotlin.gradle.ext.javaExtension
 import com.strumenta.antlrkotlin.gradle.ext.kmpExtension
 import com.strumenta.antlrkotlin.gradle.ext.releaseBuild
 import org.gradle.api.Action
-import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Nested
@@ -27,7 +25,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   }
 
   interface JvmConfiguration {
-    val enableJava: Property<Boolean>
+    //
   }
 
   interface NativeConfiguration {
@@ -148,14 +146,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
     val isRelease = project.releaseBuild()
     project.kmpExtension.jvm {
-      if (jvmConfig.enableJava.getOrElse(false)) {
-        withJava()
-
-        val java = project.javaExtension
-        java.targetCompatibility = JavaVersion.VERSION_1_8
-        java.sourceCompatibility = JavaVersion.VERSION_1_8
-      }
-
       compilations.configureEach {
         compileTaskProvider.configure {
           compilerOptions {
