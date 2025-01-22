@@ -92,11 +92,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       kmpExtension.wasmJs {
         nodejs {
           testTask {
-            useMocha {
-              // Override default 2s timeout
-              timeout = "${testsTimeout}s"
-            }
-
             filter.isFailOnNoMatchingTests = true
           }
         }
@@ -188,11 +183,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     project.kmpExtension.wasmWasi {
       nodejs {
         testTask {
-          useMocha {
-            // Override default 2s timeout
-            timeout = "30s"
-          }
-
           filter.isFailOnNoMatchingTests = true
         }
       }
