@@ -5,7 +5,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
 import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
@@ -16,7 +15,6 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
  * @see StrumentaMultiplatformModuleExtension
  */
 class StrumentaMultiplatformModulePlugin : Plugin<Project> {
-  @OptIn(ExperimentalKotlinGradlePluginApi::class)
   override fun apply(project: Project) {
     // Apply the required plugins
     project.apply<KotlinMultiplatformPluginWrapper>()

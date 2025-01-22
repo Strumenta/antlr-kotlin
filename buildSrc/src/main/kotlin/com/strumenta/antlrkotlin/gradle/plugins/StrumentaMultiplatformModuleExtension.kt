@@ -10,10 +10,10 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Nested
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 /**
@@ -113,9 +113,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
             }
           }
         }
-
-        // Enable WASM optimizations
-        applyBinaryen()
       }
 
       // Necessary as we are using dependsOn explicitly.

@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.gradle.jvm.tasks.Jar

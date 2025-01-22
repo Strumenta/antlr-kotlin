@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.strumenta.antlrkotlin.gradle.ext.setupPom
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import com.vanniktech.maven.publish.SonatypeHost
