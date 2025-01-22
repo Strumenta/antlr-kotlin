@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryName
 import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryUrl
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -44,7 +42,7 @@ release {
   buildTasks = listOf(
     ":antlr-kotlin-runtime:publishAllPublicationsToMavenCentralRepository",
     ":antlr-kotlin-target:publishAllPublicationsToMavenCentralRepository",
-    ":antlr-kotlin-gradle-plugin:publishPlugins"
+    ":antlr-kotlin-gradle-plugin:publishPlugins",
   )
 
   git {
