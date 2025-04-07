@@ -1,19 +1,17 @@
 package com.strumenta.antlrkotlin.gradle.plugins
 
-import com.strumenta.antlrkotlin.gradle.ext.javaExtension
 import com.strumenta.antlrkotlin.gradle.ext.kmpExtension
 import com.strumenta.antlrkotlin.gradle.ext.releaseBuild
 import org.gradle.api.Action
-import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Nested
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 /**
@@ -27,7 +25,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   }
 
   interface JvmConfiguration {
-    val enableJava: Property<Boolean>
+    //
   }
 
   interface NativeConfiguration {
@@ -92,11 +90,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       kmpExtension.wasmJs {
         nodejs {
           testTask {
-            useMocha {
-              // Override default 2s timeout
-              timeout = "${testsTimeout}s"
-            }
-
             filter.isFailOnNoMatchingTests = true
           }
         }
@@ -113,9 +106,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
             }
           }
         }
-
-        // Enable WASM optimizations
-        applyBinaryen()
       }
 
       // Necessary as we are using dependsOn explicitly.
@@ -156,14 +146,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
     val isRelease = project.releaseBuild()
     project.kmpExtension.jvm {
-      if (jvmConfig.enableJava.getOrElse(false)) {
-        withJava()
-
-        val java = project.javaExtension
-        java.targetCompatibility = JavaVersion.VERSION_1_8
-        java.sourceCompatibility = JavaVersion.VERSION_1_8
-      }
-
       compilations.configureEach {
         compileTaskProvider.configure {
           compilerOptions {
@@ -191,11 +173,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     project.kmpExtension.wasmWasi {
       nodejs {
         testTask {
-          useMocha {
-            // Override default 2s timeout
-            timeout = "30s"
-          }
-
           filter.isFailOnNoMatchingTests = true
         }
       }
