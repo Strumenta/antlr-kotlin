@@ -4,7 +4,8 @@ package com.strumenta.antlrkotlin.gradle.internal
 
 import org.gradle.api.file.FileCollection
 import org.gradle.process.internal.JavaExecHandleBuilder
-import org.gradle.process.internal.worker.RequestHandler
+import org.gradle.process.internal.worker.MultiRequestClient
+import org.gradle.process.internal.worker.MultiRequestWorkerProcessBuilder
 import org.gradle.process.internal.worker.WorkerProcessFactory
 import java.io.File
 
@@ -15,8 +16,17 @@ internal class AntlrWorkerManager {
     antlrClasspath: FileCollection?,
     spec: AntlrSpec,
   ): AntlrResult {
-    val antlrWorker = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec)
-    return antlrWorker.run(spec)
+    val client = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec)
+
+    var result: AntlrResult
+    try {
+      client.start()
+      result = client.run(spec)
+    } finally {
+      client.stop()
+    }
+
+    return result
   }
 
   private fun createWorkerProcess(
@@ -24,9 +34,10 @@ internal class AntlrWorkerManager {
     workerFactory: WorkerProcessFactory,
     antlrClasspath: FileCollection?,
     spec: AntlrSpec,
-  ): RequestHandler<AntlrSpec, AntlrResult> {
-    val builder = workerFactory.singleRequestWorker(AntlrExecutor::class.java)
-    builder.setBaseName("Gradle ANTLR Kotlin Worker")
+  ): MultiRequestClient<AntlrSpec, AntlrResult> {
+    val builder: MultiRequestWorkerProcessBuilder<AntlrSpec, AntlrResult> =
+      workerFactory.multiRequestWorker(AntlrExecutor::class.java)
+    builder.baseName = "Gradle ANTLR Kotlin Worker"
 
     if (antlrClasspath != null) {
       builder.applicationClasspath(antlrClasspath)
