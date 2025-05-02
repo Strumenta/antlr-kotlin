@@ -2,5 +2,4 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-@Suppress("ACTUAL_WITHOUT_EXPECT")
 internal actual typealias CopyOnWriteArrayList<E> = java.util.concurrent.CopyOnWriteArrayList<E>

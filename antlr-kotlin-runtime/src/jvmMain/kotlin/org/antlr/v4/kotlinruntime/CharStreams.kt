@@ -93,6 +93,7 @@ public actual object CharStreams : AbstractCharStreams() {
     val buffer: ByteArray
       get() = buf
 
+    @Suppress("PROPERTY_HIDES_JAVA_FIELD")
     val count: Int
       get() = super.count
   }
