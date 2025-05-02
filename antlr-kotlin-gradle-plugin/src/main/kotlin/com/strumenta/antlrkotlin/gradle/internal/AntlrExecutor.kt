@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 
 internal class AntlrExecutor : RequestHandler<AntlrSpec, AntlrResult> {
   private companion object {
-    @Suppress("ConstPropertyName")
     private const val serialVersionUID = 1L
     private val logger = LoggerFactory.getLogger(AntlrExecutor::class.java)
   }

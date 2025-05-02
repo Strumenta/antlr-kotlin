@@ -9,7 +9,6 @@ internal data class AntlrResult(
   val exception: Exception? = null,
 ) : Serializable {
   private companion object {
-    @Suppress("ConstPropertyName")
     private const val serialVersionUID = 1L
   }
 }
