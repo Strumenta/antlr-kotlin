@@ -35,7 +35,7 @@ internal class IdentityEntriesView<K, V>(private val jsMap: JsMap<K, V>) : Abstr
 
   override fun contains(element: ME<K, V>): Boolean {
     val k = undefinedToNull(element.key)
-    return jsMap.has(k) && jsMap[k] === element.value
+    return jsMap.has(k) && jsMap.get(k) === element.value
   }
 
   override fun iterator(): MutableIterator<ME<K, V>> {
@@ -65,7 +65,7 @@ internal class IdentityEntriesView<K, V>(private val jsMap: JsMap<K, V>) : Abstr
 
     if (jsMap.has(k)) {
       // IMPORTANT: notice that we use reference/strict equality
-      if (jsMap[k] === value) {
+      if (jsMap.get(k) === value) {
         return jsMap.delete(k)
       }
     }
@@ -76,9 +76,9 @@ internal class IdentityEntriesView<K, V>(private val jsMap: JsMap<K, V>) : Abstr
   private inner class IdentityEntry(override val key: K, override var value: V) : ME<K, V> {
     override fun setValue(newValue: V): V {
       val oldValue = value
-      check(oldValue === jsMap[key])
+      check(oldValue === jsMap.get(key))
 
-      jsMap[key] = newValue
+      jsMap.set(key, newValue)
       value = newValue
       return oldValue
     }
