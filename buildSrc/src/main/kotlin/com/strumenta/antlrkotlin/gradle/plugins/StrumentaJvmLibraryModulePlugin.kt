@@ -17,9 +17,6 @@ class StrumentaJvmLibraryModulePlugin : Plugin<Project> {
   override fun apply(project: Project) {
     // Apply the required plugins
     project.apply<KotlinPluginWrapper>()
-    project.apply {
-      plugin("org.gradle.java-library")
-    }
 
     // General Kotlin configuration
     val kotlin = project.kotlinJvmExtension
