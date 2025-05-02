@@ -28,19 +28,19 @@ internal actual class IdentityHashMap<K, V> : MutableMap<K, V> {
 
   actual override fun get(key: K): V? {
     val k = undefinedToNull(key)
-    return undefinedToNull(jsMap[k])
+    return undefinedToNull(jsMap.get(k))
   }
 
   actual override fun put(key: K, value: V): V? {
     val k = undefinedToNull(key)
-    val previousValue = jsMap[k]
-    jsMap[k] = value
+    val previousValue = jsMap.get(k)
+    jsMap.set(k, value)
     return undefinedToNull(previousValue)
   }
 
   actual override fun remove(key: K): V? {
     val k = undefinedToNull(key)
-    val removedValue = jsMap[k]
+    val removedValue = jsMap.get(k)
     jsMap.delete(k)
     return undefinedToNull(removedValue)
   }
@@ -48,7 +48,7 @@ internal actual class IdentityHashMap<K, V> : MutableMap<K, V> {
   actual override fun putAll(from: Map<out K, V>) {
     for ((key, value) in from) {
       val k = undefinedToNull(key)
-      jsMap[k] = value
+      jsMap.set(k, value)
     }
   }
 
