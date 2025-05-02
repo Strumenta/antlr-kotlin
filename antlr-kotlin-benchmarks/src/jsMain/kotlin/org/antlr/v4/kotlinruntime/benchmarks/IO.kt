@@ -2,7 +2,7 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package org.antlr.v4.kotlinruntime.benchmarks
 
-import js.objects.jso
+import js.objects.unsafeJso
 import node.buffer.BufferEncoding
 import node.fs.ReadFileSyncStringOptions
 import node.fs.readFileSync
@@ -12,7 +12,7 @@ import node.fs.readFileSync
 private const val basePath = "../../../../antlr-kotlin-benchmarks/build/processedResources/js/main"
 
 public actual fun readBenchmarkFile(name: String): String {
-  val options = jso<ReadFileSyncStringOptions> {
+  val options = unsafeJso<ReadFileSyncStringOptions> {
     encoding = BufferEncoding.utf8
   }
 
