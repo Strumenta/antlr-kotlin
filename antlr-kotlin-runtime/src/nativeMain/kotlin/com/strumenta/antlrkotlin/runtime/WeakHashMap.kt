@@ -5,5 +5,4 @@ package com.strumenta.antlrkotlin.runtime
 // TODO(Edoardo): implement real weak keys.
 //  See kotlinlang.org/api/latest/jvm/stdlib/kotlin.native.ref
 //  for classes and functions useful for a possible implementation
-@Suppress("ACTUAL_WITHOUT_EXPECT")
 internal actual typealias WeakHashMap<K, V> = HashMap<K, V>
