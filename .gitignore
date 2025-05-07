@@ -95,6 +95,9 @@ npm-debug.log.*
 *.ear
 *.db
 
+# Allow the Gradle Wrapper JAR
+!gradle/wrapper/gradle-wrapper.jar
+
 ######################
 # Windows
 ######################

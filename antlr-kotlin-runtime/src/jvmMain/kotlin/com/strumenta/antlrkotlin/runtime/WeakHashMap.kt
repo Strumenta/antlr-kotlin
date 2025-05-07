@@ -4,5 +4,4 @@ package com.strumenta.antlrkotlin.runtime
 
 import java.util.WeakHashMap as JavaWeakHashMap
 
-@Suppress("ACTUAL_WITHOUT_EXPECT")
 internal actual typealias WeakHashMap<K, V> = JavaWeakHashMap<K, V>

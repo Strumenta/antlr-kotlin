@@ -7,5 +7,6 @@ import kotlinx.cinterop.toKString
 import platform.posix.getenv
 
 @OptIn(ExperimentalForeignApi::class)
+@Suppress("NOTHING_TO_INLINE")
 internal actual inline fun platformGetEnv(name: String): String? =
   getenv(name)?.toKString()

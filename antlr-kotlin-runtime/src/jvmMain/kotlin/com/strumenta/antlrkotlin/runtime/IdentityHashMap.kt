@@ -4,5 +4,4 @@ package com.strumenta.antlrkotlin.runtime
 
 import java.util.IdentityHashMap as JavaIdentityHashMap
 
-@Suppress("ACTUAL_WITHOUT_EXPECT")
 internal actual typealias IdentityHashMap<K, V> = JavaIdentityHashMap<K, V>

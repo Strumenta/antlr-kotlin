@@ -17,8 +17,8 @@ internal class AntlrWorkerManager {
     spec: AntlrSpec,
   ): AntlrResult {
     val client = createWorkerProcess(workingDir, workerFactory, antlrClasspath, spec)
+    val result: AntlrResult
 
-    var result: AntlrResult
     try {
       client.start()
       result = client.run(spec)

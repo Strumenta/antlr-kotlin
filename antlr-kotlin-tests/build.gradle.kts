@@ -1,5 +1,4 @@
-@file:Suppress("UnstableApiUsage")
-
+import com.strumenta.antlrkotlin.gradle.AntlrKotlinTask
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
@@ -7,8 +6,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
   id("strumenta.multiplatform")
+  alias(libs.plugins.antlr.kotlin)
   alias(libs.plugins.kotlinx.resources)
-  antlr
 }
 
 strumentaMultiplatform {
@@ -54,11 +53,6 @@ kotlin {
   }
 }
 
-dependencies {
-  antlr(libs.antlr4)
-  antlr(projects.antlrKotlinTarget)
-}
-
 tasks {
   // The TSQL grammar test fails because of a compiler error
   // when targeting the JVM (MethodTooLargeException), even
@@ -69,14 +63,7 @@ tasks {
     exclude("**/test/generated/TSql*.kt")
   }
 
-  generateGrammarSource {
-    // The default task is set up considering a Java source set,
-    // which we do not have. Using it is messier than simply
-    // registering a new task
-    enabled = false
-  }
-
-  val generateKotlinGrammarSource = register<AntlrTask>("generateKotlinGrammarSource") {
+  val generateKotlinGrammarSource = register<AntlrKotlinTask>("generateKotlinGrammarSource") {
     dependsOn("cleanGenerateKotlinGrammarSource")
 
     // Only include *.g4 files. This allows tools (e.g., IDE plugins)
@@ -86,12 +73,11 @@ tasks {
     }
 
     val pkgName = "com.strumenta.antlrkotlin.test.generated"
-    arguments = listOf(
-      "-Dlanguage=Kotlin",    // We want to generate Kotlin sources
-      "-visitor",             // We want visitors alongside listeners
-      "-package", pkgName,    // We want the generated sources to have this package declared
-      "-encoding", "UTF-8",   // We want the generated sources to be encoded in UTF-8
-    )
+    packageName = pkgName
+
+    // We want visitors alongside listeners.
+    // The Kotlin target language is implicit, as is the file encoding (UTF-8)
+    arguments = listOf("-visitor")
 
     // Generated files are outputted inside build/generatedAntlr
     val outDir = "generatedAntlr/${pkgName.replace(".", "/")}"

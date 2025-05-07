@@ -11,10 +11,9 @@ internal data class AntlrSpec(
   val grammarFiles: Set<File>,
   val inputDirectories: Set<File>,
   val outputDirectory: File,
-  val maxHeapSize: String?,
+  val maxHeapSize: String,
 ) : Serializable {
   private companion object {
-    @Suppress("ConstPropertyName")
     private const val serialVersionUID = 1L
   }
 

@@ -17,16 +17,13 @@ class StrumentaJvmLibraryModulePlugin : Plugin<Project> {
   override fun apply(project: Project) {
     // Apply the required plugins
     project.apply<KotlinPluginWrapper>()
-    project.apply {
-      plugin("org.gradle.java-library")
-    }
 
     // General Kotlin configuration
     val kotlin = project.kotlinJvmExtension
     kotlin.explicitApiWarning()
     kotlin.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_1_9)
-      languageVersion.set(KotlinVersion.KOTLIN_1_9)
+      apiVersion.set(KotlinVersion.KOTLIN_2_1)
+      languageVersion.set(KotlinVersion.KOTLIN_2_1)
 
       jvmTarget.set(JvmTarget.JVM_1_8)
       freeCompilerArgs.add("-Xjvm-default=all")

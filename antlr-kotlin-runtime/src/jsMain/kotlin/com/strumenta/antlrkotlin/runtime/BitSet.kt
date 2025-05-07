@@ -2,7 +2,6 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-import js.core.delete
 import org.antlr.v4.kotlinruntime.misc.MurmurHash
 
 @Suppress("SimplifyBooleanWithConstants")
@@ -159,3 +158,5 @@ public actual class BitSet actual constructor(size: Int) {
     return -1
   }
 }
+
+private external fun delete(expression: dynamic): Boolean
