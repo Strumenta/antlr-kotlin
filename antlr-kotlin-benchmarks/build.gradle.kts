@@ -36,6 +36,14 @@ strumentaMultiplatform {
 }
 
 kotlin {
+  mingwX64 {
+    binaries.configureEach {
+      // Increase the function's stack size to 2 megabytes
+      // See https://youtrack.jetbrains.com/issue/KT-77313
+      linkerOpts.add("-Wl,/stack:0x200000")
+    }
+  }
+
   sourceSets {
     commonMain {
       kotlin {
