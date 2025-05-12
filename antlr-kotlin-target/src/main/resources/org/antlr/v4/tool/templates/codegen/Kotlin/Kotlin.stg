@@ -308,7 +308,7 @@ public open class <parser.name>(input: TokenStream) : <superClass; null="Parser"
 
     override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
         when (ruleIndex) {
-            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>, predIndex)}; separator="\n">
+            <parser.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx as <f.ctxType>?, predIndex)}; separator="\n">
         }
 
         return true
@@ -347,7 +347,7 @@ override fun action(_localctx: RuleContext?, ruleIndex: Int, actionIndex: Int) {
 
 override fun sempred(_localctx: RuleContext?, ruleIndex: Int, predIndex: Int): Boolean {
     when (ruleIndex) {
-        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx!!, predIndex)}; separator="\n">
+        <recog.sempredFuncs.values:{f|<f.ruleIndex> -> return <f.name>_sempred(_localctx, predIndex)}; separator="\n">
     }
 
     return true
@@ -373,15 +373,18 @@ private fun <r.name>_action(_localctx: <r.ctxType>?, actionIndex: Int) {
 
 // This generates a private method since the predIndex is generated, making an
 // overriding implementation impossible to maintain.
-// This function is only called when the predIndex and RuleContext is already known to exist
-// (see the implementation of "dumpActions")
+//
+// We suppress UNSAFE_CALL as in "_localctx.something" _localctx is null,
+// but we should be able to compile anyway.
+// An alternative is to change RetValueRef to "_localctx!!.<a.name>".
 RuleSempredFunction(r, actions) ::= <<
-private fun <r.name>_sempred(_localctx: <r.ctxType>, predIndex: Int): Boolean {
+@Suppress("UNSAFE_CALL")
+private fun <r.name>_sempred(_localctx: <r.ctxType>?, predIndex: Int): Boolean {
     when (predIndex) {
         <actions:{index|<index> -> return (<actions.(index)>)}; separator="\n">
     }
 
-    throw IllegalStateException("No predicate with index: " + predIndex)
+    return true
 }
 >>
 
