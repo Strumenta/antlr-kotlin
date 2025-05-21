@@ -30,13 +30,6 @@ kotlin {
         implementation(kotlin("test"))
       }
     }
-
-    jsMain {
-      dependencies {
-        implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
-        implementation(libs.kotlin.wrappers.kotlin.js)
-      }
-    }
   }
 }
 

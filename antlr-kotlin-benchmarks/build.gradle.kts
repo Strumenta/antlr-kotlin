@@ -36,6 +36,11 @@ strumentaMultiplatform {
 }
 
 kotlin {
+  js {
+    // Necessary for using @JsModule
+    useCommonJs()
+  }
+
   mingwX64 {
     binaries.configureEach {
       // Increase the function's stack size to 2 megabytes
@@ -59,14 +64,6 @@ kotlin {
     commonTest {
       dependencies {
         implementation(kotlin("test"))
-      }
-    }
-
-    jsMain {
-      dependencies {
-        implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
-        implementation(libs.kotlin.wrappers.kotlin.js)
-        implementation(libs.kotlin.wrappers.kotlin.node)
       }
     }
 

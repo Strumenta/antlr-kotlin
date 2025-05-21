@@ -2,7 +2,6 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-import js.collections.JsMap
 import kotlin.collections.MutableMap.MutableEntry as ME
 
 internal actual class IdentityHashMap<K, V> : MutableMap<K, V> {
@@ -58,7 +57,7 @@ internal actual class IdentityHashMap<K, V> : MutableMap<K, V> {
   }
 
   actual override fun containsValue(value: V): Boolean {
-    for (v in jsMap.values()) {
+    for (v in jsMap.values().toKotlinIterator()) {
       // IMPORTANT: notice that we use reference/strict equality
       if (v === value) {
         return true

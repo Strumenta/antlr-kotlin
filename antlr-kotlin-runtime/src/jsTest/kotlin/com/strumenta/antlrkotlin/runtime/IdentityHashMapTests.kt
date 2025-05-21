@@ -64,11 +64,36 @@ class IdentityHashMapTests {
   }
 
   @Test
+  fun entriesIterator() {
+    val imap = IdentityHashMap<String, A>()
+    val a = A("one")
+    imap["one"] = A("one")
+    imap["two"] = a
+    imap["three"] = A("one")
+
+    val iterator = imap.iterator()
+    assertEquals("one", iterator.next().key)
+    assertSame(a, iterator.next().value)
+    assertEquals("three", iterator.next().key)
+    assertFalse(iterator.hasNext())
+    assertFailsWith(NoSuchElementException::class) {
+      iterator.next()
+    }
+  }
+
+  @Test
   fun keysIterator() {
     val imap = IdentityHashMap<Any, String>()
     val one = A("one")
     imap[one] = "value-one"
     imap["two"] = "value-two"
+
+    for ((i, key) in imap.keys.withIndex()) {
+      when (i) {
+        0 -> assertSame(one, key)
+        1 -> assertEquals("two", key)
+      }
+    }
 
     val keys = imap.keys
     val iterator = keys.iterator()
@@ -76,6 +101,9 @@ class IdentityHashMapTests {
     assertSame(one, iterator.next())
     assertEquals("two", iterator.next())
     assertFalse(iterator.hasNext())
+    assertFailsWith(NoSuchElementException::class) {
+      iterator.next()
+    }
 
     iterator.remove()
     assertEquals(1, imap.size)
