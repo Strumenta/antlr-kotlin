@@ -2,7 +2,6 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-import js.collections.JsMap
 import kotlin.collections.MutableMap.MutableEntry as ME
 
 internal class IdentityEntriesView<K, V>(private val jsMap: JsMap<K, V>) : AbstractMutableSet<ME<K, V>>() {
@@ -39,7 +38,7 @@ internal class IdentityEntriesView<K, V>(private val jsMap: JsMap<K, V>) : Abstr
   }
 
   override fun iterator(): MutableIterator<ME<K, V>> {
-    val iterator = jsMap.iterator()
+    val iterator = jsMap.iterator().toKotlinIterator()
     return object : MutableIterator<ME<K, V>> {
       var lastEntry: IdentityEntriesView<K, V>.IdentityEntry? = null
 
