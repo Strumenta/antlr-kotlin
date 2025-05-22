@@ -1,0 +1,1 @@
+(stringList (int 5) (stringSequence one two three four five) <EOF>)
