@@ -392,7 +392,7 @@ RuleFunction(currentRule, args, code, locals, ruleCtx, altLabelCtxs, namedAction
 <ruleCtx>
 <altLabelCtxs:{l | <altLabelCtxs.(l)>}; separator="\n">
 
-public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.escapedName>(<args; separator=", ">): <currentRule.ctxType> {
+public fun <if(currentRule.modifiers)><currentRule.modifiers:{f | <f> }><else><endif><currentRule.escapedName>(<currentRule.args:{a |<attributeDeclAndInit(a)>}; separator=", ">): <currentRule.ctxType> {
     var _localctx = <currentRule.ctxType>(context, state<currentRule.args:{a | , <a.escapedName>}>)
     var _token: Token?
     var _ctx: RuleContext?
@@ -823,7 +823,7 @@ public open class <struct.name> : <if(contextSuperClass)><contextSuperClass><els
     <attrs:{a | <a>}; separator="\n">
     <getters:{g | <g>}; separator="\n">
 
-    public constructor(parent: ParserRuleContext?, invokingState: Int<ctorAttrs:{a | , <a>}>) : super(parent, invokingState) {
+    public constructor(parent: ParserRuleContext?, invokingState: Int<struct.ctorAttrs:{a | , <attributeDeclAndInit(a)>}>) : super(parent, invokingState) {
         <struct.ctorAttrs:{a | this.<a.escapedName> = <a.escapedName>}; separator="\n">
     }
 
@@ -874,7 +874,8 @@ override fun \<T> accept(visitor: ParseTreeVisitor\<out T>): T {
 }
 >>
 
-AttributeDecl(d) ::= "@JvmField @JsName(\"<d.escapedName>$\") public var <d.escapedName>: <TypeMap.(d.type)><if(!IsPrimitiveTypeMap.(d.type))>?<endif> = <if(d.initValue)><d.initValue><else><TypeDefaultValueMap.(TypeMap.(d.type))><endif>"
+AttributeDecl(d) ::= "@JvmField @JsName(\"<d.escapedName>$\") public var <attributeDeclAndInit(d)>"
+attributeDeclAndInit(a) ::= "<a.escapedName>: <TypeMap.(a.type)><if(!IsPrimitiveTypeMap.(a.type))>?<endif> = <if(a.initValue)><a.initValue><else><TypeDefaultValueMap.(TypeMap.(a.type))><endif>"
 
 // If we don't know location of label def x, use this template
 labelref(x) ::= "<if(!x.isLocal)>_localctx.<endif><x.escapedName>"
