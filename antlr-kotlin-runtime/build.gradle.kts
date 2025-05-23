@@ -41,7 +41,7 @@ mavenPublishing {
   )
 
   setupPom(project, projectDescription = "Runtime for ANTLR Kotlin")
-  publishToMavenCentral(SonatypeHost.DEFAULT, true)
+  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
   signAllPublications()
 }
 

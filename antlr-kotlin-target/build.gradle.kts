@@ -18,7 +18,7 @@ mavenPublishing {
   )
 
   setupPom(project, projectDescription = "Kotlin target for ANTLR")
-  publishToMavenCentral(SonatypeHost.DEFAULT, true)
+  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
   signAllPublications()
 }
 
