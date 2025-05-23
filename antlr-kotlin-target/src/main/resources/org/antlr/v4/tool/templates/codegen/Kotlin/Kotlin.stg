@@ -660,7 +660,7 @@ MatchToken(m) ::= <<
 this.state = <m.stateNumber>
 <if(m.labels)>
 _token = match(Tokens.<m.name>)
-<m.labels:{l | <labelref(l)> = _token}; separator="\n">
+<m.labels:{l | <labelref(l)> = _token<if(file.TokenLabelType)> as <TokenLabelType()><endif>}; separator="\n">
 <else>
 match(Tokens.<m.name>)
 <endif>
