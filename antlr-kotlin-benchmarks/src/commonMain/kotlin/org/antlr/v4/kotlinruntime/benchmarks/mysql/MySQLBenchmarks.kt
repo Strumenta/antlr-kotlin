@@ -18,8 +18,8 @@ import org.antlr.v4.kotlinruntime.benchmarks.readBenchmarkFile
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(BenchmarkTimeUnit.MILLISECONDS)
-@Warmup(iterations = 4, timeUnit = BenchmarkTimeUnit.MILLISECONDS)
-@Measurement(iterations = 8, timeUnit = BenchmarkTimeUnit.MILLISECONDS)
+@Warmup(iterations = 4, time = 5, timeUnit = BenchmarkTimeUnit.SECONDS)
+@Measurement(iterations = 4, time = 5, timeUnit = BenchmarkTimeUnit.SECONDS)
 public class MySQLBenchmarks {
   @Suppress("SpellCheckingInspection")
   private val charSets = setOf(

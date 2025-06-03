@@ -2,6 +2,7 @@ import com.strumenta.antlrkotlin.gradle.AntlrKotlinTask
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -37,8 +38,15 @@ strumentaMultiplatform {
 
 kotlin {
   js {
+    nodejs()
+
     // Necessary for using @JsModule
     useCommonJs()
+  }
+
+  @OptIn(ExperimentalWasmDsl::class)
+  wasmJs {
+    nodejs()
   }
 
   mingwX64 {
@@ -86,9 +94,9 @@ benchmark {
       jmhVersion = "1.37"
     }
 
-    // Blocked by https://github.com/Kotlin/kotlinx-benchmark/issues/185
-    // register("js")
-    // register("wasmJs")
+    register("js")
+    register("wasmJs")
+    register("mingwX64")
   }
 }
 
