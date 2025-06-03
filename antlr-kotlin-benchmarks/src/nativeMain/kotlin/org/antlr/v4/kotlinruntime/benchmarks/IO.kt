@@ -30,7 +30,7 @@ private val dir: String =
 
 // TODO(Edoardo): this should probably be replaced by a Gradle task,
 //  but in the meantime it should work consistently
-private val basePath = "build/processedResources/$dir/main"
+private val basePath = "antlr-kotlin-benchmarks/build/processedResources/$dir/main"
 
 public actual fun readBenchmarkFile(name: String): String {
   val path = Path("$basePath$name")

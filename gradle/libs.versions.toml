@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.20"
 kotlinx-io = "0.7.0"
-kotlinx-benchmark = "0.4.13"
+kotlinx-benchmark = "0.4.14"
 kotlinx-resources = "0.10.0"
 antlr4 = "4.13.1"
 dokka = "1.9.20"
