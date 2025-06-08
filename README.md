@@ -120,24 +120,17 @@ To start using ANTLR Kotlin:
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-5. Instruct the Kotlin compilation tasks to depend on the grammar generation.
-
-   ```kotlin
-   tasks.withType<KotlinCompile<*>> {
-     dependsOn(generateKotlinGrammarSource)
-   }
-
-   ```
-
-6. Register the `build/generatedAntlr` directory as part of the common source set.
+5. Use the `generateKotlinGrammarSource` task to provide an additional source directory
+   to the `commonMain` source set. Gradle will then infer the task dependency automatically.
 
    ```kotlin
    kotlin {
      sourceSets {
        commonMain {
          kotlin {
-           srcDir(layout.buildDirectory.dir("generatedAntlr"))
+           srcDir(generateKotlinGrammarSource)
          }
+         ...
        }
      }
    }
@@ -146,33 +139,25 @@ To start using ANTLR Kotlin:
 ## Benchmarks
 
 The [antlr-kotlin-benchmarks](./antlr-kotlin-benchmarks) module contains benchmarking code
-targeting JVM, JS and WebAssembly.  
-The scenario has been adapted from [antlr4ng][2].
+for JVM, JS, WebAssembly and Native targets.
 
-- JVM benchmarks use [kotlinx-benchmark][3], which under the hood uses JMH.
-
-  To run benchmarks, use:
-
-  ```
-  ./gradlew :antlr-kotlin-benchmarks:jvmBenchmark
-  ```
-
-- JS, WebAssembly and Native benchmarks cannot use kotlinx-benchmark currently.  
-  Instead, they use a test case which re-uses the benchmark code.
-
-  To run benchmarks, remove the `@Ignore` annotation on `ManualMySQLBenchmarks`, and use:
-
-  ```
-  ./gradlew :antlr-kotlin-benchmarks:jsTest
-  ```
-  or
-  ```
-  ./gradlew :antlr-kotlin-benchmarks:wasmJsTest
-  ```
-  or
-  ```
-  ./gradlew :antlr-kotlin-benchmarks:mingwX64Test
-  ```
+The benchmark scenario has been adapted from [antlr4ng][2].  
+To run benchmarks, use:
+```
+./gradlew :antlr-kotlin-benchmarks:jvmBenchmark
+```
+or
+```
+./gradlew :antlr-kotlin-benchmarks:jsBenchmark
+```
+or
+```
+./gradlew :antlr-kotlin-benchmarks:wasmJsBenchmark
+```
+or
+```
+./gradlew :antlr-kotlin-benchmarks:mingwX64Benchmark
+```
 
 ## Maven Central Publication
 
