@@ -120,8 +120,7 @@ To start using ANTLR Kotlin:
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-5. Use the `generateKotlinGrammarSource` task to provide an additional source directory
-   to the `commonMain` source set. Gradle will then infer the task dependency automatically.
+5. Specify that the output directory of the `generateKotlinGrammarSource` task should be included as a source directory in the commonMain source set. In Gradle, you can do that by simply reference the task itself, and Gradle will automatically infer the associated output directory and include such directory in the source set.
 
    ```kotlin
    kotlin {
