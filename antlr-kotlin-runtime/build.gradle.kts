@@ -1,8 +1,6 @@
 import com.strumenta.antlrkotlin.gradle.ext.setupPom
 import com.strumenta.antlrkotlin.gradle.ext.targetsNative
-import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.dokka.Platform
-import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.engine.parameters.KotlinPlatform
 
 plugins {
   id("strumenta.multiplatform")
@@ -41,19 +39,19 @@ mavenPublishing {
   )
 
   setupPom(project, projectDescription = "Runtime for ANTLR Kotlin")
-  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
+  publishToMavenCentral(true)
   signAllPublications()
 }
 
-tasks.withType<DokkaTask>().configureEach {
+dokka {
   dokkaSourceSets {
     configureEach {
       suppress = true
     }
 
-    val commonMain by getting {
+    commonMain.configure {
       suppress = false
-      platform = Platform.jvm
+      analysisPlatform = KotlinPlatform.JVM
     }
   }
 }

@@ -27,8 +27,8 @@ class StrumentaGradlePluginModulePlugin : Plugin<Project> {
     val kotlin = project.kotlinJvmExtension
     kotlin.explicitApiWarning()
     kotlin.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_1)
-      languageVersion.set(KotlinVersion.KOTLIN_2_1)
+      apiVersion.set(KotlinVersion.KOTLIN_2_2)
+      languageVersion.set(KotlinVersion.KOTLIN_2_2)
 
       jvmTarget.set(JvmTarget.JVM_1_8)
       freeCompilerArgs.add("-Xjvm-default=all")

@@ -2,7 +2,6 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-import kotlin.wasm.WasmImport
 import kotlin.wasm.unsafe.Pointer
 import kotlin.wasm.unsafe.UnsafeWasmMemoryApi
 import kotlin.wasm.unsafe.withScopedMemoryAllocator
@@ -10,12 +9,14 @@ import kotlin.wasm.unsafe.withScopedMemoryAllocator
 /**
  * See [environ_sizes_get](https://wasix.org/docs/api-reference/wasi/environ_sizes_get).
  */
+@OptIn(ExperimentalWasmInterop::class)
 @WasmImport("wasi_snapshot_preview1", "environ_sizes_get")
 private external fun wasiRawEnvironSizesGet(environCountPtr: Int, environBufSizePtr: Int): Int
 
 /**
  * See [environ_get](https://wasix.org/docs/api-reference/wasi/environ_get).
  */
+@OptIn(ExperimentalWasmInterop::class)
 @WasmImport("wasi_snapshot_preview1", "environ_get")
 private external fun wasiRawEnvironGet(environPtr: Int, environBufPtr: Int): Int
 
