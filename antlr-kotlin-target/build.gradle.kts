@@ -1,5 +1,4 @@
 import com.strumenta.antlrkotlin.gradle.ext.setupPom
-import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
   id("strumenta.jvm.library")
@@ -18,7 +17,7 @@ mavenPublishing {
   )
 
   setupPom(project, projectDescription = "Kotlin target for ANTLR")
-  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
+  publishToMavenCentral(true)
   signAllPublications()
 }
 

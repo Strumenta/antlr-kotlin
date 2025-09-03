@@ -2,7 +2,6 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-import kotlin.wasm.WasmImport
 import kotlin.wasm.unsafe.UnsafeWasmMemoryApi
 import kotlin.wasm.unsafe.withScopedMemoryAllocator
 
@@ -15,6 +14,7 @@ internal actual fun platformPrintErrLn(message: String): Unit =
 internal actual fun platformPrintErr(message: String): Unit =
   wasiPrintErr(message, lineFeed = false)
 
+@OptIn(ExperimentalWasmInterop::class)
 @WasmImport("wasi_snapshot_preview1", "fd_write")
 private external fun fdWrite(descriptor: Int, scatterPtr: Int, scatterSize: Int, errorPtr: Int): Int
 
