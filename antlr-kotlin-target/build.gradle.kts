@@ -11,9 +11,9 @@ dependencies {
 
 mavenPublishing {
   coordinates(
-    groupId = project.group as String,
+    groupId = project.group.toString(),
     artifactId = project.name,
-    version = project.version as String,
+    version = project.version.toString(),
   )
 
   setupPom(project, projectDescription = "Kotlin target for ANTLR")
