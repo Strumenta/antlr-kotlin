@@ -44,12 +44,11 @@ The supported Native platforms are:
 | macosArm64        | linuxArm64            | androidNativeArm64 |
 | iosSimulatorArm64 | watchosSimulatorArm64 | androidNativeX86   |
 | iosX64            | watchosX64            | androidNativeX64   |
-|                   | watchosArm32          | watchosDeviceArm64 |
+| iosArm64          | watchosArm32          | watchosDeviceArm64 |
 |                   | watchosArm64          | mingwX64           |
 |                   | tvosSimulatorArm64    | linuxArm32Hfp      |
 |                   | tvosX64               |                    |
 |                   | tvosArm64             |                    |
-|                   | iosArm64              |                    |
 
 > [!NOTE]  
 > The `linuxArm32Hfp` platform is deprecated
@@ -120,7 +119,10 @@ To start using ANTLR Kotlin:
    Depending on `cleanGenerateKotlinGrammarSource` ensures the `.tokens` files are always fresh,
    and we do not end up with out-of-sync lexers and parsers.
 
-5. Specify that the output directory of the `generateKotlinGrammarSource` task should be included as a source directory in the commonMain source set. In Gradle, you can do that by simply reference the task itself, and Gradle will automatically infer the associated output directory and include such directory in the source set.
+5. Specify that the output directory of the `generateKotlinGrammarSource` task should be included
+   as a source directory in the `commonMain` source set. With Gradle, you can do that by simply
+   referencing the task itself. Gradle will automatically infer the associated output directory
+   and include it in the source set.
 
    ```kotlin
    kotlin {
@@ -129,7 +131,7 @@ To start using ANTLR Kotlin:
          kotlin {
            srcDir(generateKotlinGrammarSource)
          }
-         ...
+         /* ... */
        }
      }
    }
