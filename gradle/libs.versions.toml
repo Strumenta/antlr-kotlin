@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.20-RC2"
+kotlin = "2.2.20"
 kotlinx-io = "0.8.0"
 kotlinx-benchmark = "0.4.14"
 kotlinx-resources = "0.10.1"
