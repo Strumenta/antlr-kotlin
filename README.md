@@ -1,7 +1,7 @@
 # ANTLR Kotlin
 
 [![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.strumenta/antlr-kotlin-runtime)
+![Maven Central Version](https://img.shields.io/maven-central/v/com.strumenta/antlr-kotlin-runtime)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-Apache)
 [![License BSD-3](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE-BSD)
 
