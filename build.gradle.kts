@@ -1,6 +1,8 @@
 import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryName
 import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryUrl
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootEnvSpec
 
 plugins {
   alias(libs.plugins.researchgate.release)
@@ -54,5 +56,16 @@ release {
 tasks {
   wrapper {
     distributionType = Wrapper.DistributionType.ALL
+  }
+}
+
+// Configure the Yarn environment for all K/JS modules
+plugins.withType<YarnPlugin> {
+  project.the<YarnRootEnvSpec>().apply {
+    version = "1.22.22"
+
+    // Disable a nagging console (fake) error.
+    // See https://youtrack.jetbrains.com/issue/KT-52578
+    ignoreScripts = false
   }
 }
