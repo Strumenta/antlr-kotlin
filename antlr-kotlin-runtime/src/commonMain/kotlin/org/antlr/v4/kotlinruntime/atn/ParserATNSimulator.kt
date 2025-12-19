@@ -736,7 +736,7 @@ public open class ParserATNSimulator(
     // If the configuration set uniquely predicts an alternative,
     // without conflict, then we know that it's a full LL decision
     // not SLL.
-    if (reach!!.uniqueAlt != ATN.INVALID_ALT_NUMBER) {
+    if (reach.uniqueAlt != ATN.INVALID_ALT_NUMBER) {
       reportContextSensitivity(dfa, predictedAlt, reach, startIndex, input.index())
       return predictedAlt
     }

@@ -13,7 +13,6 @@ import kotlin.test.assertEquals
 
 @Suppress("unused")
 class BracketsTest {
-
   @Test
   fun parsesMatched() {
     // Create the parser
@@ -25,8 +24,10 @@ class BracketsTest {
         )
       )
     )
+
     val parser = BracketsParser(tokenStream)
     parser.addErrorListener(ThrowingErrorListener)
+
     val tree = parser.matched()
     val lispTree = Trees.toStringTree(tree, parser)
     val expectedLispTreeText = loadResourceText("brackets/matched.tree")

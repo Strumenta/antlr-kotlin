@@ -3,6 +3,7 @@
 package com.strumenta.antlrkotlin.runtime
 
 @Suppress("UNUSED_PARAMETER", "RedundantNullableReturnType")
+@OptIn(ExperimentalWasmJsInterop::class)
 private fun processEnvJs(name: String): String? =
   js("process.env[name]")
 

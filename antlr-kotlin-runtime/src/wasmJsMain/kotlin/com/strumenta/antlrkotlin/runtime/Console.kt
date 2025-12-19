@@ -2,11 +2,14 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
+@OptIn(ExperimentalWasmJsInterop::class)
 internal actual fun platformPrintErrLn(): Unit =
   js("console.error('')")
 
+@OptIn(ExperimentalWasmJsInterop::class)
 internal actual fun platformPrintErrLn(message: String): Unit =
   js("console.error(message)")
 
+@OptIn(ExperimentalWasmJsInterop::class)
 internal actual fun platformPrintErr(message: String): Unit =
   js("console.error(message)")

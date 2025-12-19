@@ -5,6 +5,7 @@ package com.strumenta.antlrkotlin.runtime
 /**
  * Returns whether we are running on Node.js, or not.
  */
+@OptIn(ExperimentalWasmJsInterop::class)
 internal fun isNodeJs(): Boolean =
   js(
     """
