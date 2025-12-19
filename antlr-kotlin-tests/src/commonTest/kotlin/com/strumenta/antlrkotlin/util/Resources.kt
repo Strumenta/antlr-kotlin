@@ -29,13 +29,11 @@ fun loadResourceText(path: String): String {
  *
  * @see loadResourceBytes
  */
-fun String.loadBytes(basePath: String = "src/commonTest/resources"): ByteArray =
-  loadResourceBytes("$basePath/$this")
+fun String.loadBytes(): ByteArray = loadResourceBytes(this)
 
 /**
  * Utility extension function to load text from a string representing a resource path.
  *
  * @see loadResourceText
  */
-fun String.loadText(basePath: String = "src/commonTest/resources"): String =
-  loadResourceText("$basePath/$this")
+fun String.loadText(): String = loadResourceText(this)

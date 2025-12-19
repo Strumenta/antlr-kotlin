@@ -29,8 +29,7 @@ class BracketsTest {
     parser.addErrorListener(ThrowingErrorListener)
     val tree = parser.matched()
     val lispTree = Trees.toStringTree(tree, parser)
-
-    val expectedLispTreeText = loadResourceText("src/commonTest/resources/brackets/matched.tree")
+    val expectedLispTreeText = loadResourceText("brackets/matched.tree")
 
     assertEquals(
       expected = expectedLispTreeText,

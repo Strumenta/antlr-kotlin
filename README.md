@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
 ![Maven Central Version](https://img.shields.io/maven-central/v/com.strumenta/antlr-kotlin-runtime)
-[![Kotlin 2.2.20](https://img.shields.io/badge/kotlin-2.2.20-blue.svg?logo=kotlin)](https://kotlinlang.org)
+[![Kotlin 2.3.0](https://img.shields.io/badge/kotlin-2.3.0-blue.svg?logo=kotlin)](https://kotlinlang.org)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-Apache)
 [![License BSD-3](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE-BSD)
 

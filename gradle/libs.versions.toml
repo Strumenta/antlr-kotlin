@@ -1,14 +1,14 @@
 [versions]
-kotlin = "2.2.20"
-kotlinx-io = "0.8.0"
-kotlinx-benchmark = "0.4.14"
-kotlinx-resources = "0.10.1"
+kotlin = "2.3.0"
+kotlinx-io = "0.8.2"
+kotlinx-benchmark = "0.4.15"
+kotlinx-resources = "0.14.0"
 antlr4 = "4.13.1"
-dokka = "2.1.0-Beta"
+dokka = "2.1.0"
 researchgate-release = "3.1.0"
 maven-publish = "0.34.0"
 gradle-plugin-publish = "2.0.0"
-antlr-kotlin = "1.0.5"
+antlr-kotlin = "1.0.8"
 
 [libraries]
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }

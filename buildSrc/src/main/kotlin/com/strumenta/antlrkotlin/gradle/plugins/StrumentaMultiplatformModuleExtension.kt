@@ -9,6 +9,7 @@ import org.gradle.api.tasks.Nested
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
@@ -42,7 +43,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
   @get:Nested
   abstract val nativeConfig: NativeConfiguration
 
-  @OptIn(ExperimentalWasmDsl::class)
   fun applyJs(action: Action<JsConfiguration> = Action {}) {
     action.execute(jsConfig)
 
@@ -87,6 +87,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     }
 
     if (isWasmJsEnabled) {
+      @OptIn(ExperimentalWasmDsl::class)
       kmpExtension.wasmJs {
         nodejs {
           testTask {
@@ -107,37 +108,6 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
           }
         }
       }
-
-      // Necessary as we are using dependsOn explicitly.
-      // See https://kotlinlang.org/docs/multiplatform-hierarchy.html#creating-additional-source-sets
-      kmpExtension.applyDefaultHierarchyTemplate()
-
-      val sourceSets = kmpExtension.sourceSets
-
-      // Register a common source set between JS and WASM
-      sourceSets.register("jsAndWasmSharedMain") {
-        dependsOn(sourceSets.getByName("commonMain"))
-
-        sourceSets.getByName("jsMain").dependsOn(this)
-        sourceSets.getByName("wasmJsMain").dependsOn(this)
-      }
-
-      // Register a common test source set between JS and WASM
-      sourceSets.register("jsAndWasmSharedTest") {
-        dependsOn(sourceSets.getByName("commonTest"))
-
-        sourceSets.getByName("jsTest").dependsOn(this)
-        sourceSets.getByName("wasmJsTest").dependsOn(this)
-      }
-
-      // Disable intermediate source set compilation
-      // because we do not need js-wasmJs artifact.
-      // This is taken from kotlinx.coroutines#3966
-      project.tasks.configureEach {
-        if (name == "compileJsAndWasmSharedMainKotlinMetadata") {
-          enabled = false
-        }
-      }
     }
   }
 
@@ -150,7 +120,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
         compileTaskProvider.configure {
           compilerOptions {
             jvmTarget.set(JvmTarget.JVM_1_8)
-            freeCompilerArgs.add("-Xjvm-default=all")
+            jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
 
             if (!isRelease) {
               freeCompilerArgs.add("-Xdebug")
@@ -168,8 +138,8 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     }
   }
 
-  @OptIn(ExperimentalWasmDsl::class)
   fun applyWasi() {
+    @OptIn(ExperimentalWasmDsl::class)
     project.kmpExtension.wasmWasi {
       nodejs {
         testTask {

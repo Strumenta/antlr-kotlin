@@ -75,8 +75,8 @@ abstract class GrammarTest<L : Lexer, P : Parser> {
   }
 
   private fun executeLispTestRun(testRun: LispTestRun) {
-    val languageSourceText = loadResourceText("src/commonTest/resources/${testRun.exampleFilePath}")
-    val expectedLispTreeText = loadResourceText("src/commonTest/resources/${testRun.treeFilePath}")
+    val languageSourceText = loadResourceText(testRun.exampleFilePath)
+    val expectedLispTreeText = loadResourceText(testRun.treeFilePath)
 
     // Create the lexer
     val charStream = CharStreams.fromString(languageSourceText)
@@ -102,8 +102,8 @@ abstract class GrammarTest<L : Lexer, P : Parser> {
   }
 
   private fun executeErrorsTestRun(testRun: ErrorsTestRun) {
-    val languageSourceText = loadResourceText("src/commonTest/resources/${testRun.exampleFilePath}")
-    val expectedErrorsText = loadResourceText("src/commonTest/resources/${testRun.errorsFilePath}")
+    val languageSourceText = loadResourceText(testRun.exampleFilePath)
+    val expectedErrorsText = loadResourceText(testRun.errorsFilePath)
     val listener = SyntaxErrorsErrorListener()
 
     // Create the lexer

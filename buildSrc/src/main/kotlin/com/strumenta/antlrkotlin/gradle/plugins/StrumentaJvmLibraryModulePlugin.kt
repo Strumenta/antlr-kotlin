@@ -6,6 +6,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
@@ -22,11 +23,11 @@ class StrumentaJvmLibraryModulePlugin : Plugin<Project> {
     val kotlin = project.kotlinJvmExtension
     kotlin.explicitApiWarning()
     kotlin.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_2)
-      languageVersion.set(KotlinVersion.KOTLIN_2_2)
+      apiVersion.set(KotlinVersion.KOTLIN_2_3)
+      languageVersion.set(KotlinVersion.KOTLIN_2_3)
 
       jvmTarget.set(JvmTarget.JVM_1_8)
-      freeCompilerArgs.add("-Xjvm-default=all")
+      jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
     }
 
     val java = project.javaExtension
