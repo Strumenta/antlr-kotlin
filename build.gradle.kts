@@ -3,6 +3,9 @@ import com.strumenta.antlrkotlin.gradle.ext.mavenRepositoryUrl
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootEnvSpec
+import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnPlugin
+import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootEnvSpec
+import org.jetbrains.kotlin.gradle.targets.web.yarn.BaseYarnRootEnvSpec
 
 plugins {
   alias(libs.plugins.researchgate.release)
@@ -59,13 +62,15 @@ tasks {
   }
 }
 
-// Configure the Yarn environment for all K/JS modules
-plugins.withType<YarnPlugin> {
-  project.the<YarnRootEnvSpec>().apply {
-    version = "1.22.22"
+val yarnConfig: BaseYarnRootEnvSpec.() -> Unit = {
+  // Use the latest version of Yarn Classic
+  version = "1.22.22"
 
-    // Disable a nagging console (fake) error.
-    // See https://youtrack.jetbrains.com/issue/KT-52578
-    ignoreScripts = false
-  }
+  // Disable a nagging console error.
+  // See https://youtrack.jetbrains.com/issue/KT-52578
+  ignoreScripts = false
 }
+
+// Configure Yarn for all K/JS and K/WASM modules
+plugins.withType<YarnPlugin> { the<YarnRootEnvSpec>().apply(yarnConfig) }
+plugins.withType<WasmYarnPlugin> { the<WasmYarnRootEnvSpec>().apply(yarnConfig) }
