@@ -12,38 +12,12 @@ import kotlin.math.min
 @Suppress("MemberVisibilityCanBePrivate")
 public class Interval(public var a: Int, public var b: Int) {
   public companion object {
-    public const val INTERVAL_POOL_MAX_VALUE: Int = 1000
-
     @JvmField
     public val INVALID: Interval = Interval(-1, -2)
 
-    @JvmField
-    internal val cache = arrayOfNulls<Interval>(INTERVAL_POOL_MAX_VALUE + 1)
-
-    /**
-     * Interval objects are used readonly so share all with the
-     * same single value `a == b` up to some max size.
-     *
-     * Use an array as a perfect hash.
-     *
-     * Return a shared object for `0..`[INTERVAL_POOL_MAX_VALUE] or a new
-     * [Interval] object with [a]..[a] in it.
-     */
-    public fun of(a: Int, b: Int): Interval {
-      // Cache just a..a
-      if (a != b || a < 0 || a > INTERVAL_POOL_MAX_VALUE) {
-        return Interval(a, b)
-      }
-
-      var interval = cache[a]
-
-      if (interval == null) {
-        interval = Interval(a, a)
-        cache[a] = interval
-      }
-
-      return interval
-    }
+    // TODO(Edoardo): remove as it is an unnecessary indirection level at this point
+    public fun of(a: Int, b: Int): Interval =
+      Interval(a, b)
   }
 
   /**
