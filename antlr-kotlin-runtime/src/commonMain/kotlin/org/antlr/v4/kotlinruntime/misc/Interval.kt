@@ -16,10 +16,6 @@ public class Interval(
   public companion object {
     @JvmField
     public val INVALID: Interval = Interval(-1, -2)
-
-    // TODO(Edoardo): remove as it is an unnecessary indirection level at this point
-    public fun of(a: Int, b: Int): Interval =
-      Interval(a, b)
   }
 
   /**
@@ -81,13 +77,13 @@ public class Interval(
    * Return the interval computed from combining `this` and [other].
    */
   public fun union(other: Interval): Interval =
-    of(min(a, other.a), max(b, other.b))
+    Interval(min(a, other.a), max(b, other.b))
 
   /**
    * Return the interval in common between `this` and [other].
    */
   public fun intersection(other: Interval): Interval =
-    of(max(a, other.a), min(b, other.b))
+    Interval(max(a, other.a), min(b, other.b))
 
   /**
    * Return the interval with elements from `this` not in [other].
@@ -101,11 +97,11 @@ public class Interval(
 
     // other.a to left of this.a (or same)
     if (other.startsBeforeNonDisjoint(this)) {
-      diff = of(max(a, other.b + 1), b)
+      diff = Interval(max(a, other.b + 1), b)
     }
     // other.a to right of this.a
     else if (other.startsAfterNonDisjoint(this)) {
-      diff = of(a, other.a - 1)
+      diff = Interval(a, other.a - 1)
     }
 
     return diff

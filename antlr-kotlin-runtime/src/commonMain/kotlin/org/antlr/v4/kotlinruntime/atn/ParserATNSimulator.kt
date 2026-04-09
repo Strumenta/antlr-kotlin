@@ -2271,7 +2271,7 @@ public open class ParserATNSimulator(
     stopIndex: Int,
   ) {
     if (debug || retry_debug) {
-      val interval = Interval.of(startIndex, stopIndex)
+      val interval = Interval(startIndex, stopIndex)
       System.out.println(
         "reportAttemptingFullContext" +
           " decision=${dfa.decision}:$configs" +
@@ -2297,7 +2297,7 @@ public open class ParserATNSimulator(
     stopIndex: Int,
   ) {
     if (debug || retry_debug) {
-      val interval = Interval.of(startIndex, stopIndex)
+      val interval = Interval(startIndex, stopIndex)
       System.out.println(
         "reportContextSensitivity" +
           " decision=${dfa.decision}:$configs" +
@@ -2328,7 +2328,7 @@ public open class ParserATNSimulator(
     configs: ATNConfigSet, // Configs that LL not SLL considered conflicting
   ) {
     if (debug || retry_debug) {
-      val interval = Interval.of(startIndex, stopIndex)
+      val interval = Interval(startIndex, stopIndex)
       System.out.println("reportAmbiguity $ambigAlts:$configs, input=${parser.tokenStream.getText(interval)}")
     }
 

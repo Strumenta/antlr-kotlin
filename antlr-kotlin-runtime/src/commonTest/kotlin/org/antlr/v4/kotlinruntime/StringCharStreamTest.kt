@@ -54,21 +54,21 @@ class StringCharStreamTest {
   @Test
   fun testGetText8() {
     val expected = "cde"
-    val actual = CharStreams.fromString("abcdef").getText(Interval.of(2, 4))
+    val actual = CharStreams.fromString("abcdef").getText(Interval(2, 4))
     assertEquals(expected, actual)
   }
 
   @Test
   fun testGetText16() {
     val expected = "cΔe"
-    val actual = CharStreams.fromString("abcΔef").getText(Interval.of(2, 4))
+    val actual = CharStreams.fromString("abcΔef").getText(Interval(2, 4))
     assertEquals(expected, actual)
   }
 
   @Test
   fun testGetText32() {
     val expected = "c😱e"
-    val actual = CharStreams.fromString("abc😱ef").getText(Interval.of(2, 4))
+    val actual = CharStreams.fromString("abc😱ef").getText(Interval(2, 4))
     assertEquals(expected, actual)
   }
 }

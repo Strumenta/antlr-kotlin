@@ -239,7 +239,7 @@ public class IntervalSet : IntSet {
    * `{1..5, 6..7, 10..20}`. Adding `4..8` yields `{1..8, 10..20}`.
    */
   public fun add(a: Int, b: Int): Unit =
-    add(Interval.of(a, b))
+    add(Interval(a, b))
 
   // Copy on write, so we can cache a..a intervals and sets of that
   private fun add(addition: Interval) {
@@ -698,14 +698,14 @@ public class IntervalSet : IntSet {
 
       // If on left edge x..b, adjust left
       if (el == a) {
-        I = Interval.of(a + 1, b)
+        I = Interval(a + 1, b)
         _intervals[i] = I
         break
       }
 
       // If on right edge a..x, adjust right
       if (el == b) {
-        I = Interval.of(a, b - 1)
+        I = Interval(a, b - 1)
         _intervals[i] = I
         break
       }
@@ -714,7 +714,7 @@ public class IntervalSet : IntSet {
       if (el < b) {
         // Found in this interval
         val oldB = I.b
-        I = Interval.of(a, el - 1) // [a..x-1]
+        I = Interval(a, el - 1) // [a..x-1]
         _intervals[i] = I
         add(el + 1, oldB) // add [x+1..b]
       }

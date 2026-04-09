@@ -113,7 +113,7 @@ public open class UnbufferedTokenStream(override val tokenSource: TokenSource, b
 
   override fun getText(start: Token?, stop: Token?): String =
     if (start != null && stop != null) {
-      getText(Interval.of(start.tokenIndex, stop.tokenIndex))
+      getText(Interval(start.tokenIndex, stop.tokenIndex))
     } else {
       ""
     }
