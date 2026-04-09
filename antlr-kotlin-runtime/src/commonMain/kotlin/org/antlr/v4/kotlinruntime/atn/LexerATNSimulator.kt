@@ -760,7 +760,7 @@ public open class LexerATNSimulator(
    */
   public open fun getText(input: CharStream): String =
     // Index is first lookahead char, don't include
-    input.getText(Interval.of(startIndex, input.index() - 1))
+    input.getText(Interval(startIndex, input.index() - 1))
 
   public open fun consume(input: CharStream) {
     val curChar = input.LA(1)

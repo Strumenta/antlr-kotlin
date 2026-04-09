@@ -26,7 +26,7 @@ public class LexerNoViableAltException(
     var symbol = ""
 
     if (startIndex >= 0 && startIndex < inputStream.size()) {
-      symbol = inputStream.getText(Interval.of(startIndex, startIndex))
+      symbol = inputStream.getText(Interval(startIndex, startIndex))
       symbol = Utils.escapeWhitespace(symbol, false)
     }
 

@@ -54,7 +54,7 @@ public open class CommonTokenFactory(
     if (text != null) {
       t.text = text
     } else if (copyText && source.second != null) {
-      t.text = source.second!!.getText(Interval.of(start, stop))
+      t.text = source.second!!.getText(Interval(start, stop))
     }
 
     return t

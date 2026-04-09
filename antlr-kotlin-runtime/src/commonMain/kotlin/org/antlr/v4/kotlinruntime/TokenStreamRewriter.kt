@@ -180,7 +180,7 @@ public open class TokenStreamRewriter(public val tokenStream: TokenStream) {
    * instructions given to this rewriter.
    */
   public val text: String
-    get() = getText(DEFAULT_PROGRAM_NAME, Interval.of(0, tokenStream.size() - 1))
+    get() = getText(DEFAULT_PROGRAM_NAME, Interval(0, tokenStream.size() - 1))
 
   init {
     programs[DEFAULT_PROGRAM_NAME] = ArrayList(PROGRAM_INIT_SIZE)
@@ -321,7 +321,7 @@ public open class TokenStreamRewriter(public val tokenStream: TokenStream) {
   public fun getText(interval: Interval): String =
     getText(DEFAULT_PROGRAM_NAME, interval)
 
-  public fun getText(programName: String, interval: Interval = Interval.of(0, tokenStream.size() - 1)): String {
+  public fun getText(programName: String, interval: Interval = Interval(0, tokenStream.size() - 1)): String {
     val rewrites = programs[programName]
     var start = interval.a
     var stop = interval.b

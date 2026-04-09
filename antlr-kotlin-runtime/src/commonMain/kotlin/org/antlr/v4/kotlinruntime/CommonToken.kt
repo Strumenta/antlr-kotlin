@@ -52,7 +52,7 @@ public open class CommonToken : WritableToken {
       val input = inputStream ?: return null
       val n = input.size()
       return if (startIndex < n && stopIndex < n) {
-        input.getText(Interval.of(startIndex, stopIndex))
+        input.getText(Interval(startIndex, stopIndex))
       } else {
         "<EOF>"
       }

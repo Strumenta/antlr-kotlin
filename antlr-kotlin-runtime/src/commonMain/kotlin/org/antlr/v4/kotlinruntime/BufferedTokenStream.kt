@@ -69,7 +69,7 @@ public open class BufferedTokenStream(tokenSource: TokenSource) : TokenStream {
    * Get the text of all tokens in this buffer.
    */
   override val text: String
-    get() = getText(Interval.of(0, size() - 1))
+    get() = getText(Interval(0, size() - 1))
 
   override fun index(): Int =
     p
@@ -475,7 +475,7 @@ public open class BufferedTokenStream(tokenSource: TokenSource) : TokenStream {
 
   override fun getText(start: Token?, stop: Token?): String? =
     if (start != null && stop != null) {
-      getText(Interval.of(start.tokenIndex, stop.tokenIndex))
+      getText(Interval(start.tokenIndex, stop.tokenIndex))
     } else {
       ""
     }

@@ -103,9 +103,9 @@ public open class ParserRuleContext : RuleContext {
       val tempStop = stop
 
       return if (tempStop == null || tempStop.tokenIndex < tempStart.tokenIndex) {
-        Interval.of(tempStart.tokenIndex, tempStart.tokenIndex - 1)
+        Interval(tempStart.tokenIndex, tempStart.tokenIndex - 1)
       } else {
-        Interval.of(tempStart.tokenIndex, tempStop.tokenIndex)
+        Interval(tempStart.tokenIndex, tempStop.tokenIndex)
       }
     }
 

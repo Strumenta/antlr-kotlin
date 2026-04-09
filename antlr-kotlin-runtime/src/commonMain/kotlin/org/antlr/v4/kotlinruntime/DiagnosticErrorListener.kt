@@ -48,7 +48,7 @@ public open class DiagnosticErrorListener(protected val exactOnly: Boolean = tru
 
     val decision = getDecisionDescription(recognizer, dfa)
     val conflictingAlts = getConflictingAlts(ambigAlts, configs)
-    val text = recognizer.tokenStream.getText(Interval.of(startIndex, stopIndex))
+    val text = recognizer.tokenStream.getText(Interval(startIndex, stopIndex))
     val message = "reportAmbiguity d=$decision: ambigAlts=$conflictingAlts, input='$text'"
     recognizer.notifyErrorListeners(message)
   }
@@ -62,7 +62,7 @@ public open class DiagnosticErrorListener(protected val exactOnly: Boolean = tru
     configs: ATNConfigSet,
   ) {
     val decision = getDecisionDescription(recognizer, dfa)
-    val text = recognizer.tokenStream.getText(Interval.of(startIndex, stopIndex))
+    val text = recognizer.tokenStream.getText(Interval(startIndex, stopIndex))
     val message = "reportAttemptingFullContext d=$decision, input='$text'"
     recognizer.notifyErrorListeners(message)
   }
@@ -76,7 +76,7 @@ public open class DiagnosticErrorListener(protected val exactOnly: Boolean = tru
     configs: ATNConfigSet
   ) {
     val decision = getDecisionDescription(recognizer, dfa)
-    val text = recognizer.tokenStream.getText(Interval.of(startIndex, stopIndex))
+    val text = recognizer.tokenStream.getText(Interval(startIndex, stopIndex))
     val message = "reportContextSensitivity d=$decision, input='$text'"
     recognizer.notifyErrorListeners(message)
   }

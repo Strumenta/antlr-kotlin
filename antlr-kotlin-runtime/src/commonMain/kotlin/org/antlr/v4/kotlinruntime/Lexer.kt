@@ -367,7 +367,7 @@ public abstract class Lexer(input: CharStream) : Recognizer<Int, LexerATNSimulat
   }
 
   public open fun notifyListeners(e: LexerNoViableAltException) {
-    val text = _input.getText(Interval.of(_tokenStartCharIndex, _input.index()))
+    val text = _input.getText(Interval(_tokenStartCharIndex, _input.index()))
     val msg = "token recognition error at: '${getErrorDisplay(text)}'"
     errorListenerDispatch.syntaxError(this, null, _tokenStartLine, _tokenStartCharPositionInLine, msg, e)
   }

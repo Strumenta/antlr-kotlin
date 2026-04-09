@@ -53,7 +53,7 @@ public open class StringCharStream(
   }
 
   override fun toString(): String =
-    getText(Interval.of(0, size - 1))
+    getText(Interval(0, size - 1))
 
   override fun getText(interval: Interval): String {
     if (interval.a >= size || interval.b < 0) {
