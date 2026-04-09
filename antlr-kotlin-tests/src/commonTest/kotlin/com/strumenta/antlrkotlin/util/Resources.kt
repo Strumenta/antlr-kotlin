@@ -21,7 +21,7 @@ fun loadResourceBytes(path: String): ByteArray {
  */
 fun loadResourceText(path: String): String {
   val resource = Resource(path)
-  return resource.readText()
+  return resource.readText().replace("\r\n", "\n")
 }
 
 /**
