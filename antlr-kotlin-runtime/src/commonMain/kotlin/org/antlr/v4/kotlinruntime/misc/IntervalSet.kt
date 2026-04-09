@@ -682,7 +682,7 @@ public class IntervalSet : IntSet {
     val n = _intervals.size
 
     for (i in 0..<n) {
-      val I = _intervals[i]
+      var I = _intervals[i]
       val a = I.a
       val b = I.b
 
@@ -698,13 +698,15 @@ public class IntervalSet : IntSet {
 
       // If on left edge x..b, adjust left
       if (el == a) {
-        I.a++
+        I = Interval.of(a + 1, b)
+        _intervals[i] = I
         break
       }
 
       // If on right edge a..x, adjust right
       if (el == b) {
-        I.b--
+        I = Interval.of(a, b - 1)
+        _intervals[i] = I
         break
       }
 
@@ -712,7 +714,8 @@ public class IntervalSet : IntSet {
       if (el < b) {
         // Found in this interval
         val oldB = I.b
-        I.b = el - 1      // [a..x-1]
+        I = Interval.of(a, el - 1) // [a..x-1]
+        _intervals[i] = I
         add(el + 1, oldB) // add [x+1..b]
       }
     }
