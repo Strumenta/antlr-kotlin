@@ -9,8 +9,10 @@ import kotlin.math.min
 /**
  * An immutable inclusive interval `a..b`.
  */
-@Suppress("MemberVisibilityCanBePrivate")
-public class Interval(public var a: Int, public var b: Int) {
+public class Interval(
+  @JvmField public val a: Int,
+  @JvmField public val b: Int,
+) {
   public companion object {
     @JvmField
     public val INVALID: Interval = Interval(-1, -2)
