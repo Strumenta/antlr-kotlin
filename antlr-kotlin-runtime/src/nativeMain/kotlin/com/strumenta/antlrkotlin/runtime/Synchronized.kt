@@ -42,7 +42,7 @@ internal class Monitor(
     }
   }
 
-  //this lives below companion, so the source code flows nicely: first acquire, below release
+  // This lives below companion, so the source code flows nicely: first acquire, below release
   /**
    * Releases the held lock and cleans up the registry if necessary, freeing
    */
@@ -58,10 +58,10 @@ internal class Monitor(
     }
   }
 
-  //Yes, this is noisy, and yes, this changes nothing functionally, but all of this is sensitive code and the interplay
-  //between functions is delicate, so being explicit is worth it for clarity: No hidden behaviour; every minute detail
-  //of every nuance of every step is clearly visible here; self-contained in a single file across 65 LoC including
-  //comments
+  // Yes, this is noisy, and yes, this changes nothing functionally, but all of this is sensitive code and the interplay
+  // between functions is delicate, so being explicit is worth it for clarity: No hidden behaviour; every minute detail
+  // of every nuance of every step is clearly visible here; self-contained in a single file across 65 LoC including
+  // comments
   @Suppress("NOTHING_TO_INLINE")
   private inline fun free() {
     val index = registry.indexOfFirst { it === this }
@@ -85,7 +85,7 @@ internal actual inline fun <R> synchronized(lock: Any, block: () -> R): R {
   }
 }
 
-//The easier it is to report, the more likely people will do it
+// The easier it is to report, the more likely people will do it
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun checkWithReport(value: Boolean, body: () -> String): Unit = check(value) {
