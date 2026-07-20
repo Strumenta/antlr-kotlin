@@ -23,17 +23,23 @@ internal class Monitor(
      * Acquires a [Monitor] for the given [instance]. If one exists (i.e. if it is held by another thread), this call blocks until the monitor is released.
      * Otherwise, it creates a new monitor and acquires it.
      */
-    fun acquire(instance: Any): Monitor = registryLock.withLock {
-      // Linear search keeps things simple. Could be optimized using a custom TreeSet or similar to reduce complexity to O(log(n))
-      // but how critical is this really in the hot path and how many workers will realistically cause contention?!
-      // This added complexity (since we cannot use hashCode or equals, but we'll need to compare identity)
-      // will be worth it only if we go into the thousands of concurrent accesses in a performance-critical hot path
-      (registry.firstOrNull { it.instance === instance }
-      // create if not found
-        ?: Monitor(instance).also(registry::add)
-        ).apply { refCount++ } //increment ref count in any case
-    }.apply { lock.lock() /*lock OUTSIDE registry lock to avoid deadlocks*/ }
+    fun acquire(instance: Any): Monitor {
 
+      // Avoid shadowing/nameclashes in potential future refactor
+      val toBeReturned = registryLock.withLock {
+        // Linear search keeps things simple. Could be optimized using a custom TreeSet or similar to reduce complexity to O(log(n))
+        // but how critical is this really in the hot path and how many workers will realistically cause contention?!
+        // This added complexity (since we cannot use hashCode or equals, but we'll need to compare identity)
+        // will be worth it only if we go into the thousands of concurrent accesses in a performance-critical hot path
+        val monitor = registry.firstOrNull { it.instance === instance }
+          ?: Monitor(instance).also(registry::add) // create if not found
+
+        monitor.refCount++ //increment ref count in any case
+        monitor
+      }
+      toBeReturned.lock.lock()  /*lock OUTSIDE registry lock to avoid deadlocks*/
+      return toBeReturned
+    }
   }
 
   //this lives below companion, so the source code flows nicely: first acquire, below release
