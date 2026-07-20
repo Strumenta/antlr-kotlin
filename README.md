@@ -34,8 +34,8 @@ or use the [com.strumenta.antlr-kotlin][1] plugin, which instructs ANTLR automat
 The Kotlin runtime for the Kotlin target is derived from the Java runtime, and is built
 as a multiplatform project running on JVM, JS, WebAssembly (including WASI), and Native.
 
-> [!TIP]
-> Starting from version 1.1.0, ANTLR Kotlin is fully thread-safe.
+> [!WARNING]
+> The Kotlin ANTLR runtime is **not** thread safe
 
 The supported Native platforms are:
 

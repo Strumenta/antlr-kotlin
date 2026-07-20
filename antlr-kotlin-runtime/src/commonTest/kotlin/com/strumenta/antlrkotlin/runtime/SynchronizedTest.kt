@@ -16,10 +16,19 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 
-//this file lives here, because we need to make sure it behaves the same on all targets
+// This file lives here, because we need to make sure it behaves the same on all targets
 
-private typealias ExpectedException = IllegalStateException
-private typealias ExpectedThrowable = AssertionError
+private typealias SynchronizationExpectedException = IllegalStateException
+private typealias SynchronizationExpectedThrowable = AssertionError
+
+private const val WORKERS = 8
+private const val MONITORS = 4
+private const val INCREMENTS = 2_000
+private const val YIELD_EVERY = 8
+private const val FAIL_EVERY = 17
+private const val REENTRANCY_DEPTH = 100
+private const val MONITOR_CHURN = 2_000
+
 
 @OptIn(ExperimentalAtomicApi::class)
 class SynchronizedTest {
@@ -65,9 +74,9 @@ class SynchronizedTest {
     val monitor = Any()
 
     assertEquals(42, synchronized(monitor) {
-      assertFailsWith<ExpectedException> {
+      assertFailsWith<SynchronizationExpectedException> {
         synchronized(monitor) {
-          throw ExpectedException()
+          throw SynchronizationExpectedException()
         }
       }
 
@@ -78,9 +87,9 @@ class SynchronizedTest {
   @Test
   fun propagatesTheSameExceptionAndReleasesTheMonitor() {
     val monitor = Any()
-    val expected = ExpectedException()
+    val expected = SynchronizationExpectedException()
 
-    val actual = assertFailsWith<ExpectedException> {
+    val actual = assertFailsWith<SynchronizationExpectedException> {
       synchronized(monitor) {
         throw expected
       }
@@ -93,9 +102,9 @@ class SynchronizedTest {
   @Test
   fun propagatesArbitraryThrowablesAndReleasesTheMonitor() {
     val monitor = Any()
-    val expected = ExpectedThrowable("expected")
+    val expected = SynchronizationExpectedThrowable("expected")
 
-    val actual = assertFailsWith<ExpectedThrowable> {
+    val actual = assertFailsWith<SynchronizationExpectedThrowable> {
       synchronized(monitor) {
         throw expected
       }
@@ -207,12 +216,12 @@ class SynchronizedTest {
             try {
               synchronized(state.monitor) {
                 if (iteration % FAIL_EVERY == 0) {
-                  throw ExpectedException()
+                  throw SynchronizationExpectedException()
                 }
 
                 state.counter++
               }
-            } catch (_: ExpectedException) {
+            } catch (_: SynchronizationExpectedException) {
               // Expected.
             }
           }
@@ -263,15 +272,5 @@ class SynchronizedTest {
     override fun equals(other: Any?): Boolean = error("Monitor equality must not be used")
 
     override fun hashCode(): Int = error("Monitor hash code must not be used")
-  }
-
-  private companion object {
-    const val WORKERS = 8
-    const val MONITORS = 4
-    const val INCREMENTS = 2_000
-    const val YIELD_EVERY = 8
-    const val FAIL_EVERY = 17
-    const val REENTRANCY_DEPTH = 100
-    const val MONITOR_CHURN = 2_000
   }
 }
