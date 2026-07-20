@@ -20,8 +20,8 @@ private fun increment(state: State) {
   }
 }
 
-const val WORKERS = 64
-const val INCREMENTS = 10_000
+private const val WORKERS = 64
+private const val INCREMENTS = 10_000
 
 @OptIn(ObsoleteWorkersApi::class)
 class SynchronizedThreadTest {

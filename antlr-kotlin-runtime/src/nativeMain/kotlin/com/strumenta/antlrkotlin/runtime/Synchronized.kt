@@ -34,10 +34,10 @@ internal class Monitor(
         val monitor = registry.firstOrNull { it.instance === instance }
           ?: Monitor(instance).also(registry::add) // create if not found
 
-        monitor.refCount++ //increment ref count in any case
+        monitor.refCount++ // Increment ref count in any case
         monitor
       }
-      toBeReturned.lock.lock()  /*lock OUTSIDE registry lock to avoid deadlocks*/
+      toBeReturned.lock.lock()  // Lock OUTSIDE registry lock to avoid deadlocks
       return toBeReturned
     }
   }
@@ -92,10 +92,19 @@ private inline fun checkWithReport(value: Boolean, body: () -> String): Unit = c
   "Please report this bug at https://github.com/Strumenta/antlr-kotlin/issues/new?title=$ISSUE_TITLE&body=${body()}"
 }
 
-private const val ISSUE_TITLE = "Native%20synchronized%20inconsistent%20state"
-private const val BODY_FREE = "Freeing%20a%20monitor%20produces%20an%20inconsistent%20state." +
-  "%0A%0ASteps%20to%20reproduce%3A%0A%60%60%60kotlin%0A%2F%2Fyour%20reproducer%20here%0A%60%60%60%0A%0A" +
-  "%40JesusMcCloud%20PTAL.%0A" //this last newline is so that IDEA will not add the next line to the clickable link
-private const val BODY_RELEASE = "Releasing%20a%20monitor%20produces%20an%20inconsistent%20state." +
-  "%0A%0ASteps%20to%20reproduce%3A%0A%60%60%60kotlin%0A%2F%2Fyour%20reproducer%20here%0A%60%60%60%0A%0A" +
-  "%40JesusMcCloud%20PTAL.%0A" //this last newline is so that IDEA will not add the next line to the clickable link
+private val ISSUE_TITLE = "Native synchronized inconsistent state".basicUrlEscape()
+private val BODY_FREE = ("Freeing a monitor produces an inconsistent state." +
+  "\n\n## Steps to reproduce:\n\n```kotlin\n// your reproducer here\n```\n\n" +
+  "@JesusMcCloud PTAL.\n").basicUrlEscape() //this last newline is so that IDEA will not add the next line to the clickable link
+private val BODY_RELEASE = ("Releasing a monitor produces an inconsistent state." +
+  "\n\n## Steps to reproduce:\n\n```kotlin\n// your reproducer here\n```\n\n" +
+  "@JesusMcCloud PTAL.\n").basicUrlEscape() //this last newline is so that IDEA will not add the next line to the clickable link
+
+private fun String.basicUrlEscape(): String = this
+  .replace(" ", "%20")
+  .replace("\n", "%0A")
+  .replace(":", "%3A")
+  .replace("`", "%60")
+  .replace("/", "%2F")
+  .replace("@", "%40")
+  .replace("#", "%23")
