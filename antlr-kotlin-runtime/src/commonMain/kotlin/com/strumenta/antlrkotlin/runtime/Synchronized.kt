@@ -2,9 +2,11 @@
 // Copyright 2024-present Strumenta and contributors, licensed under BSD 3-Clause.
 package com.strumenta.antlrkotlin.runtime
 
-// TODO(Edoardo): wait for AtomicFU 0.24.0, so that we can
-//  integrate it without buildscript hacks.
-//  Also, how are we going to use the "lock" parameter?
-//  Probably it makes sense to just tell consumers the
-//  Kotlin Native implementation is not thread safe.
+/**
+ * Multiplatform `synchronized` (monitor-based locking) implementation
+ * * On the JVM this delegates to Java's `synchronized`
+ * * On Web targets, this is a NOOP, as there is no shared memory concurrency
+ * * On native targets, this uses AtomicFU and a simple enough custom implementation that handles
+ *   realistic uses cases well enough and is easy to reason about
+ */
 internal expect inline fun <R> synchronized(lock: Any, block: () -> R): R
