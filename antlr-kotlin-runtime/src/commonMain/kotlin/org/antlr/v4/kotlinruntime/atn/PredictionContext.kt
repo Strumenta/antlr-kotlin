@@ -5,6 +5,7 @@ package org.antlr.v4.kotlinruntime.atn
 import com.strumenta.antlrkotlin.runtime.IdentityHashMap
 import com.strumenta.antlrkotlin.runtime.System
 import com.strumenta.antlrkotlin.runtime.assert
+import kotlinx.atomicfu.atomic
 import org.antlr.v4.kotlinruntime.ParserRuleContext
 import org.antlr.v4.kotlinruntime.Recognizer
 import org.antlr.v4.kotlinruntime.RuleContext
@@ -49,10 +50,10 @@ public abstract class PredictionContext protected constructor(
      */
     public const val EMPTY_RETURN_STATE: Int = Int.MAX_VALUE
 
-    // TODO(Edoardo): replace with AtomicInt.
-    //  Currently blocked by kotlinx-atomicfu not supporting linuxArm32Hfp (#207)
-    //  but it is not an urgent change, so we can keep it like this for now
-    private var globalNodeCount = 0
+    /**
+     * @see PredictionContext.id
+     */
+    private val globalNodeCount = atomic(0)
 
     /**
      * Convert a [RuleContext] tree to a [PredictionContext] graph.
@@ -725,7 +726,7 @@ public abstract class PredictionContext protected constructor(
   }
 
   @JvmField
-  public val id: Int = globalNodeCount++
+  public val id: Int = globalNodeCount.getAndIncrement()
 
   /**
    * This means only the [EmptyPredictionContext]

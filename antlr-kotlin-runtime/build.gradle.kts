@@ -23,17 +23,17 @@ strumentaMultiplatform {
 
 kotlin {
   sourceSets {
+    commonMain {
+      dependencies {
+        implementation(libs.kotlinx.atomicfu)
+      }
+    }
+
     commonTest {
       dependencies {
         implementation(kotlin("test"))
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.coroutines.test)
-      }
-    }
-
-    nativeMain {
-      dependencies {
-        implementation(libs.kotlinx.atomicfu)
       }
     }
   }
