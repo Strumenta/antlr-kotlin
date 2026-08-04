@@ -1,19 +1,19 @@
 [versions]
-kotlin = "2.3.0"
-atomicfu = "0.33.0"
+kotlin = "2.3.21"
+kotlinx-atomicfu = "0.33.0"
 kotlinx-coroutines = "1.11.0"
-kotlinx-io = "0.8.2"
-kotlinx-benchmark = "0.4.15"
-kotlinx-resources = "0.14.0"
+kotlinx-io = "0.9.1"
+kotlinx-benchmark = "0.4.17"
+kotlinx-resources = "0.15.0"
 antlr4 = "4.13.1"
-dokka = "2.1.0"
+dokka = "2.2.0"
 researchgate-release = "3.1.0"
 maven-publish = "0.34.0"
-gradle-plugin-publish = "2.0.0"
-antlr-kotlin = "1.0.8"
+gradle-plugin-publish = "2.1.1"
+antlr-kotlin = "1.0.12"
 
 [libraries]
-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
+kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
