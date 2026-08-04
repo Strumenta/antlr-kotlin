@@ -47,12 +47,9 @@ The supported Native platforms are:
 | iosX64            | watchosX64            | androidNativeX64   |
 | iosArm64          | watchosArm32          | watchosDeviceArm64 |
 |                   | watchosArm64          | mingwX64           |
-|                   | tvosSimulatorArm64    | linuxArm32Hfp      |
+|                   | tvosSimulatorArm64    |                    |
 |                   | tvosX64               |                    |
 |                   | tvosArm64             |                    |
-
-> [!NOTE]
-> The `linuxArm32Hfp` platform is deprecated
 
 ## Gradle Setup
 
