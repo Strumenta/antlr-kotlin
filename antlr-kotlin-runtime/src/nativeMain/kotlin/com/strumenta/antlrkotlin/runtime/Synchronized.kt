@@ -9,9 +9,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-internal class Monitor(
-  private val instance: Any,
-) {
+internal class Monitor private constructor(private val instance: Any) {
   private var refCount: Int = 0
   private val lock: ReentrantLock = reentrantLock()
 
@@ -20,64 +18,72 @@ internal class Monitor(
     private val registry = ArrayList<Monitor>()
 
     /**
-     * Acquires a [Monitor] for the given [instance]. If one exists (i.e. if it is held by another thread), this call blocks until the monitor is released.
+     * Acquires a [Monitor] for the given [instance].
+     *
+     * If one exists (i.e., if it is held by another thread), this call blocks until the monitor is released.
      * Otherwise, it creates a new monitor and acquires it.
      */
     fun acquire(instance: Any): Monitor {
-
       // Avoid shadowing/nameclashes in potential future refactor
-      val toBeReturned = registryLock.withLock {
-        // Linear search keeps things simple. Could be optimized using a custom TreeSet or similar to reduce complexity to O(log(n))
-        // but how critical is this really in the hot path and how many workers will realistically cause contention?!
-        // This added complexity (since we cannot use hashCode or equals, but we'll need to compare identity)
-        // will be worth it only if we go into the thousands of concurrent accesses in a performance-critical hot path
+      val acquiredMonitor = registryLock.withLock {
+        // Linear search keeps things simple. Could be optimized using a custom TreeSet
+        // or similar to reduce complexity to O(log(n)) but how critical is this really
+        // in the hot path and how many workers will realistically cause contention?!
+        // This added complexity (since we cannot use hashCode or equals, but we'll need
+        // to compare identity) will be worth it only if we go into the thousands of
+        // concurrent accesses in a performance-critical hot path.
         val monitor = registry.firstOrNull { it.instance === instance }
-          ?: Monitor(instance).also(registry::add) // create if not found
+          ?: Monitor(instance).also(registry::add) // Create if not found
 
         monitor.refCount++ // Increment ref count in any case
-        monitor
+        return@withLock monitor
       }
-      toBeReturned.lock.lock()  // Lock OUTSIDE registry lock to avoid deadlocks
-      return toBeReturned
+
+      // Lock outside registry lock to avoid deadlocks
+      acquiredMonitor.lock.lock()
+      return acquiredMonitor
     }
   }
 
-  // This lives below companion, so the source code flows nicely: first acquire, below release
   /**
    * Releases the held lock and cleans up the registry if necessary, freeing
+   * resources associated with this monitor.
    */
   fun release() {
-    // FIRST we release the held lock
+    // First we release the held lock
     lock.unlock()
-    // only THEN we decrement the ref count and clean up if necessary, INSIDE the registry lock
+
+    // Only then we decrement the ref count and clean up if necessary, indide the registry lock
     registryLock.withLock {
       // Fail hard and notify
       checkWithReport(refCount > 0) { BODY_RELEASE }
 
-      if (--refCount == 0) free()
+      if (--refCount == 0) {
+        free()
+      }
     }
   }
 
-  // Yes, this is noisy, and yes, this changes nothing functionally, but all of this is sensitive code and the interplay
-  // between functions is delicate, so being explicit is worth it for clarity: No hidden behaviour; every minute detail
-  // of every nuance of every step is clearly visible here; self-contained in a single file across 65 LoC including
-  // comments
+  // Yes, this is noisy, and yes, this changes nothing functionally, but all of this
+  // is sensitive code and the interplay between functions is delicate, so being explicit
+  // is worth it for clarity.
   @Suppress("NOTHING_TO_INLINE")
   private inline fun free() {
     val index = registry.indexOfFirst { it === this }
     // Fail hard and notify
-    checkWithReport(index >= 0) { BODY_FREE } //fail hard!
+    checkWithReport(index >= 0) { BODY_FREE }
     registry.removeAt(index)
   }
 }
-
 
 @OptIn(ExperimentalContracts::class)
 internal actual inline fun <R> synchronized(lock: Any, block: () -> R): R {
   contract {
     callsInPlace(block, InvocationKind.EXACTLY_ONCE)
   }
+
   val monitor = Monitor.acquire(lock)
+
   try {
     return block()
   } finally {

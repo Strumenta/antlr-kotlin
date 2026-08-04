@@ -6,7 +6,6 @@ import kotlin.native.concurrent.Worker
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
 private class State {
   val monitor = Any()
   var counter = 0
@@ -42,6 +41,7 @@ class SynchronizedThreadTest {
       } finally {
         workers.forEach { it.requestTermination().result }
       }
+
       assertEquals(WORKERS * INCREMENTS, state.counter)
     }
   }
