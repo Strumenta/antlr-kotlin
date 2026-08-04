@@ -1,10 +1,13 @@
-# ANTLR Kotlin
+<div align="center">
+<h1>ANTLR Kotlin</h1>
 
-[![Build Status](https://github.com/Strumenta/antlr-kotlin/workflows/Build/badge.svg)](https://github.com/Strumenta/antlr-kotlin/actions)
-![Maven Central Version](https://img.shields.io/maven-central/v/com.strumenta/antlr-kotlin-runtime)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Strumenta/antlr-kotlin/build.yml.svg?branch=master)](https://github.com/Strumenta/antlr-kotlin/actions/workflows/build.yml)
+[![Maven Central Version](https://img.shields.io/maven-central/v/com.strumenta/antlr-kotlin-runtime?label=maven)](https://search.maven.org/artifact/com.strumenta/antlr-kotlin-runtime)
 [![Kotlin 2.3.21](https://img.shields.io/badge/kotlin-2.3.21-blue.svg?logo=kotlin)](https://kotlinlang.org)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-Apache)
-[![License BSD-3](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE-BSD)
+[![License BSD-3](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](LICENSE-BSD)
+
+</div>
 
 This project contains everything needed to support Kotlin as a target for ANTLR.
 
