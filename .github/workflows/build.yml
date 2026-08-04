@@ -55,8 +55,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-konan-
+          key: ${{ runner.os }}-konan-2.3.21
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb
       - name: Run Build and Tests (${{ matrix.target }})

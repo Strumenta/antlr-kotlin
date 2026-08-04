@@ -1,4 +1,5 @@
 [versions]
+# Sync with actions/cache key in .github/workflows/build.yml
 kotlin = "2.3.21"
 kotlinx-atomicfu = "0.33.0"
 kotlinx-coroutines = "1.11.0"
