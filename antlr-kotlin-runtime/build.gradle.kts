@@ -33,7 +33,7 @@ kotlin {
 
     nativeMain {
       dependencies {
-        implementation(libs.atomicfu)
+        implementation(libs.kotlinx.atomicfu)
       }
     }
   }
