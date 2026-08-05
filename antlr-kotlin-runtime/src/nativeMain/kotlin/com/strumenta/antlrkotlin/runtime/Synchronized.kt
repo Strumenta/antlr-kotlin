@@ -9,6 +9,9 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+/**
+ * Use [Monitor.acquire] to acquire a new monitor for an arbitrary instance.
+ */
 internal class Monitor private constructor(private val instance: Any) {
   private var refCount: Int = 0
   private val lock: ReentrantLock = reentrantLock()
@@ -24,7 +27,6 @@ internal class Monitor private constructor(private val instance: Any) {
      * Otherwise, it creates a new monitor and acquires it.
      */
     fun acquire(instance: Any): Monitor {
-      // Avoid shadowing/nameclashes in potential future refactor
       val acquiredMonitor = registryLock.withLock {
         // Linear search keeps things simple. Could be optimized using a custom TreeSet
         // or similar to reduce complexity to O(log(n)) but how critical is this really
@@ -50,10 +52,10 @@ internal class Monitor private constructor(private val instance: Any) {
    * resources associated with this monitor.
    */
   fun release() {
-    // First we release the held lock
+    // First, we release the held lock
     lock.unlock()
 
-    // Only then we decrement the ref count and clean up if necessary, indide the registry lock
+    // Only then, we decrement the ref count and clean up if necessary, indide the registry lock
     registryLock.withLock {
       // Fail hard and notify
       checkWithReport(refCount > 0) { BODY_RELEASE }
