@@ -11,6 +11,7 @@ dokka = "2.2.0"
 researchgate-release = "3.1.0"
 maven-publish = "0.34.0"
 gradle-plugin-publish = "2.1.1"
+# Update every time we publish a new antlr-kotlin version to Maven Central
 antlr-kotlin = "1.0.12"
 
 [libraries]
