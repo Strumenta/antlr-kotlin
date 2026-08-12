@@ -3,10 +3,10 @@
 package com.strumenta.antlrkotlin.runtime
 
 /**
- * Multiplatform `synchronized` (monitor-based locking) implementation
- * * On the JVM this delegates to Java's `synchronized`
- * * On Web targets, this is a NOOP, as there is no shared memory concurrency
- * * On native targets, this uses AtomicFU and a simple enough custom implementation that handles
- *   realistic uses cases well enough and is easy to reason about
+ * Multiplatform `synchronized` (monitor-based locking) implementation:
+ * - On the JVM this delegates to Java's `synchronized`.
+ * - On Web targets, this is a no-op, as there is no shared memory concurrency.
+ * - On Native targets, this uses AtomicFU and a simple enough custom implementation
+ *   that handles realistic uses cases well enough and is easy to reason about.
  */
 internal expect inline fun <R> synchronized(lock: Any, block: () -> R): R
