@@ -19,9 +19,10 @@ will run on the JVM (including Android), in the browser, in Node.js, and nativel
 
 Want to start experimenting immediately? See [Gradle Setup](#gradle-setup).
 
-## Status
+## ANTLR Java Parity
 
-The runtime and target's template are up-to-date with mainstream commit: `master/e9df464`
+- Target template is up-to-date with upstream commit [`master/851ddee`](https://github.com/antlr/antlr4/commit/851ddee453877b7815bb7ac902ee3b5a1c8d17b3)
+- Runtime is up-to-date with upstream commit [`master/faa457a`](https://github.com/antlr/antlr4/commit/faa457ae5b9c39b572334814f0b36c855bc23010)
 
 ## Kotlin Target
 
