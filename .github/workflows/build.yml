@@ -26,9 +26,6 @@ jobs:
           - java: '17'
             target: Gradle Plugin
             task: ':antlr-kotlin-gradle-plugin:check'
-          - java: '11'
-            target: JVM
-            task: jvmTest
           - java: '17'
             target: JVM
             task: jvmTest
