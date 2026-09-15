@@ -23,8 +23,8 @@ class StrumentaJvmLibraryModulePlugin : Plugin<Project> {
     val kotlin = project.kotlinJvmExtension
     kotlin.explicitApiWarning()
     kotlin.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_3)
-      languageVersion.set(KotlinVersion.KOTLIN_2_3)
+      apiVersion.set(KotlinVersion.KOTLIN_2_4)
+      languageVersion.set(KotlinVersion.KOTLIN_2_4)
 
       jvmTarget.set(JvmTarget.JVM_1_8)
       jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)

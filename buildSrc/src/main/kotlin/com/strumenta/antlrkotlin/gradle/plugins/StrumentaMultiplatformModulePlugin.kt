@@ -29,8 +29,8 @@ class StrumentaMultiplatformModulePlugin : Plugin<Project> {
     val kmp = project.kmpExtension
     kmp.explicitApiWarning()
     kmp.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_3)
-      languageVersion.set(KotlinVersion.KOTLIN_2_3)
+      apiVersion.set(KotlinVersion.KOTLIN_2_4)
+      languageVersion.set(KotlinVersion.KOTLIN_2_4)
       freeCompilerArgs.add("-Xexpect-actual-classes")
     }
   }

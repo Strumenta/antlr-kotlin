@@ -1,9 +1,10 @@
+<!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
 <h1>ANTLR Kotlin</h1>
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Strumenta/antlr-kotlin/build.yml.svg?branch=master)](https://github.com/Strumenta/antlr-kotlin/actions/workflows/build.yml)
 [![Maven Central Version](https://img.shields.io/maven-central/v/com.strumenta/antlr-kotlin-runtime?label=maven)](https://search.maven.org/artifact/com.strumenta/antlr-kotlin-runtime)
-[![Kotlin 2.3.21](https://img.shields.io/badge/kotlin-2.3.21-blue.svg?logo=kotlin)](https://kotlinlang.org)
+[![Kotlin 2.4.20](https://img.shields.io/badge/kotlin-2.4.20-blue.svg?logo=kotlin)](https://kotlinlang.org)
 [![License Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-Apache)
 [![License BSD-3](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](LICENSE-BSD)
 
@@ -42,17 +43,15 @@ as a multiplatform project running on JVM, JS, WebAssembly (including WASI), and
 
 The supported Native platforms are:
 
-| Tier 1            | Tier 2                | Tier 3             |
-|:------------------|:----------------------|:-------------------|
-| macosX64          | linuxX64              | androidNativeArm32 |
-| macosArm64        | linuxArm64            | androidNativeArm64 |
-| iosSimulatorArm64 | watchosSimulatorArm64 | androidNativeX86   |
-| iosX64            | watchosX64            | androidNativeX64   |
-| iosArm64          | watchosArm32          | watchosDeviceArm64 |
-|                   | watchosArm64          | mingwX64           |
-|                   | tvosSimulatorArm64    |                    |
-|                   | tvosX64               |                    |
-|                   | tvosArm64             |                    |
+| Tier 1            | Tier 2                | Tier 3             | Deprecated   |
+|:------------------|:----------------------|:-------------------|--------------|
+| macosArm64        | linuxX64              | androidNativeArm32 | watchosArm32 |
+| iosSimulatorArm64 | linuxArm64            | androidNativeArm64 | macosX64     |
+| iosArm64          | watchosSimulatorArm64 | androidNativeX86   | watchosX64   |
+|                   | watchosArm64          | androidNativeX64   | tvosX64      |
+|                   | tvosSimulatorArm64    | mingwX64           |              |
+|                   | tvosArm64             | watchosDeviceArm64 |              |
+|                   |                       | iosX64             |              |
 
 ## Gradle Setup
 
