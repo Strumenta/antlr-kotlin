@@ -11,7 +11,6 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
@@ -51,7 +50,7 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
     val testsTimeout = jsConfig.testsTimeout.getOrElse(30)
 
     val kmpExtension = project.kmpExtension
-    kmpExtension.js(KotlinJsCompilerType.IR) {
+    kmpExtension.js {
       nodejs {
         testTask {
           useMocha {
@@ -172,29 +171,33 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
       }
 
       with(project.kmpExtension) {
+        //
         // Tier 1
+        //
         // macOS host only
-        macosX64(configuration)
         macosArm64(configuration)
         iosSimulatorArm64()
-        iosX64()
+        iosArm64()
 
+        //
         // Tier 2
+        //
         linuxX64(configuration)
         linuxArm64()
 
         // macOS host only
         watchosSimulatorArm64()
-        watchosX64()
-        watchosArm32()
         watchosArm64()
         tvosSimulatorArm64()
-        tvosX64()
         tvosArm64()
-        iosArm64()
 
+        //
         // Tier 3
+        //
         mingwX64(configuration)
+
+        // macOS host only
+        iosX64()
 
         if (!disableUntestable) {
           androidNativeArm32()
@@ -204,6 +207,16 @@ abstract class StrumentaMultiplatformModuleExtension(private val project: Projec
 
           // macOS host only
           watchosDeviceArm64()
+        }
+
+        //
+        // Deprecated - scheduled for removal
+        //
+        @Suppress("DEPRECATION") run {
+          watchosArm32()
+          macosX64(configuration)
+          watchosX64()
+          tvosX64()
         }
       }
     }

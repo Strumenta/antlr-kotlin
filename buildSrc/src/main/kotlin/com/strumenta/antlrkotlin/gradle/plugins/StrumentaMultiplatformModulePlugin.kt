@@ -5,7 +5,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
 
 /**
@@ -29,8 +28,8 @@ class StrumentaMultiplatformModulePlugin : Plugin<Project> {
     val kmp = project.kmpExtension
     kmp.explicitApiWarning()
     kmp.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_3)
-      languageVersion.set(KotlinVersion.KOTLIN_2_3)
+      apiVersion.set(KOTLIN_VERSION)
+      languageVersion.set(KOTLIN_VERSION)
       freeCompilerArgs.add("-Xexpect-actual-classes")
     }
   }
