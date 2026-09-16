@@ -9,7 +9,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 /**
@@ -28,8 +27,8 @@ class StrumentaGradlePluginModulePlugin : Plugin<Project> {
     val kotlin = project.kotlinJvmExtension
     kotlin.explicitApiWarning()
     kotlin.compilerOptions {
-      apiVersion.set(KotlinVersion.KOTLIN_2_4)
-      languageVersion.set(KotlinVersion.KOTLIN_2_4)
+      apiVersion.set(KOTLIN_VERSION)
+      languageVersion.set(KOTLIN_VERSION)
 
       jvmTarget.set(JvmTarget.JVM_1_8)
       jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
