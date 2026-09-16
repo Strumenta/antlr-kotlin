@@ -44,7 +44,7 @@ as a multiplatform project running on JVM, JS, WebAssembly (including WASI), and
 The supported Native platforms are:
 
 | Tier 1            | Tier 2                | Tier 3             | Deprecated   |
-|:------------------|:----------------------|:-------------------|--------------|
+|:------------------|:----------------------|:-------------------|:-------------|
 | macosArm64        | linuxX64              | androidNativeArm32 | watchosArm32 |
 | iosSimulatorArm64 | linuxArm64            | androidNativeArm64 | macosX64     |
 | iosArm64          | watchosSimulatorArm64 | androidNativeX86   | watchosX64   |
